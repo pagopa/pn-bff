@@ -1,3 +1,3 @@
-# pn-template-ms-be
+# pn-bff
 
-A template project for a new PN backend microservice 
+Backend for frontend della piattaforma SEND
