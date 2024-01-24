@@ -1,4 +1,4 @@
-package it.pagopa.pn.template.config;
+package it.pagopa.pn.bff.config;
 
 import it.pagopa.pn.commons.conf.SharedAutoConfiguration;
 import lombok.Data;

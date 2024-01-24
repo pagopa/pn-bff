@@ -75,7 +75,6 @@
 				<configuration>
 					<excludes>
 						<exclude>**/generated/**</exclude>
-						<exclude>**it/pagopa/pn/template/rest/v1/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -122,10 +121,10 @@
 							<generateApiTests>false</generateApiTests>
 							<generateModelTests>false</generateModelTests>
 							<configOptions>
-								<basePackage>${project.groupId}.template.generated.openapi.server.v1</basePackage>
-								<modelPackage>${project.groupId}.template.generated.openapi.server.v1.dto</modelPackage>
-								<apiPackage>${project.groupId}.template.generated.openapi.server.v1.api</apiPackage>
-								<configPackage>${project.groupId}.template.generated.openapi.server.v1.config</configPackage>
+								<basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+								<modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+								<configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
 								<dateLibrary>java8</dateLibrary>
 								<delegatePattern>true</delegatePattern>
 								<interfaceOnly>true</interfaceOnly>
@@ -135,6 +134,7 @@
 								<reactive>true</reactive>
 								<skipDefaultInterface>false</skipDefaultInterface>
 								<useTags>true</useTags>
+								<additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true); @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
 							</configOptions>				
 						</configuration>
 					</execution>
