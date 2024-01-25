@@ -7,10 +7,10 @@
 		<version>2.1.1</version>
 		<relativePath />
 	</parent>
-	<artifactId>pn-template-ms-be</artifactId>
+	<artifactId>pn-bff</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>pn-template-ms-be</name>
-	<description>A template for a PN Backend Microservice</description>
+	<name>pn-bff</name>
+	<description>Backend for frontend della piattaforma SEND</description>
 	<scm>
 		<connection>${git.conn}</connection>
 		<developerConnection>${git.devConn}</developerConnection>
@@ -24,29 +24,6 @@
 			<groupId>it.pagopa.pn</groupId>
 			<artifactId>pn-commons</artifactId>
 			<version>2.2.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>it.pagopa.tech.lollipop-consumer-java-sdk</groupId>
-					<artifactId>core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>it.pagopa.tech.lollipop-consumer-java-sdk</groupId>
-					<artifactId>http-verifier</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>it.pagopa.tech.lollipop-consumer-java-sdk</groupId>
-					<artifactId>assertion-rest-client-native</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>it.pagopa.tech.lollipop-consumer-java-sdk</groupId>
-					<artifactId>identity-service-rest-client-native</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-<!--		janino required se si esclude le dipendenze di lollipop-->
-		<dependency>
-			<groupId>org.codehaus.janino</groupId>
-			<artifactId>janino</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>it.pagopa.pn</groupId>
@@ -98,7 +75,6 @@
 				<configuration>
 					<excludes>
 						<exclude>**/generated/**</exclude>
-						<exclude>**it/pagopa/pn/template/rest/v1/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -145,10 +121,10 @@
 							<generateApiTests>false</generateApiTests>
 							<generateModelTests>false</generateModelTests>
 							<configOptions>
-								<basePackage>${project.groupId}.template.generated.openapi.server.v1</basePackage>
-								<modelPackage>${project.groupId}.template.generated.openapi.server.v1.dto</modelPackage>
-								<apiPackage>${project.groupId}.template.generated.openapi.server.v1.api</apiPackage>
-								<configPackage>${project.groupId}.template.generated.openapi.server.v1.config</configPackage>
+								<basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+								<modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+								<configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
 								<dateLibrary>java8</dateLibrary>
 								<delegatePattern>true</delegatePattern>
 								<interfaceOnly>true</interfaceOnly>
@@ -158,37 +134,8 @@
 								<reactive>true</reactive>
 								<skipDefaultInterface>false</skipDefaultInterface>
 								<useTags>true</useTags>
+								<additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true); @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
 							</configOptions>				
-						</configuration>
-					</execution>
-
-					<!-- OPEN API CLIENT PN-SAFE-STORAGE REACTIVE-->
-					<execution>
-						<phase>generate-resources</phase>
-						<id>generate-client-pn-safe-storage-reactive</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/docs/wsclient/pn-safe-storage/pn-safestorage-v1-api.yaml</inputSpec>
-							<generatorName>java</generatorName>
-							<library>webclient</library>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client</templateDirectory>
-							<configOptions>
-								<apiPackage>${project.groupId}.template.generated.openapi.msclient.safestorage.api</apiPackage>
-								<modelPackage>${project.groupId}.template.generated.openapi.msclient.safestorage.model</modelPackage>
-								<dateLibrary>java8</dateLibrary>
-								<delegatePattern>true</delegatePattern>
-								<interfaceOnly>true</interfaceOnly>
-								<annotationLibrary>none</annotationLibrary>
-								<documentationProvider>source</documentationProvider>
-								<openApiNullable>false</openApiNullable>
-								<reactive>true</reactive>
-								<skipDefaultInterface>false</skipDefaultInterface>
-								<useTags>true</useTags>
-							</configOptions>
 						</configuration>
 					</execution>
 				</executions>

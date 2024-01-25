@@ -1,6 +1,6 @@
-package it.pagopa.pn.template.rest;
+package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.template.generated.openapi.server.v1.api.TemplateSampleApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.TemplateSampleApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

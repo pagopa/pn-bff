@@ -1,4 +1,4 @@
-package it.pagopa.pn.template.config;
+package it.pagopa.pn.bff.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

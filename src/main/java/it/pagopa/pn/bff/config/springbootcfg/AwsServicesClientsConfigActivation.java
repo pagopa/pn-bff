@@ -1,4 +1,4 @@
-package it.pagopa.pn.template.config.springbootcfg;
+package it.pagopa.pn.bff.config.springbootcfg;
 
 import it.pagopa.pn.commons.configs.RuntimeMode;
 import it.pagopa.pn.commons.configs.aws.AwsConfigs;
