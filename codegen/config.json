@@ -1,7 +1,7 @@
 {
     "openapi": [
         {
-            "intendedUsage": "B2B",
+            "intendedUsage": "WEB",
             "openapiFiles": [
                 "api-internal-pn-bff.yaml"
             ],
