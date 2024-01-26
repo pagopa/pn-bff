@@ -8,9 +8,6 @@
             "servicePath": "bff",
             "generateBundle": true
         }
-    ],
-    "openapiBundlePresenceCheck": [
-        "api-external-pn-bff-bundle.yaml"
     ]
 }
     
