@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Import;
 @Data
 @Import({SharedAutoConfiguration.class})
 public class PnBffConfigs {
-    private String safeStorageBaseUrl;
-
     @Data
     public static class Topics { }
 }
