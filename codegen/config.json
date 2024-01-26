@@ -3,14 +3,14 @@
         {
             "intendedUsage": "B2B",
             "openapiFiles": [
-                "api-internal-pn-template.yaml"
+                "api-internal-pn-bff.yaml"
             ],
-            "servicePath": "pn-template",
+            "servicePath": "bff",
             "generateBundle": true
         }
     ],
     "openapiBundlePresenceCheck": [
-        "api-external-pn-template-bundle.yaml"
+        "api-external-pn-bff-bundle.yaml"
     ]
 }
     
