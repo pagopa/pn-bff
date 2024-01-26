@@ -17,16 +17,23 @@ servers:
 paths:
   '/status':
     get:
-      summary: healthCheck path
-      description: health check path per verificare lo stato del micro servizio
+      summary: Get Status of application
+      operationId: getStatus
       tags:
-        - HealthCheck
-      operationId: status
+        - StatusTemplate
       responses:
         '200':
-          description: Ok
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
         '500':
-          description: Internal Server Error
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
   '/template/api/httpheaders':
     get:
       summary: Build a map of all the Http Header for the request
