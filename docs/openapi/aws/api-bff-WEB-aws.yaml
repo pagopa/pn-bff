@@ -10,7 +10,26 @@ servers:
         default: /${stageVariables.ServiceApiPath}
     x-amazon-apigateway-endpoint-configuration:
       disableExecuteApiEndpoint: true
-paths: {}
+paths:
+  '/status':
+    get:
+      summary: Get Status of application
+      operationId: getStatus
+      tags:
+        - StatusTemplate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 components:
   parameters: {}
   schemas:
@@ -49,7 +68,7 @@ components:
         identitySource: method.request.header.x-api-key
         type: request
 tags:
-  - null
+  - StatusTemplate
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
