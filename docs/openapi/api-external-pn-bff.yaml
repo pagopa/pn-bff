@@ -17,39 +17,23 @@ servers:
 paths:
   '/status':
     get:
-      summary: healthCheck path
-      description: health check path per verificare lo stato del micro servizio
+      summary: Get Status of application
+      operationId: getStatus
       tags:
-        - HealthCheck
-      operationId: status
-      responses:
-        '200':
-          description: Ok
-        '500':
-          description: Internal Server Error
-  '/template/api/httpheaders':
-    get:
-      summary: Build a map of all the Http Header for the request
-      operationId: getHttpHeadersMap
-      tags:
-        - TemplateSample
+        - StatusTemplate
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                  type: object
-                  additionalProperties:
-                    type: array
-                    items:
-                      type: string
+                type: string
         '500':
-            description: InternalServerError
-            content:
-              application/problem+json:
-                schema:
-                  $ref: 'remote-refs.yaml#/components/schemas/Problem'
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 components:
   schemas:
     MockResponse:
@@ -69,11 +53,11 @@ components:
           maxLength: 36
           pattern: ^[A-Za-z0-9+/=]{36}$
 
-#  securitySchemes:        # ONLY EXTERNAL
-#    ApiKeyAuth:           # ONLY EXTERNAL
-#      type: apiKey        # ONLY EXTERNAL
-#      in: header          # ONLY EXTERNAL
-#      name: x-api-key     # ONLY EXTERNAL
+  securitySchemes:        # ONLY EXTERNAL
+    ApiKeyAuth:           # ONLY EXTERNAL
+      type: apiKey        # ONLY EXTERNAL
+      in: header          # ONLY EXTERNAL
+      name: x-api-key     # ONLY EXTERNAL
 
-#security:                 # ONLY EXTERNAL
-#  - ApiKeyAuth: [] # use the same name as under securitySchemes    # ONLY EXTERNAL
+security:                 # ONLY EXTERNAL
+  - ApiKeyAuth: [] # use the same name as under securitySchemes    # ONLY EXTERNAL
