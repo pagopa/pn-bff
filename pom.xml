@@ -17,6 +17,9 @@
 		<url>${git.url}</url>
 	  <tag>HEAD</tag>
   </scm>
+	<properties>
+		<pagopa.codegen.version>v01.03.03</pagopa.codegen.version>
+	</properties>
 
 	<dependencies>
 
