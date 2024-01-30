@@ -5,8 +5,7 @@
             "openapiFiles": [
                 "api-internal-pn-bff.yaml"
             ],
-            "servicePath": "bff",
-            "generateBundle": true
+            "servicePath": "bff"
         }
     ]
 }

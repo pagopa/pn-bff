@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN Template BE Microservice
+  title: PN BFF BE Microservice
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-template
-  x-summary: 'Piattaforma Notifiche: API template'
+  x-api-id: api-internal-pn-bff
+  x-summary: 'API di pn-bff esposte al Web'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -12,10 +12,21 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-  - url: https://api.pn.pagopa.it
-    description: Generated server url
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: StatusTemplate
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+
 paths:
-  '/status':
+  '/bff/status':
     get:
       summary: Get Status of application
       operationId: getStatus
@@ -27,7 +38,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/StatusSchema'
         '500':
           description: InternalServerError
           content:
@@ -36,28 +47,14 @@ paths:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 components:
   schemas:
-    MockResponse:
-      title: Identificativi della richiesta di notifica
-      description: >-
-        Contiene le informazioni per identificare una richiesta di invio notifica
-        che non è ancora stata accettata da Piattaforma notifiche.
+    StatusSchema:
+      title: Stato dell'applicazione
       type: object
-      required:
-        - notificationRequestId
-        - paProtocolNumber
       properties:
-        notificationRequestId:
+        status:
           type: string
-          description: >-
-            identificativo univoco di una richiesta di invio notifica, non è lo IUN
-          maxLength: 36
-          pattern: ^[A-Za-z0-9+/=]{36}$
-
-  securitySchemes:        # ONLY EXTERNAL
-    ApiKeyAuth:           # ONLY EXTERNAL
-      type: apiKey        # ONLY EXTERNAL
-      in: header          # ONLY EXTERNAL
-      name: x-api-key     # ONLY EXTERNAL
-
-security:                 # ONLY EXTERNAL
-  - ApiKeyAuth: [] # use the same name as under securitySchemes    # ONLY EXTERNAL
+          description: Stato dell'applicazione.
+      required:
+        - status
+      example:
+        status: OK
