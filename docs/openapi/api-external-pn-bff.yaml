@@ -45,16 +45,94 @@ paths:
             application/problem+json:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+  '/bff/notifications/received/{iun}':
+    get:
+      summary: Accesso notifiche ricevute
+      description: >-
+        Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
+        notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotification
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/notificationSearchMandateId'
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/FullReceivedNotificationV21"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found - PN_DELIVERY_USER_ID_NOT_RECIPIENT_OR_DELEGATOR
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 components:
+
+  parameters:
+    ############################################################################################
+    ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
+    ############################################################################################
+
+    pathIun:
+      $ref: './remote-refs.yaml#/components/parameters/pathIun'
+    notificationSearchMandateId:
+      $ref: './remote-refs.yaml#/components/parameters/notificationSearchMandateId'
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+
   schemas:
+
     StatusSchema:
-      title: Stato dell'applicazione
-      type: object
-      properties:
-        status:
-          type: string
-          description: Stato dell'applicazione.
-      required:
-        - status
-      example:
-        status: OK
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'
+
+    FullReceivedNotificationV21:
+      description: >-
+        Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
+        inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
+      allOf:
+        - $ref: '#/components/schemas/SentNotificationV21'
+        - type: object
+          required:
+            - notificationStatus
+            - notificationStatusHistory
+            - timeline
+          properties:
+            notificationStatus:
+              $ref: '#/components/schemas/NotificationStatus'
+            notificationStatusHistory:
+              $ref: '#/components/schemas/NotificationStatusHistory'
+            timeline:
+              description: >-
+                elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
+              type: array
+              items:
+                $ref: '#/components/schemas/TimelineElementV20'
+
+    SentNotificationV21:
+      $ref: './remote-refs.yaml#/components/schemas/SentNotificationV21'
+    NotificationStatus:
+      $ref: './remote-refs.yaml#/components/schemas/NotificationStatus'
+    NotificationStatusHistory:
+      $ref: './remote-refs.yaml#/components/schemas/NotificationStatusHistory'
+    TimelineElementV20:
+      $ref: './remote-refs.yaml#/components/schemas/TimelineElementV20'
