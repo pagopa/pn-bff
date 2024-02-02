@@ -66,7 +66,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/FullReceivedNotificationV21"
+                $ref: "#/components/schemas/BffFullReceivedNotificationV21"
         '400':
           description: Bad request
           content:
@@ -105,12 +105,12 @@ components:
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'
 
-    FullReceivedNotificationV21:
+    BffFullReceivedNotificationV21:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
         inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
       allOf:
-        - $ref: '#/components/schemas/SentNotificationV21'
+        - $ref: '#/components/schemas/BffSentNotificationV21'
         - type: object
           required:
             - notificationStatus
@@ -118,21 +118,21 @@ components:
             - timeline
           properties:
             notificationStatus:
-              $ref: '#/components/schemas/NotificationStatus'
+              $ref: '#/components/schemas/BffNotificationStatus'
             notificationStatusHistory:
-              $ref: '#/components/schemas/NotificationStatusHistory'
+              $ref: '#/components/schemas/BffNotificationStatusHistory'
             timeline:
               description: >-
                 elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/TimelineElementV20'
+                $ref: '#/components/schemas/BffTimelineElementV20'
 
-    SentNotificationV21:
-      $ref: './remote-refs.yaml#/components/schemas/SentNotificationV21'
-    NotificationStatus:
-      $ref: './remote-refs.yaml#/components/schemas/NotificationStatus'
-    NotificationStatusHistory:
-      $ref: './remote-refs.yaml#/components/schemas/NotificationStatusHistory'
-    TimelineElementV20:
-      $ref: './remote-refs.yaml#/components/schemas/TimelineElementV20'
+    BffSentNotificationV21:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV21'
+    BffNotificationStatus:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
+    BffNotificationStatusHistory:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
+    BffTimelineElementV20:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV20'

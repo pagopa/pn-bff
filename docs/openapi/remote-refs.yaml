@@ -44,26 +44,17 @@ components:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-DELIVERY_PUSH                          ###
     ############################################################################################
-    TimelineElementV20:
+    BffTimelineElementV20:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementV20'
-    TimelineElement:
-      # DO NOT CHANGE: this is timeline V1 commit id.
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/5bbfdf63511b62901dfd8c4705cfb69c39eec878/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElement'
-    NotificationStatus:
+    BffNotificationStatus:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatus'
-    NotificationStatusHistory:
+    BffNotificationStatusHistory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatusHistory'
-    LegalFactDownloadMetadataResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
-    RequestStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
-    DocumentDownloadMetadataResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/api-private.yaml#/components/schemas/DocumentDownloadMetadataResponse'
 
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-DELIVERY                               ###
     ############################################################################################
-    SentNotificationV21:
+    BffSentNotificationV21:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/main/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV21'
 
     ############################################################################################

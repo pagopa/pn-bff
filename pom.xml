@@ -1,249 +1,238 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>it.pagopa.pn</groupId>
-		<artifactId>pn-parent</artifactId>
-		<version>2.1.1</version>
-		<relativePath />
-	</parent>
-	<artifactId>pn-bff</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<name>pn-bff</name>
-	<description>Backend for frontend della piattaforma SEND</description>
-	<scm>
-		<connection>${git.conn}</connection>
-		<developerConnection>${git.devConn}</developerConnection>
-		<url>${git.url}</url>
-	  <tag>HEAD</tag>
-  </scm>
-	<properties>
-		<pagopa.codegen.version>v01.03.03</pagopa.codegen.version>
-	</properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.pagopa.pn</groupId>
+        <artifactId>pn-parent</artifactId>
+        <version>2.1.1</version>
+        <relativePath/>
+    </parent>
+    <artifactId>pn-bff</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>pn-bff</name>
+    <description>Backend for frontend della piattaforma SEND</description>
+    <scm>
+        <connection>${git.conn}</connection>
+        <developerConnection>${git.devConn}</developerConnection>
+        <url>${git.url}</url>
+        <tag>HEAD</tag>
+    </scm>
+    <properties>
+        <pagopa.codegen.version>v01.03.03</pagopa.codegen.version>
+    </properties>
 
-	<dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>it.pagopa.pn</groupId>
+            <artifactId>pn-commons</artifactId>
+            <version>2.2.5</version>
+        </dependency>
 
-		<dependency>
-			<groupId>it.pagopa.pn</groupId>
-			<artifactId>pn-commons</artifactId>
-			<version>2.2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>it.pagopa.pn</groupId>
-			<artifactId>pn-model</artifactId>
-			<version>2.2.0</version>
-		</dependency>
+        <dependency>
+            <groupId>it.pagopa.pn</groupId>
+            <artifactId>pn-model</artifactId>
+            <version>2.2.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.6.5</version>
-		</dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.5</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!--LOCALSTACK/TESTCONTAINERS-->
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>localstack</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--LOCALSTACK/TESTCONTAINERS-->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	</dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/generated/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>pn-commons</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/dependency-resources</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>5.4.0</version>
+                <executions>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/generated/**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.2</version>
-				<executions>
-					<execution>
-						<id>unpack-dependencies</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeArtifactIds>pn-commons</includeArtifactIds>
-							<outputDirectory>${project.build.directory}/dependency-resources</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>5.4.0</version>
-				<executions>
+                    <!-- OPEN API PRIVATE PN-BFF-->
+                    <execution>
+                        <id>pn-internal-bff-private</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
 
-					<!-- OPEN API PRIVATE PN-BFF-->
-					<execution>
-						<id>pn-internal-bff-private</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<phase>process-resources</phase>
-						<configuration>
-							<inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff.yaml</inputSpec>
-							<generatorName>spring</generatorName>
-              				<library>spring-boot</library>
-							<modelNameSuffix />
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server</templateDirectory>
-							<generateApiDocumentation>false</generateApiDocumentation>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<configOptions>
-								<basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-								<modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
-								<apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
-								<configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
-								<dateLibrary>java8</dateLibrary>
-								<delegatePattern>true</delegatePattern>
-								<interfaceOnly>true</interfaceOnly>
-								<annotationLibrary>none</annotationLibrary>
-								<documentationProvider>source</documentationProvider>
-								<openApiNullable>false</openApiNullable>
-								<reactive>true</reactive>
-								<skipDefaultInterface>false</skipDefaultInterface>
-								<useTags>true</useTags>
-								<additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true); @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
-							</configOptions>				
-						</configuration>
-					</execution>
+                    <!-- OPEN API PRIVATE PN-DELIVERY RECIPIENT-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-delivery-recipient</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <typeMappings>
+                                <typeMapping>OffsetDateTime=java.time.Instant</typeMapping>
+                            </typeMappings>
 
-					<!-- OPEN API PRIVATE PN-DELIVERY RECIPIENT-->
-					<execution>
-						<phase>generate-resources</phase>
-						<id>generate-client-pn-delivery-recipient</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<typeMappings>
-								<typeMapping>OffsetDateTime=java.time.Instant</typeMapping>
-							</typeMappings>
+                            <!--<importMappings>
+                                <importMapping>
+                                    CxTypeAuthFleet=it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet
+                                </importMapping>
+                                <importMapping>
+                                    FullReceivedNotificationV21=it.pagopa.pn.bff.generated.openapi.server.v1.dto.FullReceivedNotificationV21
+                                </importMapping>
+                            </importMappings>-->
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/0e860b83ed8cc6928b3c408efb0f32a7af8ac0cc/docs/openapi/api-internal-web-recipient.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
 
-							<importMappings>
-								<importMapping>
-									CxTypeAuthFleet=it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet
-								</importMapping>
-								<importMapping>
-									FullReceivedNotificationV21=it.pagopa.pn.bff.generated.openapi.server.v1.dto.FullReceivedNotificationV21
-								</importMapping>
-							</importMappings>
-							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery/0e860b83ed8cc6928b3c408efb0f32a7af8ac0cc/docs/openapi/api-internal-web-recipient.yaml</inputSpec>
-							<generatorName>java</generatorName>
-							<library>webclient</library>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client</templateDirectory>
-							<configOptions>
-								<apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api</apiPackage>
-								<modelPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.model</modelPackage>
-								<dateLibrary>java8</dateLibrary>
-								<delegatePattern>true</delegatePattern>
-								<interfaceOnly>true</interfaceOnly>
-								<annotationLibrary>none</annotationLibrary>
-								<documentationProvider>source</documentationProvider>
-								<openApiNullable>false</openApiNullable>
-								<reactive>true</reactive>
-								<skipDefaultInterface>false</skipDefaultInterface>
-								<useTags>true</useTags>
-							</configOptions>
-						</configuration>
-					</execution>
-
-					<!-- DATA VAULT -->
-					<execution>
-						<id>generate-client-data-vault</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<phase>process-resources</phase>
-						<configuration>
-							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-data-vault/1c1bcaef3837a15f866596a6d9af94e3978805ff/docs/openapi/pn-datavault-api-v1.yaml</inputSpec>
-							<generatorName>java</generatorName>
-							<library>resttemplate</library>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client</templateDirectory>
-							<configOptions>
-								<apiPackage>${project.groupId}.delivery.generated.openapi.msclient.datavault.v1.api</apiPackage>
-								<modelPackage>${project.groupId}.delivery.generated.openapi.msclient.datavault.v1.model</modelPackage>
-								<dateLibrary>java8</dateLibrary>
-								<annotationLibrary>none</annotationLibrary>
-								<documentationProvider>source</documentationProvider>
-								<openApiNullable>false</openApiNullable>
-								<useAbstractionForFiles>true</useAbstractionForFiles>
-								<useBeanValidation>false</useBeanValidation>
-							</configOptions>
-						</configuration>
-					</execution>
-
-					<!-- OPEN API PRIVATE PN-DELIVERY PA-->
-<!--					<execution>-->
-<!--						<phase>generate-resources</phase>-->
-<!--						<id>generate-client-pn-delivery-pa</id>-->
-<!--						<goals>-->
-<!--							<goal>generate</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery/0e860b83ed8cc6928b3c408efb0f32a7af8ac0cc/docs/openapi/api-internal-web-pa.yaml</inputSpec>-->
-<!--							<generatorName>java</generatorName>-->
-<!--							<library>webclient</library>-->
-<!--							<generateApiTests>false</generateApiTests>-->
-<!--							<generateModelTests>false</generateModelTests>-->
-<!--							<typeMappings><typeMapping>OffsetDateTime=Instant</typeMapping></typeMappings>-->
-<!--							<importMappings><importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping></importMappings>-->
-<!--							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client</templateDirectory>-->
-<!--							<configOptions>-->
-<!--								<apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.api</apiPackage>-->
-<!--								<modelPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.model</modelPackage>-->
-<!--								<dateLibrary>java8</dateLibrary>-->
-<!--								<delegatePattern>true</delegatePattern>-->
-<!--								<interfaceOnly>true</interfaceOnly>-->
-<!--								<annotationLibrary>none</annotationLibrary>-->
-<!--								<documentationProvider>source</documentationProvider>-->
-<!--								<openApiNullable>false</openApiNullable>-->
-<!--								<reactive>true</reactive>-->
-<!--								<skipDefaultInterface>false</skipDefaultInterface>-->
-<!--								<useTags>true</useTags>-->
-<!--							</configOptions>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-				</executions>
-			</plugin>			 		 
-		</plugins>
-	</build>
+                    <!-- OPEN API PRIVATE PN-DELIVERY PA-->
+                    <!--					<execution>-->
+                    <!--						<phase>generate-resources</phase>-->
+                    <!--						<id>generate-client-pn-delivery-pa</id>-->
+                    <!--						<goals>-->
+                    <!--							<goal>generate</goal>-->
+                    <!--						</goals>-->
+                    <!--						<configuration>-->
+                    <!--							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery/0e860b83ed8cc6928b3c408efb0f32a7af8ac0cc/docs/openapi/api-internal-web-pa.yaml</inputSpec>-->
+                    <!--							<generatorName>java</generatorName>-->
+                    <!--							<library>webclient</library>-->
+                    <!--							<generateApiTests>false</generateApiTests>-->
+                    <!--							<generateModelTests>false</generateModelTests>-->
+                    <!--							<typeMappings><typeMapping>OffsetDateTime=Instant</typeMapping></typeMappings>-->
+                    <!--							<importMappings><importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping></importMappings>-->
+                    <!--							<templateDirectory>${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client</templateDirectory>-->
+                    <!--							<configOptions>-->
+                    <!--								<apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.api</apiPackage>-->
+                    <!--								<modelPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.model</modelPackage>-->
+                    <!--								<dateLibrary>java8</dateLibrary>-->
+                    <!--								<delegatePattern>true</delegatePattern>-->
+                    <!--								<interfaceOnly>true</interfaceOnly>-->
+                    <!--								<annotationLibrary>none</annotationLibrary>-->
+                    <!--								<documentationProvider>source</documentationProvider>-->
+                    <!--								<openApiNullable>false</openApiNullable>-->
+                    <!--								<reactive>true</reactive>-->
+                    <!--								<skipDefaultInterface>false</skipDefaultInterface>-->
+                    <!--								<useTags>true</useTags>-->
+                    <!--							</configOptions>-->
+                    <!--						</configuration>-->
+                    <!--					</execution>-->
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
