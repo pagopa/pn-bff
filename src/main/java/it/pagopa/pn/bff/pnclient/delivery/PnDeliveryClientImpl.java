@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.pnclient.delivery;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV21;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -15,10 +15,10 @@ public class PnDeliveryClientImpl {
 
     private final RecipientReadApi recipientReadApi;
 
-    public Mono<FullReceivedNotificationV21> retrieveNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullReceivedNotificationV23> retrieveNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                   String xPagopaPnCxId, String iun,
                                                                   List<String> xPagopaPnCxGroups, String mandateId) {
-        return recipientReadApi.getReceivedNotificationV21(
+        return recipientReadApi.getReceivedNotificationV23(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

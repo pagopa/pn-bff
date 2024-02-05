@@ -69,6 +69,13 @@
             <artifactId>localstack</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
+            <version>5.11.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -172,7 +179,7 @@
                                 </importMapping>
                             </importMappings>-->
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/0e860b83ed8cc6928b3c408efb0f32a7af8ac0cc/docs/openapi/api-internal-web-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/develop/docs/openapi/api-internal-web-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

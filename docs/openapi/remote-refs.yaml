@@ -54,8 +54,8 @@ components:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-DELIVERY                               ###
     ############################################################################################
-    BffSentNotificationV21:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/main/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV21'
+    BffSentNotificationV23:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/develop/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
 
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###

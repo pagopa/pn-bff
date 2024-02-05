@@ -70,7 +70,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/BffFullReceivedNotificationV21"
+                $ref: "#/components/schemas/BffFullReceivedNotificationV23"
         '400':
           description: Bad request
           content:
@@ -117,12 +117,12 @@ components:
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'
 
-    BffFullReceivedNotificationV21:
+    BffFullReceivedNotificationV23:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
         inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
       allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV21'
+        - $ref: '#/components/schemas/BffSentNotificationV23'
         - type: object
           required:
             - notificationStatus
@@ -140,8 +140,8 @@ components:
               items:
                 $ref: '#/components/schemas/BffTimelineElementV20'
 
-    BffSentNotificationV21:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV21'
+    BffSentNotificationV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
     BffNotificationStatus:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:

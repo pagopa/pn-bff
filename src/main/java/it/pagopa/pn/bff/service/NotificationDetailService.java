@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.service;
 
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV21;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientImpl;
@@ -20,14 +20,13 @@ public class NotificationDetailService {
 
     private final PnDeliveryClientImpl pnDeliveryClient;
     private final NotificationDetailMapper notificationDetailMapper;
-    private final ConverterUtils converterUtils;
 
-    public Mono<BffFullReceivedNotificationV21> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<BffFullReceivedNotificationV23> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                       String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
                                                                       String iun, String mandateId) {
         return pnDeliveryClient.retrieveNotification(
                 xPagopaPnUid,
-                converterUtils.convertCXType(xPagopaPnCxType),
+                ConverterUtils.convertCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups,

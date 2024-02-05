@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV21;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class NotificationDetailController implements NotificationReceivedApi {
     }
 
     @Override
-    public Mono<ResponseEntity<BffFullReceivedNotificationV21>> getReceivedNotification(String xPagopaPnUid,
+    public Mono<ResponseEntity<BffFullReceivedNotificationV23>> getReceivedNotification(String xPagopaPnUid,
                                                                                         CxTypeAuthFleet xPagopaPnCxType,
                                                                                         String xPagopaPnCxId,
                                                                                         String iun,
