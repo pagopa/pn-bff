@@ -24,6 +24,7 @@ public class NotificationDetailService {
     public Mono<BffFullReceivedNotificationV23> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                       String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
                                                                       String iun, String mandateId) {
+        log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
         return pnDeliveryClient.retrieveNotification(
                 xPagopaPnUid,
                 ConverterUtils.convertCXType(xPagopaPnCxType),

@@ -10,17 +10,19 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PostConstruct;
 
 @Configuration
-@ConfigurationProperties( prefix = "pn.bff")
+@ConfigurationProperties(prefix = "pn.bff")
 @Data
 @Import({SharedAutoConfiguration.class})
 @Slf4j
 public class PnBffConfigs {
     private String deliveryPushBaseUrl;
+
     @PostConstruct
-    public void init(){
-        log.info("CONFIGURATION {}",this);
+    public void init() {
+        log.info("CONFIGURATION {}", this);
     }
 
     @Data
-    public static class Topics { }
+    public static class Topics {
+    }
 }

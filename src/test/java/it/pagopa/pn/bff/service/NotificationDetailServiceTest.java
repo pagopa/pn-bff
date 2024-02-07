@@ -9,11 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ContextConfiguration(classes = {NotificationDetailService.class})
 public class NotificationDetailServiceTest {
     @Autowired
     private NotificationDetailService notificationDetailService;

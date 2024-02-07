@@ -5,7 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailService;
-import lombok.extern.slf4j.Slf4j;
+import it.pagopa.pn.commons.exceptions.PnRuntimeException;
+import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-@Slf4j
+@CustomLog
 @RestController
 public class NotificationDetailController implements NotificationReceivedApi {
 
@@ -32,10 +33,19 @@ public class NotificationDetailController implements NotificationReceivedApi {
                                                                                         List<String> xPagopaPnCxGroups,
                                                                                         String mandateId,
                                                                                         final ServerWebExchange exchange) {
-
-        return notificationDetailService.getNotificationDetail(
+        log.logStartingProcess("getReceivedNotification");
+        Mono<BffFullReceivedNotificationV23> serviceResponse;
+        serviceResponse = notificationDetailService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iun, mandateId
-        ).map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        );
+
+        try {
+            log.logEndingProcess("getReceivedNotification");
+            return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        } catch (PnRuntimeException exc) {
+            log.info("Exception on getReceivedNotification: {}", exc.getProblem());
+            throw exc;
+        }
     }
 
 }
