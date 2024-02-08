@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN BFF BE Microservice
+  title: PN BFF BE Microservice - Mittenti
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff
-  x-summary: 'API di pn-bff esposte al Web'
+  x-api-id: api-internal-pn-bff-pa
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -24,6 +24,10 @@ tags:
   - name: StatusTemplate
     description: >-
       Invocazioni per sapere lo stato del microservizio
+  - name: SenderReadB2B
+    description: >-
+      Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
+      di notifica inviate e delle notifiche accettate.
 
 paths:
   '/bff/status':
@@ -46,81 +50,62 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  '/bff/notifications/received/{iun}':
+  "/bff/notifications/sent/{iun}":
     get:
-      summary: Accesso notifiche ricevute
-      description: >-
-        Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
-        notifiche ricevute.
+      summary: 'Mittente: lettura dettagli notifica versione 2'
+      description: |-
+        Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
-        - NotificationReceived
-      operationId: getReceivedNotification
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+        - SenderReadB2B
+      operationId: getSentNotificationV23                                      # NO EXTERNAL
+      #      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
       parameters:
         - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
         - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
         - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
         - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
         - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/notificationSearchMandateId'
       responses:
         '200':
           description: OK
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/BffFullReceivedNotificationV23"
+                $ref: '#/components/schemas/BffFullSentNotificationV23'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '404':
-          description: Not Found
+        '500':
+          description: Internal error
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
+
 components:
-
   parameters:
-    ############################################################################################
-    ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
-    ############################################################################################
+    ### PARAMETRI DI AUTENTICAZIONE
     cxTypeAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
     cxIdAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxIdAuthFleet'              # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
     cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'          # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
     uidAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
 
+    ### PARAMETRI RECUPERO NOTIFICA
     pathIun:
-      $ref: './remote-refs.yaml#/components/parameters/pathIun'
-    notificationSearchMandateId:
-      $ref: './remote-refs.yaml#/components/parameters/notificationSearchMandateId'
-
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
+      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
 
   schemas:
-
-    StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
-
-    Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
-
-    BffFullReceivedNotificationV23:
+    BffFullSentNotificationV23:
       description: >-
-        Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
-        inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
+        Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
+        processo di inoltro della notifica verso il cittadino.
       allOf:
         - $ref: '#/components/schemas/BffSentNotificationV23'
         - type: object
@@ -135,10 +120,21 @@ components:
               $ref: '#/components/schemas/BffNotificationStatusHistory'
             timeline:
               description: >-
-                elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
+                Elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/BffTimelineElementV20'
+                $ref: '#/components/schemas/BffTimelineElementV23'
+            recipientIds: # NO EXTERNAL
+              description: Lista degli identificativi anonimizzati dei destinatari      # NO EXTERNAL
+              type: array                                                               # NO EXTERNAL
+              items: # NO EXTERNAL
+                type: string                                                            # NO EXTERNAL
+            sourceChannel: # NO EXTERNAL
+              type: string                                                              # NO EXTERNAL
+              description: Canale sorgente della richiesta di notifica                  # NO EXTERNAL
+            sourceChannelDetails: # NO EXTERNAL
+              type: string                                                              # NO EXTERNAL
+              description: Dettagli del canale sorgente della richiesta di notifica     # NO EXTERNAL
 
     BffSentNotificationV23:
       $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
@@ -146,5 +142,10 @@ components:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV20:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV20'
+    BffTimelineElementV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'

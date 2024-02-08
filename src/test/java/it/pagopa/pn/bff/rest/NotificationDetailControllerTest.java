@@ -16,7 +16,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-@WebFluxTest(NotificationDetailController.class)
+@WebFluxTest(ReceivedNotificationController.class)
 public class NotificationDetailControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
     public static final String UID = "Uid";
@@ -27,7 +27,7 @@ public class NotificationDetailControllerTest {
     @MockBean
     private NotificationDetailService notificationDetailService;
     @SpyBean
-    private NotificationDetailController notificationDetailController;
+    private ReceivedNotificationController receivedNotificationController;
 
     @Test
     void getReceivedNotification() {
@@ -68,5 +68,5 @@ public class NotificationDetailControllerTest {
     }
 
     ;
-    
+
 }

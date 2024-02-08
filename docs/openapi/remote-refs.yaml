@@ -44,12 +44,12 @@ components:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-DELIVERY_PUSH                          ###
     ############################################################################################
-    BffTimelineElementV20:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementV20'
+    BffTimelineElementV23:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementV23'
     BffNotificationStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatus'
     BffNotificationStatusHistory:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/3a6a266b166664f1e8a9832883caf32973a2aedc/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatusHistory'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatusHistory'
 
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-DELIVERY                               ###

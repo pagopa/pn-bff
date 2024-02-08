@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN BFF BE Microservice
+  title: PN BFF BE Microservice - Destinatari
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff
-  x-summary: 'API di pn-bff esposte al Web'
+  x-api-id: api-internal-pn-bff-recipient
+  x-summary: 'API di pn-bff esposte al Web per i destinatari'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -24,6 +24,9 @@ tags:
   - name: StatusTemplate
     description: >-
       Invocazioni per sapere lo stato del microservizio
+  - name: NotificationReceived
+    description: >-
+      Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
   '/bff/status':
@@ -58,6 +61,10 @@ paths:
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
+        - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/notificationSearchMandateId'
       responses:
@@ -66,7 +73,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/BffFullReceivedNotificationV21"
+                $ref: "#/components/schemas/BffFullReceivedNotificationV23"
         '400':
           description: Bad request
           content:
@@ -74,7 +81,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '404':
-          description: Not Found - PN_DELIVERY_USER_ID_NOT_RECIPIENT_OR_DELEGATOR
+          description: Not Found
           content:
             application/problem+json:
               schema:
@@ -87,11 +94,19 @@ components:
     ############################################################################################
     ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
     ############################################################################################
+    cxTypeAuthFleet: # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+    cxIdAuthFleet: # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxIdAuthFleet'              # NO EXTERNAL
+    cxGroupsAuthFleet: # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'          # NO EXTERNAL
+    uidAuthFleet: # NO EXTERNAL
+      $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
 
     pathIun:
-      $ref: './remote-refs.yaml#/components/parameters/pathIun'
+      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
     notificationSearchMandateId:
-      $ref: './remote-refs.yaml#/components/parameters/notificationSearchMandateId'
+      $ref: './parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
 
   responses:
     UnauthorizedError:
@@ -105,12 +120,12 @@ components:
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'
 
-    BffFullReceivedNotificationV21:
+    BffFullReceivedNotificationV23:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
         inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
       allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV21'
+        - $ref: '#/components/schemas/BffSentNotificationV23'
         - type: object
           required:
             - notificationStatus
@@ -126,13 +141,13 @@ components:
                 elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/BffTimelineElementV20'
+                $ref: '#/components/schemas/BffTimelineElementV23'
 
-    BffSentNotificationV21:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV21'
+    BffSentNotificationV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
     BffNotificationStatus:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV20:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV20'
+    BffTimelineElementV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'

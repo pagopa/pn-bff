@@ -1,0 +1,12 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    ############################################################################################
+    ###                             PARAMETRI RECUPERO NOTIFICA                              ###
+    ############################################################################################
+    pathIun:
+      $ref: './remote-refs.yaml#/components/parameters/pathIun'
+    notificationSearchMandateId:
+      $ref: './remote-refs.yaml#/components/parameters/notificationSearchMandateId'

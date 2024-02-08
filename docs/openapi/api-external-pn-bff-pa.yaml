@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Mittenti
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-pa
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: StatusTemplate
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+  - name: SenderReadB2B
+    description: >-
+      Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
+      di notifica inviate e delle notifiche accettate.
+
+paths:
+  '/bff/status':
+    get:
+      summary: Get Status of application
+      operationId: getStatus
+      tags:
+        - StatusTemplate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusSchema'
+        '500':
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+  "/bff/notifications/sent/{iun}":
+    get:
+      summary: 'Mittente: lettura dettagli notifica versione 2'
+      description: |-
+        Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
+      tags:
+        - SenderReadB2B
+      #      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/BffFullSentNotificationV23'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+components:
+  parameters:
+    ### PARAMETRI DI AUTENTICAZIONE
+
+    ### PARAMETRI RECUPERO NOTIFICA
+    pathIun:
+      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
+
+  schemas:
+    BffFullSentNotificationV23:
+      description: >-
+        Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
+        processo di inoltro della notifica verso il cittadino.
+      allOf:
+        - $ref: '#/components/schemas/BffSentNotificationV23'
+        - type: object
+          required:
+            - notificationStatus
+            - notificationStatusHistory
+            - timeline
+          properties:
+            notificationStatus:
+              $ref: '#/components/schemas/BffNotificationStatus'
+            notificationStatusHistory:
+              $ref: '#/components/schemas/BffNotificationStatusHistory'
+            timeline:
+              description: >-
+                Elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
+              type: array
+              items:
+                $ref: '#/components/schemas/BffTimelineElementV23'
+
+    BffSentNotificationV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
+    BffNotificationStatus:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
+    BffNotificationStatusHistory:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
+    BffTimelineElementV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'

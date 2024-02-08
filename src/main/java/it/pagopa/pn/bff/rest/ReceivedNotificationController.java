@@ -17,11 +17,11 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class NotificationDetailController implements NotificationReceivedApi {
+public class ReceivedNotificationController implements NotificationReceivedApi {
 
     private final NotificationDetailService notificationDetailService;
 
-    public NotificationDetailController(NotificationDetailService notificationDetailService) {
+    public ReceivedNotificationController(NotificationDetailService notificationDetailService) {
         this.notificationDetailService = notificationDetailService;
     }
 
