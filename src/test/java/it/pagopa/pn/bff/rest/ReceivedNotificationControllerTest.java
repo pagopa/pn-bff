@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.NotificationDetailService;
+import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @WebFluxTest(ReceivedNotificationController.class)
-public class NotificationDetailControllerTest {
+public class ReceivedNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
     public static final String UID = "Uid";
     public static final String CX_ID = "CxId";
@@ -25,14 +25,14 @@ public class NotificationDetailControllerTest {
     @Autowired
     WebTestClient webTestClient;
     @MockBean
-    private NotificationDetailService notificationDetailService;
+    private NotificationDetailRecipientService notificationDetailRecipientService;
     @SpyBean
     private ReceivedNotificationController receivedNotificationController;
 
     @Test
     void getReceivedNotification() {
 
-        Mockito.when(notificationDetailService.getNotificationDetail(
+        Mockito.when(notificationDetailRecipientService.getNotificationDetail(
                         Mockito.<String>any(),
                         Mockito.<CxTypeAuthFleet>any(),
                         Mockito.<String>any(),
@@ -57,7 +57,7 @@ public class NotificationDetailControllerTest {
                 .isOk()
                 .expectBody(BffFullReceivedNotificationV23.class);
 
-        Mockito.verify(notificationDetailService).getNotificationDetail(
+        Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
                 UID,
                 CX_TYPE,
                 CX_ID,

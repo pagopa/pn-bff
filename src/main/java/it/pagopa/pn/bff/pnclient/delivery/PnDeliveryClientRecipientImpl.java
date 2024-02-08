@@ -14,13 +14,13 @@ import java.util.List;
 @Component
 @CustomLog
 @RequiredArgsConstructor
-public class PnDeliveryClientImpl {
+public class PnDeliveryClientRecipientImpl {
 
     private final RecipientReadApi recipientReadApi;
 
-    public Mono<FullReceivedNotificationV23> retrieveNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                  String xPagopaPnCxId, String iun,
-                                                                  List<String> xPagopaPnCxGroups, String mandateId) {
+    public Mono<FullReceivedNotificationV23> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                     String xPagopaPnCxId, String iun,
+                                                                     List<String> xPagopaPnCxGroups, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
         return recipientReadApi.getReceivedNotificationV23(
                 xPagopaPnUid,
@@ -32,5 +32,4 @@ public class PnDeliveryClientImpl {
         );
     }
 
-    ;
 }

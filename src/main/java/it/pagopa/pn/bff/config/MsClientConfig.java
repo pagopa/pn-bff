@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.config;
 
 import it.pagopa.pn.bff.PnBffConfigs;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
@@ -20,4 +21,11 @@ public class MsClientConfig extends CommonBaseClient {
         return new RecipientReadApi(apiClient);
     }
 
+    @Bean
+    @Primary
+    SenderReadB2BApi senderReadB2BApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.ApiClient senderApiClient = new it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.ApiClient(initWebClient(ApiClient.buildWebClientBuilder()));
+        senderApiClient.setBasePath(cfg.getDeliveryPushBaseUrl());
+        return new SenderReadB2BApi(senderApiClient);
+    }
 }

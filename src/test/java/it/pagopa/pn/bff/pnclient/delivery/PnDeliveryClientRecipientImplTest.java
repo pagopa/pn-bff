@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {PnDeliveryClientImpl.class})
+@ContextConfiguration(classes = {PnDeliveryClientRecipientImpl.class})
 @ExtendWith(SpringExtension.class)
-class PnDeliveryClientImplTest {
+class PnDeliveryClientRecipientImplTest {
     @Autowired
-    private PnDeliveryClientImpl pnDeliveryClientImpl;
+    private PnDeliveryClientRecipientImpl pnDeliveryClientRecipientImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
     private RecipientReadApi recipientReadApi;
 
@@ -41,7 +41,7 @@ class PnDeliveryClientImplTest {
 
 
         assertSame(fullReceivedNotificationV21,
-                pnDeliveryClientImpl.retrieveNotification(
+                pnDeliveryClientRecipientImpl.getReceivedNotification(
                         "UID",
                         CxTypeAuthFleet.PF,
                         "CX_ID",

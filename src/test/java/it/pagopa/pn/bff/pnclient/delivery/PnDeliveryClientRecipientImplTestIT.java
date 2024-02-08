@@ -21,13 +21,13 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@ContextConfiguration(classes = {PnDeliveryClientImpl.class})
+@ContextConfiguration(classes = {PnDeliveryClientRecipientImpl.class})
 @TestPropertySource(properties = {
         "pn.bff.delivery-push-base-url=http://localhost:9998",
 })
-public class PnDeliveryClientImplTestIT {
+public class PnDeliveryClientRecipientImplTestIT {
     @Autowired
-    private PnDeliveryClientImpl deliveryClient;
+    private PnDeliveryClientRecipientImpl deliveryClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
     private RecipientReadApi recipientReadApi;
     private static ClientAndServer mockServer;
@@ -57,7 +57,7 @@ public class PnDeliveryClientImplTestIT {
                         .withStatusCode(200)
                 );
 
-        deliveryClient.retrieveNotification(
+        deliveryClient.getReceivedNotification(
                 "Uid",
                 CxTypeAuthFleet.PF,
                 "CxId",
@@ -68,7 +68,7 @@ public class PnDeliveryClientImplTestIT {
 
         // Then
         assertDoesNotThrow(() -> {
-            deliveryClient.retrieveNotification(
+            deliveryClient.getReceivedNotification(
                     "Uid",
                     CxTypeAuthFleet.PF,
                     "CxId",

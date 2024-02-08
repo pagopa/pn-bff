@@ -4,7 +4,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
-import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientImpl;
+import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.utils.ConverterUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,18 +16,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationDetailService {
+public class NotificationDetailRecipientService {
 
-    private final PnDeliveryClientImpl pnDeliveryClient;
+    private final PnDeliveryClientRecipientImpl pnDeliveryClient;
     private final NotificationDetailMapper notificationDetailMapper;
 
     public Mono<BffFullReceivedNotificationV23> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                       String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
                                                                       String iun, String mandateId) {
         log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
-        return pnDeliveryClient.retrieveNotification(
+        return pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
-                ConverterUtils.convertCXType(xPagopaPnCxType),
+                ConverterUtils.convertRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups,

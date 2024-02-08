@@ -50,7 +50,7 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  "/bff/notifications/sent/{iun}":
+  '/bff/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica versione 2'
       description: |-
@@ -86,6 +86,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
+
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
     cxTypeAuthFleet: # NO EXTERNAL
@@ -102,6 +103,9 @@ components:
       $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
 
   schemas:
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
     BffFullSentNotificationV23:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
@@ -145,7 +149,5 @@ components:
     BffTimelineElementV23:
       $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
 
-    StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'
