@@ -25,7 +25,7 @@ import static org.mockserver.model.HttpResponse.response;
 @TestPropertySource(properties = {
         "pn.bff.delivery-push-base-url=http://localhost:9998",
 })
-public class PnDeliveryClientRecipientImplTestIT {
+public class PnDeliveryClientRecipientTest {
     @Autowired
     private PnDeliveryClientRecipientImpl deliveryClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")

@@ -13,5 +13,6 @@ public class PnBffRestConstants {
     private static final String BFF_PATH = "bff";
 
     public static final String NOTIFICATION_RECEIVED_PATH = BFF_PATH + "/notifications/received/{iun}";
+    public static final String NOTIFICATION_SENT_PATH = BFF_PATH + "/notifications/sent/{iun}";
 
 }
