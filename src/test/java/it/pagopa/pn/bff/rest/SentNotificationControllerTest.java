@@ -45,7 +45,7 @@ public class SentNotificationControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path("/" + PnBffRestConstants.NOTIFICATION_SENT_PATH)
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UID)

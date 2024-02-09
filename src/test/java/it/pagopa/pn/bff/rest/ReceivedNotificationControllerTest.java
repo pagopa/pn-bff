@@ -46,7 +46,7 @@ public class ReceivedNotificationControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path("/" + PnBffRestConstants.NOTIFICATION_RECEIVED_PATH)
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UID)

@@ -12,15 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import reactor.core.publisher.Mono;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 @ContextConfiguration(classes = {NotificationDetailPAService.class})
 public class NotificationDetailPaServiceTest {
     @Autowired
     private NotificationDetailPAService notificationDetailPAService;
     private PnDeliveryClientPAImpl pnDeliveryClientPA;
-
+    NotificationDetailMapper modelMapperMock = mock(NotificationDetailMapper.class);
+    
     @BeforeEach
     void setup() {
         this.pnDeliveryClientPA = mock(PnDeliveryClientPAImpl.class);
@@ -38,7 +41,7 @@ public class NotificationDetailPaServiceTest {
                 Mockito.<java.util.List<String>>any()
         )).thenReturn(Mono.just(new FullSentNotificationV23()));
 
-        when(NotificationDetailMapper.modelMapper.mapSentNotificationDetail(Mockito.<FullSentNotificationV23>any()))
+        when(modelMapperMock.mapSentNotificationDetail(any(FullSentNotificationV23.class)))
                 .thenReturn(new BffFullSentNotificationV23());
 
         notificationDetailPAService.getSentNotificationDetail(

@@ -20,6 +20,7 @@ public class NotificationDetailRecipientServiceTest {
     @Autowired
     private NotificationDetailRecipientService notificationDetailRecipientService;
     private PnDeliveryClientRecipientImpl pnDeliveryClient;
+    NotificationDetailMapper modelMapperMock = mock(NotificationDetailMapper.class);
 
     @BeforeEach
     void setup() {
@@ -38,7 +39,7 @@ public class NotificationDetailRecipientServiceTest {
                 Mockito.<String>any()
         )).thenReturn(Mono.just(new FullReceivedNotificationV23()));
 
-        when(NotificationDetailMapper.modelMapper.mapNotificationDetail(Mockito.<FullReceivedNotificationV23>any()))
+        when(modelMapperMock.mapNotificationDetail(Mockito.<FullReceivedNotificationV23>any()))
                 .thenReturn(new BffFullReceivedNotificationV23());
 
         notificationDetailRecipientService.getNotificationDetail(
