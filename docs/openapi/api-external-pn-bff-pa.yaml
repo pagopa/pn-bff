@@ -30,7 +30,7 @@ tags:
       di notifica inviate e delle notifiche accettate.
 
 paths:
-  '/bff/status':
+  '/status':
     get:
       summary: Get Status of application
       operationId: getStatus
@@ -50,14 +50,14 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  "/bff/notifications/sent/{iun}":
+  '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica versione 2'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
         - SenderReadB2B
-      #      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
+      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -81,6 +81,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
+
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
 
@@ -89,6 +90,9 @@ components:
       $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
 
   schemas:
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
     BffFullSentNotificationV23:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
@@ -121,7 +125,5 @@ components:
     BffTimelineElementV23:
       $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
 
-    StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

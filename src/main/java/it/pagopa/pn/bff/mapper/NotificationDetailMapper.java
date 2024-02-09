@@ -4,20 +4,16 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNot
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.control.DeepClone;
+import org.mapstruct.factory.Mappers;
 
-@Slf4j
-@Component
-public class NotificationDetailMapper {
-    ModelMapper modelMapper = new ModelMapper();
+@Mapper(mappingControl = DeepClone.class, uses = DateMapper.class)
+public interface NotificationDetailMapper {
 
-    public BffFullReceivedNotificationV23 mapNotificationDetail(FullReceivedNotificationV23 notification) {
-        return modelMapper.map(notification, BffFullReceivedNotificationV23.class);
-    }
+    NotificationDetailMapper modelMapper = Mappers.getMapper(NotificationDetailMapper.class);
+    
+    BffFullReceivedNotificationV23 mapNotificationDetail(FullReceivedNotificationV23 notification);
 
-    public BffFullSentNotificationV23 mapSentNotificationDetail(FullSentNotificationV23 notification) {
-        return modelMapper.map(notification, BffFullSentNotificationV23.class);
-    }
+    BffFullSentNotificationV23 mapSentNotificationDetail(FullSentNotificationV23 notification);
 }

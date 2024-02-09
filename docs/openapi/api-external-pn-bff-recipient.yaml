@@ -49,7 +49,7 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  '/bff/notifications/received/{iun}':
+  '/bff/v1/notifications/received/{iun}':
     get:
       summary: Accesso notifiche ricevute
       description: >-
@@ -69,7 +69,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/BffFullReceivedNotificationV23"
+                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
         '400':
           description: Bad request
           content:
@@ -87,10 +87,9 @@ paths:
 components:
 
   parameters:
-    ############################################################################################
-    ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
-    ############################################################################################
+    ### PARAMETRI DI AUTENTICAZIONE
 
+    ### PARAMETRI RECUPERO NOTIFICA
     pathIun:
       $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
     notificationSearchMandateId:
@@ -101,12 +100,8 @@ components:
       description: Access token is missing or invalid
 
   schemas:
-
     StatusSchema:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
-
-    Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
 
     BffFullReceivedNotificationV23:
       description: >-
@@ -139,3 +134,6 @@ components:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
     BffTimelineElementV23:
       $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'

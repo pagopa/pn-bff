@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 7kLpp49iwk0KyOT8N4sDnOh1oDlKTxOz4dfGND8Dluk=
+  version: LuPsO44D2uzuToBwTAsZls2mfAvMjxReaptInID8cQU=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -11,6 +11,70 @@ servers:
     x-amazon-apigateway-endpoint-configuration:
       disableExecuteApiEndpoint: true
 paths:
+  /v1/notifications/sent/{iun}:
+    get:
+      summary: 'Mittente: lettura dettagli notifica versione 2'
+      description: >-
+        Questa operazione permette di leggere tutti i dettagli di una notifica
+        accettata.
+      tags:
+        - SenderReadB2B
+      operationId: retrieveSentNotificationV23
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffFullSentNotificationV23'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/sent/{iun} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
   /status:
     get:
       summary: Get Status of application
@@ -63,70 +127,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /notifications/sent/{iun}:
-    get:
-      summary: 'Mittente: lettura dettagli notifica versione 2'
-      description: >-
-        Questa operazione permette di leggere tutti i dettagli di una notifica
-        accettata.
-      tags:
-        - SenderReadB2B
-      parameters:
-        - $ref: '#/components/parameters/pathIun'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BffFullSentNotificationV23'
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
-          description: Internal error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/notifications/sent/{iun}
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters:
-          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
-          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
-          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
-          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
-          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
-          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
-          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-          integration.request.path.iun: method.request.path.iun
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
-    options:
-      operationId: Options for /notifications/sent/{iun} API CORS
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/notifications/sent/{iun}
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters:
-          integration.request.path.iun: method.request.path.iun
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
-  /notifications/received/{iun}:
+  /v1/notifications/received/{iun}:
     get:
       summary: Accesso notifiche ricevute
       description: >-
@@ -163,7 +164,7 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/notifications/received/{iun}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -181,10 +182,10 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /notifications/received/{iun} API CORS
+      operationId: Options for /v1/notifications/received/{iun} API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/notifications/received/{iun}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -213,6 +214,17 @@ components:
       schema:
         type: string
   schemas:
+    StatusSchema:
+      title: Stato dell'applicazione
+      type: object
+      properties:
+        status:
+          type: string
+          description: Stato dell'applicazione.
+      required:
+        - status
+      example:
+        status: OK
     BffFullSentNotificationV23:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica
@@ -244,17 +256,6 @@ components:
       $ref: '#/components/schemas/NotificationStatusHistory'
     BffTimelineElementV23:
       $ref: '#/components/schemas/TimelineElementV23'
-    StatusSchema:
-      title: Stato dell'applicazione
-      type: object
-      properties:
-        status:
-          type: string
-          description: Stato dell'applicazione.
-      required:
-        - status
-      example:
-        status: OK
     Problem:
       properties:
         type:
@@ -300,27 +301,6 @@ components:
       required:
         - status
         - errors
-    ProblemError:
-      properties:
-        code:
-          description: Internal code of the error, in human-readable format
-          example: >-
-            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
-            | etc...
-          type: string
-        element:
-          description: Parameter or request body field name for validation error
-          example: body.order.item[2].quantity
-          type: string
-        detail:
-          description: >-
-            A human readable explanation specific to this occurrence of the
-            problem.
-          example: Parameter not valid
-          maxLength: 1024
-          type: string
-      required:
-        - code
     TaxId:
       description: C.F. persona fisica o persona giuridica
       type: string
@@ -2051,6 +2031,27 @@ components:
           $ref: '#/components/schemas/TimelineElementCategoryV23'
         details:
           $ref: '#/components/schemas/TimelineElementDetailsV23'
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: >-
+            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
+            | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: >-
+            A human readable explanation specific to this occurrence of the
+            problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+        - code
     BffFullReceivedNotificationV23:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il

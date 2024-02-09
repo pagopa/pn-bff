@@ -30,7 +30,7 @@ tags:
       di notifica inviate e delle notifiche accettate.
 
 paths:
-  '/bff/status':
+  '/status':
     get:
       summary: Get Status of application
       operationId: getStatus
@@ -50,7 +50,7 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  '/bff/notifications/sent/{iun}':
+  '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica versione 2'
       description: |-
@@ -58,7 +58,7 @@ paths:
       tags:
         - SenderReadB2B
       operationId: getSentNotificationV23                                      # NO EXTERNAL
-      #      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
+#      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
       parameters:
         - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
         - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL

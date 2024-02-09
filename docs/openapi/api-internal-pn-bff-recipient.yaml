@@ -49,7 +49,7 @@ paths:
               schema:
                 $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
-  '/bff/notifications/received/{iun}':
+  '/bff/v1/notifications/received/{iun}':
     get:
       summary: Accesso notifiche ricevute
       description: >-

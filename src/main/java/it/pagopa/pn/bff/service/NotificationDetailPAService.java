@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
@@ -18,19 +19,21 @@ import java.util.List;
 public class NotificationDetailPAService {
 
     private final PnDeliveryClientPAImpl pnDeliveryClientPA;
-    private final NotificationDetailMapper notificationDetailMapper;
 
     public Mono<BffFullSentNotificationV23> getSentNotificationDetail(String xPagopaPnUid,
                                                                       CxTypeAuthFleet xPagopaPnCxType,
                                                                       String xPagopaPnCxId, String iun,
                                                                       List<String> xPagopaPnCxGroups
     ) {
-        return pnDeliveryClientPA.getSentNotification(
+        Mono<FullSentNotificationV23> notificationDetail;
+        notificationDetail = pnDeliveryClientPA.getSentNotification(
                 xPagopaPnUid,
                 ConverterUtils.convertPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups
-        ).map(notificationDetailMapper::mapSentNotificationDetail);
+        );
+
+        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapSentNotificationDetail);
     }
 }
