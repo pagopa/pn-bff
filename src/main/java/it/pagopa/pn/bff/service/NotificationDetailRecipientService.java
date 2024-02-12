@@ -4,9 +4,9 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mapper.CxTypeMapper;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
-import it.pagopa.pn.bff.utils.ConverterUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class NotificationDetailRecipientService {
         Mono<FullReceivedNotificationV23> notificationDetail;
         notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
-                ConverterUtils.convertRecipientCXType(xPagopaPnCxType),
+                CxTypeMapper.cxTypeMapper.convertRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups,
