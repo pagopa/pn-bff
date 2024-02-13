@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -23,7 +26,7 @@ public class NotificationDetailPaServiceTest {
     private NotificationDetailPAService notificationDetailPAService;
     private PnDeliveryClientPAImpl pnDeliveryClientPA;
     NotificationDetailMapper modelMapperMock = mock(NotificationDetailMapper.class);
-    
+
     @BeforeEach
     void setup() {
         this.pnDeliveryClientPA = mock(PnDeliveryClientPAImpl.class);
@@ -59,5 +62,26 @@ public class NotificationDetailPaServiceTest {
                 Mockito.<String>any(),
                 Mockito.<java.util.List<String>>any()
         );
+    }
+
+    @Test
+    void testGetNotificationDetailIunNotFound() {
+        when(pnDeliveryClientPA.getSentNotification(
+                Mockito.<String>any(),
+                Mockito.<CxTypeAuthFleet>any(),
+                Mockito.<String>any(),
+                Mockito.<String>any(),
+                Mockito.<java.util.List<String>>any()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(notificationDetailPAService.getSentNotificationDetail(
+                        "UID",
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        "CX_ID",
+                        "IUN",
+                        null
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException)
+                .verify();
     }
 }
