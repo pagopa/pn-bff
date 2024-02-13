@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
@@ -8,6 +9,7 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -34,7 +36,7 @@ public class SentNotificationController implements SenderReadB2BApi {
         Mono<BffFullSentNotificationV23> serviceResponse;
         serviceResponse = notificationDetailPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
-        );
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         log.logEndingProcess("getSentNotificationV23");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

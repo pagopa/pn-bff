@@ -81,7 +81,8 @@ public class NotificationDetailPaServiceTest {
                         "IUN",
                         null
                 ))
-                .expectErrorMatches(throwable -> throwable instanceof PnBffException)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
 }

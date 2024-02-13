@@ -1,15 +1,16 @@
 package it.pagopa.pn.bff.rest;
 
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
-import it.pagopa.pn.commons.exceptions.PnRuntimeException;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -37,14 +38,10 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
         Mono<BffFullReceivedNotificationV23> serviceResponse;
         serviceResponse = notificationDetailRecipientService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iun, mandateId
-        );
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
-        try {
-            log.logEndingProcess("getReceivedNotification");
-            return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
-        } catch (PnRuntimeException exc) {
-            log.info("Exception on getReceivedNotification: {}", exc.getProblem());
-            throw exc;
-        }
+
+        log.logEndingProcess("getReceivedNotification");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }
