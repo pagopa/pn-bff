@@ -139,7 +139,7 @@
                 <version>5.4.0</version>
                 <executions>
 
-                    <!-- OPEN API PRIVATE PN-BFF RECIPIENT-->
+                    <!-- OPEN API PN-BFF RECIPIENT-->
                     <execution>
                         <id>pn-internal-bff-private-recipient</id>
                         <goals>
@@ -180,7 +180,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PRIVATE PN-DELIVERY PA-->
+                    <!-- OPEN API PN-BFF PA-->
                     <execution>
                         <id>pn-internal-bff-private-pa</id>
                         <goals>
@@ -221,7 +221,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PRIVATE PN-DELIVERY RECIPIENT-->
+                    <!-- OPEN API PN-DELIVERY RECIPIENT-->
                     <execution>
                         <phase>generate-resources</phase>
                         <id>generate-client-pn-delivery-recipient</id>
@@ -261,7 +261,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PRIVATE PN-DELIVERY PA-->
+                    <!-- OPEN API PN-DELIVERY PA-->
                     <execution>
                         <phase>generate-resources</phase>
                         <id>generate-client-pn-delivery-pa</id>
