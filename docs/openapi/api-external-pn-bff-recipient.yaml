@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Destinatari
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-recipient
+  x-summary: 'API di pn-bff esposte al Web per i destinatari'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: StatusTemplate
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+  - name: NotificationReceived
+    description: >-
+      Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
+
+paths:
+  '/bff/status':
+    get:
+      summary: Get Status of application
+      operationId: getStatus
+      tags:
+        - StatusTemplate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusSchema'
+        '500':
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/{iun}':
+    get:
+      summary: Accesso notifiche ricevute
+      description: >-
+        Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
+        notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotification
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/notificationSearchMandateId'
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+components:
+
+  parameters:
+    ### PARAMETRI DI AUTENTICAZIONE
+
+    ### PARAMETRI RECUPERO NOTIFICA
+    pathIun:
+      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
+    notificationSearchMandateId:
+      $ref: './parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+
+  schemas:
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
+    BffFullReceivedNotificationV23:
+      description: >-
+        Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
+        inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
+      allOf:
+        - $ref: '#/components/schemas/BffSentNotificationV23'
+        - type: object
+          required:
+            - notificationStatus
+            - notificationStatusHistory
+            - timeline
+          properties:
+            notificationStatus:
+              $ref: '#/components/schemas/BffNotificationStatus'
+            notificationStatusHistory:
+              $ref: '#/components/schemas/BffNotificationStatusHistory'
+            timeline:
+              description: >-
+                elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
+              type: array
+              items:
+                $ref: '#/components/schemas/BffTimelineElementV23'
+
+    BffSentNotificationV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
+    BffNotificationStatus:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
+    BffNotificationStatusHistory:
+      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
+    BffTimelineElementV23:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'

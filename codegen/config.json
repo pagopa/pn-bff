@@ -1,12 +1,13 @@
 {
-    "openapi": [
-        {
-            "intendedUsage": "WEB",
-            "openapiFiles": [
-                "api-internal-pn-bff.yaml"
-            ],
-            "servicePath": "bff"
-        }
-    ]
+  "openapi": [
+    {
+      "intendedUsage": "WEB",
+      "openapiFiles": [
+        "api-internal-pn-bff-pa.yaml",
+        "api-internal-pn-bff-recipient.yaml"
+      ],
+      "servicePath": "bff"
+    }
+  ]
 }
     

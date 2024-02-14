@@ -12,21 +12,55 @@ components:
     cxIdAuthFleet:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxIdAuthFleet'
     cxGroupsAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroups'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroupsAuthFleet'
     uidAuthFleet:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
     cxTaxIdAuthFleet:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
 
+
+    ############################################################################################
+    ###                     PARAMETRI RICERCA NOTIFICHE                                      ###
+    ############################################################################################
+    pathIun:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/main/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
+    notificationSearchMandateId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/main/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+
   schemas:
+
+    StatusSchema:
+      title: Stato dell'applicazione
+      type: object
+      properties:
+        status:
+          type: string
+          description: Stato dell'applicazione.
+      required:
+        - status
+      example:
+        status: OK
+
     ############################################################################################
-    ###                     PARAMETRI NOTIFICA                                               ###
+    ###                          STRUTTURE DATI DI PN-DELIVERY_PUSH                          ###
     ############################################################################################
-    IUN:
-      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/d3f6dcd8b484c761959c315b444bdeafebd35968/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
+    BffTimelineElementV23:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementV23'
+    BffNotificationStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatus'
+    BffNotificationStatusHistory:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/develop/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatusHistory'
+
     ############################################################################################
-    ###                          STRUTTURE DATI DI PN-ERROR                                  ###
+    ###                          STRUTTURE DATI DI PN-DELIVERY                               ###
+    ############################################################################################
+    BffSentNotificationV23:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/develop/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
+
+    ############################################################################################
+    ###                          STRUTTURE DATI DI PN-COMMONS                                ###
     ############################################################################################
     Problem:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/61cdf0712f133c8c69e056abfad6ce5223242ba0/docs/openapi/pn-errors.yaml#/components/schemas/Problem'
-    
+    ProblemError:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/61cdf0712f133c8c69e056abfad6ce5223242ba0/docs/openapi/pn-errors.yaml#/components/schemas/ProblemError'
