@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 58h8+0GpM5vQihlOU0wWLTlDPXrDgCz3KtJESWwE+HA=
+  version: QHSZo5lxMlnGLujXwzH9rEM91984AP10EEu+rUswPr4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -162,17 +162,6 @@ components:
       schema:
         type: string
   schemas:
-    StatusSchema:
-      title: Stato dell'applicazione
-      type: object
-      properties:
-        status:
-          type: string
-          description: Stato dell'applicazione.
-      required:
-        - status
-      example:
-        status: OK
     BffFullSentNotificationV23:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica
@@ -2040,7 +2029,7 @@ components:
         identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-]+)$
         type: token
 tags:
-  - name: StatusTemplate
+  - name: HealthCheck
     description: Invocazioni per sapere lo stato del microservizio
   - name: SenderReadB2B
     description: >-
