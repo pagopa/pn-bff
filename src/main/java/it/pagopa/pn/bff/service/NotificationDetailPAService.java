@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mapper.CxTypeMapper;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
@@ -22,10 +22,10 @@ public class NotificationDetailPAService {
 
     private final PnDeliveryClientPAImpl pnDeliveryClientPA;
 
-    public Mono<BffFullSentNotificationV23> getSentNotificationDetail(String xPagopaPnUid,
-                                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                                      String xPagopaPnCxId, String iun,
-                                                                      List<String> xPagopaPnCxGroups
+    public Mono<BffFullSentNotificationV1> getSentNotificationDetail(String xPagopaPnUid,
+                                                                     CxTypeAuthFleet xPagopaPnCxType,
+                                                                     String xPagopaPnCxId, String iun,
+                                                                     List<String> xPagopaPnCxGroups
     ) {
         Mono<FullSentNotificationV23> notificationDetail;
         notificationDetail = pnDeliveryClientPA.getSentNotification(

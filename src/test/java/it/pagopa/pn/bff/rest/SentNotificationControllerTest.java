@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV23;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -40,7 +40,7 @@ public class SentNotificationControllerTest {
                         Mockito.<String>any(),
                         Mockito.<java.util.List<String>>any()
                 ))
-                .thenReturn(Mono.just(new BffFullSentNotificationV23()));
+                .thenReturn(Mono.just(new BffFullSentNotificationV1()));
 
 
         webTestClient.get()
@@ -55,7 +55,7 @@ public class SentNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffFullSentNotificationV23.class);
+                .expectBody(BffFullSentNotificationV1.class);
 
         Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
                 UID,

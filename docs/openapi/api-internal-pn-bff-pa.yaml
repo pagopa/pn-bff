@@ -24,7 +24,7 @@ tags:
   - name: HealthCheck
     description: >-
       Invocazioni per sapere lo stato del microservizio
-  - name: SenderReadB2B
+  - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
       di notifica inviate e delle notifiche accettate.
@@ -33,24 +33,32 @@ paths:
   '/status':
     get:
       summary: Get Status of application
-      operationId: HealthCheck
+      operationId: status
       tags:
-        - status
+        - HealthCheck
       responses:
         '200':
-          description: Ok
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusSchema'
         '500':
-          description: Internal Server Error
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/sent/{iun}':
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 2'
+      summary: 'Mittente: lettura dettagli notifica versione 1'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
-        - SenderReadB2B
-      operationId: getSentNotificationV23                                      # NO EXTERNAL
-#      operationId: retrieveSentNotificationV23                                # ONLY EXTERNAL
+        - NotificationSent
+      operationId: getSentNotificationV1                                      # NO EXTERNAL
+#      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
       parameters:
         - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
         - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
@@ -63,7 +71,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/BffFullSentNotificationV23'
+                $ref: '#/components/schemas/BffFullSentNotificationV1'
         '400':
           description: Bad request
           content:
@@ -95,12 +103,15 @@ components:
       $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
 
   schemas:
-    BffFullSentNotificationV23:
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
+    BffFullSentNotificationV1:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
         processo di inoltro della notifica verso il cittadino.
       allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV23'
+        - $ref: '#/components/schemas/BffSentNotificationV1'
         - type: object
           required:
             - notificationStatus
@@ -116,7 +127,7 @@ components:
                 Elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/BffTimelineElementV23'
+                $ref: '#/components/schemas/BffTimelineElementV1'
             recipientIds: # NO EXTERNAL
               description: Lista degli identificativi anonimizzati dei destinatari      # NO EXTERNAL
               type: array                                                               # NO EXTERNAL
@@ -129,14 +140,14 @@ components:
               type: string                                                              # NO EXTERNAL
               description: Dettagli del canale sorgente della richiesta di notifica     # NO EXTERNAL
 
-    BffSentNotificationV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
+    BffSentNotificationV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV1'
     BffNotificationStatus:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+    BffTimelineElementV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

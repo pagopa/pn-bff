@@ -32,14 +32,22 @@ paths:
   '/status':
     get:
       summary: Get Status of application
-      operationId: HealthCheck
+      operationId: status
       tags:
-        - status
+        - HealthCheck
       responses:
         '200':
-          description: Ok
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusSchema'
         '500':
-          description: Internal Server Error
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/received/{iun}':
     get:
@@ -49,7 +57,7 @@ paths:
         notifiche ricevute.
       tags:
         - NotificationReceived
-      operationId: getReceivedNotification
+      operationId: getReceivedNotificationV1
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -61,7 +69,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
+                $ref: '#/components/schemas/BffFullReceivedNotificationV1'
         '400':
           description: Bad request
           content:
@@ -93,12 +101,15 @@ components:
       description: Access token is missing or invalid
 
   schemas:
-    BffFullReceivedNotificationV23:
+    StatusSchema:
+      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
+    BffFullReceivedNotificationV1:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
         inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
       allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV23'
+        - $ref: '#/components/schemas/BffSentNotificationV1'
         - type: object
           required:
             - notificationStatus
@@ -114,16 +125,16 @@ components:
                 elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/BffTimelineElementV23'
+                $ref: '#/components/schemas/BffTimelineElementV1'
 
-    BffSentNotificationV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
+    BffSentNotificationV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV1'
     BffNotificationStatus:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+    BffTimelineElementV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

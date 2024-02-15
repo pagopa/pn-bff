@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: QHSZo5lxMlnGLujXwzH9rEM91984AP10EEu+rUswPr4=
+  version: VP88K0v82ZezpepdqC2NzSZtanmjY1nZuEbLu2LTFm8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -13,13 +13,13 @@ servers:
 paths:
   /v1/notifications/sent/{iun}:
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 2'
+      summary: 'Mittente: lettura dettagli notifica versione 1'
       description: >-
         Questa operazione permette di leggere tutti i dettagli di una notifica
         accettata.
       tags:
-        - SenderReadB2B
-      operationId: retrieveSentNotificationV23
+        - NotificationSent
+      operationId: retrieveSentNotificationV1
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -28,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullSentNotificationV23'
+                $ref: '#/components/schemas/BffFullSentNotificationV1'
         '400':
           description: Bad request
           content:
@@ -83,7 +83,7 @@ paths:
         dettagli delle  notifiche ricevute.
       tags:
         - NotificationReceived
-      operationId: getReceivedNotification
+      operationId: getReceivedNotificationV1
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/notificationSearchMandateId'
@@ -93,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
+                $ref: '#/components/schemas/BffFullReceivedNotificationV1'
         '400':
           description: Bad request
           content:
@@ -162,7 +162,18 @@ components:
       schema:
         type: string
   schemas:
-    BffFullSentNotificationV23:
+    StatusSchema:
+      title: Stato dell'applicazione
+      type: object
+      properties:
+        status:
+          type: string
+          description: Stato dell'applicazione.
+      required:
+        - status
+      example:
+        status: OK
+    BffFullSentNotificationV1:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica
         accettata) e il  processo di inoltro della notifica verso il cittadino.
@@ -185,13 +196,13 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/TimelineElementV23'
-    BffSentNotificationV23:
+    BffSentNotificationV1:
       $ref: '#/components/schemas/SentNotificationV23'
     BffNotificationStatus:
       $ref: '#/components/schemas/NotificationStatus'
     BffNotificationStatusHistory:
       $ref: '#/components/schemas/NotificationStatusHistory'
-    BffTimelineElementV23:
+    BffTimelineElementV1:
       $ref: '#/components/schemas/TimelineElementV23'
     Problem:
       properties:
@@ -1989,7 +2000,7 @@ components:
           type: string
       required:
         - code
-    BffFullReceivedNotificationV23:
+    BffFullReceivedNotificationV1:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il
         processo di  inoltro della notifica verso i destinatari (Persone Fisiche
@@ -2031,7 +2042,7 @@ components:
 tags:
   - name: HealthCheck
     description: Invocazioni per sapere lo stato del microservizio
-  - name: SenderReadB2B
+  - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle
       richieste  di notifica inviate e delle notifiche accettate.
