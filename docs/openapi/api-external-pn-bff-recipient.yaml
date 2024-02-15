@@ -29,7 +29,7 @@ tags:
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
-  '/bff/status':
+  '/status':
     get:
       summary: Get Status of application
       operationId: getStatus
@@ -84,6 +84,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+
 components:
 
   parameters:
