@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 @Import({SharedAutoConfiguration.class})
 @Slf4j
 public class PnBffConfigs {
-    private String deliveryPushBaseUrl;
+    private String deliveryBaseUrl;
 
     @PostConstruct
     public void init() {
