@@ -31,7 +31,7 @@ import static org.mockserver.model.HttpResponse.response;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {PnDeliveryClientRecipientImpl.class})
 @TestPropertySource(properties = {
-        "pn.bff.delivery-push-base-url=http://localhost:9998",
+        "pn.bff.delivery-base-url=http://localhost:9998",
 })
 public class PnDeliveryClientRecipientTestIT {
     @Autowired

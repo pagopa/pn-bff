@@ -21,7 +21,7 @@ servers:
   - url: https://webapi.dev.notifichedigitali.it
     description: Ambiente di sviluppo
 tags:
-  - name: StatusTemplate
+  - name: HealthCheck
     description: >-
       Invocazioni per sapere lo stato del microservizio
   - name: NotificationReceived
@@ -32,9 +32,9 @@ paths:
   '/status':
     get:
       summary: Get Status of application
-      operationId: getStatus
+      operationId: status
       tags:
-        - StatusTemplate
+        - HealthCheck
       responses:
         '200':
           description: OK
@@ -57,7 +57,7 @@ paths:
         notifiche ricevute.
       tags:
         - NotificationReceived
-      operationId: getReceivedNotification
+      operationId: getReceivedNotificationV1
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -73,7 +73,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
+                $ref: '#/components/schemas/BffFullReceivedNotificationV1'
         '400':
           description: Bad request
           content:
@@ -116,12 +116,12 @@ components:
     StatusSchema:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
 
-    BffFullReceivedNotificationV23:
+    BffFullReceivedNotificationV1:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il processo di 
         inoltro della notifica verso i destinatari (Persone Fisiche o Giuridiche).
       allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV23'
+        - $ref: '#/components/schemas/BffSentNotificationV1'
         - type: object
           required:
             - notificationStatus
@@ -137,16 +137,16 @@ components:
                 elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
               type: array
               items:
-                $ref: '#/components/schemas/BffTimelineElementV23'
+                $ref: '#/components/schemas/BffTimelineElementV1'
 
-    BffSentNotificationV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV23'
+    BffSentNotificationV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV1'
     BffNotificationStatus:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
     BffNotificationStatusHistory:
       $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV23:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV23'
+    BffTimelineElementV1:
+      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

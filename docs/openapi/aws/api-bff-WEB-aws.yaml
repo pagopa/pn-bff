@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: LuPsO44D2uzuToBwTAsZls2mfAvMjxReaptInID8cQU=
+  version: VP88K0v82ZezpepdqC2NzSZtanmjY1nZuEbLu2LTFm8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -13,13 +13,13 @@ servers:
 paths:
   /v1/notifications/sent/{iun}:
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 2'
+      summary: 'Mittente: lettura dettagli notifica versione 1'
       description: >-
         Questa operazione permette di leggere tutti i dettagli di una notifica
         accettata.
       tags:
-        - SenderReadB2B
-      operationId: retrieveSentNotificationV23
+        - NotificationSent
+      operationId: retrieveSentNotificationV1
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -28,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullSentNotificationV23'
+                $ref: '#/components/schemas/BffFullSentNotificationV1'
         '400':
           description: Bad request
           content:
@@ -75,58 +75,6 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /status:
-    get:
-      summary: Get Status of application
-      operationId: getStatus
-      tags:
-        - StatusTemplate
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatusSchema'
-        '500':
-          description: InternalServerError
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/status
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters:
-          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
-          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
-          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
-          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
-          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
-          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
-          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
-      parameters: []
-    options:
-      operationId: Options for /status API CORS
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/status
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters: {}
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
   /v1/notifications/received/{iun}:
     get:
       summary: Accesso notifiche ricevute
@@ -135,7 +83,7 @@ paths:
         dettagli delle  notifiche ricevute.
       tags:
         - NotificationReceived
-      operationId: getReceivedNotification
+      operationId: getReceivedNotificationV1
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/notificationSearchMandateId'
@@ -145,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullReceivedNotificationV23'
+                $ref: '#/components/schemas/BffFullReceivedNotificationV1'
         '400':
           description: Bad request
           content:
@@ -225,7 +173,7 @@ components:
         - status
       example:
         status: OK
-    BffFullSentNotificationV23:
+    BffFullSentNotificationV1:
       description: >-
         Le informazioni riguardanti una notifica (richiesta di notifica
         accettata) e il  processo di inoltro della notifica verso il cittadino.
@@ -248,13 +196,13 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/TimelineElementV23'
-    BffSentNotificationV23:
+    BffSentNotificationV1:
       $ref: '#/components/schemas/SentNotificationV23'
     BffNotificationStatus:
       $ref: '#/components/schemas/NotificationStatus'
     BffNotificationStatusHistory:
       $ref: '#/components/schemas/NotificationStatusHistory'
-    BffTimelineElementV23:
+    BffTimelineElementV1:
       $ref: '#/components/schemas/TimelineElementV23'
     Problem:
       properties:
@@ -2052,7 +2000,7 @@ components:
           type: string
       required:
         - code
-    BffFullReceivedNotificationV23:
+    BffFullReceivedNotificationV1:
       description: >-
         Le informazioni riguardanti una richiesta di notifica accettata e il
         processo di  inoltro della notifica verso i destinatari (Persone Fisiche
@@ -2092,9 +2040,9 @@ components:
         identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-]+)$
         type: token
 tags:
-  - name: StatusTemplate
+  - name: HealthCheck
     description: Invocazioni per sapere lo stato del microservizio
-  - name: SenderReadB2B
+  - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle
       richieste  di notifica inviate e delle notifiche accettate.

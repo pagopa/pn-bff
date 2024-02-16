@@ -28,7 +28,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @ContextConfiguration(classes = {PnDeliveryClientPAImpl.class})
 @TestPropertySource(properties = {
-        "pn.bff.delivery-push-base-url=http://localhost:9998",
+        "pn.bff.delivery-base-url=http://localhost:9998",
 })
 public class PnDeliveryClientPATestIT {
     @Autowired
@@ -118,4 +118,3 @@ public class PnDeliveryClientPATestIT {
                 .verify();
     }
 }
-

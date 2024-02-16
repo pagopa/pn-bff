@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV23;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mapper.CxTypeMapper;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
@@ -23,9 +23,9 @@ public class NotificationDetailRecipientService {
 
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
 
-    public Mono<BffFullReceivedNotificationV23> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                      String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
-                                                                      String iun, String mandateId) {
+    public Mono<BffFullReceivedNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                     String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
+                                                                     String iun, String mandateId) {
         log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
         Mono<FullReceivedNotificationV23> notificationDetail;
         notificationDetail = pnDeliveryClient.getReceivedNotification(
