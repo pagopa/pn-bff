@@ -17,7 +17,7 @@ public class MsClientConfig extends CommonBaseClient {
     @Primary
     RecipientReadApi recipientReadApi(PnBffConfigs cfg) {
         ApiClient apiClient = new ApiClient(initWebClient(ApiClient.buildWebClientBuilder()));
-        apiClient.setBasePath(cfg.getDeliveryPushBaseUrl());
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
         return new RecipientReadApi(apiClient);
     }
 
@@ -25,7 +25,7 @@ public class MsClientConfig extends CommonBaseClient {
     @Primary
     SenderReadB2BApi senderReadB2BApi(PnBffConfigs cfg) {
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.ApiClient senderApiClient = new it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.ApiClient(initWebClient(ApiClient.buildWebClientBuilder()));
-        senderApiClient.setBasePath(cfg.getDeliveryPushBaseUrl());
+        senderApiClient.setBasePath(cfg.getDeliveryBaseUrl());
         return new SenderReadB2BApi(senderApiClient);
     }
 }
