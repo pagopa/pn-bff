@@ -1,0 +1,265 @@
+info:
+  version: 1.0
+components:
+  schemas:
+    NotificationDetailTimeline:
+      type: object
+      required:
+        - elementId
+        - timestamp
+        - category
+        - details
+      properties:
+        elementId:
+          type: string
+        timestamp:
+          type: string
+        legalFactsIds:
+          type: array
+          items:
+            type: object
+            oneOf:
+              - $ref: "#/components/schemas/LegalFactId"
+              - $ref: "./schemas-notification-documents.yaml#/components/schemas/NotificationDetailOtherDocument"
+        category:
+          $ref: "./notification-enums.yaml#/components/schemas/TimelineCategory"
+        details:
+          $ref: "#/components/schemas/NotificationDetailTimelineDetails"
+        hidden:
+          type: boolean;
+        index:
+          type: integer;
+
+    NotificationDetailTimelineDetails:
+      type: object
+      oneOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - $ref: "#/components/schemas/AarDetails"
+        - $ref: "#/components/schemas/ViewedDetails"
+        - $ref: "#/components/schemas/AnalogWorkflowDetails"
+        - $ref: "#/components/schemas/DigitalWorkflowDetails"
+        - $ref: "#/components/schemas/AddressInfoDetails"
+        - $ref: "#/components/schemas/PublicRegistryCallDetails"
+        - $ref: "#/components/schemas/PublicRegistryResponseDetails"
+        - $ref: "#/components/schemas/RequestRefusedDetails"
+        - $ref: "#/components/schemas/ScheduleDigitalWorkflowDetails"
+        - $ref: "#/components/schemas/SendCourtesyMessageDetails"
+        - $ref: "#/components/schemas/SendDigitalDetails"
+        - $ref: "#/components/schemas/SendPaperDetails"
+        - $ref: "#/components/schemas/PaidDetails"
+        - $ref: "#/components/schemas/NotHandledDetails"
+
+    BaseDetails:
+      type: object
+      properties:
+        recIndex:
+          type: integer
+        eventTimestamp:
+          type: string
+
+    AarDetails:
+      type: object
+      properties:
+        recIndex:
+          type: integer
+        errors:
+          type: array
+          items:
+            type: string
+        generatedAarUrl:
+          type: string
+        numberOfPages:
+          type: integer
+
+    ViewedDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            delegateInfo:
+              internalId:
+                type: string
+              taxId:
+                type: string
+              operatorUuid:
+                type: string
+              mandateId:
+                type: string
+              denomination:
+                type: string
+              delegateType:
+                $ref: "./notification-enums.yaml#/components/schemas/RecipientType"
+
+    AnalogWorkflowDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            physicalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/PhysicalAddress"
+
+    DigitalWorkflowDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            digitalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+
+    AddressInfoDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            digitalAddressSource:
+              $ref: "./notification-enums.yaml#/components/schemas/AddressSource"
+            isAvailable:
+              type: boolean
+            attemptDate:
+              type: string
+
+    PublicRegistryCallDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            deliveryMode:
+              $ref: "./notification-enums.yaml#/components/schemas/NotificationDeliveryMode"
+            contactPhase:
+              $ref: "./notification-enums.yaml#/components/schemas/ContactPhase"
+            sentAttemptMade:
+              type: integer
+            sendDate:
+              type: string
+
+    PublicRegistryResponseDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            digitalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+            physicalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/PhysicalAddress"
+
+    RequestRefusedDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: string
+
+    ScheduleDigitalWorkflowDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+        - type: object
+          properties:
+            digitalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+            digitalAddressSource:
+              $ref: "./notification-enums.yaml#/components/schemas/AddressSource"
+            sentAttemptMade:
+              type: integer
+            lastAttemptDate:
+              type: string
+
+    SendCourtesyMessageDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            digitalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+            sendDate:
+              type: string
+            ioSendMessageResult:
+              $ref: "./notification-enums.yaml#/components/schemas/AppIoCourtesyMessageEventType"
+
+    SendDigitalDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            digitalAddress:
+              $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
+            responseStatus:
+              $ref: "./notification-enums.yaml#/components/schemas/SimpleResponseStatus"
+            deliveryDetailCode:
+              type: string
+            digitalAddressSource:
+              $ref: "./notification-enums.yaml#/components/schemas/AddressSource"
+            retryNumber:
+              type: integer
+            notificationDate:
+              type: string
+
+    SendPaperDetails:
+      allOf:
+        - $ref: "#/components/schemas/AnalogWorkflowDetails"
+        - type: object
+          properties:
+            serviceLevel:
+              $ref: "./notification-enums.yaml#/components/schemas/PhysicalCommunicationType"
+            productType:
+              type: string
+            registeredLetterCode:
+              type: string
+            responseStatus:
+              $ref: "./notification-enums.yaml#/components/schemas/ResponseStatus"
+            deliveryFailureCause:
+              type: string
+            deliveryDetailCode:
+              type: string
+            sendRequestId:
+              type: string
+            attachments:
+              type: array
+              items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    documentType:
+                      type: string
+                    url:
+                      type: string
+
+    PaidDetails:
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            paymentSourceChannel:
+              type: string
+            recipientType:
+              $ref: "./notification-enums.yaml#/components/schemas/RecipientType"
+            amount:
+              type: number;
+            creditorTaxId:
+              type: string
+            noticeCode:
+              type: string
+            uncertainPaymentDate:
+              type: boolean
+
+    NotHandledDetails:
+        allOf:
+            - $ref: "#/components/schemas/BaseDetails"
+            - type: object
+              properties:
+                reasonCode:
+                  type: string
+                reason:
+                  type: string
+
+    LegalFactId:
+      type: object
+      properties:
+        key:
+          type: string
+        category:
+          $ref: "./notification-enums.yaml#/components/schemas/LegalFactType"

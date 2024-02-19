@@ -1,0 +1,142 @@
+info:
+  version: 1.0
+components:
+  schemas:
+    NotificationStatus:
+      type: string
+      enum:
+        - IN_VALIDATION
+        - ACCEPTED
+        - DELIVERING
+        - DELIVERED
+        - VIEWED
+        - EFFECTIVE_DATE
+        - PAID
+        - UNREACHABLE
+        - CANCELLED
+        - REFUSED
+        - CANCELLATION_IN_PROGRESS
+
+    PhysicalCommunicationType:
+      type: string
+      enum:
+        - AR_REGISTERED_LETTER
+        - REGISTERED_LETTER_890
+
+    NotificationFeePolicy:
+      type: string
+      enum:
+        - FLAT_RATE
+        - DELIVERY_MODE
+
+    NotificationDeliveryMode:
+      type: string
+      enum:
+        - analog
+        - digital
+
+    RecipientType:
+      type: string
+      enum:
+        - PF
+        - PG
+
+    DigitalDomicileType:
+      type: string
+      enum:
+        - PEC
+        - EMAIL
+        - APPIO
+        - SMS
+
+    AddressSource:
+      type: string
+      enum:
+        - PLATFORM
+        - SPECIAL
+        - GENERAL
+
+    ContactPhase:
+      type: string
+      enum:
+        - CHOOSE_DELIVERY
+        - SEND_ATTEMPT
+
+    AppIoCourtesyMessageEventType:
+      type: string
+      enum:
+        - SENT_COURTESY
+        - SENT_OPTIN
+        - NOT_SENT_OPTIN_ALREADY_SENT
+
+    SimpleResponseStatus:
+      type: string
+      enum:
+        - OK
+        - KO
+
+    ResponseStatus:
+      type: string
+      enum:
+        - OK
+        - PROGRESS
+        - PROGRESS_WITH_RETRY
+        - KO
+
+    TimelineCategory:
+      type: string
+      enum:
+        - REQUEST_ACCEPTED
+        - SEND_COURTESY_MESSAGE
+        - GET_ADDRESS
+        - PUBLIC_REGISTRY_CALL
+        - PUBLIC_REGISTRY_RESPONSE
+        - SCHEDULE_ANALOG_WORKFLOW
+        - SCHEDULE_DIGITAL_WORKFLOW
+        - SEND_DIGITAL_DOMICILE
+        - SEND_DIGITAL_PROGRESS
+        - SEND_DIGITAL_FEEDBACK
+        - REFINEMENT
+        - SCHEDULE_REFINEMENT
+        - DIGITAL_SUCCESS_WORKFLOW
+        - DIGITAL_FAILURE_WORKFLOW
+        - ANALOG_SUCCESS_WORKFLOW
+        - ANALOG_FAILURE_WORKFLOW
+        - SEND_SIMPLE_REGISTERED_LETTER
+        - SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
+        - NOTIFICATION_VIEWED
+        - SEND_ANALOG_DOMICILE
+        - PAYMENT
+        - COMPLETELY_UNREACHABLE
+        - REQUEST_REFUSED
+        - NOT_HANDLED
+        - PREPARE_SIMPLE_REGISTERED_LETTER
+        - PREPARE_ANALOG_DOMICILE
+        - PREPARE_ANALOG_DOMICILE_FAILURE
+        - SEND_ANALOG_PROGRESS
+        - SEND_ANALOG_FEEDBACK
+        - AAR_GENERATION
+        - NOTIFICATION_CANCELLATION_REQUEST
+        - NOTIFICATION_CANCELLED
+
+    LegalFactType:
+      type: string
+      enum:
+        - AAR
+        - SENDER_ACK
+        - DIGITAL_DELIVERY
+        - ANALOG_DELIVERY
+        - ANALOG_FAILURE_DELIVERY
+        - RECIPIENT_ACCESS
+        - PEC_RECEIPT
+
+
+
+
+
+
+
+
+
+
+
