@@ -42,22 +42,6 @@ components:
         status: OK
 
     ############################################################################################
-    ###                          STRUTTURE DATI DI PN-DELIVERY_PUSH                          ###
-    ############################################################################################
-    BffTimelineElementV1:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/657ce23d087cdc1266e4f97070410d09c8a045d0/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementV23'
-    BffNotificationStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/657ce23d087cdc1266e4f97070410d09c8a045d0/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatus'
-    BffNotificationStatusHistory:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/657ce23d087cdc1266e4f97070410d09c8a045d0/docs/openapi/schemas-pn-status.yaml#/components/schemas/NotificationStatusHistory'
-
-    ############################################################################################
-    ###                          STRUTTURE DATI DI PN-DELIVERY                               ###
-    ############################################################################################
-    BffSentNotificationV1:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
-
-    ############################################################################################
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###
     ############################################################################################
     Problem:

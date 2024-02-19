@@ -1,5 +1,5 @@
 info:
-  version: 1.0
+  version: v1.0
 components:
   schemas:
     NotificationAttachment:
@@ -49,24 +49,24 @@ components:
           maxLength: 256
 
     NotificationDetailDocument:
-        description: >-
-            Documento della notifica.
-        allOf:
-            - $ref: "#/components/schemas/NotificationAttachment"
-            - type: object
-              properties:
-                title:
-                  type: string
-                requiresAck:
-                  type: string
-                docIdx:
-                  type: string
-                documentId:
-                  type: string
-                documentType:
-                  type: string
-                recIndex:
-                  type: integer
+      description: >-
+        Documento della notifica.
+      allOf:
+        - $ref: "#/components/schemas/NotificationAttachment"
+        - type: object
+          properties:
+            title:
+              type: string
+            requiresAck:
+              type: string
+            docIdx:
+              type: string
+            documentId:
+              type: string
+            documentType:
+              type: string
+            recIndex:
+              type: integer
 
     NotificationDetailOtherDocument:
       type: object

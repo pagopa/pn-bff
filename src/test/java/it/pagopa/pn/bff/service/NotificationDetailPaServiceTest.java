@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ public class NotificationDetailPaServiceTest {
         )).thenReturn(Mono.just(new FullSentNotificationV23()));
 
         when(modelMapperMock.mapSentNotificationDetail(any(FullSentNotificationV23.class)))
-                .thenReturn(new BffFullSentNotificationV1());
+                .thenReturn(new BffFullNotificationV1());
 
         notificationDetailPAService.getSentNotificationDetail(
                 "UID",

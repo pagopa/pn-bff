@@ -1,5 +1,5 @@
 info:
-  version: 1.0
+  version: v1.0
 components:
   schemas:
     NotificationDetailTimeline:
@@ -9,6 +9,7 @@ components:
         - timestamp
         - category
         - details
+      additionalProperties: false
       properties:
         elementId:
           type: string
@@ -19,16 +20,16 @@ components:
           items:
             type: object
             oneOf:
-              - $ref: "#/components/schemas/LegalFactId"
-              - $ref: "./schemas-notification-documents.yaml#/components/schemas/NotificationDetailOtherDocument"
+              - "$ref": "#/components/schemas/LegalFactId"
+              - "$ref": "./schemas-notification-documents.yaml#/components/schemas/NotificationDetailOtherDocument"
         category:
           $ref: "./notification-enums.yaml#/components/schemas/TimelineCategory"
         details:
           $ref: "#/components/schemas/NotificationDetailTimelineDetails"
         hidden:
-          type: boolean;
+          type: boolean
         index:
-          type: integer;
+          type: integer
 
     NotificationDetailTimelineDetails:
       type: object
@@ -77,18 +78,20 @@ components:
         - type: object
           properties:
             delegateInfo:
-              internalId:
-                type: string
-              taxId:
-                type: string
-              operatorUuid:
-                type: string
-              mandateId:
-                type: string
-              denomination:
-                type: string
-              delegateType:
-                $ref: "./notification-enums.yaml#/components/schemas/RecipientType"
+              type: object
+              properties:
+                internalId:
+                  type: string
+                taxId:
+                  type: string
+                operatorUuid:
+                  type: string
+                mandateId:
+                  type: string
+                denomination:
+                  type: string
+                delegateType:
+                  $ref: "./notification-enums.yaml#/components/schemas/RecipientType"
 
     AnalogWorkflowDetails:
       allOf:
@@ -219,14 +222,14 @@ components:
             attachments:
               type: array
               items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    documentType:
-                      type: string
-                    url:
-                      type: string
+                type: object
+                properties:
+                  id:
+                    type: string
+                  documentType:
+                    type: string
+                  url:
+                    type: string
 
     PaidDetails:
       allOf:
@@ -238,7 +241,7 @@ components:
             recipientType:
               $ref: "./notification-enums.yaml#/components/schemas/RecipientType"
             amount:
-              type: number;
+              type: integer
             creditorTaxId:
               type: string
             noticeCode:
@@ -247,14 +250,14 @@ components:
               type: boolean
 
     NotHandledDetails:
-        allOf:
-            - $ref: "#/components/schemas/BaseDetails"
-            - type: object
-              properties:
-                reasonCode:
-                  type: string
-                reason:
-                  type: string
+      allOf:
+        - $ref: "#/components/schemas/BaseDetails"
+        - type: object
+          properties:
+            reasonCode:
+              type: string
+            reason:
+              type: string
 
     LegalFactId:
       type: object

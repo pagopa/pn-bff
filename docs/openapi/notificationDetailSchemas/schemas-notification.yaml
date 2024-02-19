@@ -1,7 +1,8 @@
 info:
-  version: 1.0
+  version: v1.0
 components:
   schemas:
+
     IUN:
       description: Identificativo Univoco Notifica
       type: string
@@ -32,7 +33,7 @@ components:
       minLength: 11
       pattern: '^\d+$'
 
-    BffNotification:
+    BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend
       required:
@@ -52,10 +53,12 @@ components:
       properties:
         idempotenceToken:
           type: string
+          # ASCII printable characters
           pattern: ^[ -~]*$
           maxLength: 256
         paProtocolNumber:
           type: string
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
         subject:
@@ -83,9 +86,7 @@ components:
         cancelledIun:
           $ref: '#/components/schemas/IUN'
         physicalCommunicationType:
-          type: object
-          properties:
-            $ref: './notification-enums.yaml#/components/schemas/PhysicalCommunicationType'
+          $ref: './notification-enums.yaml#/components/schemas/PhysicalCommunicationType'
         senderDenomination:
           $ref: '#/components/schemas/Denomination'
         paymentExpirationDate:
@@ -97,10 +98,12 @@ components:
           $ref: '#/components/schemas/paTaxId'
         group:
           type: string
+          # ASCII printable characters
           pattern: ^[ -~]*$
           maxLength: 1024
         senderPaId:
           type: string
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
         iun:
@@ -121,7 +124,7 @@ components:
         timeline:
           type: array
           items:
-            $ref: './schemas-notification-timeline/yaml#/components/schemas/NotificationDetailTimeline'
+            $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
         amount:
           type: number
           format: int32
@@ -133,9 +136,10 @@ components:
 
     NotificationStatusHistory:
       type: object
+      additionalProperties: false
       properties:
         status:
-          $ref: './notification-enums#/components/schemas/NotificationStatus'
+          $ref: './notification-enums.yaml#/components/schemas/NotificationStatus'
         activeFrom:
           type: string
           format: date-time
@@ -146,7 +150,7 @@ components:
         steps:
           type: array
           items:
-            $ref: './schemas-notification-timeline/yaml#/components/schemas/NotificationDetailTimeline'
+            $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
         recipient:
           type: string
         deliveryMode:
@@ -162,17 +166,20 @@ components:
         at:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
         address:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           minLength: 2
           maxLength: 1024
         addressDetails:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           maxLength: 1024
         zip:
@@ -184,22 +191,26 @@ components:
         municipality:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           minLength: 2
           maxLength: 256
         municipalityDetails:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
         province:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
         foreignState:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          # wide range of characters
           pattern: ^.*$
           maxLength: 256
 
@@ -216,3 +227,4 @@ components:
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           pattern: ^([a-zA-Z0-9]+(?:[.\-_][a-zA-Z0-9]+){0,10}@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+){0,10}(?:\.[a-zA-Z0-9]{2,10}))$
           maxLength: 320
+          # 64 chars for the user and 255 chars for the domain, + 1 char for the '@'

@@ -1,5 +1,5 @@
 info:
-  version: 1.0
+  version: v1.0
 components:
   schemas:
     NotificationDetailRecipient:
@@ -24,10 +24,10 @@ components:
           maxLength: 80
           pattern: ^.*$
         digitalDomicile:
-          $ref: "./schemas-notification.yaml#/components/schemas/DigitalDomicile"
+          $ref: "./schemas-notification.yaml#/components/schemas/DigitalAddress"
         physicalAddress:
           $ref: "./schemas-notification.yaml#/components/schemas/PhysicalAddress"
         payments:
           type: array
           items:
-            $ref: "./schemas-notification-payment.yaml/components/schemas/NotificationDetailPayment"
+            $ref: "./schemas-notification-payment.yaml#/components/schemas/NotificationDetailPayment"
