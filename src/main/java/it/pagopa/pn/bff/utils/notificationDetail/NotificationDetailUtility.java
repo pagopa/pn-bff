@@ -29,9 +29,9 @@ public class NotificationDetailUtility {
     public static boolean isInternalAppIoEvent(NotificationDetailTimeline step) {
         if (step.getCategory() == TimelineCategory.SEND_COURTESY_MESSAGE) {
             NotificationDetailTimelineDetails details = step.getDetails();
-            return details.getDigitalAddress().getType() == DigitalDomicileType.APPIO
+            return details.getDigitalAddress().getType().equals("APPIO")
                     && details.getIoSendMessageResult() != null
-                    && !details.getIoSendMessageResult().equals(AppIoCourtesyMessageEventType.SENT_COURTESY);
+                    && !details.getIoSendMessageResult().equals(IoSendMessageResult.SENT_COURTESY);
         } else {
             return false;
         }
@@ -82,7 +82,7 @@ public class NotificationDetailUtility {
                     .findFirst();
 
             if (timelineCancellationRequestElement.isPresent()) {
-                OffsetDateTime timestamp = OffsetDateTime.parse(timelineCancellationRequestElement.get().getTimestamp());
+                OffsetDateTime timestamp = timelineCancellationRequestElement.get().getTimestamp();
 
                 NotificationStatusHistory notificationStatusHistoryElement =
                         new NotificationStatusHistory(NotificationStatus.CANCELLATION_IN_PROGRESS, timestamp, new ArrayList<>(), new ArrayList<>(), null, null);
@@ -106,7 +106,7 @@ public class NotificationDetailUtility {
             otherDocuments = timelineFiltered.stream()
                     .map(t -> {
                         final Integer recIndex = t.getDetails().getRecIndex();
-                        final List<NotificationDetailRecipient> recipients = bffFullNotificationV1.getRecipients();
+                        final List<NotificationRecipientV23> recipients = bffFullNotificationV1.getRecipients();
                         final String recipientData = isMultiRecipient && recIndex != null
                                 ? " - " + recipients.get(recIndex).getDenomination() + "(" + recipients.get(recIndex).getTaxId() + ")"
                                 : "";

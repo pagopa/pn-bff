@@ -125,7 +125,7 @@ public class NotificationMacroStepPopulator {
                 stepsToShift.sort(NotificationDetailUtility::fromLatestToEarliest);
                 deliveringStatus.getSteps().addAll(0, stepsToShift);
                 status.setSteps(new ArrayList<>(status.getSteps().subList(lastDeliveredIndexToShift + 1, status.getSteps().size())));
-                status.setActiveFrom(NotificationDetailUtility.parseOffsetDateTime(deliveringStatus.getSteps().get(0).getTimestamp()));
+                status.setActiveFrom(deliveringStatus.getSteps().get(0).getTimestamp());
             }
 
             status.getSteps().sort(NotificationDetailUtility::fromLatestToEarliest);

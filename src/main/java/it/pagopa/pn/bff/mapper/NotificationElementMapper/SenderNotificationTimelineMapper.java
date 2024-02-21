@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.mapper.NotificationElementMapper;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationDetailTimeline;
+import it.pagopa.pn.bff.mapper.DateMapper;
 import it.pagopa.pn.bff.utils.notificationDetail.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -9,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = {DateMapper.class})
 public interface SenderNotificationTimelineMapper {
 
     RecipientNotificationTimelineMapper paTimelineMapper = Mappers.getMapper(RecipientNotificationTimelineMapper.class);

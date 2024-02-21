@@ -3,136 +3,27 @@ info:
 components:
   schemas:
 
-    IUN:
-      description: Identificativo Univoco Notifica
-      type: string
-      minLength: 25
-      maxLength: 25
-      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
-
-    Denomination:
-      description: Denominazione ente o persona fisica / ragione sociale
-      type: string
-      x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-      minLength: 1
-      maxLength: 80
-      pattern: ^.*$
-
-    TaxId:
-      description: C.F. persona fisica o persona giuridica
-      type: string
-      x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-      minLength: 11
-      maxLength: 16
-      pattern: ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
-
-    paTaxId:
-      description: Payment PA fiscal code
-      type: string
-      maxLength: 11
-      minLength: 11
-      pattern: '^\d+$'
-
     BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend
-      required:
-        - paProtocolNumber
-        - subject
-        - recipients
-        - documents
-        - notificationFeePolicy
-        - physicalCommunicationType
-        - senderPaId
-        - iun
-        - sentAt
-        - notificationStatus
-        - notificationStatusHistory
-        - timeline
-      type: object
-      properties:
-        idempotenceToken:
-          type: string
-          # ASCII printable characters
-          pattern: ^[ -~]*$
-          maxLength: 256
-        paProtocolNumber:
-          type: string
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
-        subject:
-          type: string
-          maxLength: 134
-          # wide range of characters
-          pattern: ^.*$
-        abstract:
-          type: string
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 1024
-        recipients:
-          type: array
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          items:
-            $ref: './schemas-notification-recipient.yaml#/components/schemas/NotificationDetailRecipient'
-        documents:
-          type: array
-          items:
-            $ref: './schemas-notification-documents.yaml#/components/schemas/NotificationDetailDocument'
-          minItems: 1
-        notificationFeePolicy:
-          $ref: './notification-enums.yaml#/components/schemas/NotificationFeePolicy'
-        cancelledIun:
-          $ref: '#/components/schemas/IUN'
-        physicalCommunicationType:
-          $ref: './notification-enums.yaml#/components/schemas/PhysicalCommunicationType'
-        senderDenomination:
-          $ref: '#/components/schemas/Denomination'
-        paymentExpirationDate:
-          type: string
-          minLength: 10
-          maxLength: 10
-          pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$"
-        senderTaxId:
-          $ref: '#/components/schemas/paTaxId'
-        group:
-          type: string
-          # ASCII printable characters
-          pattern: ^[ -~]*$
-          maxLength: 1024
-        senderPaId:
-          type: string
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
-        iun:
-          $ref: '#/components/schemas/IUN'
-        sentAt:
-          type: string
-          format: date-time
-        cancelledByIun:
-          $ref: '#/components/schemas/IUN'
-        documentsAvailable:
-          type: boolean
-        notificationStatus:
-          $ref: './notification-enums.yaml#/components/schemas/NotificationStatus'
-        notificationStatusHistory:
-          type: array
-          items:
-            $ref: '#/components/schemas/NotificationStatusHistory'
-        timeline:
-          type: array
-          items:
-            $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
-        amount:
-          type: number
-          format: int32
-        otherDocuments:
-          type: array
-          items:
-            $ref: './schemas-notification-documents.yaml#/components/schemas/NotificationDetailDocument'
-
+      allOf:
+        - $ref: '../remote-refs.yaml#/components/schemas/SentNotificationV23'
+        - type: object
+          properties:
+            notificationStatusHistory:
+              type: array
+              items:
+                $ref: '#/components/schemas/NotificationStatusHistory'
+            notificationStatus:
+              $ref: './notification-enums.yaml#/components/schemas/NotificationStatus'
+            timeline:
+              type: array
+              items:
+                $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
+            otherDocuments:
+              type: array
+              items:
+                $ref: './schemas-notification-documents.yaml#/components/schemas/NotificationDetailDocument'
 
     NotificationStatusHistory:
       type: object
@@ -161,74 +52,7 @@ components:
           $ref: './notification-enums.yaml#/components/schemas/NotificationDeliveryMode'
 
     PhysicalAddress:
-      type: object
-      required:
-        - address
-        - zip
-        - municipality
-      properties:
-        at:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
-        address:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          minLength: 2
-          maxLength: 1024
-        addressDetails:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 1024
-        zip:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          minLength: 0
-          maxLength: 15
-          pattern: ^(\w|\ |\-)*$
-        municipality:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          minLength: 2
-          maxLength: 256
-        municipalityDetails:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
-        province:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
-        foreignState:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          # wide range of characters
-          pattern: ^.*$
-          maxLength: 256
+      $ref: '../remote-refs.yaml#/components/schemas/PhysicalAddress'
 
     DigitalAddress:
-      type: object
-      required:
-        - type
-        - address
-      properties:
-        type:
-          $ref: './notification-enums.yaml#/components/schemas/DigitalDomicileType'
-        address:
-          type: string
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-          pattern: ^([a-zA-Z0-9]+(?:[.\-_][a-zA-Z0-9]+){0,10}@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+){0,10}(?:\.[a-zA-Z0-9]{2,10}))$
-          maxLength: 320
-          # 64 chars for the user and 255 chars for the domain, + 1 char for the '@'
+      $ref: '../remote-refs.yaml#/components/schemas/DigitalAddress'

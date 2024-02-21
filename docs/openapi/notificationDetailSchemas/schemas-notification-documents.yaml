@@ -2,52 +2,6 @@ info:
   version: v1.0
 components:
   schemas:
-    NotificationAttachment:
-      description: >-
-        Un allegato della notifica.
-      type: object
-      required:
-        - digests
-        - contentType
-        - ref
-      properties:
-        digests:
-          $ref: "#/components/schemas/NotificationAttachmentDigests"
-        contentType:
-          type: string
-          minLength: 15
-          maxLength: 15
-          pattern: ^application\/pdf$
-        ref:
-          $ref: "#/components/schemas/NotificationAttachmentBodyRef"
-
-    NotificationAttachmentDigests:
-      description: Codici per la verifica del corretto caricamento di un allegato
-      type: object
-      required:
-        - sha256
-      properties:
-        sha256:
-          type: string
-          minLength: 44
-          maxLength: 44
-          pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
-
-    NotificationAttachmentBodyRef:
-      description: Riferimento all'allegato precaricato
-      required:
-        - key
-        - versionToken
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 512
-        versionToken:
-          type: string
-          pattern: ^.*$
-          maxLength: 256
-
     NotificationDetailDocument:
       description: >-
         Documento della notifica.
@@ -75,3 +29,6 @@ components:
           type: string
         documentType:
           type: string
+
+    NotificationAttachment:
+      $ref: '../remote-refs.yaml#/components/schemas/NotificationAttachment'

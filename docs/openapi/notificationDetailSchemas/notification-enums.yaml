@@ -2,6 +2,18 @@ info:
   version: v1.0
 components:
   schemas:
+    RecipientType:
+      $ref: '../remote-refs.yaml#/components/schemas/RecipientType'
+
+    AddressSource:
+      $ref: '../remote-refs.yaml#/components/schemas/AddressSource'
+
+    ContactPhase:
+      $ref: '../remote-refs.yaml#/components/schemas/ContactPhase'
+
+    TimelineCategory:
+      $ref: '../remote-refs.yaml#/components/schemas/TimelineCategory'
+
     NotificationStatus:
       type: string
       enum:
@@ -23,44 +35,11 @@ components:
         - AR_REGISTERED_LETTER
         - REGISTERED_LETTER_890
 
-    NotificationFeePolicy:
-      type: string
-      enum:
-        - FLAT_RATE
-        - DELIVERY_MODE
-
     NotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-
-    RecipientType:
-      type: string
-      enum:
-        - PF
-        - PG
-
-    DigitalDomicileType:
-      type: string
-      enum:
-        - PEC
-        - EMAIL
-        - APPIO
-        - SMS
-
-    AddressSource:
-      type: string
-      enum:
-        - PLATFORM
-        - SPECIAL
-        - GENERAL
-
-    ContactPhase:
-      type: string
-      enum:
-        - CHOOSE_DELIVERY
-        - SEND_ATTEMPT
 
     AppIoCourtesyMessageEventType:
       type: string
@@ -83,52 +62,6 @@ components:
         - PROGRESS_WITH_RETRY
         - KO
 
-    TimelineCategory:
-      type: string
-      enum:
-        - REQUEST_ACCEPTED
-        - SEND_COURTESY_MESSAGE
-        - GET_ADDRESS
-        - PUBLIC_REGISTRY_CALL
-        - PUBLIC_REGISTRY_RESPONSE
-        - SCHEDULE_ANALOG_WORKFLOW
-        - SCHEDULE_DIGITAL_WORKFLOW
-        - SEND_DIGITAL_DOMICILE
-        - SEND_DIGITAL_PROGRESS
-        - SEND_DIGITAL_FEEDBACK
-        - REFINEMENT
-        - SCHEDULE_REFINEMENT
-        - DIGITAL_SUCCESS_WORKFLOW
-        - DIGITAL_FAILURE_WORKFLOW
-        - ANALOG_SUCCESS_WORKFLOW
-        - ANALOG_FAILURE_WORKFLOW
-        - SEND_SIMPLE_REGISTERED_LETTER
-        - SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
-        - NOTIFICATION_VIEWED
-        - SEND_ANALOG_DOMICILE
-        - PAYMENT
-        - COMPLETELY_UNREACHABLE
-        - REQUEST_REFUSED
-        - NOT_HANDLED
-        - PREPARE_SIMPLE_REGISTERED_LETTER
-        - PREPARE_ANALOG_DOMICILE
-        - PREPARE_ANALOG_DOMICILE_FAILURE
-        - SEND_ANALOG_PROGRESS
-        - SEND_ANALOG_FEEDBACK
-        - AAR_GENERATION
-        - NOTIFICATION_CANCELLATION_REQUEST
-        - NOTIFICATION_CANCELLED
-        - SENDER_ACK_CREATION_REQUEST
-        - VALIDATE_NORMALIZE_ADDRESSES_REQUEST
-        - NORMALIZED_ADDRESS
-        - PREPARE_DIGITAL_DOMICILE
-        - DIGITAL_DELIVERY_CREATION_REQUEST
-        - NOTIFICATION_VIEWED_CREATION_REQUEST
-        - COMPLETELY_UNREACHABLE_CREATION_REQUEST
-        - AAR_CREATION_REQUEST
-        - PROBABLE_SCHEDULING_ANALOG_DATE
-        - NOTIFICATION_RADD_RETRIEVED
-
     LegalFactType:
       type: string
       enum:
@@ -136,6 +69,6 @@ components:
         - SENDER_ACK
         - DIGITAL_DELIVERY
         - ANALOG_DELIVERY
-        - ANALOG_FAILURE_DELIVERY
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
+        - ANALOG_FAILURE_DELIVERY
