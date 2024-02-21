@@ -2,11 +2,16 @@ package it.pagopa.pn.bff.utils.notificationDetail;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class NotificationDetailUtility {
+    public static OffsetDateTime parseOffsetDateTime(String date) {
+        return date != null ? OffsetDateTime.parse(date) : null;
+    }
 
     public static Integer fromLatestToEarliest(NotificationDetailTimeline a, NotificationDetailTimeline b) {
         long differenceInTimeline = (b.getTimestamp() != null && a.getTimestamp() != null) ? b.getTimestamp().compareTo(a.getTimestamp()) : 0;
@@ -30,49 +35,6 @@ public class NotificationDetailUtility {
         } else {
             return false;
         }
-    }
-
-    public static NotificationDetailTimeline populateMacroStep(
-            BffFullNotificationV1 notificationDetail,
-            String timelineElement,
-            NotificationStatusHistory status,
-            List<String> acceptedStatusItems
-    ) {
-        NotificationDetailTimeline step = null;
-
-        for (NotificationDetailTimeline t : notificationDetail.getTimeline()) {
-            if (t.getElementId().equals(timelineElement)) {
-                step = t;
-                break;
-            }
-        }
-
-        if (step != null) {
-            // hide accepted status micro steps
-            if (status.getStatus() == NotificationStatus.ACCEPTED) {
-                status.getSteps().add(step.hidden(true));
-                // PN-4484 - hide the internal events related to the courtesy messages sent through app IO
-            } else if (isInternalAppIoEvent(step)) {
-                status.getSteps().add(step.hidden(true));
-                // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
-                // since the AAR for such steps must be shown in the timeline exactly the same way as legalFacts.
-                // Cfr. comment in the definition of INotificationDetailTimeline in src/models/NotificationDetail.ts.
-            } else if (step.getCategory() == TimelineCategory.ANALOG_FAILURE_WORKFLOW
-                    && (step.getDetails()).getGeneratedAarUrl() != null) {
-                status.getSteps().add(step.legalFactsIds(List.of(new LegalFactId(
-                        (step.getDetails()).getGeneratedAarUrl(),
-                        LegalFactType.AAR
-                ))));
-                // remove legal facts for those microsteps that are related to the accepted status
-            } else if (acceptedStatusItems.contains(step.getElementId())) {
-                status.getSteps().add(step.legalFactsIds(Collections.emptyList()));
-                // default case
-            } else {
-                status.getSteps().add(step);
-            }
-        }
-
-        return step;
     }
 
     public static boolean timelineElementMustBeShown(NotificationDetailTimeline t) {
@@ -109,4 +71,65 @@ public class NotificationDetailUtility {
         return TimelineAllowedStatus.contains(t.getCategory());
     }
 
+    public static void insertCancelledStatusInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
+        Optional<NotificationDetailTimeline> timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLED)
+                .findFirst();
+
+        if (timelineCancelledElement.isEmpty()) {
+            Optional<NotificationDetailTimeline> timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
+                    .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)
+                    .findFirst();
+
+            if (timelineCancellationRequestElement.isPresent()) {
+                OffsetDateTime timestamp = OffsetDateTime.parse(timelineCancellationRequestElement.get().getTimestamp());
+
+                NotificationStatusHistory notificationStatusHistoryElement =
+                        new NotificationStatusHistory(NotificationStatus.CANCELLATION_IN_PROGRESS, timestamp, new ArrayList<>(), new ArrayList<>(), null, null);
+
+                bffFullNotificationV1.getNotificationStatusHistory().add(notificationStatusHistoryElement);
+                bffFullNotificationV1.setNotificationStatus(NotificationStatus.CANCELLATION_IN_PROGRESS);
+            }
+        }
+    }
+
+    public static void populateOtherDocuments(BffFullNotificationV1 bffFullNotificationV1) {
+        List<NotificationDetailDocument> otherDocuments = new ArrayList<>();
+
+        List<NotificationDetailTimeline> timelineFiltered = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == TimelineCategory.AAR_GENERATION)
+                .toList();
+
+        if (!timelineFiltered.isEmpty()) {
+            final boolean isMultiRecipient = timelineFiltered.size() > 1;
+
+            otherDocuments = timelineFiltered.stream()
+                    .map(t -> {
+                        final Integer recIndex = t.getDetails().getRecIndex();
+                        final List<NotificationDetailRecipient> recipients = bffFullNotificationV1.getRecipients();
+                        final String recipientData = isMultiRecipient && recIndex != null
+                                ? " - " + recipients.get(recIndex).getDenomination() + "(" + recipients.get(recIndex).getTaxId() + ")"
+                                : "";
+                        final String title = "Avviso di avvenuta ricezione" + recipientData;
+
+                        return new NotificationDetailDocument()
+                                .recIndex(recIndex)
+                                .documentId(t.getDetails().getGeneratedAarUrl())
+                                .documentType(LegalFactType.AAR.toString())
+                                .title(title)
+                                .digests(
+                                        new NotificationAttachmentDigests()
+                                                .sha256("")
+                                )
+                                .ref(
+                                        new NotificationAttachmentBodyRef()
+                                                .key("")
+                                                .versionToken("")
+                                )
+                                .contentType("");
+                    }).toList();
+        }
+
+        bffFullNotificationV1.setOtherDocuments(otherDocuments);
+    }
 }

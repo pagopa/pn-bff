@@ -24,7 +24,7 @@ public interface RecipientNotificationTimelineMapper {
     public NotificationDetailTimeline mapTimelineElement(TimelineElementV23 timelineElement);
 
     @AfterMapping
-    default void setHidden(TimelineElementV23 timelineElement, @MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
+    default void setHidden(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
         notificationDetailTimeline.setHidden(!NotificationDetailUtility.timelineElementMustBeShown(notificationDetailTimeline));
     }
 }
