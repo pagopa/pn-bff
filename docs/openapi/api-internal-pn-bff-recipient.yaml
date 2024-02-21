@@ -73,7 +73,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './notificationDetailSchemas/schemas-notification.yaml#/components/schemas/BffFullNotificationV1'
+                $ref: '#/components/schemas/BffFullNotificationV1'
         '400':
           description: Bad request
           content:
@@ -115,6 +115,9 @@ components:
   schemas:
     StatusSchema:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
+
+    BffFullNotificationV1:
+      $ref: './notificationDetailSchemas/schemas-notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

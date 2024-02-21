@@ -137,6 +137,10 @@ components:
     NotificationStatusHistory:
       type: object
       additionalProperties: false
+      required:
+        - status
+        - activeFrom
+        - relatedTimelineElements
       properties:
         status:
           $ref: './notification-enums.yaml#/components/schemas/NotificationStatus'

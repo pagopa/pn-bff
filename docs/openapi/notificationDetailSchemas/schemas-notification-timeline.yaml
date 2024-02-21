@@ -18,10 +18,11 @@ components:
         legalFactsIds:
           type: array
           items:
-            type: object
-            oneOf:
-              - "$ref": "#/components/schemas/LegalFactId"
-              - "$ref": "./schemas-notification-documents.yaml#/components/schemas/NotificationDetailOtherDocument"
+            $ref: "#/components/schemas/LegalFactId"
+        #            type: object
+        #            oneOf:
+        #              - "$ref": "#/components/schemas/LegalFactId"
+        #              - "$ref": "./schemas-notification-documents.yaml#/components/schemas/NotificationDetailOtherDocument"
         category:
           $ref: "./notification-enums.yaml#/components/schemas/TimelineCategory"
         details:
@@ -264,5 +265,7 @@ components:
       properties:
         key:
           type: string
+          pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
+          maxLength: 512
         category:
           $ref: "./notification-enums.yaml#/components/schemas/LegalFactType"

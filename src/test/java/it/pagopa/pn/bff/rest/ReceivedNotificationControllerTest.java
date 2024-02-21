@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -41,7 +41,7 @@ public class ReceivedNotificationControllerTest {
                         Mockito.<String>any(),
                         Mockito.<String>any()
                 ))
-                .thenReturn(Mono.just(new BffFullReceivedNotificationV1()));
+                .thenReturn(Mono.just(new BffFullNotificationV1()));
 
 
         webTestClient.get()
@@ -56,7 +56,7 @@ public class ReceivedNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffFullReceivedNotificationV1.class);
+                .expectBody(BffFullNotificationV1.class);
 
         Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
                 UID,
