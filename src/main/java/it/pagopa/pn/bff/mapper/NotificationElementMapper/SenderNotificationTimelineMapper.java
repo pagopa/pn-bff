@@ -13,6 +13,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(uses = {DateMapper.class})
 public interface SenderNotificationTimelineMapper {
 
+
     RecipientNotificationTimelineMapper paTimelineMapper = Mappers.getMapper(RecipientNotificationTimelineMapper.class);
 
     @Mapping(target = "elementId", source = "elementId")
@@ -28,4 +29,12 @@ public interface SenderNotificationTimelineMapper {
     default void setHidden(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
         notificationDetailTimeline.setHidden(!NotificationDetailUtility.timelineElementMustBeShown(notificationDetailTimeline));
     }
+
+    @AfterMapping
+    default void removeNotRefinedRecipientIndexes(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
+        if (notificationDetailTimeline.getDetails() != null) {
+            notificationDetailTimeline.getDetails().setNotRefinedRecipientIndexes(null);
+        }
+    }
+
 }

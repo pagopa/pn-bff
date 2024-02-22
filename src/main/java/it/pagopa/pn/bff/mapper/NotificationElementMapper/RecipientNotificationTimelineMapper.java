@@ -28,4 +28,11 @@ public interface RecipientNotificationTimelineMapper {
     default void setHidden(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
         notificationDetailTimeline.setHidden(!NotificationDetailUtility.timelineElementMustBeShown(notificationDetailTimeline));
     }
+
+    @AfterMapping
+    default void removeNotRefinedRecipientIndexes(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
+        if (notificationDetailTimeline.getDetails() != null) {
+            notificationDetailTimeline.getDetails().setNotRefinedRecipientIndexes(null);
+        }
+    }
 }

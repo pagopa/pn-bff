@@ -1,11 +1,13 @@
 package it.pagopa.pn.bff.utils.notificationDetail;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 public class NotificationMacroStepPopulator {
 
     /**
@@ -45,7 +47,7 @@ public class NotificationMacroStepPopulator {
             } else if (step.getCategory() == TimelineCategory.ANALOG_FAILURE_WORKFLOW
                     && (step.getDetails()).getGeneratedAarUrl() != null) {
                 status.getSteps().add(step.legalFactsIds(List.of(new LegalFactId(
-                        (step.getDetails()).getGeneratedAarUrl(),
+                        step.getDetails().getGeneratedAarUrl(),
                         LegalFactType.AAR
                 ))));
                 // remove legal facts for those microsteps that are related to the accepted status
@@ -74,12 +76,12 @@ public class NotificationMacroStepPopulator {
         boolean preventShiftFromDeliveredToDelivering = false;
 
         for (NotificationStatusHistory status : bffFullNotificationV1.getNotificationStatusHistory()) {
-            if (NotificationStatus.DELIVERING.equals(status.getStatus())) {
+            if (status.getStatus().equals(NotificationStatus.DELIVERING)) {
                 deliveringStatus = status;
             }
 
-            if (NotificationStatus.ACCEPTED.equals(status.getStatus()) && !status.getRelatedTimelineElements().isEmpty()) {
-                acceptedStatusItems = status.getRelatedTimelineElements();
+            if (status.getStatus().equals(NotificationStatus.ACCEPTED) && !status.getRelatedTimelineElements().isEmpty()) {
+                acceptedStatusItems.addAll(status.getRelatedTimelineElements());
             } else if (!acceptedStatusItems.isEmpty()) {
                 status.getRelatedTimelineElements().addAll(0, acceptedStatusItems);
             }
@@ -90,20 +92,20 @@ public class NotificationMacroStepPopulator {
             for (String timelineElement : status.getRelatedTimelineElements()) {
                 NotificationDetailTimeline step = NotificationMacroStepPopulator.populateMacroStep(bffFullNotificationV1, timelineElement, status, acceptedStatusItems);
                 if (step != null) {
-                    if (deliveryMode == null && TimelineCategory.DIGITAL_SUCCESS_WORKFLOW.equals(step.getCategory())) {
+                    if (deliveryMode == null && step.getCategory().equals(TimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
                         deliveryMode = NotificationDeliveryMode.DIGITAL;
-                    } else if (deliveryMode == null && (TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER.equals(step.getCategory())
-                            || TimelineCategory.ANALOG_SUCCESS_WORKFLOW.equals(step.getCategory()))) {
+                    } else if (deliveryMode == null && (step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
+                            || step.getCategory().equals(TimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
                         deliveryMode = NotificationDeliveryMode.ANALOG;
                     }
 
-                    if (NotificationStatus.DELIVERED.equals(status.getStatus()) && !preventShiftFromDeliveredToDelivering) {
-                        if ((TimelineCategory.DIGITAL_FAILURE_WORKFLOW.equals(step.getCategory())
-                                || TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER.equals(step.getCategory())
-                                || TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS.equals(step.getCategory()))
+                    if (status.getStatus().equals(NotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
+                        if ((step.getCategory().equals(TimelineCategory.DIGITAL_FAILURE_WORKFLOW)
+                                || step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
+                                || step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
                                 && !lastDeliveredIndexToShiftIsFixed) {
                             lastDeliveredIndexToShift = ix;
-                        } else if (TimelineCategory.DIGITAL_SUCCESS_WORKFLOW.equals(step.getCategory())) {
+                        } else if (step.getCategory().equals(TimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
                             if (lastDeliveredIndexToShift > -1) {
                                 lastDeliveredIndexToShift = ix - 1;
                                 lastDeliveredIndexToShiftIsFixed = true;
@@ -116,7 +118,7 @@ public class NotificationMacroStepPopulator {
                 ix++;
             }
 
-            if (NotificationStatus.DELIVERED.equals(status.getStatus())
+            if (status.getStatus().equals(NotificationStatus.DELIVERED)
                     && deliveringStatus != null
                     && deliveringStatus.getSteps() != null
                     && !preventShiftFromDeliveredToDelivering
@@ -130,17 +132,17 @@ public class NotificationMacroStepPopulator {
 
             status.getSteps().sort(NotificationDetailUtility::fromLatestToEarliest);
 
-            if (!NotificationStatus.ACCEPTED.equals(status.getStatus()) && !acceptedStatusItems.isEmpty()) {
+            if (!status.getStatus().equals(NotificationStatus.ACCEPTED) && !acceptedStatusItems.isEmpty()) {
                 acceptedStatusItems.clear();
             }
 
-            if (NotificationStatus.DELIVERED.equals(status.getStatus()) && deliveryMode != null) {
+            if (status.getStatus().equals(NotificationStatus.DELIVERED) && deliveryMode != null) {
                 status.setDeliveryMode(deliveryMode);
             }
 
-            if (NotificationStatus.VIEWED.equals(status.getStatus())) {
+            if (status.getStatus().equals(NotificationStatus.VIEWED)) {
                 List<NotificationDetailTimeline> viewedSteps = status.getSteps().stream()
-                        .filter(s -> TimelineCategory.NOTIFICATION_VIEWED.equals(s.getCategory()))
+                        .filter(s -> s.getCategory().equals(TimelineCategory.NOTIFICATION_VIEWED))
                         .toList();
 
                 if (!viewedSteps.isEmpty()) {

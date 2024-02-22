@@ -23,6 +23,11 @@ public interface NotificationDetailMapper {
 
 
     @AfterMapping
+    default void populateOtherDocuments(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.populateOtherDocuments(bffFullNotificationV1);
+    }
+
+    @AfterMapping
     default void insertCancelledStatusInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.insertCancelledStatusInTimeline(bffFullNotificationV1);
     }
@@ -33,10 +38,10 @@ public interface NotificationDetailMapper {
             bffFullNotificationV1.getTimeline().get(i).setIndex(i);
         }
     }
-
+    
     @AfterMapping
-    default void populateOtherDocuments(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationDetailUtility.populateOtherDocuments(bffFullNotificationV1);
+    default void populateMacroStep(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationMacroStepPopulator.populateMacroSteps(bffFullNotificationV1);
     }
 
     @AfterMapping
@@ -44,8 +49,4 @@ public interface NotificationDetailMapper {
         bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> o2.getActiveFrom().compareTo(o1.getActiveFrom()));
     }
 
-    @AfterMapping
-    default void populateMacroStep(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationMacroStepPopulator.populateMacroSteps(bffFullNotificationV1);
-    }
 }
