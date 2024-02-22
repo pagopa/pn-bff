@@ -66,10 +66,6 @@ public class NotificationDetailUtility {
             "RECRI004B"
     );
 
-    public static OffsetDateTime parseOffsetDateTime(String date) {
-        return date != null ? OffsetDateTime.parse(date) : null;
-    }
-
     public static Integer fromLatestToEarliest(NotificationDetailTimeline a, NotificationDetailTimeline b) {
         long differenceInTimeline = (b.getTimestamp() != null && a.getTimestamp() != null) ? b.getTimestamp().compareTo(a.getTimestamp()) : 0;
         int differenceInIndex = (b.getIndex() != null && a.getIndex() != null) ? b.getIndex() - a.getIndex() : 0;
@@ -84,7 +80,7 @@ public class NotificationDetailUtility {
     }
 
     public static boolean isInternalAppIoEvent(NotificationDetailTimeline step) {
-        if (step.getCategory() == TimelineCategory.SEND_COURTESY_MESSAGE) {
+        if (step.getCategory().equals(TimelineCategory.SEND_COURTESY_MESSAGE)) {
             NotificationDetailTimelineDetails details = step.getDetails();
             return details.getDigitalAddress().getType().equals("APPIO")
                     && details.getIoSendMessageResult() != null
@@ -188,5 +184,9 @@ public class NotificationDetailUtility {
         }
 
         bffFullNotificationV1.setOtherDocuments(otherDocuments);
+    }
+
+    public static void checkRADDInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
+
     }
 }

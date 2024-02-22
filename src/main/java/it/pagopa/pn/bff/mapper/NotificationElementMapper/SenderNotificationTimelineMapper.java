@@ -15,12 +15,7 @@ public interface SenderNotificationTimelineMapper {
 
 
     RecipientNotificationTimelineMapper paTimelineMapper = Mappers.getMapper(RecipientNotificationTimelineMapper.class);
-
-    @Mapping(target = "elementId", source = "elementId")
-    @Mapping(target = "timestamp", source = "timestamp")
-    @Mapping(target = "legalFactsIds", source = "legalFactsIds")
-    @Mapping(target = "category", source = "category")
-    @Mapping(target = "details", source = "details")
+    
     @Mapping(target = "hidden", ignore = true)
     @Mapping(target = "index", ignore = true)
     public NotificationDetailTimeline mapTimelineElement(TimelineElementV23 timelineElement);
@@ -32,9 +27,9 @@ public interface SenderNotificationTimelineMapper {
 
     @AfterMapping
     default void removeNotRefinedRecipientIndexes(@MappingTarget NotificationDetailTimeline notificationDetailTimeline) {
-        if (notificationDetailTimeline.getDetails() != null) {
+        if (notificationDetailTimeline.getDetails() != null
+                && notificationDetailTimeline.getDetails().getNotRefinedRecipientIndexes().isEmpty()) {
             notificationDetailTimeline.getDetails().setNotRefinedRecipientIndexes(null);
         }
     }
-
 }

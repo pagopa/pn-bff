@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -25,37 +25,33 @@ public class NotificationMacroStepPopulator {
             NotificationStatusHistory status,
             List<String> acceptedStatusItems
     ) {
-        NotificationDetailTimeline step = null;
-
-        for (NotificationDetailTimeline t : notificationDetail.getTimeline()) {
-            if (t.getElementId().equals(timelineElement)) {
-                step = t;
-                break;
-            }
-        }
+        final NotificationDetailTimeline step = notificationDetail.getTimeline().stream()
+                .filter(t -> t.getElementId().equals(timelineElement))
+                .findFirst()
+                .orElse(null);
 
         if (step != null) {
             // hide accepted status micro steps
-            if (status.getStatus() == NotificationStatus.ACCEPTED) {
-                status.getSteps().add(step.hidden(true));
+            if (status.getStatus().equals(NotificationStatus.ACCEPTED)) {
+                status.addStepsItem(step.hidden(true));
                 // PN-4484 - hide the internal events related to the courtesy messages sent through app IO
             } else if (NotificationDetailUtility.isInternalAppIoEvent(step)) {
-                status.getSteps().add(step.hidden(true));
+                status.addStepsItem(step.hidden(true));
                 // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
                 // since the AAR for such steps must be shown in the timeline exactly the same way as legalFacts.
                 // Cfr. comment in the definition of INotificationDetailTimeline in src/models/NotificationDetail.ts.
-            } else if (step.getCategory() == TimelineCategory.ANALOG_FAILURE_WORKFLOW
-                    && (step.getDetails()).getGeneratedAarUrl() != null) {
-                status.getSteps().add(step.legalFactsIds(List.of(new LegalFactId(
+            } else if (step.getCategory().equals(TimelineCategory.ANALOG_FAILURE_WORKFLOW)
+                    && step.getDetails().getGeneratedAarUrl() != null) {
+                status.addStepsItem(step.legalFactsIds(List.of(new LegalFactId(
                         step.getDetails().getGeneratedAarUrl(),
                         LegalFactType.AAR
                 ))));
                 // remove legal facts for those microsteps that are related to the accepted status
-            } else if (acceptedStatusItems.contains(step.getElementId())) {
-                status.getSteps().add(step.legalFactsIds(Collections.emptyList()));
+            } else if (!acceptedStatusItems.isEmpty() && Arrays.asList(acceptedStatusItems).contains(step.getElementId())) {
+                status.addStepsItem(step.legalFactsIds(new ArrayList<>()));
                 // default case
             } else {
-                status.getSteps().add(step);
+                status.addStepsItem(step);
             }
         }
 
@@ -68,7 +64,7 @@ public class NotificationMacroStepPopulator {
      * @param bffFullNotificationV1 the notification to populate
      */
     public static void populateMacroSteps(BffFullNotificationV1 bffFullNotificationV1) {
-        List<String> acceptedStatusItems = new ArrayList<>();
+        ArrayList<String> acceptedStatusItems = new ArrayList<>();
         NotificationDeliveryMode deliveryMode = null;
         NotificationStatusHistory deliveringStatus = null;
         int lastDeliveredIndexToShift = -1;
@@ -81,16 +77,22 @@ public class NotificationMacroStepPopulator {
             }
 
             if (status.getStatus().equals(NotificationStatus.ACCEPTED) && !status.getRelatedTimelineElements().isEmpty()) {
-                acceptedStatusItems.addAll(status.getRelatedTimelineElements());
+                acceptedStatusItems = new ArrayList<>(status.getRelatedTimelineElements());
             } else if (!acceptedStatusItems.isEmpty()) {
                 status.getRelatedTimelineElements().addAll(0, acceptedStatusItems);
             }
 
             status.setSteps(new ArrayList<>());
 
-            int ix = 0;
-            for (String timelineElement : status.getRelatedTimelineElements()) {
-                NotificationDetailTimeline step = NotificationMacroStepPopulator.populateMacroStep(bffFullNotificationV1, timelineElement, status, acceptedStatusItems);
+            for (int ix = 0; ix < status.getRelatedTimelineElements().size(); ix++) {
+                String timelineElement = status.getRelatedTimelineElements().get(ix);
+                NotificationDetailTimeline step = NotificationMacroStepPopulator.populateMacroStep(
+                        bffFullNotificationV1,
+                        timelineElement,
+                        status,
+                        acceptedStatusItems
+                );
+
                 if (step != null) {
                     if (deliveryMode == null && step.getCategory().equals(TimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
                         deliveryMode = NotificationDeliveryMode.DIGITAL;
@@ -115,7 +117,6 @@ public class NotificationMacroStepPopulator {
                         }
                     }
                 }
-                ix++;
             }
 
             if (status.getStatus().equals(NotificationStatus.DELIVERED)
@@ -123,6 +124,7 @@ public class NotificationMacroStepPopulator {
                     && deliveringStatus.getSteps() != null
                     && !preventShiftFromDeliveredToDelivering
                     && lastDeliveredIndexToShift > -1) {
+
                 List<NotificationDetailTimeline> stepsToShift = new ArrayList<>(status.getSteps().subList(0, lastDeliveredIndexToShift + 1));
                 stepsToShift.sort(NotificationDetailUtility::fromLatestToEarliest);
                 deliveringStatus.getSteps().addAll(0, stepsToShift);
@@ -133,7 +135,7 @@ public class NotificationMacroStepPopulator {
             status.getSteps().sort(NotificationDetailUtility::fromLatestToEarliest);
 
             if (!status.getStatus().equals(NotificationStatus.ACCEPTED) && !acceptedStatusItems.isEmpty()) {
-                acceptedStatusItems.clear();
+                acceptedStatusItems = new ArrayList<>();
             }
 
             if (status.getStatus().equals(NotificationStatus.DELIVERED) && deliveryMode != null) {

@@ -38,7 +38,7 @@ public interface NotificationDetailMapper {
             bffFullNotificationV1.getTimeline().get(i).setIndex(i);
         }
     }
-    
+
     @AfterMapping
     default void populateMacroStep(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationMacroStepPopulator.populateMacroSteps(bffFullNotificationV1);
@@ -48,5 +48,4 @@ public interface NotificationDetailMapper {
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> o2.getActiveFrom().compareTo(o1.getActiveFrom()));
     }
-
 }
