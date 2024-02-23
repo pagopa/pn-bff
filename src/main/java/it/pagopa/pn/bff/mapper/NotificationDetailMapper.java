@@ -12,7 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {DateMapper.class, RecipientNotificationTimelineMapper.class, SenderNotificationTimelineMapper.class})
+@Mapper(uses = {RecipientNotificationTimelineMapper.class, SenderNotificationTimelineMapper.class})
 public interface NotificationDetailMapper {
 
     NotificationDetailMapper modelMapper = Mappers.getMapper(NotificationDetailMapper.class);
@@ -25,6 +25,11 @@ public interface NotificationDetailMapper {
     @AfterMapping
     default void populateOtherDocuments(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.populateOtherDocuments(bffFullNotificationV1);
+    }
+
+    @AfterMapping
+    default void checkRADDInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.checkRADDInTimeline(bffFullNotificationV1);
     }
 
     @AfterMapping
@@ -46,6 +51,8 @@ public interface NotificationDetailMapper {
 
     @AfterMapping
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> o2.getActiveFrom().compareTo(o1.getActiveFrom()));
+        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) ->
+                o2.getActiveFrom().toInstant().toEpochMilli() > o1.getActiveFrom().toInstant().toEpochMilli() ? 1 : -1
+        );
     }
 }

@@ -20,6 +20,8 @@ components:
               type: array
               items:
                 $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
+            radd:
+              $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
             otherDocuments:
               type: array
               items:

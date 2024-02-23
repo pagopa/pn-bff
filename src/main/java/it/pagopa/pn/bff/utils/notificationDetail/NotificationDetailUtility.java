@@ -67,7 +67,7 @@ public class NotificationDetailUtility {
     );
 
     public static Integer fromLatestToEarliest(NotificationDetailTimeline a, NotificationDetailTimeline b) {
-        long differenceInTimeline = (b.getTimestamp() != null && a.getTimestamp() != null) ? b.getTimestamp().compareTo(a.getTimestamp()) : 0;
+        long differenceInTimeline = b.getTimestamp().toInstant().toEpochMilli() - a.getTimestamp().toInstant().toEpochMilli();
         int differenceInIndex = (b.getIndex() != null && a.getIndex() != null) ? b.getIndex() - a.getIndex() : 0;
 
         if (differenceInTimeline > 0) {
@@ -187,6 +187,10 @@ public class NotificationDetailUtility {
     }
 
     public static void checkRADDInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
-
+        bffFullNotificationV1.getTimeline()
+                .stream()
+                .filter(element -> element.getCategory() == TimelineCategory.NOTIFICATION_RADD_RETRIEVED)
+                .findFirst()
+                .ifPresent(bffFullNotificationV1::setRadd);
     }
 }
