@@ -2,9 +2,9 @@ package it.pagopa.pn.bff.utils.notificationDetail;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -30,28 +30,37 @@ public class NotificationMacroStepPopulator {
                 .findFirst()
                 .orElse(null);
 
+        NotificationDetailTimeline timelineStep = new NotificationDetailTimeline();
+
+
         if (step != null) {
+            BeanUtils.copyProperties(step, timelineStep);
+
             // hide accepted status micro steps
             if (status.getStatus().equals(NotificationStatus.ACCEPTED)) {
-                status.addStepsItem(step.hidden(true));
+                timelineStep.setHidden(true);
+                status.addStepsItem(timelineStep);
                 // PN-4484 - hide the internal events related to the courtesy messages sent through app IO
             } else if (NotificationDetailUtility.isInternalAppIoEvent(step)) {
-                status.addStepsItem(step.hidden(true));
+                timelineStep.setHidden(true);
+                status.addStepsItem(timelineStep);
                 // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
                 // since the AAR for such steps must be shown in the timeline exactly the same way as legalFacts.
                 // Cfr. comment in the definition of INotificationDetailTimeline in src/models/NotificationDetail.ts.
             } else if (step.getCategory().equals(TimelineCategory.ANALOG_FAILURE_WORKFLOW)
                     && step.getDetails().getGeneratedAarUrl() != null) {
-                status.addStepsItem(step.legalFactsIds(List.of(new LegalFactId(
+                timelineStep.setLegalFactsIds(List.of(new LegalFactId(
                         step.getDetails().getGeneratedAarUrl(),
                         LegalFactType.AAR
-                ))));
+                )));
+                status.addStepsItem(timelineStep);
                 // remove legal facts for those microsteps that are related to the accepted status
-            } else if (!acceptedStatusItems.isEmpty() && Arrays.asList(acceptedStatusItems).contains(step.getElementId())) {
-                status.addStepsItem(step.legalFactsIds(new ArrayList<>()));
+            } else if (!acceptedStatusItems.isEmpty() && acceptedStatusItems.contains(step.getElementId())) {
+                timelineStep.setLegalFactsIds(new ArrayList<>());
+                status.addStepsItem(timelineStep);
                 // default case
             } else {
-                status.addStepsItem(step);
+                status.addStepsItem(timelineStep);
             }
         }
 

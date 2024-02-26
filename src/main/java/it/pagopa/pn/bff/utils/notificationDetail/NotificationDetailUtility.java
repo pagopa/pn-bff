@@ -2,11 +2,9 @@ package it.pagopa.pn.bff.utils.notificationDetail;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class NotificationDetailUtility {
 
@@ -125,20 +123,27 @@ public class NotificationDetailUtility {
     }
 
     public static void insertCancelledStatusInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
-        Optional<NotificationDetailTimeline> timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
+        NotificationDetailTimeline timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLED)
-                .findFirst();
+                .findFirst()
+                .orElse(null);
 
-        if (timelineCancelledElement.isEmpty()) {
-            Optional<NotificationDetailTimeline> timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
+        if (timelineCancelledElement == null) {
+            NotificationDetailTimeline timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
                     .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)
-                    .findFirst();
+                    .findFirst()
+                    .orElse(null);
 
-            if (timelineCancellationRequestElement.isPresent()) {
-                OffsetDateTime timestamp = timelineCancellationRequestElement.get().getTimestamp();
+            if (timelineCancellationRequestElement != null) {
 
                 NotificationStatusHistory notificationStatusHistoryElement =
-                        new NotificationStatusHistory(NotificationStatus.CANCELLATION_IN_PROGRESS, timestamp, new ArrayList<>(), new ArrayList<>(), null, null);
+                        new NotificationStatusHistory(NotificationStatus.CANCELLATION_IN_PROGRESS,
+                                timelineCancellationRequestElement.getTimestamp(),
+                                new ArrayList<>(),
+                                new ArrayList<>(),
+                                null,
+                                null
+                        );
 
                 bffFullNotificationV1.getNotificationStatusHistory().add(notificationStatusHistoryElement);
                 bffFullNotificationV1.setNotificationStatus(NotificationStatus.CANCELLATION_IN_PROGRESS);
