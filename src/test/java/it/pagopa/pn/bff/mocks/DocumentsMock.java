@@ -5,27 +5,27 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationDocument;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DocumentsMock {
 
     public static ArrayList<NotificationDocument> getDocumentsMock() {
-        NotificationDocument notificationDocument = new NotificationDocument();
-        NotificationAttachmentDigests notificationAttachmentDigests = new NotificationAttachmentDigests();
-        notificationAttachmentDigests.setSha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=");
+        ArrayList<NotificationDocument> notificationDocuments = new ArrayList<>();
 
-        NotificationAttachmentBodyRef notificationAttachmentBodyRef = new NotificationAttachmentBodyRef();
-        notificationAttachmentBodyRef.setKey("PN_NOTIFICATION_ATTACHMENTS-abb7804b6e442c8b2223648af970cd1.pdf");
-        notificationAttachmentBodyRef.setVersionToken("v1");
+        notificationDocuments.add(
+                new NotificationDocument()
+                        .docIdx("0")
+                        .title("Document 0")
+                        .contentType("application/pdf")
+                        .digests(new NotificationAttachmentDigests()
+                                .sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=")
+                        )
+                        .ref(new NotificationAttachmentBodyRef()
+                                .key("PN_NOTIFICATION_ATTACHMENTS-abb7804b6e442c8b2223648af970cd1.pdf")
+                                .versionToken("v1")
+                        )
+        );
 
-        notificationDocument.setDocIdx("0");
-        notificationDocument.setTitle("Document 0");
-        notificationDocument.setContentType("application/pdf");
-        notificationDocument.setDigests(notificationAttachmentDigests);
-        notificationDocument.setRef(notificationAttachmentBodyRef);
-
-
-        return new ArrayList<>(List.of(notificationDocument));
+        return notificationDocuments;
     }
 
 }

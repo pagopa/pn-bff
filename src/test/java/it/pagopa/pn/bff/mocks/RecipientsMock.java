@@ -5,39 +5,78 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationRecipientV23;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipientsMock {
 
     public static ArrayList<NotificationRecipientV23> getRecipientsMock() {
-        NotificationDigitalAddress digitalAddress = new NotificationDigitalAddress();
-        digitalAddress.setType(NotificationDigitalAddress.TypeEnum.PEC);
-        digitalAddress.setAddress("notifichedigitali-uat@pec.pagopa.it");
+        ArrayList<NotificationRecipientV23> recipients = new ArrayList<>();
 
-        NotificationPhysicalAddress physicalAddress = new NotificationPhysicalAddress();
-        physicalAddress.setAt("Presso");
-        physicalAddress.setAddress("VIA SENZA NOME");
-        physicalAddress.setAddressDetails("SCALA B");
-        physicalAddress.setZip("87100");
-        physicalAddress.setMunicipality("MILANO");
-        physicalAddress.setProvince("MI");
-        physicalAddress.setForeignState("ITALIA");
+        recipients.add(
+                new NotificationRecipientV23()
+                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF)
+                        .taxId("LVLDAA85T50G702B")
+                        .denomination("Mario Cucumber")
+                        .digitalDomicile(
+                                new NotificationDigitalAddress()
+                                        .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                        .address("notifichedigitali-uat@pec.pagopa.it")
+                        )
+                        .physicalAddress(
+                                new NotificationPhysicalAddress()
+                                        .at("Presso")
+                                        .address("VIA SENZA NOME")
+                                        .addressDetails("SCALA B")
+                                        .zip("87100")
+                                        .municipality("MILANO")
+                                        .municipalityDetails("MILANO")
+                                        .province("MI")
+                                        .foreignState("ITALIA")
+                        )
+                        .payments(PaymentsMock.getPaymentsMock())
+        );
+
+        recipients.add(
+                new NotificationRecipientV23()
+                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF)
+                        .taxId("FRMTTR76M06B715E")
+                        .denomination("Mario Gherkin")
+                        .digitalDomicile(
+                                new NotificationDigitalAddress()
+                                        .type(NotificationDigitalAddress.TypeEnum.PEC)
+                                        .address("testpagopa3@pec.pagopa.it")
+                        )
+                        .physicalAddress(
+                                new NotificationPhysicalAddress()
+                                        .at("Presso")
+                                        .address("VIA SENZA NOME")
+                                        .addressDetails("SCALA A")
+                                        .zip("87100")
+                                        .municipality("MILANO")
+                                        .municipalityDetails("MILANO")
+                                        .province("MI")
+                                        .foreignState("ITALIA")
+                        )
+        );
+
+        recipients.add(
+                new NotificationRecipientV23()
+                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)
+                        .taxId("12345678910")
+                        .denomination("Ufficio Tal dei Tali")
+                        .physicalAddress(
+                                new NotificationPhysicalAddress()
+                                        .at("Presso")
+                                        .address("VIA SENZA NOME")
+                                        .addressDetails("SCALA C")
+                                        .zip("87100")
+                                        .municipality("MILANO")
+                                        .municipalityDetails("MILANO")
+                                        .province("MI")
+                                        .foreignState("ITALIA")
+                        )
+        );
 
 
-        NotificationRecipientV23 recipient1 = new NotificationRecipientV23();
-        recipient1.setRecipientType(NotificationRecipientV23.RecipientTypeEnum.PF);
-        recipient1.setTaxId("LVLDAA85T50G702B");
-        recipient1.setDenomination("Mario Cucumber");
-        recipient1.setDigitalDomicile(digitalAddress);
-        recipient1.setPayments(PaymentsMock.getPaymentsMock());
-
-        NotificationRecipientV23 recipient2 = new NotificationRecipientV23();
-        recipient2.setRecipientType(NotificationRecipientV23.RecipientTypeEnum.PF);
-        recipient2.setTaxId("FRMTTR76M06B715E");
-        recipient2.setDenomination("Mario Gherkin");
-        recipient1.setPhysicalAddress(physicalAddress);
-
-
-        return new ArrayList<>(List.of(recipient1, recipient2));
+        return recipients;
     }
 }
