@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: m8Is4R+7bR0dBSn66mowZLmLrmFWDSXj7T13pBlhjsU=
+  version: HTiBdMCXtJtM3Ms/ArxcBYSv2wt+rMKGe+iiqCDt/Gs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -188,6 +188,8 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/NotificationDetailTimeline'
+            radd:
+              $ref: '#/components/schemas/NotificationDetailTimeline'
             otherDocuments:
               type: array
               items:
