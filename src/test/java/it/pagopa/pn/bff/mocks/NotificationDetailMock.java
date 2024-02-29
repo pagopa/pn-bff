@@ -5,18 +5,16 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class NotificationDetailMock {
+    RecipientsMock recipientsMock = new RecipientsMock();
+    DocumentsMock documentsMock = new DocumentsMock();
+    StatusHistoryMock statusHistoryMock = new StatusHistoryMock();
+    TimelineMock timelineMock = new TimelineMock();
 
-    public static ArrayList<NotificationRecipientV23> recipientV23 = RecipientsMock.getRecipientsMock();
-    public static ArrayList<NotificationDocument> notificationDocuments = DocumentsMock.getDocumentsMock();
-    public static ArrayList<NotificationStatusHistoryElement> notificationStatusHistory = StatusHistoryMock.getStatusHistoryMock();
-    public static ArrayList<TimelineElementV23> timeline = TimelineMock.getTimelineMock();
-
-    public static FullReceivedNotificationV23 notificationMultiRecipientMock() {
+    public FullReceivedNotificationV23 notificationMultiRecipientMock() {
         FullReceivedNotificationV23 bffFullNotificationV1Mock = new FullReceivedNotificationV23();
 
         bffFullNotificationV1Mock.setAbstract("Abstract della notifica");
@@ -32,15 +30,15 @@ public class NotificationDetailMock {
         bffFullNotificationV1Mock.setSentAt(OffsetDateTime.parse("2023-08-25T09:33:58.709695008Z"));
         bffFullNotificationV1Mock.setDocumentsAvailable(true);
         bffFullNotificationV1Mock.setNotificationStatus(NotificationStatus.EFFECTIVE_DATE);
-        bffFullNotificationV1Mock.setRecipients(recipientV23);
-        bffFullNotificationV1Mock.setDocuments(notificationDocuments);
-        bffFullNotificationV1Mock.setNotificationStatusHistory(notificationStatusHistory);
-        bffFullNotificationV1Mock.setTimeline(timeline);
+        bffFullNotificationV1Mock.setRecipients(recipientsMock.getRecipientsMock());
+        bffFullNotificationV1Mock.setDocuments(documentsMock.getDocumentsMock());
+        bffFullNotificationV1Mock.setNotificationStatusHistory(statusHistoryMock.getStatusHistoryMock());
+        bffFullNotificationV1Mock.setTimeline(timelineMock.getTimelineMock());
 
         return bffFullNotificationV1Mock;
     }
 
-    public static FullReceivedNotificationV23 getOneRecipientNotification() {
+    public FullReceivedNotificationV23 getOneRecipientNotification() {
         FullReceivedNotificationV23 oneRecipientNotification = notificationMultiRecipientMock();
         oneRecipientNotification.setRecipients(Collections.singletonList(oneRecipientNotification.getRecipients().get(0)));
         oneRecipientNotification.setTimeline(oneRecipientNotification.getTimeline()
@@ -58,24 +56,24 @@ public class NotificationDetailMock {
         return oneRecipientNotification;
     }
 
-    public static BffFullNotificationV1 notificationToFE() {
+    public BffFullNotificationV1 notificationToFE() {
         FullReceivedNotificationV23 notificationMonoRecipient = getOneRecipientNotification();
         return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationMonoRecipient);
     }
 
-    public static BffFullNotificationV1 notificationToFEMultiRecipient() {
+    public BffFullNotificationV1 notificationToFEMultiRecipient() {
         FullReceivedNotificationV23 notificationMultiRecipient = notificationMultiRecipientMock();
         return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationMultiRecipient);
     }
 
 
-    public static BffFullNotificationV1 notificationToFERADD() {
+    public BffFullNotificationV1 notificationToFERADD() {
         FullReceivedNotificationV23 notificationDTORadd = notificationMultiRecipientMock();
-        notificationDTORadd.setTimeline(TimelineMock.getTimelineRADDMock());
+        notificationDTORadd.setTimeline(timelineMock.getTimelineRADDMock());
         return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTORadd);
     }
 
-    public static TimelineElementV23 getTimelineElem(TimelineElementCategoryV23 category, TimelineElementDetailsV23 details) {
+    public TimelineElementV23 getTimelineElem(TimelineElementCategoryV23 category, TimelineElementDetailsV23 details) {
         return new TimelineElementV23()
                 .category(category)
                 .elementId(category + ".IUN_RTRD-UDGU-QTQY-202308-P-1")

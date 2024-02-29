@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class PaymentsMock {
 
-    public static ArrayList<NotificationPaymentItem> getPaymentsMock() {
+    public ArrayList<NotificationPaymentItem> getPaymentsMock() {
         ArrayList<NotificationPaymentItem> notificationPaymentItems = new ArrayList<>();
 
         notificationPaymentItems.add(

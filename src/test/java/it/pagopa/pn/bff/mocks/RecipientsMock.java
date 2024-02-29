@@ -8,8 +8,11 @@ import java.util.ArrayList;
 
 public class RecipientsMock {
 
-    public static ArrayList<NotificationRecipientV23> getRecipientsMock() {
+    PaymentsMock paymentsMock = new PaymentsMock();
+
+    public ArrayList<NotificationRecipientV23> getRecipientsMock() {
         ArrayList<NotificationRecipientV23> recipients = new ArrayList<>();
+
 
         recipients.add(
                 new NotificationRecipientV23()
@@ -32,7 +35,7 @@ public class RecipientsMock {
                                         .province("MI")
                                         .foreignState("ITALIA")
                         )
-                        .payments(PaymentsMock.getPaymentsMock())
+                        .payments(paymentsMock.getPaymentsMock())
         );
 
         recipients.add(

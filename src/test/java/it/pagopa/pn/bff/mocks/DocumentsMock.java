@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class DocumentsMock {
 
-    public static ArrayList<NotificationDocument> getDocumentsMock() {
+    public ArrayList<NotificationDocument> getDocumentsMock() {
         ArrayList<NotificationDocument> notificationDocuments = new ArrayList<>();
 
         notificationDocuments.add(

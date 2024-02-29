@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatusHistoryMock {
-    public static ArrayList<NotificationStatusHistoryElement> getStatusHistoryMock() {
+    public ArrayList<NotificationStatusHistoryElement> getStatusHistoryMock() {
         ArrayList<NotificationStatusHistoryElement> notificationStatusHistory = new ArrayList<>();
 
         notificationStatusHistory.add(

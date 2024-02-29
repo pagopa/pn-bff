@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TimelineMock {
 
-    public static ArrayList<TimelineElementV23> getTimelineMock() {
+    public ArrayList<TimelineElementV23> getTimelineMock() {
         ArrayList<TimelineElementV23> timeline = new ArrayList<>();
 
         timeline.add(
@@ -353,7 +353,7 @@ public class TimelineMock {
         return timeline;
     }
 
-    public static ArrayList<TimelineElementV23> getTimelineRADDMock() {
+    public ArrayList<TimelineElementV23> getTimelineRADDMock() {
         ArrayList<TimelineElementV23> timeline = new ArrayList<>();
 
         BeanUtils.copyProperties(getTimelineMock(), timeline);
