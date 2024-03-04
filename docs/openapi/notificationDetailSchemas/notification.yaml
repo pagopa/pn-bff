@@ -9,6 +9,10 @@ components:
       allOf:
         - $ref: '../remote-refs.yaml#/components/schemas/SentNotificationV23'
         - type: object
+          required:
+            - notificationStatusHistory
+            - notificationStatus
+            - timeline
           properties:
             notificationStatusHistory:
               type: array
@@ -19,13 +23,13 @@ components:
             timeline:
               type: array
               items:
-                $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
+                $ref: './notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
             radd:
-              $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
+              $ref: './notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
             otherDocuments:
               type: array
               items:
-                $ref: './schemas-notification-documents.yaml#/components/schemas/NotificationDetailDocument'
+                $ref: './notification-documents.yaml#/components/schemas/NotificationDetailDocument'
 
     NotificationStatusHistory:
       type: object
@@ -47,7 +51,7 @@ components:
         steps:
           type: array
           items:
-            $ref: './schemas-notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
+            $ref: './notification-timeline.yaml#/components/schemas/NotificationDetailTimeline'
         recipient:
           type: string
         deliveryMode:

@@ -5,8 +5,8 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.mapper.CxTypeMapper;
-import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +37,6 @@ public class NotificationDetailRecipientService {
                 mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
-        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapNotificationDetail);
+        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapReceivedNotificationDetail);
     }
 }

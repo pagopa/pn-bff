@@ -1,8 +1,9 @@
-package it.pagopa.pn.bff.mapper;
+package it.pagopa.pn.bff.mappers;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
+import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,17 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class NotificationDetailMapperTest {
     @Test
-    void testMapNotificationDetail() {
+    void testReceivedNotificationDetailMapper() {
         FullReceivedNotificationV23 notification = new FullReceivedNotificationV23();
-        BffFullNotificationV1 actualMapNotificationDetailResult = NotificationDetailMapper.modelMapper.mapNotificationDetail(notification);
+        BffFullNotificationV1 actualMapNotificationDetailResult = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
         assertNotNull(actualMapNotificationDetailResult);
 
-        BffFullNotificationV1 mapNotificationNull = NotificationDetailMapper.modelMapper.mapNotificationDetail(null);
+        BffFullNotificationV1 mapNotificationNull = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(null);
         assertNull(mapNotificationNull);
     }
 
     @Test
-    void testMapSentNotificationDetail() {
+    void testSentNotificationDetailMapper() {
         FullSentNotificationV23 notification = new FullSentNotificationV23();
         BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notification);
         assertNotNull(actualMapSentNotificationDetailResult);

@@ -11,10 +11,15 @@ components:
           properties:
             title:
               type: string
+              minLength: 1
+              maxLength: 512
+              pattern: ^.*$
             requiresAck:
               type: string
             docIdx:
               type: string
+              maxLength: 3
+              pattern: ^\d+$
             documentId:
               type: string
             documentType:

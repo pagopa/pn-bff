@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mapper;
+package it.pagopa.pn.bff.mappers;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ class CxTypeMapperTest {
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet actualConvertRecipientCXTypeResult = CxTypeMapper.cxTypeMapper.convertRecipientCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertRecipientCXTypeResult);
     }
-    
+
     @Test
     void testConvertPACXType() {
         CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;

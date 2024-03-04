@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -58,19 +58,19 @@ public class NotificationDetailMock {
 
     public BffFullNotificationV1 notificationToFE() {
         FullReceivedNotificationV23 notificationMonoRecipient = getOneRecipientNotification();
-        return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationMonoRecipient);
+        return NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationMonoRecipient);
     }
 
     public BffFullNotificationV1 notificationToFEMultiRecipient() {
         FullReceivedNotificationV23 notificationMultiRecipient = notificationMultiRecipientMock();
-        return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationMultiRecipient);
+        return NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationMultiRecipient);
     }
 
 
     public BffFullNotificationV1 notificationToFERADD() {
         FullReceivedNotificationV23 notificationDTORadd = notificationMultiRecipientMock();
         notificationDTORadd.setTimeline(timelineMock.getTimelineRADDMock());
-        return NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTORadd);
+        return NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTORadd);
     }
 
     public TimelineElementV23 getTimelineElem(TimelineElementCategoryV23 category, TimelineElementDetailsV23 details) {

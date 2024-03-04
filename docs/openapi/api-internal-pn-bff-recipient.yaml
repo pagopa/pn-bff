@@ -117,7 +117,7 @@ components:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
 
     BffFullNotificationV1:
-      $ref: './notificationDetailSchemas/schemas-notification.yaml#/components/schemas/BffFullNotificationV1'
+      $ref: './notificationDetailSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

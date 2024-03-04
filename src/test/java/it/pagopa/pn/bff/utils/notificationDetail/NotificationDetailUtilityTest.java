@@ -5,14 +5,17 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailMock;
+import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,27 +34,27 @@ public class NotificationDetailUtilityTest {
                 t -> t.getCategory() != TimelineElementCategoryV23.AAR_GENERATION
         ).collect(Collectors.toList()));
 
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(noAARNotification);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(noAARNotification);
 
-        assert calculatedParsedNotification.getOtherDocuments().isEmpty();
+        Assertions.assertTrue(calculatedParsedNotification.getOtherDocuments().isEmpty());
 
         ArrayList<TimelineElementV23> AARTimelineElements = notificationDTO.getTimeline().stream().filter(
                 t -> t.getCategory() == TimelineElementCategoryV23.AAR_GENERATION
         ).collect(Collectors.toCollection(ArrayList::new));
 
-        calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTO);
+        calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTO);
 
-        assert calculatedParsedNotification.getOtherDocuments().size() == 1;
+        Assertions.assertEquals(1, calculatedParsedNotification.getOtherDocuments().size());
 
-        assert calculatedParsedNotification.getOtherDocuments().get(0).equals(
-                new NotificationDetailDocument()
+        Assertions.assertEquals(new NotificationDetailDocument()
                         .recIndex(0)
                         .documentId(AARTimelineElements.get(0).getDetails().getGeneratedAarUrl())
                         .documentType("AAR")
                         .title("Avviso di avvenuta ricezione")
                         .digests(new NotificationAttachmentDigests().sha256(""))
                         .ref(new NotificationAttachmentBodyRef().key("").versionToken(""))
-                        .contentType("")
+                        .contentType(""),
+                calculatedParsedNotification.getOtherDocuments().get(0)
         );
 
         // MULTI RECIPIENT
@@ -59,14 +62,13 @@ public class NotificationDetailUtilityTest {
                 t -> t.getCategory() == TimelineElementCategoryV23.AAR_GENERATION
         ).collect(Collectors.toCollection(ArrayList::new));
 
-        calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTOMultiRecipient);
+        calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTOMultiRecipient);
 
-        assert calculatedParsedNotification.getOtherDocuments().size() == AARTimelineElementsMultiRecipient.size();
+        Assertions.assertEquals(calculatedParsedNotification.getOtherDocuments().size(), AARTimelineElementsMultiRecipient.size());
 
         int index = 0;
         for (TimelineElementV23 element : AARTimelineElementsMultiRecipient) {
-            assert calculatedParsedNotification.getOtherDocuments().get(index).equals(
-                    new NotificationDetailDocument()
+            Assertions.assertEquals(new NotificationDetailDocument()
                             .recIndex(element.getDetails().getRecIndex())
                             .documentId(element.getDetails().getGeneratedAarUrl())
                             .documentType("AAR")
@@ -76,7 +78,8 @@ public class NotificationDetailUtilityTest {
                             )
                             .digests(new NotificationAttachmentDigests().sha256(""))
                             .ref(new NotificationAttachmentBodyRef().key("").versionToken(""))
-                            .contentType("")
+                            .contentType(""),
+                    calculatedParsedNotification.getOtherDocuments().get(index)
             );
             index++;
         }
@@ -86,8 +89,7 @@ public class NotificationDetailUtilityTest {
     void checkRADDInTimeline() {
         NotificationDetailTimeline raddFromTimeline = notificationDetailMock.notificationToFERADD().getRadd();
 
-        assert raddFromTimeline.equals(
-                new NotificationDetailTimeline()
+        Assertions.assertEquals(new NotificationDetailTimeline()
                         .elementId("NOTIFICATION_RADD_RETRIEVED_mock")
                         .timestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                         .legalFactsIds(List.of())
@@ -100,7 +102,8 @@ public class NotificationDetailUtilityTest {
                                         .raddTransactionId("6")
                         )
                         .index(0)
-                        .hidden(true)
+                        .hidden(true),
+                raddFromTimeline
         );
     }
 
@@ -118,7 +121,7 @@ public class NotificationDetailUtilityTest {
         );
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
-                .mapNotificationDetail(cancellationInProgressNotification);
+                .mapReceivedNotificationDetail(cancellationInProgressNotification);
 
         NotificationStatusHistory cancellationInProgressStatusHistory =
                 calculatedParsedNotification.getNotificationStatusHistory().stream()
@@ -126,9 +129,9 @@ public class NotificationDetailUtilityTest {
                         .findFirst()
                         .orElse(null);
 
-        assert cancellationInProgressStatusHistory != null;
+        Assertions.assertNotNull(cancellationInProgressStatusHistory);
 
-        assert calculatedParsedNotification.getNotificationStatus().equals(NotificationStatus.CANCELLATION_IN_PROGRESS);
+        Assertions.assertEquals(NotificationStatus.CANCELLATION_IN_PROGRESS, calculatedParsedNotification.getNotificationStatus());
     }
 
     @Test
@@ -160,25 +163,27 @@ public class NotificationDetailUtilityTest {
                 )
         );
 
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(analogNotification);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(analogNotification);
 
         NotificationDetailTimeline sendAnalogProgressElem = calculatedParsedNotification.getTimeline().stream()
                 .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_PROGRESS))
                 .findFirst()
                 .orElseThrow();
-        assert sendAnalogProgressElem.getHidden().equals(true);
+
+        Assertions.assertTrue(sendAnalogProgressElem.getHidden());
 
         NotificationDetailTimeline sendAnalogFeedbackElem = calculatedParsedNotification.getTimeline().stream()
                 .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_FEEDBACK))
                 .findFirst()
                 .orElseThrow();
-        assert sendAnalogFeedbackElem.getHidden().equals(false);
+
+        Assertions.assertFalse(sendAnalogFeedbackElem.getHidden());
 
         NotificationDetailTimeline sendAnalogRegisteredLetterElem = calculatedParsedNotification.getTimeline().stream()
                 .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
                 .findFirst()
                 .orElseThrow();
-        assert sendAnalogRegisteredLetterElem.getHidden().equals(true);
+        Assertions.assertTrue(sendAnalogRegisteredLetterElem.getHidden());
     }
 
     @Test
@@ -204,7 +209,7 @@ public class NotificationDetailUtilityTest {
 
         deliveredStatus.getRelatedTimelineElements().add(analogFailure.getElementId());
 
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(analogFailureNotification);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(analogFailureNotification);
 
         NotificationStatusHistory bffDeliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
@@ -230,7 +235,7 @@ public class NotificationDetailUtilityTest {
 
     @Test
     void deliveryModeDigital() {
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(
                 notificationDetailMock.getOneRecipientNotification()
         );
 
@@ -261,7 +266,7 @@ public class NotificationDetailUtilityTest {
 
         digitalSuccess.setCategory(TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER);
 
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTO);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTO);
         NotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
@@ -284,7 +289,7 @@ public class NotificationDetailUtilityTest {
                         .toList()
         );
 
-        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapNotificationDetail(notificationDTO);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTO);
         NotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
@@ -292,6 +297,216 @@ public class NotificationDetailUtilityTest {
                 .orElseThrow();
 
         Assertions.assertNull(deliveredStep.getDeliveryMode());
+    }
+
+    @Test
+    void checkFillingOfMacroSteps() {
+        FullReceivedNotificationV23 notificationDTO = new FullReceivedNotificationV23();
+        BeanUtils.copyProperties(notificationDetailMock.getOneRecipientNotification(), notificationDTO);
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTO);
+
+        boolean previousStepIsAccepted = false;
+        ArrayList<String> acceptedItems = new ArrayList<>();
+
+        for (NotificationStatusHistory status : ArrayHelpers.reverseArray(calculatedParsedNotification.getNotificationStatusHistory())) {
+            if (String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED))) {
+                previousStepIsAccepted = true;
+                acceptedItems = notificationDTO.getNotificationStatusHistory()
+                        .stream()
+                        .filter((statusHistory) -> statusHistory.getStatus()
+                                .equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED)
+                        ).findFirst()
+                        .orElseThrow()
+                        .getRelatedTimelineElements()
+                        .stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+                for (NotificationDetailTimeline step : status.getSteps()) {
+                    Assertions.assertTrue(step.getHidden());
+                    Assertions.assertTrue(step.getLegalFactsIds().isEmpty());
+                }
+                continue;
+            }
+
+            if (previousStepIsAccepted) {
+                ArrayList<String> currentItems = notificationDTO.getNotificationStatusHistory()
+                        .stream()
+                        .filter((statusHistory) -> String.valueOf(statusHistory.getStatus())
+                                .equals(String.valueOf(status.getStatus()))
+                        )
+                        .findFirst()
+                        .orElseThrow()
+                        .getRelatedTimelineElements()
+                        .stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                previousStepIsAccepted = false;
+
+                Assertions.assertEquals(
+                        status.getRelatedTimelineElements(),
+                        Arrays.stream(ArrayUtils.addAll(acceptedItems.toArray(), currentItems.toArray()))
+                                .toList()
+                );
+            }
+
+            OffsetDateTime previousStepTimestamp = null;
+            for (NotificationDetailTimeline step : status.getSteps()) {
+                NotificationDetailTimeline timelineStep = calculatedParsedNotification.getTimeline()
+                        .stream()
+                        .filter((timelineElem) -> timelineElem.getElementId().equals(step.getElementId()))
+                        .findFirst()
+                        .orElse(null);
+                Assertions.assertEquals(timelineStep, step);
+
+                if (previousStepTimestamp != null) {
+                    Assertions.assertTrue(step.getTimestamp().isBefore(previousStepTimestamp));
+                }
+
+                previousStepTimestamp = step.getTimestamp();
+            }
+        }
+    }
+
+    @Test
+    void hideAppIOEvent() {
+        TimelineElementV23 sendCourtesy = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.SEND_COURTESY_MESSAGE,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+                        .digitalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.DigitalAddress().type("APPIO").address(""))
+                        .ioSendMessageResult(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.IoSendMessageResult.SENT_OPTIN)
+        );
+
+        FullReceivedNotificationV23 ioNotification = new FullReceivedNotificationV23();
+        BeanUtils.copyProperties(notificationDetailMock.getOneRecipientNotification(), ioNotification);
+        ioNotification.getTimeline().add(sendCourtesy);
+
+        NotificationStatusHistoryElement acceptedStatus = ioNotification.getNotificationStatusHistory()
+                .stream()
+                .filter((status) -> status.getStatus().equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED))
+                .findFirst()
+                .orElseThrow();
+
+        acceptedStatus.getRelatedTimelineElements().add(sendCourtesy.getElementId());
+
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(ioNotification);
+
+        NotificationDetailTimeline ioStep;
+
+        for (NotificationStatusHistory status : calculatedParsedNotification.getNotificationStatusHistory()) {
+            ioStep = status.getSteps()
+                    .stream()
+                    .filter((st) -> st.getElementId().equals(sendCourtesy.getElementId()))
+                    .findFirst()
+                    .orElse(null);
+
+            Assertions.assertTrue(ioStep == null || ioStep.getHidden());
+        }
+    }
+
+    @Test
+    void shiftStepsFromDeliveredToDelivering() {
+        FullReceivedNotificationV23 notificationDTO = new FullReceivedNotificationV23();
+        BeanUtils.copyProperties(notificationDetailMock.getOneRecipientNotification(), notificationDTO);
+        TimelineElementV23 digitalFailure = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.DIGITAL_FAILURE_WORKFLOW,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+        );
+        int digitalSuccessIndex = -1;
+        for (int i = 0; i < notificationDTO.getTimeline().size(); i++) {
+            if (String.valueOf(notificationDTO.getTimeline().get(i).getCategory())
+                    .equals(String.valueOf(TimelineElementCategoryV23.DIGITAL_SUCCESS_WORKFLOW))) {
+                digitalSuccessIndex = i;
+                break;
+            }
+        }
+
+
+        TimelineElementV23 prepareLetter = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.PREPARE_SIMPLE_REGISTERED_LETTER,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+                        .productType("RN_RS")
+                        .physicalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.PhysicalAddress()
+                                .address("Via Rosas 1829")
+                                .zip("98036")
+                                .municipality("Graniti")
+                        )
+        );
+
+        TimelineElementV23 sendLetter = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+                        .productType("RN_RS")
+                        .physicalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.PhysicalAddress()
+                                .address("Via Rosas 1829")
+                                .zip("98036")
+                                .municipality("Graniti")
+                        )
+        );
+
+        NotificationStatusHistoryElement prevDeliveredStatus = notificationDTO.getNotificationStatusHistory()
+                .stream()
+                .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
+                .findFirst()
+                .orElseThrow();
+
+        int digitalSuccessElIndex = -1;
+        for (int i = 0; i < prevDeliveredStatus.getRelatedTimelineElements().size(); i++) {
+            if (String.valueOf(prevDeliveredStatus.getRelatedTimelineElements().get(i))
+                    .equals(String.valueOf(notificationDTO.getTimeline().get(digitalSuccessIndex).getElementId()))) {
+                digitalSuccessElIndex = i;
+                break;
+            }
+        }
+
+        prevDeliveredStatus.getRelatedTimelineElements().set(digitalSuccessElIndex, digitalFailure.getElementId());
+
+        prevDeliveredStatus.getRelatedTimelineElements().add(digitalSuccessElIndex + 1, prepareLetter.getElementId());
+        prevDeliveredStatus.getRelatedTimelineElements().add(digitalSuccessElIndex + 2, sendLetter.getElementId());
+
+        int deliveredCount = prevDeliveredStatus.getRelatedTimelineElements().size();
+
+        notificationDTO.getTimeline().set(digitalSuccessIndex, digitalFailure);
+        notificationDTO.getTimeline().add(digitalSuccessIndex + 1, prepareLetter);
+        notificationDTO.getTimeline().add(digitalSuccessIndex + 2, sendLetter);
+
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDTO);
+
+        NotificationStatusHistory deliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
+                .stream()
+                .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
+                .findFirst()
+                .orElseThrow();
+
+        NotificationStatusHistory deliveringStatus = calculatedParsedNotification.getNotificationStatusHistory()
+                .stream()
+                .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERING)))
+                .findFirst()
+                .orElseThrow();
+
+        Assertions.assertEquals(deliveredStatus.getSteps().size(), deliveredCount - digitalSuccessElIndex - 3);
+
+        NotificationDetailTimeline prepareLetterEl = deliveringStatus.getSteps()
+                .stream()
+                .filter((step) -> step.getElementId().equals(prepareLetter.getElementId()))
+                .findFirst()
+                .orElseThrow();
+
+        NotificationDetailTimeline sendLetterEl = deliveringStatus.getSteps()
+                .stream()
+                .filter((step) -> step.getElementId().equals(sendLetter.getElementId()))
+                .findFirst()
+                .orElseThrow();
+
+        NotificationDetailTimeline digitalFailureEl = deliveringStatus.getSteps()
+                .stream()
+                .filter((step) -> step.getElementId().equals(digitalFailure.getElementId()))
+                .findFirst()
+                .orElseThrow();
+
+        Assertions.assertNotNull(prepareLetterEl);
+        Assertions.assertNotNull(sendLetterEl);
+        Assertions.assertNotNull(digitalFailureEl);
     }
 
 }

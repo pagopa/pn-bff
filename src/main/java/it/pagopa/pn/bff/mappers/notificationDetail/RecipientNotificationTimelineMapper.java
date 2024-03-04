@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mapper.NotificationElementMapper;
+package it.pagopa.pn.bff.mappers.notificationDetail;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationDetailTimeline;

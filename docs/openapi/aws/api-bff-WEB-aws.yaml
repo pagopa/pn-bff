@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: HTiBdMCXtJtM3Ms/ArxcBYSv2wt+rMKGe+iiqCDt/Gs=
+  version: kwe0sJE9/Z2NREUIHguPNTPB9iEJ0JUe90pWDjenJtg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -19,6 +19,7 @@ paths:
         accettata.
       tags:
         - NotificationSent
+      operationId: retrieveSentNotificationV1
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
