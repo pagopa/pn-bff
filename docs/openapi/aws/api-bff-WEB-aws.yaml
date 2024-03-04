@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: kwe0sJE9/Z2NREUIHguPNTPB9iEJ0JUe90pWDjenJtg=
+  version: s/Xew+rp6DouwSel/aygGXTeOfcZDZ12+8CK8ExQUGs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -178,6 +178,10 @@ components:
       allOf:
         - $ref: '#/components/schemas/SentNotificationV23'
         - type: object
+          required:
+            - notificationStatusHistory
+            - notificationStatus
+            - timeline
           properties:
             notificationStatusHistory:
               type: array
@@ -1962,10 +1966,15 @@ components:
           properties:
             title:
               type: string
+              minLength: 1
+              maxLength: 512
+              pattern: ^.*$
             requiresAck:
               type: string
             docIdx:
               type: string
+              maxLength: 3
+              pattern: ^\d+$
             documentId:
               type: string
             documentType:
