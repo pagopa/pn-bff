@@ -1,11 +1,11 @@
-package it.pagopa.pn.bff.utils.notificationDetail;
+package it.pagopa.pn.bff.utils;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusHistoryElement;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailMock;
 import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
 import org.apache.commons.lang3.ArrayUtils;

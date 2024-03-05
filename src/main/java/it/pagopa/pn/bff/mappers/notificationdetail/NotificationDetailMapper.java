@@ -1,10 +1,10 @@
-package it.pagopa.pn.bff.mappers.notificationDetail;
+package it.pagopa.pn.bff.mappers.notificationdetail;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationDetailTimeline;
-import it.pagopa.pn.bff.utils.notificationDetail.NotificationDetailUtility;
+import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

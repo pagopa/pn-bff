@@ -6,7 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Full
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.notificationDetail.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

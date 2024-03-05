@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.utils.notificationDetail;
+package it.pagopa.pn.bff.utils;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import org.springframework.beans.BeanUtils;
@@ -191,7 +191,6 @@ public class NotificationDetailUtility {
         if (!timelineFiltered.isEmpty()) {
             final boolean isMultiRecipient = timelineFiltered.size() > 1;
 
-            List<NotificationDetailDocument> documentsList = new ArrayList<>();
             for (NotificationDetailTimeline timeline : timelineFiltered) {
                 final Integer recIndex = timeline.getDetails().getRecIndex();
                 final List<NotificationRecipientV23> recipients = bffFullNotificationV1.getRecipients();
@@ -215,9 +214,8 @@ public class NotificationDetailUtility {
                                         .versionToken("")
                         )
                         .contentType("");
-                documentsList.add(document);
+                otherDocuments.add(document);
             }
-            otherDocuments = documentsList;
         }
 
         bffFullNotificationV1.setOtherDocuments(otherDocuments);
