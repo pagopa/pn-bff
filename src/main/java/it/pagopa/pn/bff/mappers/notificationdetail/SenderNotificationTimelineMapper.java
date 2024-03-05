@@ -6,9 +6,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the TimelineElementV23 from the FullSentNotificationV23
+ * to the NotificationDetailTimeline
+ */
 @Mapper
 public interface SenderNotificationTimelineMapper {
-    
+
     SenderNotificationTimelineMapper paTimelineMapper = Mappers.getMapper(SenderNotificationTimelineMapper.class);
 
     @Mapping(target = "hidden", ignore = true)

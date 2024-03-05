@@ -221,6 +221,11 @@ public class NotificationDetailUtility {
         bffFullNotificationV1.setOtherDocuments(otherDocuments);
     }
 
+    /**
+     * If timeline contains a NOTIFICATION_RADD_RETRIEVED event, it is set in the notification radd property
+     *
+     * @param bffFullNotificationV1 the notification to check
+     */
     public static void checkRADDInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
         bffFullNotificationV1.getTimeline()
                 .stream()

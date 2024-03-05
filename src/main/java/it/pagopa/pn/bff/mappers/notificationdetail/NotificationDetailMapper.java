@@ -10,6 +10,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the FullReceivedNotificationV23 and FullSentNotificationV23
+ * to the BffFullNotificationV1
+ */
 @Mapper(uses = {RecipientNotificationTimelineMapper.class, SenderNotificationTimelineMapper.class})
 public interface NotificationDetailMapper {
 
@@ -33,21 +37,37 @@ public interface NotificationDetailMapper {
     BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV23 notification);
 
 
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#populateOtherDocuments(BffFullNotificationV1)
+     */
     @AfterMapping
     default void populateOtherDocuments(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.populateOtherDocuments(bffFullNotificationV1);
     }
 
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#checkRADDInTimeline(BffFullNotificationV1)
+     */
     @AfterMapping
     default void checkRADDInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.checkRADDInTimeline(bffFullNotificationV1);
     }
 
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertCancelledStatusInTimeline(BffFullNotificationV1)
+     */
     @AfterMapping
     default void insertCancelledStatusInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.insertCancelledStatusInTimeline(bffFullNotificationV1);
     }
 
+    /**
+     * Add index and hidden properties to timeline elements.<br />
+     * Hidden is used to hide those categories that are not shown by frontend.<br />
+     * Index is used to sort the timeline elements.
+     *
+     * @param bffFullNotificationV1 the BffFullNotificationV1 to map
+     */
     @AfterMapping
     default void setTimelineIndexAndHidden(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         for (int i = 0; i < bffFullNotificationV1.getTimeline().size(); i++) {
@@ -57,11 +77,19 @@ public interface NotificationDetailMapper {
         }
     }
 
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#populateMacroSteps(BffFullNotificationV1)
+     */
     @AfterMapping
     default void populateMacroStep(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.populateMacroSteps(bffFullNotificationV1);
     }
 
+    /**
+     * Sort the notification status history by activeFrom date
+     *
+     * @param bffFullNotificationV1 the BffFullNotificationV1 to map
+     */
     @AfterMapping
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) ->
