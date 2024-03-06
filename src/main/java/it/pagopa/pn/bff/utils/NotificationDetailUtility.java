@@ -7,8 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class that contains the utility functions used to transform the data from delivery to front-end
+ */
 public class NotificationDetailUtility {
 
+    /**
+     * List of the allowed delivery codes for the analog flow
+     * They are used to filter out those timeline events that are not included in the list
+     */
     final private static List<String> AnalogFlowAllowedCodes = java.util.List.of(
             "CON080",
             "RECRN001C",
@@ -65,11 +72,19 @@ public class NotificationDetailUtility {
             "RECRI004B"
     );
 
-    final private static List<TimelineCategory> AllowedCategories =
+    /**
+     * List of the allowed timeline categories for the analog flow
+     * They are used to filter out those timeline categories that are not included in the list
+     */
+    final private static List<TimelineCategory> TimelineAllowedAnalogCategories =
             Arrays.asList(TimelineCategory.SEND_ANALOG_PROGRESS, TimelineCategory.SEND_ANALOG_FEEDBACK,
                     TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS);
 
-    final private static List<TimelineCategory> TimelineAllowedStatus =
+    /**
+     * List of the allowed timeline categories
+     * On front-end side we don't show all the categories but only those listed below
+     */
+    final private static List<TimelineCategory> TimelineAllowedCategories =
             Arrays.asList(
                     TimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
                     // PN-6902
@@ -92,6 +107,10 @@ public class NotificationDetailUtility {
 
     /**
      * Compares two timeline elements and returns an integer representing the order between them
+     * This is used to sort the timeline categories into each status
+     * The desired order is descending (from earliest to the oldest)
+     * For those categories that have the same timestamp, we use the index properties (assuming that delivery returns
+     * the categories in ascending order)
      *
      * @param a the first timeline element
      * @param b the second timeline element
@@ -112,6 +131,7 @@ public class NotificationDetailUtility {
 
     /**
      * Check if the step is an internal app IO event
+     * This is used to filter out those categories that are about sending messages on App IO
      *
      * @param step - The timeline step to check
      * @return true if the step is an internal app IO event, false otherwise
@@ -129,21 +149,26 @@ public class NotificationDetailUtility {
 
     /**
      * Check if the timeline element must be shown
+     * This method uses the TimelineAllowedCategories to check if the timeline category must be shown
      *
      * @param t - The timeline element to check
      * @return true if the timeline element must be shown, false otherwise
      */
     public static boolean timelineElementMustBeShown(NotificationDetailTimeline t) {
-        if (AllowedCategories.contains(t.getCategory())) {
+        if (TimelineAllowedAnalogCategories.contains(t.getCategory())) {
             String deliveryDetailCode = t.getDetails().getDeliveryDetailCode();
             return deliveryDetailCode != null && AnalogFlowAllowedCodes.contains(deliveryDetailCode);
         }
 
-        return TimelineAllowedStatus.contains(t.getCategory());
+        return TimelineAllowedCategories.contains(t.getCategory());
     }
 
     /**
-     * Inserts the cancelled status in the timeline
+     * Se the CANCELLATION_IN_PROGRESS status for the notification.
+     * The cancellation flow is async. So we pass through a cancellation request before the cancellation process ends.
+     * On delivery side, this means that we have a NOTIFICATION_CANCELLATION_REQUEST timeline category.
+     * On front-end side, we translate this timeline category into a new notification status (CANCELLATION_IN_PROGRESS).
+     * This status must be added only if the cancellation process isn't already ended (no NOTIFICATION_CANCELLED category into the timeline)
      *
      * @param bffFullNotificationV1 the notification to populate
      */
@@ -177,7 +202,7 @@ public class NotificationDetailUtility {
     }
 
     /**
-     * Populates the other documents for the notification
+     * Move the AAR documents from the timeline to a separate key in the notification model
      *
      * @param bffFullNotificationV1 the notification to populate
      */
@@ -222,7 +247,8 @@ public class NotificationDetailUtility {
     }
 
     /**
-     * If timeline contains a NOTIFICATION_RADD_RETRIEVED event, it is set in the notification radd property
+     * If timeline contains a NOTIFICATION_RADD_RETRIEVED event, it is set in the notification radd flag.
+     * This flag indicates that the notification has been retrieved through the RADD flow
      *
      * @param bffFullNotificationV1 the notification to check
      */
@@ -235,7 +261,10 @@ public class NotificationDetailUtility {
     }
 
     /**
-     * Populates the macro step for the notification status history
+     * Populates the steps for each notification status history element.
+     * Each status history elements is determined by a series of timeline elements.
+     * This method copies the related timeline elements into a new property (steps) into each status history element
+     *
      *
      * @param notificationDetail  the notification to populate
      * @param timelineElement     the timeline element to populate
@@ -292,7 +321,12 @@ public class NotificationDetailUtility {
     }
 
     /**
-     * Populates the macro steps for the notification status history
+     * In addition to the population of the key steps, we apply other transformations.
+     * This is because, on front-end side, choices were made to make the timeline more readable to the citizen.
+     * So in this method:
+     * - we move the timeline elements from the status ACCEPTED to the next one
+     * - we move the timeline elements from DELIVERED to DELIVERING, if the digital workflow fails
+     * - we enrich the VIEWED status with the information about the user that has opened the notification
      *
      * @param bffFullNotificationV1 the notification to populate
      */

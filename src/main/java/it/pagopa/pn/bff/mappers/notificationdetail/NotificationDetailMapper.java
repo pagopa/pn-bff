@@ -64,7 +64,7 @@ public interface NotificationDetailMapper {
     /**
      * Add index and hidden properties to timeline elements.<br />
      * Hidden is used to hide those categories that are not shown by frontend.<br />
-     * Index is used to sort the timeline elements.
+     * Index is used to sort concurrent timeline elements.
      *
      * @param bffFullNotificationV1 the BffFullNotificationV1 to map
      */
@@ -87,6 +87,8 @@ public interface NotificationDetailMapper {
 
     /**
      * Sort the notification status history by activeFrom date
+     * From delivery, the statuses of the notification are sorted ascending (from the oldest to the earliest)
+     * Front-end wants them ordered descending (from the earliest to the oldest) instead
      *
      * @param bffFullNotificationV1 the BffFullNotificationV1 to map
      */
