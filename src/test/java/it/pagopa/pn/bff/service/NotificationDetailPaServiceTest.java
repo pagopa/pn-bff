@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 
 @ContextConfiguration(classes = {NotificationDetailPAService.class})
-public class NotificationDetailPaServiceTest {
+class NotificationDetailPaServiceTest {
     @Autowired
     private NotificationDetailPAService notificationDetailPAService;
     private PnDeliveryClientPAImpl pnDeliveryClientPA;
