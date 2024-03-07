@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mapper;
+package it.pagopa.pn.bff.mappers;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import org.mapstruct.Mapper;

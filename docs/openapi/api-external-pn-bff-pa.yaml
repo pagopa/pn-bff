@@ -64,9 +64,9 @@ paths:
         '200':
           description: OK
           content:
-            "application/json":
+            application/json:
               schema:
-                $ref: '#/components/schemas/BffFullSentNotificationV1'
+                $ref: '#/components/schemas/BffFullNotificationV1'
         '400':
           description: Bad request
           content:
@@ -93,37 +93,8 @@ components:
     StatusSchema:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
 
-    BffFullSentNotificationV1:
-      description: >-
-        Le informazioni riguardanti una notifica (richiesta di notifica accettata) e il 
-        processo di inoltro della notifica verso il cittadino.
-      allOf:
-        - $ref: '#/components/schemas/BffSentNotificationV1'
-        - type: object
-          required:
-            - notificationStatus
-            - notificationStatusHistory
-            - timeline
-          properties:
-            notificationStatus:
-              $ref: '#/components/schemas/BffNotificationStatus'
-            notificationStatusHistory:
-              $ref: '#/components/schemas/BffNotificationStatusHistory'
-            timeline:
-              description: >-
-                Elenco dettagliato di tutto ciò che è accaduto durante il processo di notifica
-              type: array
-              items:
-                $ref: '#/components/schemas/BffTimelineElementV1'
-
-    BffSentNotificationV1:
-      $ref: './remote-refs.yaml#/components/schemas/BffSentNotificationV1'
-    BffNotificationStatus:
-      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatus'
-    BffNotificationStatusHistory:
-      $ref: './remote-refs.yaml#/components/schemas/BffNotificationStatusHistory'
-    BffTimelineElementV1:
-      $ref: './remote-refs.yaml#/components/schemas/BffTimelineElementV1'
+    BffFullNotificationV1:
+      $ref: './notificationDetailSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

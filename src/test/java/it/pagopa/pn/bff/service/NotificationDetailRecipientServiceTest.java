@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV1;
-import it.pagopa.pn.bff.mapper.NotificationDetailMapper;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
+import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {NotificationDetailRecipientService.class})
-public class NotificationDetailRecipientServiceTest {
+class NotificationDetailRecipientServiceTest {
     @Autowired
     private NotificationDetailRecipientService notificationDetailRecipientService;
     private PnDeliveryClientRecipientImpl pnDeliveryClient;
@@ -42,8 +42,8 @@ public class NotificationDetailRecipientServiceTest {
                 Mockito.<String>any()
         )).thenReturn(Mono.just(new FullReceivedNotificationV23()));
 
-        when(modelMapperMock.mapNotificationDetail(Mockito.<FullReceivedNotificationV23>any()))
-                .thenReturn(new BffFullReceivedNotificationV1());
+        when(modelMapperMock.mapReceivedNotificationDetail(Mockito.<FullReceivedNotificationV23>any()))
+                .thenReturn(new BffFullNotificationV1());
 
         notificationDetailRecipientService.getNotificationDetail(
                 "UID",

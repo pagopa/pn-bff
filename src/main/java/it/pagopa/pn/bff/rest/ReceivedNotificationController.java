@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullReceivedNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
 import lombok.CustomLog;
@@ -27,15 +27,15 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
     }
 
     @Override
-    public Mono<ResponseEntity<BffFullReceivedNotificationV1>> getReceivedNotificationV1(String xPagopaPnUid,
-                                                                                       CxTypeAuthFleet xPagopaPnCxType,
-                                                                                       String xPagopaPnCxId,
-                                                                                       String iun,
-                                                                                       List<String> xPagopaPnCxGroups,
-                                                                                       String mandateId,
-                                                                                       final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffFullNotificationV1>> getReceivedNotificationV1(String xPagopaPnUid,
+                                                                                 CxTypeAuthFleet xPagopaPnCxType,
+                                                                                 String xPagopaPnCxId,
+                                                                                 String iun,
+                                                                                 List<String> xPagopaPnCxGroups,
+                                                                                 String mandateId,
+                                                                                 final ServerWebExchange exchange) {
         log.logStartingProcess("getReceivedNotificationV1");
-        Mono<BffFullReceivedNotificationV1> serviceResponse;
+        Mono<BffFullNotificationV1> serviceResponse;
         serviceResponse = notificationDetailRecipientService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iun, mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);

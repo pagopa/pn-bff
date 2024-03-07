@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PnBffExceptionTest {
+class PnBffExceptionTest {
     @Test
     void testConstructor() {
         PnBffException pnBffException = new PnBffException(
@@ -15,7 +15,7 @@ public class PnBffExceptionTest {
                 "Element",
                 new Throwable("Error")
         );
-        
+
         assertEquals(404, pnBffException.getStatus());
         assertEquals("Element", pnBffException.getProblem().getTitle());
         assertEquals(404, pnBffException.getProblem().getStatus().intValue());

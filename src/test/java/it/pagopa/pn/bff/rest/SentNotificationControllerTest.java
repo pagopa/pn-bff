@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullSentNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.NotificationDetailPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @WebFluxTest(SentNotificationController.class)
-public class SentNotificationControllerTest {
+class SentNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
     public static final String UID = "Uid";
     public static final String CX_ID = "CxId";
@@ -40,7 +40,7 @@ public class SentNotificationControllerTest {
                         Mockito.<String>any(),
                         Mockito.<java.util.List<String>>any()
                 ))
-                .thenReturn(Mono.just(new BffFullSentNotificationV1()));
+                .thenReturn(Mono.just(new BffFullNotificationV1()));
 
 
         webTestClient.get()
@@ -55,7 +55,7 @@ public class SentNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffFullSentNotificationV1.class);
+                .expectBody(BffFullNotificationV1.class);
 
         Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
                 UID,
