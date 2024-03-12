@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {NotificationDetailRecipientService.class})
-public class NotificationDetailRecipientServiceTest {
+class NotificationDetailRecipientServiceTest {
     @Autowired
     private NotificationDetailRecipientService notificationDetailRecipientService;
     private PnDeliveryClientRecipientImpl pnDeliveryClient;

@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @WebFluxTest(SentNotificationController.class)
-public class SentNotificationControllerTest {
+class SentNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
     public static final String UID = "Uid";
     public static final String CX_ID = "CxId";
