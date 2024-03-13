@@ -248,7 +248,6 @@ class NotificationDetailUtilityTest {
         Assertions.assertEquals(deliveredStep.getDeliveryMode(), NotificationDeliveryMode.DIGITAL);
     }
 
-
     @Test
     void deliveryModeAnalog() {
         FullReceivedNotificationV23 notificationDTO = new FullReceivedNotificationV23();
@@ -509,4 +508,84 @@ class NotificationDetailUtilityTest {
         Assertions.assertNotNull(digitalFailureEl);
     }
 
+    @Test
+    void viewedByRecipient() {
+        FullReceivedNotificationV23 viewedNotification = new FullReceivedNotificationV23();
+
+        BeanUtils.copyProperties(notificationDetailMock.getOneRecipientNotification(), viewedNotification);
+
+        TimelineElementV23 viewedTimelineElement = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.NOTIFICATION_VIEWED,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+        );
+        // add viewed timeline element
+        viewedNotification.getTimeline().add(viewedTimelineElement);
+        // add viewed status
+        NotificationStatusHistoryElement viewedStatus = new NotificationStatusHistoryElement();
+        viewedStatus.setStatus(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.VIEWED);
+        viewedStatus.setActiveFrom(viewedTimelineElement.getTimestamp());
+        List<String> relatedViewedElement = new ArrayList<>();
+        relatedViewedElement.add(viewedTimelineElement.getElementId());
+        viewedStatus.setRelatedTimelineElements(relatedViewedElement);
+
+        viewedNotification.addNotificationStatusHistoryItem(viewedStatus);
+
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
+                .mapReceivedNotificationDetail(viewedNotification);
+
+        NotificationStatusHistory viewedStatusHistory =
+                calculatedParsedNotification.getNotificationStatusHistory().stream()
+                        .filter(status -> status.getStatus().equals(NotificationStatus.VIEWED))
+                        .findFirst()
+                        .orElse(null);
+
+        Assertions.assertNotNull(viewedStatusHistory);
+        Assertions.assertEquals(viewedStatusHistory.getSteps().size(), 1);
+        Assertions.assertNull(viewedStatusHistory.getRecipient());
+    }
+
+    @Test
+    void viewedByDelegate() {
+        FullReceivedNotificationV23 viewedNotification = new FullReceivedNotificationV23();
+
+        BeanUtils.copyProperties(notificationDetailMock.getOneRecipientNotification(), viewedNotification);
+
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.DelegateInfo delegate =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.DelegateInfo()
+                        .taxId("GLLGLL64B15G702I")
+                        .denomination("Galileo Galilei")
+                        .delegateType(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.RecipientType.PF);
+
+        TimelineElementV23 viewedTimelineElement = notificationDetailMock.getTimelineElem(
+                TimelineElementCategoryV23.NOTIFICATION_VIEWED,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementDetailsV23()
+                        .recIndex(0)
+                        .delegateInfo(delegate)
+        );
+        // add viewed timeline element
+        viewedNotification.getTimeline().add(viewedTimelineElement);
+        // add viewed status
+        NotificationStatusHistoryElement viewedStatus = new NotificationStatusHistoryElement();
+        viewedStatus.setStatus(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.VIEWED);
+        viewedStatus.setActiveFrom(viewedTimelineElement.getTimestamp());
+        List<String> relatedViewedElement = new ArrayList<>();
+        relatedViewedElement.add(viewedTimelineElement.getElementId());
+        viewedStatus.setRelatedTimelineElements(relatedViewedElement);
+
+        viewedNotification.addNotificationStatusHistoryItem(viewedStatus);
+
+        BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
+                .mapReceivedNotificationDetail(viewedNotification);
+
+        NotificationStatusHistory viewedStatusHistory =
+                calculatedParsedNotification.getNotificationStatusHistory().stream()
+                        .filter(status -> status.getStatus().equals(NotificationStatus.VIEWED))
+                        .findFirst()
+                        .orElse(null);
+
+        Assertions.assertNotNull(viewedStatusHistory);
+        Assertions.assertEquals(viewedStatusHistory.getSteps().size(), 1);
+        Assertions.assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
+    }
 }
