@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.config;
 
-import it.pagopa.pn.bff.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
