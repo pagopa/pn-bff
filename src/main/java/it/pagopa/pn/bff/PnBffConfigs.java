@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class PnBffConfigs {
     private String deliveryBaseUrl;
+    private String apikeyManagerBaseUrl;
 
     @PostConstruct
     public void init() {

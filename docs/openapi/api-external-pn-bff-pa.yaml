@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN BFF BE Microservice - Mittenti
+  title: PN BFF BE Microservice - Notifiche Mittenti
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
   x-api-id: api-internal-pn-bff-pa
-  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  x-summary: 'API di pn-bff esposte al Web ai mittenti per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -58,6 +58,8 @@ paths:
       tags:
         - NotificationSent
       operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -94,7 +96,7 @@ components:
       $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
 
     BffFullNotificationV1:
-      $ref: './notificationDetailSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+      $ref: './notificationSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

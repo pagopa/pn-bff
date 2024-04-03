@@ -1,0 +1,230 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - ApiKeys Mittenti
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-pa-apikeys
+  x-summary: 'API di pn-bff esposte al Web ai mittenti per la creazione/modifica/rimozione delle api key'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: ApiKeys
+    description: >-
+      Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+
+paths:
+  "/bff/v1/api-keys":
+    get:
+      summary: Ricerca api keys
+      description: >-
+        servizio di consultazione della lista delle api keys
+      tags:
+        - ApiKeys
+      operationId: getApiKeys
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lastUpdate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showVirtualKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BffApiKeysResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      summary: Creazione api key
+      description: >-
+        servizio di creazione di un'api key
+      tags:
+        - ApiKeys
+      operationId: newApiKey
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BffRequestNewApiKey"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BffResponseNewApiKey'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  "/bff/v1/api-keys/{id}":
+    delete:
+      summary: Rimozione api key
+      description: >-
+        servizio di rimozione dell'api key
+      tags:
+        - ApiKeys
+      operationId: deleteApiKeys
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: '#/components/parameters/pathApiKey'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. delete an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  "/bff/v1/api-keys/{id}/status":
+    put:
+      summary: Cambia lo stato dell'api key
+      description: >-
+        servizio di cambio stato dell'api key
+      tags:
+        - ApiKeys
+      operationId: changeStatusApiKey
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: '#/components/parameters/pathApiKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BffRequestApiKeyStatus"
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+components:
+  parameters:
+    ### PARAMETRI DI AUTENTICAZIONE
+      required: false
+
+    ### PARAMETRI RICERCA API KEY
+    pathApiKey:
+      description: >-
+        Identificativo univoco dell'api key
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    Problem:
+      $ref: './remote-refs.yaml#/components/schemas/Problem'
+
+    BffApiKeysResponse:
+      $ref: './apikeysSchemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
+
+    BffRequestNewApiKey:
+      $ref: './remote-refs.yaml#/components/schemas/RequestNewApiKey'
+
+    BffResponseNewApiKey:
+      $ref: './remote-refs.yaml#/components/schemas/ResponseNewApiKey'
+
+    BffRequestApiKeyStatus:
+      $ref: './remote-refs.yaml#/components/schemas/RequestApiKeyStatus'
