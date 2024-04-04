@@ -3,7 +3,8 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
+import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -21,53 +22,50 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnDeliveryClientRecipientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnDeliveryClientRecipientImplTest {
+    private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     @Autowired
     private PnDeliveryClientRecipientImpl pnDeliveryClientRecipientImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
     private RecipientReadApi recipientReadApi;
 
     @Test
-    void getNotification() throws RestClientException {
-        Mono<FullReceivedNotificationV23> fullReceivedNotificationV21 = Mono.just(new FullReceivedNotificationV23());
-
-        when(recipientReadApi
-                .getReceivedNotificationV23(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any(),
-                        Mockito.<String>any()
-                )).thenReturn(fullReceivedNotificationV21);
+    void getReceivedNotificationV23() throws RestClientException {
+        when(recipientReadApi.getReceivedNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getOneRecipientNotification()));
 
         StepVerifier.create(pnDeliveryClientRecipientImpl.getReceivedNotification(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
-                "CX_ID",
+                UserMock.PN_CX_ID,
                 "IUN",
-                null,
+                UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
-        )).expectNextCount(1).verifyComplete();
+        )).expectNext(notificationDetailRecipientMock.getOneRecipientNotification()).verifyComplete();
     }
 
     @Test
-    void getSentNotificationV23Error() {
-        when(recipientReadApi
-                .getReceivedNotificationV23(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any(),
-                        Mockito.<String>any()
-                )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+    void getReceivedNotificationV23Error() {
+        when(recipientReadApi.getReceivedNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnDeliveryClientRecipientImpl.getReceivedNotification(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
-                "CX_ID",
+                UserMock.PN_CX_ID,
                 "IUN",
-                null,
+                UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
         )).expectError(PnBffException.class).verify();
     }

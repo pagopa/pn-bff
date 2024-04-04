@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 public class PnBffConfigs {
     private String deliveryBaseUrl;
     private String apikeyManagerBaseUrl;
+    private String externalRegistriesBaseUrl;
 
     @PostConstruct
     public void init() {
