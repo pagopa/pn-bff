@@ -19,19 +19,19 @@ public class PnUserAttributesClientImpl {
 
     private final ConsentsApi consentsApi;
 
-    public Mono<Consent> getTosConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String version) {
+    public Mono<Consent> getTosConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType TOS");
-        
+
         Mono<Consent> tosConsent;
-        tosConsent = consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.TOS, version)
+        tosConsent = consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.TOS, null)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         return tosConsent;
     }
 
-    public Mono<Consent> getPrivacyConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String version) {
+    public Mono<Consent> getPrivacyConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType DataPrivacy");
-        return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.DATAPRIVACY, version)
+        return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.DATAPRIVACY, null)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

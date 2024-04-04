@@ -25,17 +25,16 @@ public class TosPrivacyController implements UserConsentsApi {
     @Override
     public Mono<ResponseEntity<TosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
                                                                    CxTypeAuthFleet xPagopaPnCxType,
-                                                                   String version,
                                                                    final ServerWebExchange exchange) {
         log.logStartingProcess("getTosPrivacyV1");
 
         Mono<TosPrivacyConsent> serviceResponse;
         serviceResponse = tosPrivacyService
-                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType, version)
+                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         log.logEndingProcess("getTosPrivacyV1");
-        
+
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

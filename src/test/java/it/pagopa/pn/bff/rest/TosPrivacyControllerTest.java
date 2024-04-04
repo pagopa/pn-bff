@@ -32,8 +32,7 @@ public class TosPrivacyControllerTest {
     void getTosPrivacy() {
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any()
+                        Mockito.<CxTypeAuthFleet>any()
                 ))
                 .thenReturn(Mono.just(new TosPrivacyConsent()));
 
@@ -50,8 +49,7 @@ public class TosPrivacyControllerTest {
 
         Mockito.verify(tosPrivacyService).getTosPrivacy(
                 UID,
-                CX_TYPE,
-                null
+                CX_TYPE
         );
     }
 
@@ -59,8 +57,7 @@ public class TosPrivacyControllerTest {
     void getTosPrivacyError() {
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any()
+                        Mockito.<CxTypeAuthFleet>any()
                 ))
                 .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -76,8 +73,7 @@ public class TosPrivacyControllerTest {
 
         Mockito.verify(tosPrivacyService).getTosPrivacy(
                 UID,
-                CX_TYPE,
-                null
+                CX_TYPE
         );
     }
 }

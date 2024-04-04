@@ -38,14 +38,12 @@ class TosPrivacyServiceTest {
     void testGetTosContent() {
         when(pnUserAttributesClient.getTosConsent(
                 Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any()
+                Mockito.<CxTypeAuthFleet>any()
         )).thenReturn(Mono.just(new Consent()));
 
         when(pnUserAttributesClient.getPrivacyConsent(
                 Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any()
+                Mockito.<CxTypeAuthFleet>any()
         )).thenReturn(Mono.just(new Consent()));
 
         when(modelMapperMock.mapTosPrivacyConsent(any(Consent.class)))
@@ -53,14 +51,12 @@ class TosPrivacyServiceTest {
 
         tosPrivacyService.getTosPrivacy(
                 "UID",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
-                "VERSION_1"
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
         );
 
         Mockito.verify(pnUserAttributesClient).getTosConsent(
                 Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any()
+                Mockito.<CxTypeAuthFleet>any()
         );
     }
 
@@ -68,20 +64,17 @@ class TosPrivacyServiceTest {
     void testGetNotificationDetailIunNotFound() {
         when(pnUserAttributesClient.getTosConsent(
                 Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any()
+                Mockito.<CxTypeAuthFleet>any()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         when(pnUserAttributesClient.getPrivacyConsent(
                 Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any()
+                Mockito.<CxTypeAuthFleet>any()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         "UID",
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
-                        "VERSION_1"
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)

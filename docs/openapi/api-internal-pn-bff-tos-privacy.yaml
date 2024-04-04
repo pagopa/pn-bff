@@ -37,9 +37,6 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV1
-      parameters:
-        - $ref: '#/components/parameters/queryVersion'
-        # TODO - verificare se è necessario passare 2 parametri query version (uno per tos e uno per privacy)
       responses:
         '200':
           description: successful operation
@@ -86,13 +83,6 @@ components:
       $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
     uidAuthFleet:                                                                  # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
-    queryVersion:
-      name: version
-      in: query
-      description: La versione del consenso. Se non presente il default è nessuna versione accettata.
-      required: false
-      schema:
-        $ref: './remote-refs.yaml#/components/schemas/ConsentVersion'
 
   schemas:
     ConsentAction:

@@ -19,19 +19,17 @@ import reactor.core.publisher.Mono;
 public class TosPrivacyService {
     private final PnUserAttributesClientImpl pnUserAttributesClient;
 
-    public Mono<TosPrivacyConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String version) {
+    public Mono<TosPrivacyConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
         log.info("getTosPrivacy");
         Mono<BffConsent> tosConsent = pnUserAttributesClient.getTosConsent(
                         xPagopaPnUid,
-                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
-                        version)
+                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
                 .map(TosPrivacyMapper.tosPrivacyMapper::mapTosPrivacyConsent)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         Mono<BffConsent> privacyConsent = pnUserAttributesClient.getPrivacyConsent(
                         xPagopaPnUid,
-                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
-                        version)
+                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
                 .map(TosPrivacyMapper.tosPrivacyMapper::mapTosPrivacyConsent)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 

@@ -34,13 +34,12 @@ class PnUserAttributesClientImplTest {
                 Mockito.<String>any(),
                 Mockito.<CxTypeAuthFleet>any(),
                 Mockito.<ConsentType>any(),
-                Mockito.<String>any()
+                Mockito.isNull()
         )).thenReturn(Mono.just(mock(Consent.class)));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
-                CxTypeAuthFleet.PF,
-                "VERSION_1"
+                CxTypeAuthFleet.PF
         )).expectNextCount(1).verifyComplete();
     }
 
@@ -50,13 +49,12 @@ class PnUserAttributesClientImplTest {
                 Mockito.<String>any(),
                 Mockito.<CxTypeAuthFleet>any(),
                 Mockito.<ConsentType>any(),
-                Mockito.<String>any()
+                Mockito.isNull()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
-                CxTypeAuthFleet.PF,
-                "VERSION_1"
+                CxTypeAuthFleet.PF
         )).expectError(PnBffException.class).verify();
     }
 }
