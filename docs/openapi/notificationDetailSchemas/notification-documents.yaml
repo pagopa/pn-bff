@@ -36,4 +36,4 @@ components:
           type: string
 
     NotificationAttachment:
-      $ref: '../remote-refs.yaml#/components/schemas/NotificationAttachment'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/01f91fb6390338e566c3fcc538ff575be0364df9/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
