@@ -32,7 +32,7 @@ class PnApikeyManagerClientPAImplTest {
     void getApiKeys() throws RestClientException {
         when(apiKeysApi.getApiKeys(
                 Mockito.anyString(),
-                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyInt(),
@@ -57,7 +57,7 @@ class PnApikeyManagerClientPAImplTest {
     void getApiKeysError() {
         when(apiKeysApi.getApiKeys(
                 Mockito.anyString(),
-                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyInt(),

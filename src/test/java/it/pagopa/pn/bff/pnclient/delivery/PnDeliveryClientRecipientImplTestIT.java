@@ -64,7 +64,7 @@ class PnDeliveryClientRecipientImplTestIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
-        String response = objectMapper.writeValueAsString(notificationDetailRecipientMock.getOneRecipientNotification());
+        String response = objectMapper.writeValueAsString(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
@@ -79,7 +79,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 iun,
                 UserMock.PN_CX_GROUPS,
                 mandateId
-        )).expectNext(notificationDetailRecipientMock.getOneRecipientNotification()).verifyComplete();
+        )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
 
     @Test

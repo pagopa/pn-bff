@@ -2,9 +2,10 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
@@ -32,7 +33,7 @@ public class ApiKeysPaService {
         // list of api keys
         Mono<ApiKeysResponse> apiKeysResponse = pnApikeyManagerClientPA.getApiKeys(
                 xPagopaPnUid,
-                xPagopaPnCxType,
+                CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 xPagopaPnCxGroups,
                 limit,

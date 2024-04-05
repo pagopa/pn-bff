@@ -35,9 +35,9 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                  String mandateId,
                                                                                  final ServerWebExchange exchange) {
         log.logStartingProcess("getReceivedNotificationV1");
-        Mono<BffFullNotificationV1> serviceResponse;
-        serviceResponse = notificationDetailRecipientService.getNotificationDetail(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iun, mandateId
+        
+        Mono<BffFullNotificationV1> serviceResponse = notificationDetailRecipientService.getNotificationDetail(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups, mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 

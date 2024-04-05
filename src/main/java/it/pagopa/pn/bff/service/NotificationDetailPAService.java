@@ -30,7 +30,7 @@ public class NotificationDetailPAService {
         Mono<FullSentNotificationV23> notificationDetail;
         notificationDetail = pnDeliveryClientPA.getSentNotification(
                 xPagopaPnUid,
-                CxTypeMapper.cxTypeMapper.convertPACXType(xPagopaPnCxType),
+                CxTypeMapper.cxTypeMapper.convertDeliveryPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups

@@ -202,7 +202,7 @@ class NotificationDetailUtilityTest {
         NotificationStatusHistoryElement deliveredStatus = analogFailureNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) ->
-                        status.getStatus().equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)
+                        status.getStatus().equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationStatus.DELIVERED)
                 )
                 .findFirst()
                 .orElseThrow();
@@ -313,7 +313,7 @@ class NotificationDetailUtilityTest {
                 acceptedItems = notificationDTO.getNotificationStatusHistory()
                         .stream()
                         .filter((statusHistory) -> statusHistory.getStatus()
-                                .equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED)
+                                .equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationStatus.ACCEPTED)
                         ).findFirst()
                         .orElseThrow()
                         .getRelatedTimelineElements()
@@ -379,7 +379,7 @@ class NotificationDetailUtilityTest {
 
         NotificationStatusHistoryElement acceptedStatus = ioNotification.getNotificationStatusHistory()
                 .stream()
-                .filter((status) -> status.getStatus().equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED))
+                .filter((status) -> status.getStatus().equals(it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationStatus.ACCEPTED))
                 .findFirst()
                 .orElseThrow();
 

@@ -32,12 +32,12 @@ class PnDeliveryClientRecipientImplTest {
     void getReceivedNotificationV23() throws RestClientException {
         when(recipientReadApi.getReceivedNotificationV23(
                 Mockito.anyString(),
-                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyString()
-        )).thenReturn(Mono.just(notificationDetailRecipientMock.getOneRecipientNotification()));
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationMultiRecipientMock()));
 
         StepVerifier.create(pnDeliveryClientRecipientImpl.getReceivedNotification(
                 UserMock.PN_UID,
@@ -46,14 +46,14 @@ class PnDeliveryClientRecipientImplTest {
                 "IUN",
                 UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
-        )).expectNext(notificationDetailRecipientMock.getOneRecipientNotification()).verifyComplete();
+        )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
 
     @Test
     void getReceivedNotificationV23Error() {
         when(recipientReadApi.getReceivedNotificationV23(
                 Mockito.anyString(),
-                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),

@@ -1,44 +1,44 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
+import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
+import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {ApiKeysPaService.class})
 public class ApiKeysPaServiceTest {
+    @Autowired
+    private static ApiKeysPaService apiKeysPaService;
+    private static PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
+    private static PnInfoPaClientImpl pnInfoPaClient;
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
     private final UserMock userMock = new UserMock();
-    @Autowired
-    private ApiKeysPaService apiKeysPaService;
-    private PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
-    private PnInfoPaClientImpl pnInfoPaClient;
 
-    @BeforeEach
-    void setup() {
-        this.pnApikeyManagerClientPA = mock(PnApikeyManagerClientPAImpl.class);
-        this.pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+    @BeforeAll
+    public static void setup() {
+        pnApikeyManagerClientPA = mock(PnApikeyManagerClientPAImpl.class);
+        pnInfoPaClient = mock(PnInfoPaClientImpl.class);
 
-        this.apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnInfoPaClient);
+        apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnInfoPaClient);
     }
 
     @Test
     void testGetApiKeys() {
         when(pnApikeyManagerClientPA.getApiKeys(
                 Mockito.anyString(),
-                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyInt(),
@@ -47,26 +47,26 @@ public class ApiKeysPaServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.just(apiKeysMock.getApiKeysMock()));
 
-        apiKeysPaService.getApiKeys(
-                "UID",
-                CxTypeAuthFleet.PF,
-                "CX_ID",
-                Collections.singletonList("group"),
+        when(pnInfoPaClient.getGroups(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any()
+        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+
+        Mono<BffApiKeysResponse> result = apiKeysPaService.getApiKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
                 10,
                 "LAST_KEY",
                 "LAST_UPDATE",
                 true
         );
 
-        Mockito.verify(pnApikeyManagerClientPA).getApiKeys(
-                Mockito.anyString(),
-                Mockito.any(),
-                Mockito.anyString(),
-                Mockito.anyList(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()
-        );
+        StepVerifier.create(result)
+                .expectNext(ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), userMock.getPaGroupsMock()))
+                .verifyComplete();
     }
 }

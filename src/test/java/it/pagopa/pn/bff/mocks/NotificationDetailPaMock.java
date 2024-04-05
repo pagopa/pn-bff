@@ -9,119 +9,112 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class NotificationDetailPaMock {
 
+    private NotificationDocument getDocumentMock(String idx) {
+        NotificationDocument document = new NotificationDocument();
+        document.setDocIdx(idx);
+        document.setTitle("Document " + idx);
+        document.setContentType("application/pdf");
+        document.setDigests(new NotificationAttachmentDigests().sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=" + idx));
+        document.setRef(
+                new NotificationAttachmentBodyRef()
+                        .key("PN_NOTIFICATION_ATTACHMENTS-abb7804b6e442c8b2223648af970cd1-" + idx + ".pdf")
+                        .versionToken("v1")
+        );
+        return document;
+    }
+
     private ArrayList<NotificationDocument> getDocumentsMock() {
         ArrayList<NotificationDocument> notificationDocuments = new ArrayList<>();
-
-        notificationDocuments.add(
-                new NotificationDocument()
-                        .docIdx("0")
-                        .title("Document 0")
-                        .contentType("application/pdf")
-                        .digests(new NotificationAttachmentDigests()
-                                .sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=")
-                        )
-                        .ref(new NotificationAttachmentBodyRef()
-                                .key("PN_NOTIFICATION_ATTACHMENTS-abb7804b6e442c8b2223648af970cd1.pdf")
-                                .versionToken("v1")
-                        )
-        );
-
+        notificationDocuments.add(getDocumentMock("0"));
         return notificationDocuments;
     }
 
-    private ArrayList<NotificationPaymentItem> getPaymentsMock() {
-        ArrayList<NotificationPaymentItem> notificationPaymentItems = new ArrayList<>();
+    private NotificationPaymentItem getPaymentMock(String type, String index, boolean hasAttachment, String f24Title) {
+        NotificationPaymentItem paymentItem = new NotificationPaymentItem();
+        if (Objects.equals(type, "PagoPa") || Objects.equals(type, "PagoPaAndF24")) {
+            PagoPaPayment pagoPaPayment = new PagoPaPayment();
+            pagoPaPayment.setCreditorTaxId("77777777777");
+            pagoPaPayment.setNoticeCode("33333333333333333" + index);
+            pagoPaPayment.setApplyCost(Objects.equals(index, "0"));
+            if (hasAttachment) {
+                NotificationPaymentAttachment paymentAttachment = new NotificationPaymentAttachment();
+                paymentAttachment.setContentType("application/pdf");
+                paymentAttachment.setDigests(new NotificationAttachmentDigests().sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlA=" + index));
+                paymentAttachment.setRef(new NotificationAttachmentBodyRef()
+                        .key("PN_NOTIFICATION_ATTACHMENTS-abb7804b6e442c8b2223648af970cd1-" + index + ".pdf")
+                        .versionToken("v1"));
+                pagoPaPayment.setAttachment(paymentAttachment);
+                paymentItem.setPagoPa(pagoPaPayment);
+            }
+        }
+        if (Objects.equals(type, "F24") || Objects.equals(type, "PagoPaAndF24")) {
+            F24Payment f24Payment = new F24Payment();
+            f24Payment.setApplyCost(Objects.equals(index, "0"));
+            f24Payment.setTitle(f24Title);
+            NotificationMetadataAttachment metadataAttachment = new NotificationMetadataAttachment();
+            metadataAttachment.setContentType("application/pdf");
+            metadataAttachment.setDigests(new NotificationAttachmentDigests().sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlB=" + index));
+            metadataAttachment.setRef(new NotificationAttachmentBodyRef()
+                    .key("PN_NOTIFICATION_ATTACHMENTS-bbb7804b6e442c8b2223648af970cd1-" + index + ".pdf")
+                    .versionToken("v1"));
+            f24Payment.setMetadataAttachment(metadataAttachment);
+            paymentItem.setF24(f24Payment);
+        }
+        return paymentItem;
+    }
 
-        notificationPaymentItems.add(
-                new NotificationPaymentItem()
-                        .pagoPa(new PagoPaPayment()
-                                .noticeCode("302011686772695132")
-                                .creditorTaxId("77777777777")
-                                .applyCost(true)
-                        )
-                        .f24(new F24Payment()
-                                .title("F24-001")
-                                .applyCost(false)
-                        )
-        );
+    private ArrayList<NotificationPaymentItem> getPaymentsMockRec0() {
+        ArrayList<NotificationPaymentItem> notificationPaymentItems = new ArrayList<>();
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "0", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "1", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "2", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "3", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "4", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "5", true, null));
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "6", false, null));
 
         return notificationPaymentItems;
     }
 
+    private ArrayList<NotificationPaymentItem> getPaymentsMockRec1() {
+        ArrayList<NotificationPaymentItem> notificationPaymentItems = new ArrayList<>();
+        notificationPaymentItems.add(getPaymentMock("PagoPa", "7", true, "F24 prima rata TARI"));
+        notificationPaymentItems.add(getPaymentMock("F24", "8", false, "F24 seconda rata TARI"));
+        notificationPaymentItems.add(getPaymentMock("F24", "9", false, "F24 terza rata TARI"));
+
+        return notificationPaymentItems;
+    }
+
+    private NotificationRecipientV23 getRecipientMock(NotificationRecipientV23.RecipientTypeEnum recipientType, String taxId, String denomination, ArrayList<NotificationPaymentItem> payments) {
+        NotificationRecipientV23 recipient = new NotificationRecipientV23();
+        recipient.setRecipientType(recipientType);
+        recipient.setTaxId(taxId);
+        recipient.setDenomination(denomination);
+        recipient.setDigitalDomicile(new NotificationDigitalAddress()
+                .type(NotificationDigitalAddress.TypeEnum.PEC)
+                .address("notifichedigitali-uat@pec.pagopa.it"));
+        recipient.setPhysicalAddress(new NotificationPhysicalAddress()
+                .at("Presso")
+                .address("VIA SENZA NOME")
+                .addressDetails("SCALA B")
+                .zip("87100")
+                .municipality("MILANO")
+                .municipalityDetails("MILANO")
+                .province("MI")
+                .foreignState("ITALIA"));
+        recipient.setPayments(payments);
+        return recipient;
+    }
+
     private ArrayList<NotificationRecipientV23> getRecipientsMock() {
         ArrayList<NotificationRecipientV23> recipients = new ArrayList<>();
-
-
-        recipients.add(
-                new NotificationRecipientV23()
-                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF)
-                        .taxId("LVLDAA85T50G702B")
-                        .denomination("Mario Cucumber")
-                        .digitalDomicile(
-                                new NotificationDigitalAddress()
-                                        .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                        .address("notifichedigitali-uat@pec.pagopa.it")
-                        )
-                        .physicalAddress(
-                                new NotificationPhysicalAddress()
-                                        .at("Presso")
-                                        .address("VIA SENZA NOME")
-                                        .addressDetails("SCALA B")
-                                        .zip("87100")
-                                        .municipality("MILANO")
-                                        .municipalityDetails("MILANO")
-                                        .province("MI")
-                                        .foreignState("ITALIA")
-                        )
-                        .payments(getPaymentsMock())
-        );
-
-        recipients.add(
-                new NotificationRecipientV23()
-                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF)
-                        .taxId("FRMTTR76M06B715E")
-                        .denomination("Mario Gherkin")
-                        .digitalDomicile(
-                                new NotificationDigitalAddress()
-                                        .type(NotificationDigitalAddress.TypeEnum.PEC)
-                                        .address("testpagopa3@pec.pagopa.it")
-                        )
-                        .physicalAddress(
-                                new NotificationPhysicalAddress()
-                                        .at("Presso")
-                                        .address("VIA SENZA NOME")
-                                        .addressDetails("SCALA A")
-                                        .zip("87100")
-                                        .municipality("MILANO")
-                                        .municipalityDetails("MILANO")
-                                        .province("MI")
-                                        .foreignState("ITALIA")
-                        )
-        );
-
-        recipients.add(
-                new NotificationRecipientV23()
-                        .recipientType(NotificationRecipientV23.RecipientTypeEnum.PG)
-                        .taxId("12345678910")
-                        .denomination("Ufficio Tal dei Tali")
-                        .physicalAddress(
-                                new NotificationPhysicalAddress()
-                                        .at("Presso")
-                                        .address("VIA SENZA NOME")
-                                        .addressDetails("SCALA C")
-                                        .zip("87100")
-                                        .municipality("MILANO")
-                                        .municipalityDetails("MILANO")
-                                        .province("MI")
-                                        .foreignState("ITALIA")
-                        )
-        );
-
-
+        recipients.add(getRecipientMock(NotificationRecipientV23.RecipientTypeEnum.PF, "LVLDAA85T50G702B", "Ada Lovelace", getPaymentsMockRec0()));
+        recipients.add(getRecipientMock(NotificationRecipientV23.RecipientTypeEnum.PF, "FRMTTR76M06B715E", "Ettore Fieramosca", getPaymentsMockRec1()));
         return recipients;
     }
 
@@ -202,19 +195,6 @@ public class NotificationDetailPaMock {
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:34:58.041398918Z"))
                         .legalFactsIds(new ArrayList<>())
                         .category(TimelineElementCategoryV23.REQUEST_ACCEPTED)
-        );
-
-        timeline.add(
-                new TimelineElementV23()
-                        .elementId("AAR_GEN.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_2")
-                        .timestamp(OffsetDateTime.parse("2023-08-25T09:35:27.328299384Z"))
-                        .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV23.AAR_GENERATION)
-                        .details(new TimelineElementDetailsV23()
-                                .recIndex(2)
-                                .generatedAarUrl("PN_AAR-7e3c456307f743669b42105aa9357dac.pdf")
-                                .numberOfPages(1)
-                        )
         );
 
         timeline.add(
@@ -498,7 +478,7 @@ public class NotificationDetailPaMock {
                                 .recipientType(RecipientType.PF)
                                 .amount(200)
                                 .creditorTaxId("77777777777")
-                                .noticeCode("302011692956029088")
+                                .noticeCode("333333333333333330")
                                 .paymentSourceChannel("EXTERNAL_REGISTRY")
                         )
         );
@@ -513,22 +493,7 @@ public class NotificationDetailPaMock {
                                 .recipientType(RecipientType.PF)
                                 .amount(200)
                                 .creditorTaxId("77777777777")
-                                .noticeCode("302011692956029096")
-                                .paymentSourceChannel("EXTERNAL_REGISTRY")
-                        )
-        );
-
-        timeline.add(
-                new TimelineElementV23()
-                        .elementId("NOTIFICATION_PAID.IUN_RTRD-UDGU-QTQY-202308-P-1.CODE_PPA30218167745972026777777777777")
-                        .timestamp(OffsetDateTime.parse("2023-08-25T11:38:05.392Z"))
-                        .category(TimelineElementCategoryV23.PAYMENT)
-                        .details(new TimelineElementDetailsV23()
-                                .recIndex(2)
-                                .recipientType(RecipientType.PG)
-                                .amount(65)
-                                .creditorTaxId("77777777777")
-                                .noticeCode("302181677459720267")
+                                .noticeCode("333333333333333338")
                                 .paymentSourceChannel("EXTERNAL_REGISTRY")
                         )
         );

@@ -24,13 +24,13 @@ public class NotificationDetailRecipientService {
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
 
     public Mono<BffFullNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                             String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
-                                                             String iun, String mandateId) {
+                                                             String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
+                                                             String mandateId) {
         log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
         Mono<FullReceivedNotificationV23> notificationDetail;
         notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
-                CxTypeMapper.cxTypeMapper.convertRecipientCXType(xPagopaPnCxType),
+                CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups,
