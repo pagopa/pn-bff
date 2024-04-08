@@ -16,7 +16,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,19 @@ public class ApiKeysPaService {
     private final PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
     private final PnInfoPaClientImpl pnInfoPaClient;
 
+    /**
+     * Get a paginated list of the api keys that belong to a Public Administration and are accessible by the current user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param limit             Number of items per page
+     * @param lastKey           The last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param lastUpdate        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param showVirtualKey    Flag to show/hide the virtual key
+     * @return the list of the api keys or error
+     */
     public Mono<BffApiKeysResponse> getApiKeys(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
                                                Integer limit, String lastKey,
@@ -41,6 +53,7 @@ public class ApiKeysPaService {
                 lastUpdate,
                 showVirtualKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
         // list of groups linked to the pa
         List<PaGroup> paGroups = pnInfoPaClient.getGroups(
                         xPagopaPnUid,
@@ -50,7 +63,7 @@ public class ApiKeysPaService {
                 )
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException)
                 .toStream()
-                .collect(Collectors.toList());
+                .toList();
 
         return apiKeysResponse.map(res -> ApiKeysMapper.modelMapper.mapApiKeysResponse(res, paGroups));
     }

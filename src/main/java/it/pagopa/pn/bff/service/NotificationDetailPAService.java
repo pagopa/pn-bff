@@ -22,6 +22,16 @@ public class NotificationDetailPAService {
 
     private final PnDeliveryClientPAImpl pnDeliveryClientPA;
 
+    /**
+     * Get the detail of a notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the detail of the notification with a specific IUN
+     */
     public Mono<BffFullNotificationV1> getSentNotificationDetail(String xPagopaPnUid,
                                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                                  String xPagopaPnCxId, String iun,

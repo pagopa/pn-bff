@@ -23,6 +23,17 @@ public class NotificationDetailRecipientService {
 
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
 
+    /**
+     * Get the detail of a notification. This is for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the detail of the notification with a specific IUN
+     */
     public Mono<BffFullNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
                                                              String mandateId) {
