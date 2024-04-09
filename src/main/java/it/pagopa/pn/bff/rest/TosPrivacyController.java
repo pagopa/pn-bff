@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyConsent;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import lombok.CustomLog;
@@ -36,5 +37,16 @@ public class TosPrivacyController implements UserConsentsApi {
         log.logEndingProcess("getTosPrivacyV1");
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    @Override
+    public Mono<ResponseEntity<Void>> putTosPrivacyV1(String xPagopaPnUid,
+                                                      CxTypeAuthFleet xPagopaPnCxType,
+                                                      Mono<TosPrivacyBody> tosPrivacyBody,
+                                                      ServerWebExchange exchange) {
+
+
+        return tosPrivacyService.acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody)
+                .map(response -> ResponseEntity.noContent().build());
     }
 }

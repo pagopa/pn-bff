@@ -65,7 +65,7 @@ paths:
             schema:
               # TODO - Dovrebbe prendere un oggetto con due chiavi (tos e privacy) e uno dei due deve essere required
               # TODO - L'oggetto deve contenere la action e la version (required entrambe)
-              $ref: '#/components/schemas/ConsentAction'
+              $ref: '#/components/schemas/TosPrivacyBody'
       responses:
         '200':
           description: successful operation
@@ -87,6 +87,8 @@ components:
   schemas:
     ConsentAction:
       $ref: './remote-refs.yaml#/components/schemas/ConsentAction'
+    ConsentVersion:
+      $ref: './remote-refs.yaml#/components/schemas/ConsentVersion'
 
     BffConsent:
       $ref: './remote-refs.yaml#/components/schemas/Consent'
@@ -101,6 +103,25 @@ components:
           $ref: '#/components/schemas/BffConsent'
         privacy:
           $ref: '#/components/schemas/BffConsent'
+
+    TosPrivacyBody:
+      type: object
+      properties:
+        tos:
+          $ref: '#/components/schemas/TosPrivacyActionBody'
+        privacy:
+          $ref: '#/components/schemas/TosPrivacyActionBody'
+
+    TosPrivacyActionBody:
+      type: object
+      required:
+        - action
+        - version
+      allOf:
+       - $ref: '#/components/schemas/ConsentAction'
+      properties:
+        version:
+          $ref: '#/components/schemas/ConsentVersion'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

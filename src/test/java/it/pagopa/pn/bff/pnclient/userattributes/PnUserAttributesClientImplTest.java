@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.userattributes;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class PnUserAttributesClientImplTest {
     private ConsentsApi consentsApi;
 
     @Test
-    void getTosConsent() throws RestClientException {
+    void getTosConsentTest() throws RestClientException {
         when(consentsApi.getConsentByType(
                 Mockito.<String>any(),
                 Mockito.<CxTypeAuthFleet>any(),
@@ -44,7 +45,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void getTosContentError() {
+    void getTosContentErrorTest() {
         when(consentsApi.getConsentByType(
                 Mockito.<String>any(),
                 Mockito.<CxTypeAuthFleet>any(),
@@ -55,6 +56,44 @@ class PnUserAttributesClientImplTest {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
                 CxTypeAuthFleet.PF
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void acceptConsentTest() {
+        when(consentsApi.consentAction(
+                Mockito.<String>any(),
+                Mockito.<CxTypeAuthFleet>any(),
+                Mockito.<ConsentType>any(),
+                Mockito.<String>any(),
+                Mockito.<ConsentAction>any()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsent(
+                "UID",
+                CxTypeAuthFleet.PF,
+                ConsentType.TOS,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1"
+        )).verifyComplete();
+    }
+
+    @Test
+    void acceptConsentErrorTest() {
+        when(consentsApi.consentAction(
+                Mockito.<String>any(),
+                Mockito.<CxTypeAuthFleet>any(),
+                Mockito.<ConsentType>any(),
+                Mockito.<String>any(),
+                Mockito.<ConsentAction>any()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsent(
+                "UID",
+                CxTypeAuthFleet.PF,
+                ConsentType.TOS,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1"
         )).expectError(PnBffException.class).verify();
     }
 }
