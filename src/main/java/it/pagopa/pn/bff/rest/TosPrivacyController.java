@@ -44,9 +44,13 @@ public class TosPrivacyController implements UserConsentsApi {
                                                       CxTypeAuthFleet xPagopaPnCxType,
                                                       Mono<TosPrivacyBody> tosPrivacyBody,
                                                       ServerWebExchange exchange) {
+        log.logStartingProcess("putTosPrivacyV1");
 
+        Mono<Void> serviceResponse;
+        serviceResponse = tosPrivacyService.acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
 
-        return tosPrivacyService.acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody)
-                .map(response -> ResponseEntity.noContent().build());
+        log.logEndingProcess("putTosPrivacyV1");
+
+        return serviceResponse.map(response -> ResponseEntity.noContent().build());
     }
 }

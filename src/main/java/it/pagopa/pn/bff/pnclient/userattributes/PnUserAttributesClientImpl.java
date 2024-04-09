@@ -21,13 +21,13 @@ public class PnUserAttributesClientImpl {
     private final ConsentsApi consentsApi;
 
     public Mono<Consent> getTosConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType TOS");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType - TOS");
         return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.TOS, null)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 
     public Mono<Consent> getPrivacyConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType DataPrivacy");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType - DataPrivacy");
         return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, ConsentType.DATAPRIVACY, null)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
