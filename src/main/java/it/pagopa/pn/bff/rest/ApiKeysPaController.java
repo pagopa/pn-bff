@@ -3,8 +3,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.ApiKeysApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -58,6 +57,84 @@ public class ApiKeysPaController implements ApiKeysApi {
 
 
         log.logEndingProcess("getApiKeys");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * POST bff/v1/api-keys: Create new api key
+     * Create new api key that belongs to a Public Administration and are accessible by the current user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return the newly created api key
+     */
+    @Override
+    public Mono<ResponseEntity<BffResponseNewApiKey>> newApiKey(String xPagopaPnUid,
+                                                                CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId,
+                                                                Mono<BffRequestNewApiKey> bffRequestNewApiKey,
+                                                                List<String> xPagopaPnCxGroups,
+                                                                final ServerWebExchange exchange) {
+        log.logStartingProcess("newApiKey");
+
+        Mono<BffResponseNewApiKey> serviceResponse = apiKeysPaService.newApiKey(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffRequestNewApiKey, xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+
+        log.logEndingProcess("newApiKey");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * DELETE bff/v1/api-keys/{id}: Delete an api key
+     * Delete the api key identified by the id path parameter
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param id                ID of the api key to delete
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> deleteApiKey(String xPagopaPnUid,
+                                                   CxTypeAuthFleet xPagopaPnCxType,
+                                                   String xPagopaPnCxId,
+                                                   String id,
+                                                   List<String> xPagopaPnCxGroups,
+                                                   final ServerWebExchange exchange) {
+        log.logStartingProcess("deleteApiKey");
+
+        Mono<Void> serviceResponse = apiKeysPaService.deleteApiKey(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+
+        log.logEndingProcess("deleteApiKey");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    @Override
+    public Mono<ResponseEntity<Void>> changeStatusApiKey(String xPagopaPnUid,
+                                                         CxTypeAuthFleet xPagopaPnCxType,
+                                                         String xPagopaPnCxId,
+                                                         String id,
+                                                         Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
+                                                         List<String> xPagopaPnCxGroups,
+                                                         final ServerWebExchange exchange) {
+        log.logStartingProcess("changeStatusApiKey");
+
+        Mono<Void> serviceResponse = apiKeysPaService.changeStatusApiKey(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, bffRequestApiKeyStatus, xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+
+        log.logEndingProcess("changeStatusApiKey");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

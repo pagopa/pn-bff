@@ -106,7 +106,7 @@ paths:
         '200':
           description: OK
           content:
-            application/problem+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/BffResponseNewApiKey'
         '400':
@@ -129,7 +129,7 @@ paths:
         servizio di rimozione dell'api key
       tags:
         - ApiKeys
-      operationId: deleteApiKeys
+      operationId: deleteApiKey
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -247,10 +247,10 @@ components:
       $ref: './apikeysSchemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
 
     BffRequestNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/RequestNewApiKey'
+      $ref: './remote-refs.yaml#/components/schemas/BffRequestNewApiKey'
 
     BffResponseNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/ResponseNewApiKey'
+      $ref: './remote-refs.yaml#/components/schemas/BffResponseNewApiKey'
 
     BffRequestApiKeyStatus:
-      $ref: './remote-refs.yaml#/components/schemas/RequestApiKeyStatus'
+      $ref: './remote-refs.yaml#/components/schemas/BffRequestApiKeyStatus'

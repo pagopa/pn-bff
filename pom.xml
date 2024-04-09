@@ -347,7 +347,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/f40b660a0e46083222a662a7aa6f7424fbcc20bd/docs/openapi/pn-apikey-manager-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

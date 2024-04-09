@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
+import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
@@ -19,6 +19,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+
 @Slf4j
 @WebFluxTest(ApiKeysPaController.class)
 class ApiKeysPaControllerTest {
@@ -33,6 +39,19 @@ class ApiKeysPaControllerTest {
     private ApiKeysPaService apiKeysPaService;
     @SpyBean
     private ApiKeysPaController apiKeysPaController;
+
+    private <TC, FC> boolean monoComparator(TC argumentToCompare, FC argumentForComparison) {
+        if (argumentToCompare == null || argumentForComparison == null) {
+            return false;
+        }
+        if (!(argumentToCompare instanceof Mono) || !(argumentForComparison instanceof Mono)) {
+            return false;
+        }
+        Mono<Boolean> result = ((Mono<?>) argumentToCompare)
+                .zipWith((Mono<?>) argumentForComparison)
+                .map((args) -> args.getT1().equals(args.getT2()));
+        return Boolean.TRUE.equals(result.block());
+    }
 
     @Test
     void getApiKeys() {
@@ -124,6 +143,249 @@ class ApiKeysPaControllerTest {
                 LAST_KEY,
                 LAST_UPDATE,
                 true
+        );
+    }
+
+    @Test
+    void newApiKey() {
+        BffRequestNewApiKey request = new BffRequestNewApiKey();
+        request.setName("mock-api-key-name");
+        List<String> groups = new ArrayList<>();
+        groups.add("mock-id-1");
+        groups.add("mock-id-3");
+        request.setGroups(groups);
+        BffResponseNewApiKey response = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.geResponseNewApiKeyMock());
+
+        Mockito.when(apiKeysPaService.newApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.just(response));
+
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffResponseNewApiKey.class)
+                .isEqualTo(response);
+
+        Mockito.verify(apiKeysPaService).newApiKey(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void newApiKeyError() {
+        BffRequestNewApiKey request = new BffRequestNewApiKey();
+        request.setName("mock-api-key-name");
+        List<String> groups = new ArrayList<>();
+        groups.add("mock-id-1");
+        groups.add("mock-id-3");
+        request.setGroups(groups);
+
+        Mockito.when(apiKeysPaService.newApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(apiKeysPaService).newApiKey(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void deleteApiKey() {
+        Mockito.when(apiKeysPaService.deleteApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.delete()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .build())
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Void.class);
+
+        Mockito.verify(apiKeysPaService).deleteApiKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "API_KEY_ID",
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void deleteApiKeyError() {
+        Mockito.when(apiKeysPaService.deleteApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.delete()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .build())
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(apiKeysPaService).deleteApiKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "API_KEY_ID",
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void changeStatusApiKey() {
+        BffRequestApiKeyStatus request = new BffRequestApiKeyStatus();
+        request.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
+
+        Mockito.when(apiKeysPaService.changeStatusApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Void.class);
+
+        Mockito.verify(apiKeysPaService).changeStatusApiKey(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                eq("API_KEY_ID"),
+                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void changeStatusApiKeyError() {
+        BffRequestApiKeyStatus request = new BffRequestApiKeyStatus();
+        request.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
+
+        Mockito.when(apiKeysPaService.changeStatusApiKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(apiKeysPaService).changeStatusApiKey(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                eq("API_KEY_ID"),
+                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                eq(UserMock.PN_CX_GROUPS)
         );
     }
 }

@@ -24,17 +24,25 @@ public abstract class ApiKeysMapper {
      * Maps a ApiKeysResponse to a BffApiKeysResponse
      *
      * @param apiKeysResponse the ApiKeysResponse to map
+     * @param paGroups        groups retrieved from selfcare and linked to current Public Administration and user
      * @return the mapped BffApiKeysResponse
      */
     public abstract BffApiKeysResponse mapApiKeysResponse(ApiKeysResponse apiKeysResponse, @Context List<PaGroup> paGroups);
 
+    /**
+     * Map api keys groups (String) to paGroups
+     *
+     * @param groups   api keys groups (String)
+     * @param paGroups groups retrieved from selfcare and linked to current Public Administration and user
+     * @return the list of groups where each element is made by id and name
+     */
     protected List<BffApiKeyGroup> mapGroups(List<String> groups, @Context List<PaGroup> paGroups) {
         List<BffApiKeyGroup> apiKeyGroups = new ArrayList<>();
         for (String group : groups) {
             BffApiKeyGroup apiKeyGroup = new BffApiKeyGroup();
             // search api key group into pa groups
             PaGroup paGroup = paGroups.stream()
-                    .filter(el -> el.getName() == group)
+                    .filter(el -> el.getName() != null && el.getName().equals(group))
                     .findFirst()
                     .orElse(null);
             if (paGroup != null) {

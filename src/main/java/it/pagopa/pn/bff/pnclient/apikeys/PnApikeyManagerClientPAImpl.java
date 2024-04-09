@@ -2,8 +2,7 @@ package it.pagopa.pn.bff.pnclient.apikeys;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,7 @@ public class PnApikeyManagerClientPAImpl {
                                             String lastUpdate, Boolean showVirtualKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "getApiKeys");
 
-        Mono<ApiKeysResponse> apiKeysResponse;
-        apiKeysResponse = apiKeysApi.getApiKeys(
+        return apiKeysApi.getApiKeys(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -37,7 +35,48 @@ public class PnApikeyManagerClientPAImpl {
                 lastUpdate,
                 showVirtualKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
 
-        return apiKeysResponse;
+    public Mono<ResponseNewApiKey> newApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                             String xPagopaPnCxId, RequestNewApiKey requestNewApiKey,
+                                             List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "newApiKey");
+
+        return apiKeysApi.newApiKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                requestNewApiKey,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Mono<Void> deleteApiKeys(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                    String xPagopaPnCxId, String id,
+                                    List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "deleteApiKeys");
+
+        return apiKeysApi.deleteApiKeys(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                id,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Mono<Void> changeStatusApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                         String xPagopaPnCxId, String id, RequestApiKeyStatus requestApiKeyStatus,
+                                         List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "changeStatusApiKey");
+
+        return apiKeysApi.changeStatusApiKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                id,
+                requestApiKeyStatus,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

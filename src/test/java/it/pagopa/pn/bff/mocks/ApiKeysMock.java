@@ -1,9 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeyRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeyStatus;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeyStatusHistory;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -112,5 +109,22 @@ public class ApiKeysMock {
         apiKeyRows.add(thirdApiKey);
         apiKeysResponse.setItems(apiKeyRows);
         return apiKeysResponse;
+    }
+
+    public RequestNewApiKey geRequestNewApiKeyMock() {
+        RequestNewApiKey requestNewApiKey = new RequestNewApiKey();
+        requestNewApiKey.setName("mock-api-key-name");
+        List<String> groups = new ArrayList<>();
+        groups.add("mock-id-1");
+        groups.add("mock-id-3");
+        requestNewApiKey.setGroups(groups);
+        return requestNewApiKey;
+    }
+
+    public ResponseNewApiKey geResponseNewApiKeyMock() {
+        ResponseNewApiKey responseNewApiKey = new ResponseNewApiKey();
+        responseNewApiKey.setId("mock-api-key-id");
+        responseNewApiKey.setApiKey("mock-api-key-value");
+        return responseNewApiKey;
     }
 }
