@@ -119,6 +119,19 @@ public class ApiKeysPaController implements ApiKeysApi {
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
+    /**
+     * PUT bff/v1/api-keys/{id}/status: Change status for an api key
+     * Change the status of the api key identified by the id path parameter
+     *
+     * @param xPagopaPnUid           User Identifier
+     * @param xPagopaPnCxType        Public Administration Type
+     * @param xPagopaPnCxId          Public Administration id
+     * @param id                     ID of the api key to change status
+     * @param bffRequestApiKeyStatus New status for the api key
+     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @param exchange
+     * @return
+     */
     @Override
     public Mono<ResponseEntity<Void>> changeStatusApiKey(String xPagopaPnUid,
                                                          CxTypeAuthFleet xPagopaPnCxType,
