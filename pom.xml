@@ -466,7 +466,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-user-consents-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

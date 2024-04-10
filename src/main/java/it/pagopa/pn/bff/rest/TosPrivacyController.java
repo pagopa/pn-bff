@@ -2,9 +2,9 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyConsent;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,22 @@ public class TosPrivacyController implements UserConsentsApi {
         this.tosPrivacyService = tosPrivacyService;
     }
 
+    /**
+     * GET /bff/v1/tos-privacy : Tos & Privacy information
+     * Get the Tos & Privacy information of the user
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Public Administration Type
+     * @param exchange
+     * @return the Tos & Privacy information of the user
+     */
     @Override
-    public Mono<ResponseEntity<TosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
-                                                                   CxTypeAuthFleet xPagopaPnCxType,
-                                                                   final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffTosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
+                                                                      CxTypeAuthFleet xPagopaPnCxType,
+                                                                      final ServerWebExchange exchange) {
         log.logStartingProcess("getTosPrivacyV1");
 
-        Mono<TosPrivacyConsent> serviceResponse;
+        Mono<BffTosPrivacyConsent> serviceResponse;
         serviceResponse = tosPrivacyService
                 .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
@@ -39,11 +48,21 @@ public class TosPrivacyController implements UserConsentsApi {
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
+    /**
+     * PUT /bff/v1/tos-privacy : Acceptance of TOS and Privacy
+     * Allows to accept the TOS and Privacy.
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Public Administration Type
+     * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
+     * @param exchange
+     * @return successful operation
+     */
     @Override
-    public Mono<ResponseEntity<Void>> putTosPrivacyV1(String xPagopaPnUid,
-                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                      Mono<TosPrivacyBody> tosPrivacyBody,
-                                                      ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Void>> acceptTosPrivacy(String xPagopaPnUid,
+                                                       CxTypeAuthFleet xPagopaPnCxType,
+                                                       Mono<BffTosPrivacyBody> tosPrivacyBody,
+                                                       ServerWebExchange exchange) {
         log.logStartingProcess("putTosPrivacyV1");
 
         Mono<Void> serviceResponse;

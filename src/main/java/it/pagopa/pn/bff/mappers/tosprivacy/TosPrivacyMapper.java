@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.tosprivacy;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody.ActionEnum;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;

@@ -18,6 +18,7 @@ public class PnBffConfigs {
     private String deliveryBaseUrl;
     private String apikeyManagerBaseUrl;
     private String externalRegistriesBaseUrl;
+    private String userAttributesBaseUrl;
 
     @PostConstruct
     public void init() {

@@ -5,8 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TosPrivacyMapperTest {
     @Test
@@ -21,15 +20,15 @@ public class TosPrivacyMapperTest {
 
     @Test
     void testConvertConsentAction() {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody.ActionEnum acceptAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody.ActionEnum.ACCEPT;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum acceptAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum.ACCEPT;
         ConsentAction.ActionEnum convertAcceptAction = TosPrivacyMapper.tosPrivacyMapper.convertConsentAction(acceptAction);
         assertNotNull(convertAcceptAction);
-        assert (convertAcceptAction == ConsentAction.ActionEnum.ACCEPT);
+        assertEquals(convertAcceptAction, ConsentAction.ActionEnum.ACCEPT);
 
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody.ActionEnum declineAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody.ActionEnum.DECLINE;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum declineAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum.DECLINE;
         ConsentAction.ActionEnum convertDeclineAction = TosPrivacyMapper.tosPrivacyMapper.convertConsentAction(declineAction);
         assertNotNull(convertDeclineAction);
-        assert (convertDeclineAction == ConsentAction.ActionEnum.DECLINE);
+        assertEquals(convertDeclineAction, ConsentAction.ActionEnum.DECLINE);
 
         it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction.ActionEnum convertConsentActionNull = TosPrivacyMapper.tosPrivacyMapper.convertConsentAction(null);
         assertNull(convertConsentActionNull);

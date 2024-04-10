@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyConsent;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +33,10 @@ public class TosPrivacyControllerTest {
     @Test
     void getTosPrivacy() {
         Mockito.when(tosPrivacyService.getTosPrivacy(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class)
                 ))
-                .thenReturn(Mono.just(new TosPrivacyConsent()));
+                .thenReturn(Mono.just(new BffTosPrivacyConsent()));
 
         webTestClient
                 .get()
@@ -47,7 +47,7 @@ public class TosPrivacyControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(TosPrivacyConsent.class);
+                .expectBody(BffTosPrivacyConsent.class);
 
         Mockito.verify(tosPrivacyService).getTosPrivacy(
                 UID,
@@ -59,8 +59,8 @@ public class TosPrivacyControllerTest {
     void getTosPrivacyError() {
         Mockito.doThrow(new PnBffException("Err", "Err", "Err", 404, "Err", null))
                 .when(tosPrivacyService).getTosPrivacy(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class)
                 );
 
         webTestClient
@@ -76,17 +76,20 @@ public class TosPrivacyControllerTest {
 
     @Test
     void putTosPrivacy() {
-        Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(Mockito.anyString(), Mockito.any(), Mockito.any()))
+        Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.any(Mono.class)))
                 .thenReturn(Mono.empty());
 
-        TosPrivacyBody request = TosPrivacyBody.builder()
-                .tos(new TosPrivacyActionBody().action(TosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
+        BffTosPrivacyBody request = BffTosPrivacyBody.builder()
+                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
                 .build();
 
         webTestClient.put()
                 .uri(PnBffRestConstants.TOS_PRIVACY_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(request), TosPrivacyBody.class)
+                .body(Mono.just(request), BffTosPrivacyBody.class)
                 .headers(httpHeaders -> {
                     httpHeaders.set("x-pagopa-pn-uid", UID);
                     httpHeaders.set("x-pagopa-pn-cx-type", CX_TYPE.toString());
@@ -96,16 +99,20 @@ public class TosPrivacyControllerTest {
                 .isOk()
                 .expectBody(Void.class);
 
-        Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(Mockito.anyString(), Mockito.any(), Mockito.any());
+        Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(Mono.class)
+        );
     }
 
     @Test
     void putTosPrivacyError() {
         Mockito.doThrow(new PnBffException("Err", "Err", "Err", 500, "Err", null))
                 .when(tosPrivacyService).acceptOrDeclineTosPrivacy(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<Mono<TosPrivacyBody>>any()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.any(Mono.class)
                 );
 
         webTestClient
@@ -113,10 +120,9 @@ public class TosPrivacyControllerTest {
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PRIVACY_PATH).build())
                 .header(PnBffRestConstants.UID_HEADER, UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
-                .body(Mono.just(new TosPrivacyBody()), TosPrivacyBody.class)
+                .body(Mono.just(new BffTosPrivacyBody()), BffTosPrivacyBody.class)
                 .exchange()
                 .expectStatus()
                 .is5xxServerError();
-
     }
 }

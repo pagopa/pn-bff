@@ -6,8 +6,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,13 +41,13 @@ class TosPrivacyServiceTest {
     @Test
     void testGetTosContent() {
         when(pnUserAttributesClient.getTosConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class)
         )).thenReturn(Mono.just(new Consent()));
 
         when(pnUserAttributesClient.getPrivacyConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class)
         )).thenReturn(Mono.just(new Consent()));
 
         when(modelMapperMock.mapTosPrivacyConsent(any(Consent.class)))
@@ -64,13 +64,13 @@ class TosPrivacyServiceTest {
     @Test
     void testGetTosContentError() {
         when(pnUserAttributesClient.getTosConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         when(pnUserAttributesClient.getPrivacyConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
@@ -84,17 +84,17 @@ class TosPrivacyServiceTest {
 
     @Test
     void acceptOrDeclineTosPrivacyTest() {
-        TosPrivacyBody tosPrivacyBody = new TosPrivacyBody()
-                .privacy(new TosPrivacyActionBody().action(TosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
-                .tos(new TosPrivacyActionBody().action(TosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
+        BffTosPrivacyBody tosPrivacyBody = new BffTosPrivacyBody()
+                .privacy(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
+                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
 
 
         when(pnUserAttributesClient.acceptConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<ConsentAction>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyString()
         )).thenReturn(Mono.empty());
 
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
@@ -107,25 +107,25 @@ class TosPrivacyServiceTest {
 
         // Check that client is called twice (once for privacy and once for tos)
         Mockito.verify(pnUserAttributesClient, Mockito.times(2)).acceptConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<ConsentAction>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyString()
         );
     }
 
     @Test
     void acceptOnlyTosTest() {
-        TosPrivacyBody tosPrivacyBody = new TosPrivacyBody()
-                .tos(new TosPrivacyActionBody().action(TosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
+        BffTosPrivacyBody tosPrivacyBody = new BffTosPrivacyBody()
+                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
 
         when(pnUserAttributesClient.acceptConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<ConsentAction>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyString()
         )).thenReturn(Mono.empty());
 
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
@@ -138,28 +138,28 @@ class TosPrivacyServiceTest {
 
         // Check that client is called once
         Mockito.verify(pnUserAttributesClient, Mockito.times(1)).acceptConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<ConsentAction>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyString()
         );
     }
 
     @Test
     void acceptOrDeclineTosPrivacyEmptyBodyErrorTest() {
         when(pnUserAttributesClient.acceptConsent(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<ConsentAction>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(400, "Bad Request", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         "UID",
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
-                        Mono.just(new TosPrivacyBody())
+                        Mono.just(new BffTosPrivacyBody())
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400

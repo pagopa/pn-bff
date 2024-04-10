@@ -4,9 +4,9 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TosPrivacyConsent;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
@@ -22,7 +22,14 @@ import reactor.core.publisher.Mono;
 public class TosPrivacyService {
     private final PnUserAttributesClientImpl pnUserAttributesClient;
 
-    public Mono<TosPrivacyConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
+    /**
+     * Retrieve tos and privacy consents for the user
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Public Administration Type
+     * @return an object containing the tos and privacy consents
+     */
+    public Mono<BffTosPrivacyConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
         log.info("Get tos and privacy consents");
         Mono<BffConsent> tosConsent = pnUserAttributesClient.getTosConsent(
                         xPagopaPnUid,
@@ -37,12 +44,20 @@ public class TosPrivacyService {
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        return Mono.zip(tosConsent, privacyConsent, TosPrivacyConsent::new);
+        return Mono.zip(tosConsent, privacyConsent, BffTosPrivacyConsent::new);
     }
 
+    /**
+     * Accept or decline tos and privacy consents
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Public Administration Type
+     * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
+     * @return void
+     */
     public Mono<Void> acceptOrDeclineTosPrivacy(String xPagopaPnUid,
                                                 CxTypeAuthFleet xPagopaPnCxType,
-                                                Mono<TosPrivacyBody> tosPrivacyBody) {
+                                                Mono<BffTosPrivacyBody> tosPrivacyBody) {
         log.info("Accept or decline tos and privacy consents");
         return tosPrivacyBody.flatMap(body -> {
             Mono<Void> tosMono = Mono.empty();

@@ -32,9 +32,9 @@ class PnUserAttributesClientImplTest {
     @Test
     void getTosConsentTest() throws RestClientException {
         when(consentsApi.getConsentByType(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
                 Mockito.isNull()
         )).thenReturn(Mono.just(mock(Consent.class)));
 
@@ -47,9 +47,9 @@ class PnUserAttributesClientImplTest {
     @Test
     void getTosContentErrorTest() {
         when(consentsApi.getConsentByType(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
                 Mockito.isNull()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -62,11 +62,11 @@ class PnUserAttributesClientImplTest {
     @Test
     void acceptConsentTest() {
         when(consentsApi.consentAction(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<String>any(),
-                Mockito.<ConsentAction>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class)
         )).thenReturn(Mono.empty());
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
@@ -81,11 +81,11 @@ class PnUserAttributesClientImplTest {
     @Test
     void acceptConsentErrorTest() {
         when(consentsApi.consentAction(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<ConsentType>any(),
-                Mockito.<String>any(),
-                Mockito.<ConsentAction>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
