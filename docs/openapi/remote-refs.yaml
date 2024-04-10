@@ -76,3 +76,13 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/ContactPhase'
     TimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV23'
+
+    ############################################################################################
+    ###                          STRUTTURE DATI DI PN-APIKEY-MANAGER                         ###
+    ############################################################################################
+    BffRequestNewApiKey:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestNewApiKey'
+    BffResponseNewApiKey:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/ResponseNewApiKey'
+    BffRequestApiKeyStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestApiKeyStatus'

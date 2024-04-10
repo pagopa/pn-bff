@@ -2,6 +2,9 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
+import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.NotificationDetailPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +23,7 @@ import reactor.core.publisher.Mono;
 @WebFluxTest(SentNotificationController.class)
 class SentNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
-    public static final String UID = "Uid";
-    public static final String CX_ID = "CxId";
-    public static final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PA;
+    private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
@@ -32,15 +33,15 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotification() {
-
+        BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
         Mockito.when(notificationDetailPAService.getSentNotificationDetail(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
                 ))
-                .thenReturn(Mono.just(new BffFullNotificationV1()));
+                .thenReturn(Mono.just(response));
 
 
         webTestClient.get()
@@ -49,31 +50,33 @@ class SentNotificationControllerTest {
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UID)
-                .header(PnBffRestConstants.CX_ID_HEADER, CX_ID)
-                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffFullNotificationV1.class);
+                .expectBody(BffFullNotificationV1.class)
+                .isEqualTo(response);
 
         Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
-                UID,
-                CX_TYPE,
-                CX_ID,
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
                 IUN,
-                null
+                UserMock.PN_CX_GROUPS
         );
     }
 
     @Test
     void getSentNotificationError() {
         Mockito.when(notificationDetailPAService.getSentNotificationDetail(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
                 ))
                 .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -84,19 +87,20 @@ class SentNotificationControllerTest {
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UID)
-                .header(PnBffRestConstants.CX_ID_HEADER, CX_ID)
-                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus()
                 .isNotFound();
 
         Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
-                UID,
-                CX_TYPE,
-                CX_ID,
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
                 IUN,
-                null
+                UserMock.PN_CX_GROUPS
         );
     }
 
