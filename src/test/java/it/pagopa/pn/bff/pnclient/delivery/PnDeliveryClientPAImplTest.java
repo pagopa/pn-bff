@@ -3,7 +3,8 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
+import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -16,12 +17,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnDeliveryClientPAImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnDeliveryClientPAImplTest {
+    private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi")
@@ -29,41 +30,39 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void getSentNotificationV23() throws RestClientException {
-        when(senderReadB2BApi
-                .getSentNotificationV23(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any()
-                )).thenReturn(Mono.just(mock(FullSentNotificationV23.class)));
+        when(senderReadB2BApi.getSentNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(notificationDetailPaMock.getNotificationMultiRecipientMock()));
 
         StepVerifier.create(pnDeliveryClientPAImpl.getSentNotification(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "CX_ID",
+                UserMock.PN_CX_ID,
                 "IUN",
-                null
-        )).expectNextCount(1).verifyComplete();
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationDetailPaMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
 
     @Test
     void getSentNotificationV23Error() {
-        when(senderReadB2BApi
-                .getSentNotificationV23(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<java.util.List<String>>any()
-                )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+        when(senderReadB2BApi.getSentNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnDeliveryClientPAImpl.getSentNotification(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "CX_ID",
+                UserMock.PN_CX_ID,
                 "IUN",
-                null
+                UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }
 }

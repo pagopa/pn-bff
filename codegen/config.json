@@ -5,10 +5,10 @@
       "openapiFiles": [
         "api-internal-pn-bff-pa-notification.yaml",
         "api-internal-pn-bff-recipient-notification.yaml",
-        "api-internal-pn-bff-tos-privacy.yaml"
+        "api-internal-pn-bff-tos-privacy.yaml",
+        "api-internal-pn-bff-pa-apikeys.yaml"
       ],
       "servicePath": "bff"
     }
   ]
 }
-    
