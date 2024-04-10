@@ -25,6 +25,18 @@ public class SentNotificationController implements NotificationSentApi {
         this.notificationDetailPAService = notificationDetailPAService;
     }
 
+    /**
+     * GET bff/v1/notifications/sent/{iun}: Notification detail
+     * Get the detail of a notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return the detail of the notification with a specific IUN
+     */
     @Override
     public Mono<ResponseEntity<BffFullNotificationV1>> getSentNotificationV1(String xPagopaPnUid,
                                                                              CxTypeAuthFleet xPagopaPnCxType,

@@ -1,0 +1,84 @@
+info:
+  version: v1.0
+components:
+  schemas:
+
+    BffApiKeysResponse:
+      title: Elenco di api keys
+      description: >-
+        Dto contenente la lista delle api keys associate ad un utente.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyRow'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: integer
+
+    BffApiKeyRow:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id dell'api key
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+        name:
+          type: string
+          description: Nome dell'api key
+        value:
+          type: string
+          description: Valore dell'api key
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+        lastUpdate:
+          type: string
+          description: Data ultima modifica
+          format: date-time
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyGroup'
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        statusHistory:
+          type: array
+          description: Storico degli stati dell'api key
+          items:
+            $ref: '#/components/schemas/BffApiKeyStatusHistory'
+
+    BffApiKeyGroup:
+      description: Gruppo a cui appartiene l'api key
+      type: object
+      properties:
+        id:
+          type: string
+          description: id del gruppo
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+        name:
+          type: string
+          description: nome del gruppo
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+
+    BffApiKeyStatus:
+      description: Stato dell'api key
+      type: string
+      enum: [ 'CREATED', 'ENABLED', 'BLOCKED', 'ROTATED' ]
+
+    BffApiKeyStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        date:
+          type: string
+          description: data a cui corrisponde il cambio di stato
+          format: date-time
+        changedByDenomination:
+          type: string
+          description: nome dell'utente che ha effettuato il cambio di stato
