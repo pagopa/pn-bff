@@ -61,7 +61,9 @@ public class MsClientConfig extends CommonBaseClient {
     @Bean
     @Primary
     ConsentsApi consentsApi(PnBffConfigs cfg) {
-        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient consentsApi = new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(initWebClient(ApiClient.buildWebClientBuilder()));
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient consentsApi =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
         consentsApi.setBasePath(cfg.getUserAttributesBaseUrl());
         return new ConsentsApi(consentsApi);
     }
