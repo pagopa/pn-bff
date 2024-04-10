@@ -4,7 +4,8 @@
       "intendedUsage": "WEB",
       "openapiFiles": [
         "api-internal-pn-bff-pa.yaml",
-        "api-internal-pn-bff-recipient.yaml"
+        "api-internal-pn-bff-recipient.yaml",
+        "api-internal-pn-bff-institution-and-product.yaml"
       ],
       "servicePath": "bff"
     }

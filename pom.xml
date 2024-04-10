@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -175,8 +175,10 @@
                                 <reactive>true</reactive>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
-                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
-                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
                                 </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
@@ -216,8 +218,55 @@
                                 <reactive>true</reactive>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
-                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
-                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-BFF INSTITUTION AND PRODUCT -->
+                    <execution>
+                        <id>pn-internal-bff-private-institution-and-product</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-institution-and-product.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
                                 </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
@@ -283,6 +332,43 @@
                                 </apiPackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-pa.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES -->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-external-registries</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.external-registries.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

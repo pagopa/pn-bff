@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.api.InfoPaApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,4 +29,13 @@ public class MsClientConfig extends CommonBaseClient {
         senderApiClient.setBasePath(cfg.getDeliveryBaseUrl());
         return new SenderReadB2BApi(senderApiClient);
     }
+
+    @Bean
+    @Primary
+    InfoPaApi infoPaApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries.ApiClient infoPaApiClient = new it.pagopa.pn.bff.generated.openapi.msclient.external_registries.ApiClient(initWebClient(ApiClient.buildWebClientBuilder()));
+        infoPaApiClient.setBasePath(cfg.getDeliveryBaseUrl());
+        return new InfoPaApi(infoPaApiClient);
+    }
+
 }
