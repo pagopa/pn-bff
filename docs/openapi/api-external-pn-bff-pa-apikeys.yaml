@@ -33,7 +33,7 @@ paths:
         servizio di consultazione della lista delle api keys
       tags:
         - ApiKeys
-      operationId: getApiKeys
+      operationId: getApiKeysV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -84,7 +84,7 @@ paths:
         servizio di creazione di un'api key
       tags:
         - ApiKeys
-      operationId: newApiKey
+      operationId: newApiKeyV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
@@ -120,7 +120,7 @@ paths:
         servizio di rimozione dell'api key
       tags:
         - ApiKeys
-      operationId: deleteApiKey
+      operationId: deleteApiKeyV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -160,7 +160,7 @@ paths:
         servizio di cambio stato dell'api key
       tags:
         - ApiKeys
-      operationId: changeStatusApiKey
+      operationId: changeStatusApiKeyV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

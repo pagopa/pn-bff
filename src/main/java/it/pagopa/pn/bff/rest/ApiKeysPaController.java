@@ -40,15 +40,15 @@ public class ApiKeysPaController implements ApiKeysApi {
      * @return the list of the api keys or error
      */
     @Override
-    public Mono<ResponseEntity<BffApiKeysResponse>> getApiKeys(String xPagopaPnUid,
-                                                               CxTypeAuthFleet xPagopaPnCxType,
-                                                               String xPagopaPnCxId,
-                                                               List<String> xPagopaPnCxGroups,
-                                                               Integer limit,
-                                                               String lastKey,
-                                                               String lastUpdate,
-                                                               Boolean showVirtualKey,
-                                                               final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffApiKeysResponse>> getApiKeysV1(String xPagopaPnUid,
+                                                                 CxTypeAuthFleet xPagopaPnCxType,
+                                                                 String xPagopaPnCxId,
+                                                                 List<String> xPagopaPnCxGroups,
+                                                                 Integer limit,
+                                                                 String lastKey,
+                                                                 String lastUpdate,
+                                                                 Boolean showVirtualKey,
+                                                                 final ServerWebExchange exchange) {
         log.logStartingProcess("getApiKeys");
 
         Mono<BffApiKeysResponse> serviceResponse = apiKeysPaService.getApiKeys(
@@ -72,12 +72,12 @@ public class ApiKeysPaController implements ApiKeysApi {
      * @return the newly created api key
      */
     @Override
-    public Mono<ResponseEntity<BffResponseNewApiKey>> newApiKey(String xPagopaPnUid,
-                                                                CxTypeAuthFleet xPagopaPnCxType,
-                                                                String xPagopaPnCxId,
-                                                                Mono<BffRequestNewApiKey> bffRequestNewApiKey,
-                                                                List<String> xPagopaPnCxGroups,
-                                                                final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffResponseNewApiKey>> newApiKeyV1(String xPagopaPnUid,
+                                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                                  String xPagopaPnCxId,
+                                                                  Mono<BffRequestNewApiKey> bffRequestNewApiKey,
+                                                                  List<String> xPagopaPnCxGroups,
+                                                                  final ServerWebExchange exchange) {
         log.logStartingProcess("newApiKey");
 
         Mono<BffResponseNewApiKey> serviceResponse = apiKeysPaService.newApiKey(
@@ -102,12 +102,12 @@ public class ApiKeysPaController implements ApiKeysApi {
      * @return
      */
     @Override
-    public Mono<ResponseEntity<Void>> deleteApiKey(String xPagopaPnUid,
-                                                   CxTypeAuthFleet xPagopaPnCxType,
-                                                   String xPagopaPnCxId,
-                                                   String id,
-                                                   List<String> xPagopaPnCxGroups,
-                                                   final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Void>> deleteApiKeyV1(String xPagopaPnUid,
+                                                     CxTypeAuthFleet xPagopaPnCxType,
+                                                     String xPagopaPnCxId,
+                                                     String id,
+                                                     List<String> xPagopaPnCxGroups,
+                                                     final ServerWebExchange exchange) {
         log.logStartingProcess("deleteApiKey");
 
         Mono<Void> serviceResponse = apiKeysPaService.deleteApiKey(
@@ -133,13 +133,13 @@ public class ApiKeysPaController implements ApiKeysApi {
      * @return
      */
     @Override
-    public Mono<ResponseEntity<Void>> changeStatusApiKey(String xPagopaPnUid,
-                                                         CxTypeAuthFleet xPagopaPnCxType,
-                                                         String xPagopaPnCxId,
-                                                         String id,
-                                                         Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
-                                                         List<String> xPagopaPnCxGroups,
-                                                         final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Void>> changeStatusApiKeyV1(String xPagopaPnUid,
+                                                           CxTypeAuthFleet xPagopaPnCxType,
+                                                           String xPagopaPnCxId,
+                                                           String id,
+                                                           Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
+                                                           List<String> xPagopaPnCxGroups,
+                                                           final ServerWebExchange exchange) {
         log.logStartingProcess("changeStatusApiKey");
 
         Mono<Void> serviceResponse = apiKeysPaService.changeStatusApiKey(
