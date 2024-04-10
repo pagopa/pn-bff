@@ -1,0 +1,148 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Institutions and Products
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-institution-and-product
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+- url: https://webapi.notifichedigitali.it
+  description: Ambiente di produzione
+- url: https://webapi.uat.notifichedigitali.it
+  description: Ambiente di UAT
+- url: https://webapi.test.notifichedigitali.it
+  description: Ambiente di test
+- url: https://webapi.dev.notifichedigitali.it
+  description: Ambiente di sviluppo
+tags:
+- name: Institutions
+  description: Invocazioni per sapere gli enti disponibili
+- name: InstitutionProducts
+  description: Invocazioni per sapere i portali disponibili di un ente
+
+paths:
+  '/bff/v1/institutions':
+    get:
+      summary: Get Institutions list
+      description: |-
+        This operation retrieves the institutions from Self Care.
+      operationId: getInstitutionsV1
+      tags:
+      - Institutions
+      parameters:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffInstitutionList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/institutions/{institutionId}/products':
+    get:
+      summary: Get Products list of an Institution
+      description: |-
+        This operation retrieves all active products associated with the specified institution and user.
+      operationId: getInstitutionProductsV1
+      tags:
+      - InstitutionProducts
+      parameters:
+      - name: institutionId
+        description: The identifier of one PA
+        in: path
+        required: true
+        schema:
+          $ref: 'remote-refs.yaml#/components/schemas/SelfCarePaId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffInstitutionProductList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+
+components:
+  schemas:
+    BffInstitutionList:
+      description: The list of institutions
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitution'
+    BffInstitution:
+      type: object
+      required:
+      - id
+      - name
+      - productRole
+      - entityUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the institution
+        name:
+          type: string
+          description: The name of the institution
+        productRole:
+          type: string
+          description: The role of the product
+        logoUrl:
+          type: string
+          description: The URL of the logo
+        parentName:
+          type: string
+          description: The name of the parent institution
+        entityUrl:
+          type: string
+          description: The URL of the entity
+    BffInstitutionProductList:
+      description: The list of products
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitutionProduct'
+    BffInstitutionProduct:
+      type: object
+      required:
+      - id
+      - title
+      - productUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the product
+        title:
+          type: string
+          description: The title of the product
+        productUrl:
+          type: string
+          description: The URL of the product
