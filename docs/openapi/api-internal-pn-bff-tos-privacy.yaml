@@ -30,6 +30,8 @@ paths:
     parameters:
       - $ref: 'remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
       - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
     get:
       summary: Accettazione TOS e Privacy
       description: >-
@@ -37,17 +39,15 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '200':
-          description: successful operation
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BffTosPrivacyConsent'
         '400':
-          description: Invalid input
+          description: Bad Request
           content:
             application/problem+json:
               schema:
@@ -60,8 +60,6 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacy
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         required: true
         content:
@@ -70,9 +68,9 @@ paths:
               $ref: '#/components/schemas/BffTosPrivacyBody'
       responses:
         '200':
-          description: successful operation
+          description: OK
         '400':
-          description: Invalid input
+          description: Bad Request
           content:
             application/problem+json:
               schema:
@@ -80,49 +78,21 @@ paths:
 
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
+    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet:                                                               # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
     uidAuthFleet:                                                                  # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
 
   schemas:
-    BffConsentAction:
-      $ref: './remote-refs.yaml#/components/schemas/ConsentAction'
-    BffConsentVersion:
-      $ref: './remote-refs.yaml#/components/schemas/ConsentVersion'
-    BffConsent:
-      $ref: './remote-refs.yaml#/components/schemas/Consent'
-
     BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffConsent'
-        privacy:
-          $ref: '#/components/schemas/BffConsent'
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
 
     BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
 
     BffTosPrivacyActionBody:
-      type: object
-      required:
-        - action
-        - version
-      allOf:
-       - $ref: '#/components/schemas/BffConsentAction'
-      properties:
-        version:
-          $ref: '#/components/schemas/BffConsentVersion'
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyActionBody'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

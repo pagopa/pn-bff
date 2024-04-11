@@ -8,7 +8,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyMapper;
+import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentActionMapper;
+import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +35,13 @@ public class TosPrivacyService {
         Mono<BffConsent> tosConsent = pnUserAttributesClient.getTosConsent(
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
-                .map(TosPrivacyMapper.tosPrivacyMapper::mapTosPrivacyConsent)
+                .map(TosPrivacyConsentMapper.tosPrivacyConsentMapper::mapConsent)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         Mono<BffConsent> privacyConsent = pnUserAttributesClient.getPrivacyConsent(
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
-                .map(TosPrivacyMapper.tosPrivacyMapper::mapTosPrivacyConsent)
+                .map(TosPrivacyConsentMapper.tosPrivacyConsentMapper::mapConsent)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
@@ -79,7 +80,7 @@ public class TosPrivacyService {
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                         ConsentType.TOS,
-                        new ConsentAction().action(TosPrivacyMapper.tosPrivacyMapper.convertConsentAction(body.getTos().getAction())),
+                        new ConsentAction().action(TosPrivacyConsentActionMapper.tosPrivacyConsentActionMapper.convertConsentAction(body.getTos().getAction())),
                         body.getTos().getVersion()
                 ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
             }
@@ -89,7 +90,7 @@ public class TosPrivacyService {
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                         ConsentType.DATAPRIVACY,
-                        new ConsentAction().action(TosPrivacyMapper.tosPrivacyMapper.convertConsentAction(body.getPrivacy().getAction())),
+                        new ConsentAction().action(TosPrivacyConsentActionMapper.tosPrivacyConsentActionMapper.convertConsentAction(body.getPrivacy().getAction())),
                         body.getPrivacy().getVersion()
                 ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
             }

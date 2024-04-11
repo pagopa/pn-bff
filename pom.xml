@@ -460,7 +460,7 @@
                     <!-- OPEN API PN-USER-ATTRIBUTES-->
                     <execution>
                         <phase>generate-resources</phase>
-                        <id>generate-client-pn-user-attributes</id>
+                        <id>generate-client-pn-user-attributes-consents</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>

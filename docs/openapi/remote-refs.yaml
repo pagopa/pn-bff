@@ -68,13 +68,3 @@ components:
       $ref: "https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/ResponseNewApiKey"
     BffRequestApiKeyStatus:
       $ref: "https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8e2486b271a65245352ad8c8bb2d0894cd865904/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestApiKeyStatus"
-
-    ############################################################################################
-    ###                          STRUTTURE DATI DI PN-USER-ATTRIBUTES                        ###
-    ############################################################################################
-    ConsentAction:
-      $ref: "https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction"
-    Consent:
-      $ref: "https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent"
-    ConsentVersion:
-      $ref: "https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion"

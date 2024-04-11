@@ -41,7 +41,7 @@ class PnUserAttributesClientImplTest {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
                 CxTypeAuthFleet.PF
-        )).expectNextCount(1).verifyComplete();
+        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
     }
 
     @Test
@@ -71,7 +71,7 @@ class PnUserAttributesClientImplTest {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
                 CxTypeAuthFleet.PF
-        )).expectNextCount(1).verifyComplete();
+        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
     }
 
     @Test

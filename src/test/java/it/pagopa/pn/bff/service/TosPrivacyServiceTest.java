@@ -5,10 +5,9 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
-import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyMapper;
+import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
+import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +27,8 @@ class TosPrivacyServiceTest {
     @Autowired
     private TosPrivacyService tosPrivacyService;
     private PnUserAttributesClientImpl pnUserAttributesClient;
-    TosPrivacyMapper modelMapperMock = mock(TosPrivacyMapper.class);
+    TosPrivacyConsentMapper modelMapperMock = mock(TosPrivacyConsentMapper.class);
+    ConsentsMock consentsMock = new ConsentsMock();
 
     @BeforeEach
     void setup() {
@@ -40,24 +39,24 @@ class TosPrivacyServiceTest {
 
     @Test
     void testGetTosContent() {
+        Consent tosConsent = consentsMock.getTosConsentResponseMock();
+        Consent privacyConsent = consentsMock.getPrivacyConsentResponseMock();
+
         when(pnUserAttributesClient.getTosConsent(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class)
-        )).thenReturn(Mono.just(new Consent()));
+        )).thenReturn(Mono.just(tosConsent));
 
         when(pnUserAttributesClient.getPrivacyConsent(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class)
-        )).thenReturn(Mono.just(new Consent()));
-
-        when(modelMapperMock.mapTosPrivacyConsent(any(Consent.class)))
-                .thenReturn(new BffConsent());
+        )).thenReturn(Mono.just(privacyConsent));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         "UID",
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
                 ))
-                .expectNextCount(1)
+                .expectNext(consentsMock.getBffTosPrivacyConsentMock())
                 .verifyComplete();
     }
 
@@ -84,10 +83,7 @@ class TosPrivacyServiceTest {
 
     @Test
     void acceptOrDeclineTosPrivacyTest() {
-        BffTosPrivacyBody tosPrivacyBody = new BffTosPrivacyBody()
-                .privacy(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
-                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
-
+        BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock();
 
         when(pnUserAttributesClient.acceptConsent(
                 Mockito.anyString(),
@@ -117,8 +113,7 @@ class TosPrivacyServiceTest {
 
     @Test
     void acceptOnlyTosTest() {
-        BffTosPrivacyBody tosPrivacyBody = new BffTosPrivacyBody()
-                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
+        BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock().privacy(null);
 
         when(pnUserAttributesClient.acceptConsent(
                 Mockito.anyString(),

@@ -5,6 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mocks.ConsentsMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @WebFluxTest(TosPrivacyController.class)
 public class TosPrivacyControllerTest {
-    public static final String UID = "Uid";
     public static final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
     @Autowired
     WebTestClient webTestClient;
@@ -29,28 +30,33 @@ public class TosPrivacyControllerTest {
     private TosPrivacyService tosPrivacyService;
     @SpyBean
     private TosPrivacyController tosPrivacyController;
+    ConsentsMock consentsMock = new ConsentsMock();
+    UserMock userMock = new UserMock();
 
     @Test
     void getTosPrivacy() {
+        BffTosPrivacyConsent response = consentsMock.getBffTosPrivacyConsentMock();
+
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class)
                 ))
-                .thenReturn(Mono.just(new BffTosPrivacyConsent()));
+                .thenReturn(Mono.just(response));
 
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PRIVACY_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UID)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffTosPrivacyConsent.class);
+                .expectBody(BffTosPrivacyConsent.class)
+                .isEqualTo(response);
 
         Mockito.verify(tosPrivacyService).getTosPrivacy(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE
         );
     }
@@ -67,7 +73,7 @@ public class TosPrivacyControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PRIVACY_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UID)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .exchange()
                 .expectStatus()
@@ -91,14 +97,14 @@ public class TosPrivacyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), BffTosPrivacyBody.class)
                 .headers(httpHeaders -> {
-                    httpHeaders.set("x-pagopa-pn-uid", UID);
+                    httpHeaders.set("x-pagopa-pn-uid", UserMock.PN_UID);
                     httpHeaders.set("x-pagopa-pn-cx-type", CX_TYPE.toString());
                 })
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody(Void.class);
-
+        
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -118,7 +124,7 @@ public class TosPrivacyControllerTest {
         webTestClient
                 .put()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PRIVACY_PATH).build())
-                .header(PnBffRestConstants.UID_HEADER, UID)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .body(Mono.just(new BffTosPrivacyBody()), BffTosPrivacyBody.class)
                 .exchange()

@@ -56,7 +56,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * @param xPagopaPnCxType Public Administration Type
      * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
      * @param exchange
-     * @return successful operation
+     * @return
      */
     @Override
     public Mono<ResponseEntity<Void>> acceptTosPrivacy(String xPagopaPnUid,
