@@ -2,14 +2,14 @@ info:
   version: v1.0
 components:
   schemas:
-
+    
     BffApiKeysResponse:
       title: Elenco di api keys
       description: >-
         Dto contenente la lista delle api keys associate ad un utente.
       type: object
       required:
-        - items
+      - items
       properties:
         items:
           type: array
@@ -21,7 +21,7 @@ components:
           type: string
         total:
           type: integer
-
+    
     BffApiKeyRow:
       type: object
       properties:
@@ -51,7 +51,7 @@ components:
           description: Storico degli stati dell'api key
           items:
             $ref: '#/components/schemas/BffApiKeyStatusHistory'
-
+    
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object
@@ -64,12 +64,12 @@ components:
           type: string
           description: nome del gruppo
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-
+    
     BffApiKeyStatus:
       description: Stato dell'api key
       type: string
       enum: [ 'CREATED', 'ENABLED', 'BLOCKED', 'ROTATED' ]
-
+    
     BffApiKeyStatusHistory:
       type: object
       properties:
