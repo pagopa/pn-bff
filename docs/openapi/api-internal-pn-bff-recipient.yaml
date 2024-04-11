@@ -12,14 +12,14 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
   - name: NotificationReceived
     description: >-
@@ -34,17 +34,17 @@ paths:
         Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
         notifiche ricevute.
       tags:
-      - NotificationReceived
+        - NotificationReceived
       operationId: getReceivedNotificationV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
-      - $ref: '#/components/parameters/pathIun'
-      - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/notificationSearchMandateId'
       responses:
         '200':
           description: OK
@@ -68,7 +68,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
 
 components:
-  
+
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
     cxTypeAuthFleet: # NO EXTERNAL
@@ -93,6 +93,6 @@ components:
   schemas:
     BffFullNotificationV1:
       $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-    
+
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'

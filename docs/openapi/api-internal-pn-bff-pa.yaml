@@ -12,14 +12,14 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
   - name: NotificationSent
     description: >-
@@ -34,17 +34,17 @@ paths:
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
-      - NotificationSent
+        - NotificationSent
       operationId: getSentNotificationV1                                      # NO EXTERNAL
-      #      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
-      - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
+        - $ref: '#/components/parameters/pathIun'
       responses:
         '200':
           description: OK
@@ -66,7 +66,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-  
+
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
     cxTypeAuthFleet: # NO EXTERNAL
@@ -81,11 +81,11 @@ components:
     ### PARAMETRI RECUPERO NOTIFICA
     pathIun:
       $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/pathIun'
-  
+
   schemas:
 
     BffFullNotificationV1:
       $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-    
+
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'

@@ -34,35 +34,35 @@ paths:
       tags:
         - ApiKeys
       operationId: getApiKeysV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-      - name: limit
-        in: query
-        schema:
-          type: integer
-          default: 10
-      - name: lastKey
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: lastUpdate
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: showVirtualKey
-        in: query
-        required: false
-        schema:
-          type: boolean
-          default: false
-      
+        - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lastUpdate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showVirtualKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+        
       responses:
         '200':
           description: OK
@@ -89,13 +89,13 @@ paths:
       tags:
         - ApiKeys
       operationId: newApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
-      - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
       requestBody:
         content:
           application/json:
@@ -165,7 +165,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-  
+
   "/bff/v1/api-keys/{id}/status":
     put:
       summary: Cambia lo stato dell'api key
@@ -174,14 +174,14 @@ paths:
       tags:
         - ApiKeys
       operationId: changeStatusApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/pathApiKey'
+        - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/pathApiKey'
       requestBody:
         content:
           application/json:
@@ -238,7 +238,7 @@ components:
       schema:
         type: string
         x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-  
+
   schemas:
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'
