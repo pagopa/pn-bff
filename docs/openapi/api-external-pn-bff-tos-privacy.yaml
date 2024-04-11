@@ -35,6 +35,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '200':
           description: successful operation
@@ -56,6 +58,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacy
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         required: true
         content:
