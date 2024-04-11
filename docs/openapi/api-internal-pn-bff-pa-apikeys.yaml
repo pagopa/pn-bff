@@ -224,8 +224,7 @@ components:
     cxIdAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
     cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-      required: false
+      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNALinva
     uidAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
     
@@ -239,7 +238,7 @@ components:
       schema:
         type: string
         x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-
+  
   schemas:
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'
