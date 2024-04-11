@@ -21,34 +21,12 @@ servers:
 - url: https://webapi.dev.notifichedigitali.it
   description: Ambiente di sviluppo
 tags:
-- name: HealthCheck
-  description: >-
-    Invocazioni per sapere lo stato del microservizio
-- name: NotificationReceived
-  description: >-
-    Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
+  - name: NotificationReceived
+    description: >-
+      Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
-  '/status':
-    get:
-      summary: Get Status of application
-      operationId: status
-      tags:
-      - HealthCheck
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatusSchema'
-        '500':
-          description: InternalServerError
-          content:
-            application/problem+json:
-              schema:
-                $ref: 'common-refs.yaml#/components/schemas/Problem'
-  
+
   '/bff/v1/notifications/received/{iun}':
     get:
       summary: Accesso notifiche ricevute
@@ -113,9 +91,6 @@ components:
       description: Access token is missing or invalid
   
   schemas:
-    StatusSchema:
-      $ref: './common-refs.yaml#/components/schemas/StatusSchema'
-    
     BffFullNotificationV1:
       $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
     

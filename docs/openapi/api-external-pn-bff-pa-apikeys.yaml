@@ -201,9 +201,7 @@ paths:
 
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
-    required: false
-    
+
     ### PARAMETRI RICERCA API KEY
     pathApiKey:
       description: >-
@@ -213,6 +211,7 @@ components:
       required: true
       schema:
         type: string
+
   schemas:
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'

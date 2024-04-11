@@ -21,34 +21,12 @@ servers:
 - url: https://webapi.dev.notifichedigitali.it
   description: Ambiente di sviluppo
 tags:
-- name: HealthCheck
-  description: >-
-    Invocazioni per sapere lo stato del microservizio
 - name: NotificationSent
   description: >-
     Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste
     di notifica inviate e delle notifiche accettate.
 
 paths:
-  '/status':
-    get:
-      summary: Get Status of application
-      operationId: status
-      tags:
-      - HealthCheck
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatusSchema'
-        '500':
-          description: InternalServerError
-          content:
-            application/problem+json:
-              schema:
-                $ref: 'common-refs.yaml#/components/schemas/Problem'
   
   '/bff/v1/notifications/sent/{iun}':
     get:
@@ -59,7 +37,7 @@ paths:
       - NotificationSent
       operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
       security: # ONLY EXTERNAL
-      - bearerAuth: [ ]                            # ONLY EXTERNAL
+      - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
       - $ref: '#/components/parameters/pathIun'
       responses:

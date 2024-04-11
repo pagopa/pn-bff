@@ -218,7 +218,7 @@ paths:
 
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
+    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
     cxIdAuthFleet: # NO EXTERNAL
@@ -239,6 +239,7 @@ components:
       schema:
         type: string
         x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+
   schemas:
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'
