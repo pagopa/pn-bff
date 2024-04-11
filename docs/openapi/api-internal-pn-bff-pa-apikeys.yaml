@@ -218,14 +218,14 @@ paths:
 
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
+    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet: # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
     cxIdAuthFleet: # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
     cxGroupsAuthFleet: # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-      required: false
+      required: false # NO EXTERNAL
     uidAuthFleet: # NO EXTERNAL
       $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
 
@@ -239,6 +239,7 @@ components:
       schema:
         type: string
         x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+
   schemas:
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'
