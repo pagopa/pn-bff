@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TosPrivacyConsent'
+                $ref: '#/components/schemas/BffTosPrivacyConsent'
         '400':
           description: Invalid input
           content:
@@ -55,15 +55,13 @@ paths:
         Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
-      operationId: putTosPrivacyV1
+      operationId: acceptTosPrivacy
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              # TODO - Dovrebbe prendere un oggetto con due chiavi (tos e privacy) e uno dei due deve essere required
-              # TODO - L'oggetto deve contenere la action e la version (required entrambe)
-              $ref: '#/components/schemas/TosPrivacyBody'
+              $ref: '#/components/schemas/BffTosPrivacyBody'
       responses:
         '200':
           description: successful operation
@@ -79,15 +77,14 @@ components:
     ### PARAMETRI DI AUTENTICAZIONE
 
   schemas:
-    ConsentAction:
+    BffConsentAction:
       $ref: './remote-refs.yaml#/components/schemas/ConsentAction'
-    ConsentVersion:
+    BffConsentVersion:
       $ref: './remote-refs.yaml#/components/schemas/ConsentVersion'
-
     BffConsent:
       $ref: './remote-refs.yaml#/components/schemas/Consent'
 
-    TosPrivacyConsent:
+    BffTosPrivacyConsent:
       type: object
       required:
         - tos
@@ -98,24 +95,24 @@ components:
         privacy:
           $ref: '#/components/schemas/BffConsent'
 
-    TosPrivacyBody:
+    BffTosPrivacyBody:
       type: object
       properties:
         tos:
-          $ref: '#/components/schemas/TosPrivacyActionBody'
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
         privacy:
-          $ref: '#/components/schemas/TosPrivacyActionBody'
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
 
-    TosPrivacyActionBody:
+    BffTosPrivacyActionBody:
       type: object
       required:
         - action
         - version
       allOf:
-       - $ref: '#/components/schemas/ConsentAction'
+       - $ref: '#/components/schemas/BffConsentAction'
       properties:
         version:
-          $ref: '#/components/schemas/ConsentVersion'
+          $ref: '#/components/schemas/BffConsentVersion'
 
     Problem:
       $ref: './remote-refs.yaml#/components/schemas/Problem'

@@ -2,10 +2,10 @@ package it.pagopa.pn.bff.pnclient.userattributes;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mocks.ConsentsMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -18,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnUserAttributesClientImpl.class})
@@ -28,6 +27,7 @@ class PnUserAttributesClientImplTest {
     private PnUserAttributesClientImpl pnUserAttributesClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi")
     private ConsentsApi consentsApi;
+    private final ConsentsMock consentsMock = new ConsentsMock();
 
     @Test
     void getTosConsentTest() throws RestClientException {
@@ -36,7 +36,7 @@ class PnUserAttributesClientImplTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.isNull()
-        )).thenReturn(Mono.just(mock(Consent.class)));
+        )).thenReturn(Mono.just(consentsMock.getTosConsentResponseMock()));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 "UID",
@@ -46,6 +46,36 @@ class PnUserAttributesClientImplTest {
 
     @Test
     void getTosContentErrorTest() {
+        when(consentsApi.getConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.isNull()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+                "UID",
+                CxTypeAuthFleet.PF
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void getPrivacyConsentTest() throws RestClientException {
+        when(consentsApi.getConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.isNull()
+        )).thenReturn(Mono.just(consentsMock.getPrivacyConsentResponseMock()));
+
+        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+                "UID",
+                CxTypeAuthFleet.PF
+        )).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void getPrivacyContentErrorTest() {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

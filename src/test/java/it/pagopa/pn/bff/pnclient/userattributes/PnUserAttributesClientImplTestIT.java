@@ -56,7 +56,7 @@ public class PnUserAttributesClientImplTestIT {
     @Test
     void getTosConsent() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(consentsMock.getConsentResponseMock());
+        String response = objectMapper.writeValueAsString(consentsMock.getTosConsentResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response()
                         .withStatusCode(200)
@@ -67,7 +67,7 @@ public class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 UID,
                 CX_TYPE
-        )).expectNext(consentsMock.getConsentResponseMock()).verifyComplete();
+        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
     }
 
     @Test
@@ -84,7 +84,7 @@ public class PnUserAttributesClientImplTestIT {
     @Test
     void getPrivacyConsent() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(consentsMock.getConsentResponseMock());
+        String response = objectMapper.writeValueAsString(consentsMock.getPrivacyConsentResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
                 .respond(response()
                         .withStatusCode(200)
@@ -95,7 +95,7 @@ public class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
                 UID,
                 CX_TYPE
-        )).expectNext(consentsMock.getConsentResponseMock()).verifyComplete();
+        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
     }
 
     @Test
