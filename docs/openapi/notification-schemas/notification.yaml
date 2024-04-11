@@ -1,0 +1,64 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    
+    BffFullNotificationV1:
+      description: >-
+        Dettaglio notifica con elementi per il Frontend
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/01f91fb6390338e566c3fcc538ff575be0364df9/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
+        - type: object
+          required:
+            - notificationStatusHistory
+            - notificationStatus
+            - timeline
+          properties:
+            notificationStatusHistory:
+              type: array
+              items:
+                $ref: '#/components/schemas/BffNotificationStatusHistory'
+            notificationStatus:
+              $ref: './notification-enums.yaml#/components/schemas/BffNotificationStatus'
+            timeline:
+              type: array
+              items:
+                $ref: './notification-timeline.yaml#/components/schemas/BffNotificationDetailTimeline'
+            radd:
+              $ref: './notification-timeline.yaml#/components/schemas/BffNotificationDetailTimeline'
+            otherDocuments:
+              type: array
+              items:
+                $ref: './notification-documents.yaml#/components/schemas/BffNotificationDetailDocument'
+    
+    BffNotificationStatusHistory:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - activeFrom
+        - relatedTimelineElements
+      properties:
+        status:
+          $ref: './notification-enums.yaml#/components/schemas/BffNotificationStatus'
+        activeFrom:
+          type: string
+          format: date-time
+        relatedTimelineElements:
+          type: array
+          items:
+            type: string
+        steps:
+          type: array
+          items:
+            $ref: './notification-timeline.yaml#/components/schemas/BffNotificationDetailTimeline'
+        recipient:
+          type: string
+        deliveryMode:
+          $ref: './notification-enums.yaml#/components/schemas/BffNotificationDeliveryMode'
+    
+    BffPhysicalAddress:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-addresses.yaml#/components/schemas/PhysicalAddress'
+    
+    BffDigitalAddress:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-addresses.yaml#/components/schemas/DigitalAddress'

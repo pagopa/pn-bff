@@ -62,7 +62,6 @@ paths:
           schema:
             type: boolean
             default: false
-
       responses:
         '200':
           description: OK
@@ -91,7 +90,7 @@ paths:
       operationId: newApiKeyV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:                                           # NO EXTERNAL
+      parameters: # NO EXTERNAL
         - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
         - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
         - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
@@ -220,15 +219,14 @@ components:
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
     cxIdAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
     cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-      required: false # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
     uidAuthFleet: # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-
+      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
+    
     ### PARAMETRI RICERCA API KEY
     pathApiKey:
       description: >-
@@ -242,16 +240,16 @@ components:
 
   schemas:
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'
 
     BffApiKeysResponse:
-      $ref: './apikeysSchemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
 
     BffRequestNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/BffRequestNewApiKey'
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestNewApiKey'
 
     BffResponseNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/BffResponseNewApiKey'
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffResponseNewApiKey'
 
     BffRequestApiKeyStatus:
-      $ref: './remote-refs.yaml#/components/schemas/BffRequestApiKeyStatus'
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestApiKeyStatus'
