@@ -224,7 +224,7 @@ components:
     cxIdAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
     cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNALinva
+      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
     uidAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
     
