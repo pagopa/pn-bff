@@ -76,33 +76,33 @@ public class NotificationDetailUtility {
      * List of the allowed timeline categories for the analog flow
      * They are used to filter out those timeline categories that are not included in the list
      */
-    final private static List<TimelineCategory> TimelineAllowedAnalogCategories =
-            Arrays.asList(TimelineCategory.SEND_ANALOG_PROGRESS, TimelineCategory.SEND_ANALOG_FEEDBACK,
-                    TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS);
+    final private static List<BffTimelineCategory> TimelineAllowedAnalogCategories =
+            Arrays.asList(BffTimelineCategory.SEND_ANALOG_PROGRESS, BffTimelineCategory.SEND_ANALOG_FEEDBACK,
+                    BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS);
 
     /**
      * List of the allowed timeline categories
      * On front-end side we don't show all the categories but only those listed below
      */
-    final private static List<TimelineCategory> TimelineAllowedCategories =
+    final private static List<BffTimelineCategory> TimelineAllowedCategories =
             Arrays.asList(
-                    TimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
+                    BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
                     // PN-6902
-                    TimelineCategory.ANALOG_FAILURE_WORKFLOW,
-                    TimelineCategory.SEND_DIGITAL_DOMICILE,
-                    TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER,
-                    TimelineCategory.SEND_ANALOG_DOMICILE,
-                    TimelineCategory.SEND_DIGITAL_FEEDBACK,
-                    TimelineCategory.SEND_DIGITAL_PROGRESS,
+                    BffTimelineCategory.ANALOG_FAILURE_WORKFLOW,
+                    BffTimelineCategory.SEND_DIGITAL_DOMICILE,
+                    BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER,
+                    BffTimelineCategory.SEND_ANALOG_DOMICILE,
+                    BffTimelineCategory.SEND_DIGITAL_FEEDBACK,
+                    BffTimelineCategory.SEND_DIGITAL_PROGRESS,
                     // PN-2068
-                    TimelineCategory.SEND_COURTESY_MESSAGE,
+                    BffTimelineCategory.SEND_COURTESY_MESSAGE,
                     // PN-1647
-                    TimelineCategory.NOT_HANDLED,
-                    TimelineCategory.SEND_ANALOG_PROGRESS,
-                    TimelineCategory.SEND_ANALOG_FEEDBACK,
-                    TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
+                    BffTimelineCategory.NOT_HANDLED,
+                    BffTimelineCategory.SEND_ANALOG_PROGRESS,
+                    BffTimelineCategory.SEND_ANALOG_FEEDBACK,
+                    BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
                     // PN-7743
-                    TimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE
+                    BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE
             );
 
     /**
@@ -137,8 +137,8 @@ public class NotificationDetailUtility {
      * @return true if the step is an internal app IO event, false otherwise
      */
     public static boolean isInternalAppIoEvent(NotificationDetailTimeline step) {
-        if (step.getCategory().equals(TimelineCategory.SEND_COURTESY_MESSAGE)) {
-            NotificationDetailTimelineDetails details = step.getDetails();
+        if (step.getCategory().equals(BffTimelineCategory.SEND_COURTESY_MESSAGE)) {
+            BffNotificationDetailTimelineDetails details = step.getDetails();
             return details.getDigitalAddress().getType().equals("APPIO")
                     && details.getIoSendMessageResult() != null
                     && !details.getIoSendMessageResult().equals(IoSendMessageResult.SENT_COURTESY);
@@ -174,13 +174,13 @@ public class NotificationDetailUtility {
      */
     public static void insertCancelledStatusInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailTimeline timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
-                .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLED)
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLED)
                 .findFirst()
                 .orElse(null);
 
         if (timelineCancelledElement == null) {
             NotificationDetailTimeline timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
-                    .filter(el -> el.getCategory() == TimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)
+                    .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)
                     .findFirst()
                     .orElse(null);
 
@@ -210,7 +210,7 @@ public class NotificationDetailUtility {
         List<NotificationDetailDocument> otherDocuments = new ArrayList<>();
 
         List<NotificationDetailTimeline> timelineFiltered = bffFullNotificationV1.getTimeline().stream()
-                .filter(el -> el.getCategory() == TimelineCategory.AAR_GENERATION)
+                .filter(el -> el.getCategory() == BffTimelineCategory.AAR_GENERATION)
                 .toList();
 
         if (!timelineFiltered.isEmpty()) {
@@ -255,7 +255,7 @@ public class NotificationDetailUtility {
     public static void checkRADDInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
         bffFullNotificationV1.getTimeline()
                 .stream()
-                .filter(element -> element.getCategory() == TimelineCategory.NOTIFICATION_RADD_RETRIEVED)
+                .filter(element -> element.getCategory() == BffTimelineCategory.NOTIFICATION_RADD_RETRIEVED)
                 .findFirst()
                 .ifPresent(bffFullNotificationV1::setRadd);
     }
@@ -264,7 +264,6 @@ public class NotificationDetailUtility {
      * Populates the steps for each notification status history element.
      * Each status history elements is determined by a series of timeline elements.
      * This method copies the related timeline elements into a new property (steps) into each status history element
-     *
      *
      * @param notificationDetail  the notification to populate
      * @param timelineElement     the timeline element to populate
@@ -300,7 +299,7 @@ public class NotificationDetailUtility {
                 // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
                 // since the AAR for such steps must be shown in the timeline exactly the same way as legalFacts.
                 // Cfr. comment in the definition of INotificationDetailTimeline in src/models/NotificationDetail.ts.
-            } else if (step.getCategory().equals(TimelineCategory.ANALOG_FAILURE_WORKFLOW)
+            } else if (step.getCategory().equals(BffTimelineCategory.ANALOG_FAILURE_WORKFLOW)
                     && step.getDetails().getGeneratedAarUrl() != null) {
                 timelineStep.setLegalFactsIds(java.util.List.of(new LegalFactId(
                         step.getDetails().getGeneratedAarUrl(),
@@ -361,20 +360,20 @@ public class NotificationDetailUtility {
                 );
 
                 if (step != null) {
-                    if (deliveryMode == null && step.getCategory().equals(TimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
+                    if (deliveryMode == null && step.getCategory().equals(BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
                         deliveryMode = NotificationDeliveryMode.DIGITAL;
-                    } else if (deliveryMode == null && (step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
-                            || step.getCategory().equals(TimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
+                    } else if (deliveryMode == null && (step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
+                            || step.getCategory().equals(BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
                         deliveryMode = NotificationDeliveryMode.ANALOG;
                     }
 
                     if (status.getStatus().equals(NotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
-                        if ((step.getCategory().equals(TimelineCategory.DIGITAL_FAILURE_WORKFLOW)
-                                || step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
-                                || step.getCategory().equals(TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
+                        if ((step.getCategory().equals(BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW)
+                                || step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
+                                || step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
                                 && !lastDeliveredIndexToShiftIsFixed) {
                             lastDeliveredIndexToShift = ix;
-                        } else if (step.getCategory().equals(TimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
+                        } else if (step.getCategory().equals(BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
                             if (lastDeliveredIndexToShift > -1) {
                                 lastDeliveredIndexToShift = ix - 1;
                                 lastDeliveredIndexToShiftIsFixed = true;
@@ -411,14 +410,14 @@ public class NotificationDetailUtility {
 
             if (status.getStatus().equals(NotificationStatus.VIEWED)) {
                 List<NotificationDetailTimeline> viewedSteps = status.getSteps().stream()
-                        .filter(s -> s.getCategory().equals(TimelineCategory.NOTIFICATION_VIEWED))
+                        .filter(s -> s.getCategory().equals(BffTimelineCategory.NOTIFICATION_VIEWED))
                         .toList();
 
                 if (!viewedSteps.isEmpty()) {
                     NotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
 
                     if (mostOldViewedStep.getDetails() != null) {
-                        NotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
+                        BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
                         if (viewedDetails.getDelegateInfo() != null) {
                             String recipient = viewedDetails.getDelegateInfo().getDenomination() +
                                     " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";

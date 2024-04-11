@@ -12,18 +12,18 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-  - url: https://webapi.notifichedigitali.it
-    description: Ambiente di produzione
-  - url: https://webapi.uat.notifichedigitali.it
-    description: Ambiente di UAT
-  - url: https://webapi.test.notifichedigitali.it
-    description: Ambiente di test
-  - url: https://webapi.dev.notifichedigitali.it
-    description: Ambiente di sviluppo
+- url: https://webapi.notifichedigitali.it
+  description: Ambiente di produzione
+- url: https://webapi.uat.notifichedigitali.it
+  description: Ambiente di UAT
+- url: https://webapi.test.notifichedigitali.it
+  description: Ambiente di test
+- url: https://webapi.dev.notifichedigitali.it
+  description: Ambiente di sviluppo
 tags:
-  - name: ApiKeys
-    description: >-
-      Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+- name: ApiKeys
+  description: >-
+    Invocazioni utilizzabili dai mittenti per la gestione delle api keys
 
 paths:
   "/bff/v1/api-keys":
@@ -32,33 +32,33 @@ paths:
       description: >-
         servizio di consultazione della lista delle api keys
       tags:
-        - ApiKeys
+      - ApiKeys
       operationId: getApiKeysV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security: # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 10
-        - name: lastKey
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: lastUpdate
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: showVirtualKey
-          in: query
-          required: false
-          schema:
-            type: boolean
-            default: false
-
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 10
+      - name: lastKey
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: lastUpdate
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: showVirtualKey
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      
       responses:
         '200':
           description: OK
@@ -83,10 +83,10 @@ paths:
       description: >-
         servizio di creazione di un'api key
       tags:
-        - ApiKeys
+      - ApiKeys
       operationId: newApiKeyV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security: # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         content:
           application/json:
@@ -112,19 +112,19 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-
+  
   "/bff/v1/api-keys/{id}":
     delete:
       summary: Rimozione api key
       description: >-
         servizio di rimozione dell'api key
       tags:
-        - ApiKeys
+      - ApiKeys
       operationId: deleteApiKeyV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security: # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathApiKey'
+      - $ref: '#/components/parameters/pathApiKey'
       responses:
         '200':
           description: OK
@@ -152,19 +152,19 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-
+  
   "/bff/v1/api-keys/{id}/status":
     put:
       summary: Cambia lo stato dell'api key
       description: >-
         servizio di cambio stato dell'api key
       tags:
-        - ApiKeys
+      - ApiKeys
       operationId: changeStatusApiKeyV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security: # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathApiKey'
+      - $ref: '#/components/parameters/pathApiKey'
       requestBody:
         content:
           application/json:
@@ -202,8 +202,8 @@ paths:
 components:
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
-      required: false
-
+    required: false
+    
     ### PARAMETRI RICERCA API KEY
     pathApiKey:
       description: >-
@@ -215,16 +215,16 @@ components:
         type: string
   schemas:
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
-
+      $ref: './common-refs.yaml#/components/schemas/Problem'
+    
     BffApiKeysResponse:
-      $ref: './apikeysSchemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
-
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
+    
     BffRequestNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/BffRequestNewApiKey'
-
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestNewApiKey'
+    
     BffResponseNewApiKey:
-      $ref: './remote-refs.yaml#/components/schemas/BffResponseNewApiKey'
-
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffResponseNewApiKey'
+    
     BffRequestApiKeyStatus:
-      $ref: './remote-refs.yaml#/components/schemas/BffRequestApiKeyStatus'
+      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestApiKeyStatus'

@@ -93,9 +93,9 @@ class NotificationDetailUtilityTest {
                         .elementId("NOTIFICATION_RADD_RETRIEVED_mock")
                         .timestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                         .legalFactsIds(List.of())
-                        .category(TimelineCategory.NOTIFICATION_RADD_RETRIEVED)
+                        .category(BffTimelineCategory.NOTIFICATION_RADD_RETRIEVED)
                         .details(
-                                new NotificationDetailTimelineDetails()
+                                new BffNotificationDetailTimelineDetails()
                                         .recIndex(1)
                                         .eventTimestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                                         .raddType("ALT")
@@ -166,21 +166,21 @@ class NotificationDetailUtilityTest {
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(analogNotification);
 
         NotificationDetailTimeline sendAnalogProgressElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_PROGRESS))
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_ANALOG_PROGRESS))
                 .findFirst()
                 .orElseThrow();
 
         Assertions.assertTrue(sendAnalogProgressElem.getHidden());
 
         NotificationDetailTimeline sendAnalogFeedbackElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_FEEDBACK))
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_ANALOG_FEEDBACK))
                 .findFirst()
                 .orElseThrow();
 
         Assertions.assertFalse(sendAnalogFeedbackElem.getHidden());
 
         NotificationDetailTimeline sendAnalogRegisteredLetterElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
                 .findFirst()
                 .orElseThrow();
         Assertions.assertTrue(sendAnalogRegisteredLetterElem.getHidden());

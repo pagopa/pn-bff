@@ -12,22 +12,22 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-  - url: https://webapi.notifichedigitali.it
-    description: Ambiente di produzione
-  - url: https://webapi.uat.notifichedigitali.it
-    description: Ambiente di UAT
-  - url: https://webapi.test.notifichedigitali.it
-    description: Ambiente di test
-  - url: https://webapi.dev.notifichedigitali.it
-    description: Ambiente di sviluppo
+- url: https://webapi.notifichedigitali.it
+  description: Ambiente di produzione
+- url: https://webapi.uat.notifichedigitali.it
+  description: Ambiente di UAT
+- url: https://webapi.test.notifichedigitali.it
+  description: Ambiente di test
+- url: https://webapi.dev.notifichedigitali.it
+  description: Ambiente di sviluppo
 tags:
-  - name: HealthCheck
-    description: >-
-      Invocazioni per sapere lo stato del microservizio
-  - name: NotificationSent
-    description: >-
-      Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
-      di notifica inviate e delle notifiche accettate.
+- name: HealthCheck
+  description: >-
+    Invocazioni per sapere lo stato del microservizio
+- name: NotificationSent
+  description: >-
+    Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste
+    di notifica inviate e delle notifiche accettate.
 
 paths:
   '/status':
@@ -35,7 +35,7 @@ paths:
       summary: Get Status of application
       operationId: status
       tags:
-        - HealthCheck
+      - HealthCheck
       responses:
         '200':
           description: OK
@@ -48,20 +48,20 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
-
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+  
   '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica versione 1'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
-        - NotificationSent
+      - NotificationSent
       operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security: # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+      - $ref: '#/components/parameters/pathIun'
       responses:
         '200':
           description: OK
@@ -83,20 +83,18 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-
+  
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
-
     ### PARAMETRI RECUPERO NOTIFICA
     pathIun:
-      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
-
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/pathIun'
+  
   schemas:
     StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
-
+      $ref: './common-refs.yaml#/components/schemas/StatusSchema'
+    
     BffFullNotificationV1:
-      $ref: './notificationSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-
+      $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+    
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'
