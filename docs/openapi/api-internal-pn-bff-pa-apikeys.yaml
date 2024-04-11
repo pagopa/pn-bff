@@ -24,7 +24,6 @@ tags:
 - name: ApiKeys
   description: >-
     Invocazioni utilizzabili dai mittenti per la gestione delle api keys
-
 paths:
   "/bff/v1/api-keys":
     get:
@@ -34,13 +33,9 @@ paths:
       tags:
       - ApiKeys
       operationId: getApiKeysV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
       - name: limit
         in: query
         schema:
@@ -89,13 +84,8 @@ paths:
       tags:
       - ApiKeys
       operationId: newApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
-      - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+      security:                                      # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         content:
           application/json:
@@ -130,13 +120,9 @@ paths:
       tags:
       - ApiKeys
       operationId: deleteApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
       - $ref: '#/components/parameters/pathApiKey'
       responses:
         '200':
@@ -174,13 +160,9 @@ paths:
       tags:
       - ApiKeys
       operationId: changeStatusApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+      - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
       - $ref: '#/components/parameters/pathApiKey'
       requestBody:
         content:
@@ -215,19 +197,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
-    cxTypeAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-    cxIdAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-    cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-    uidAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-    
     ### PARAMETRI RICERCA API KEY
     pathApiKey:
       description: >-
@@ -237,7 +208,6 @@ components:
       required: true
       schema:
         type: string
-        x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
   
   schemas:
     Problem:
