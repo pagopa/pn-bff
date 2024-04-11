@@ -21,9 +21,9 @@ servers:
   - url: https://webapi.dev.notifichedigitali.it
     description: Ambiente di sviluppo
 tags:
-- name: ApiKeys
-  description: >-
-    Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+  - name: ApiKeys
+    description: >-
+      Invocazioni utilizzabili dai mittenti per la gestione delle api keys
 
 paths:
   "/bff/v1/api-keys":
@@ -62,7 +62,6 @@ paths:
           schema:
             type: boolean
             default: false
-        
       responses:
         '200':
           description: OK
@@ -128,16 +127,16 @@ paths:
       description: >-
         servizio di rimozione dell'api key
       tags:
-      - ApiKeys
+        - ApiKeys
       operationId: deleteApiKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-      - $ref: '#/components/parameters/pathApiKey'
+        - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: '#/components/parameters/pathApiKey'
       responses:
         '200':
           description: OK

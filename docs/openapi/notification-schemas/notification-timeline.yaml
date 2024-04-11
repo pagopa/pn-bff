@@ -2,13 +2,13 @@ info:
   version: v1.0
 components:
   schemas:
-    NotificationDetailTimeline:
+    BffNotificationDetailTimeline:
       type: object
       required:
-      - elementId
-      - timestamp
-      - category
-      - details
+        - elementId
+        - timestamp
+        - category
+        - details
       additionalProperties: false
       properties:
         elementId:
@@ -19,7 +19,7 @@ components:
         legalFactsIds:
           type: array
           items:
-            $ref: "#/components/schemas/LegalFactId"
+            $ref: "#/components/schemas/BffLegalFactId"
         category:
           $ref: "#/components/schemas/BffTimelineCategory"
         details:
@@ -35,15 +35,15 @@ components:
     BffNotificationDetailTimelineDetails:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementDetailsV23'
     
-    LegalFactId:
+    BffLegalFactId:
       type: object
       required:
-      - key
-      - category
+        - key
+        - category
       properties:
         key:
           type: string
           pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
           maxLength: 512
         category:
-          $ref: "./notification-enums.yaml#/components/schemas/LegalFactType"
+          $ref: "./notification-enums.yaml#/components/schemas/BffLegalFactType"

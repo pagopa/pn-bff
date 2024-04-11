@@ -43,8 +43,8 @@ paths:
         - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
         - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
         - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: '#/components/parameters/BffPathIun'
+        - $ref: '#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK
@@ -81,10 +81,10 @@ components:
       $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
     
     ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/pathIun'
-    notificationSearchMandateId:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+    BffNotificationSearchMandateId:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
   
   responses:
     UnauthorizedError:

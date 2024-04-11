@@ -12,14 +12,14 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
   - name: NotificationReceived
     description: >-
@@ -34,13 +34,13 @@ paths:
         Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
         notifiche ricevute.
       tags:
-      - NotificationReceived
+        - NotificationReceived
       operationId: getReceivedNotificationV1
-      security: # ONLY EXTERNAL
-      - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/pathIun'
-      - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: '#/components/parameters/BffPathIun'
+        - $ref: '#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK
@@ -64,15 +64,15 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
 
 components:
-  
+
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
     
     ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/pathIun'
-    notificationSearchMandateId:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+    BffNotificationSearchMandateId:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
   
   responses:
     UnauthorizedError:
@@ -81,6 +81,6 @@ components:
   schemas:
     BffFullNotificationV1:
       $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-    
+
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'

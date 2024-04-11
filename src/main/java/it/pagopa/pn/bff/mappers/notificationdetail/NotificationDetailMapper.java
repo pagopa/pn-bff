@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.mappers.notificationdetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationDetailTimeline;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -71,7 +71,7 @@ public interface NotificationDetailMapper {
     @AfterMapping
     default void setTimelineIndexAndHidden(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         for (int i = 0; i < bffFullNotificationV1.getTimeline().size(); i++) {
-            NotificationDetailTimeline timelineElement = bffFullNotificationV1.getTimeline().get(i);
+            BffNotificationDetailTimeline timelineElement = bffFullNotificationV1.getTimeline().get(i);
             timelineElement.setIndex(i);
             timelineElement.setHidden(!NotificationDetailUtility.timelineElementMustBeShown(timelineElement));
         }

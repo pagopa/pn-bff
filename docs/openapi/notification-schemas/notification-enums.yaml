@@ -14,61 +14,61 @@ components:
     BffTimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV23'
     
-    NotificationStatus:
+    BffNotificationStatus:
       type: string
       enum:
-      - IN_VALIDATION
-      - ACCEPTED
-      - DELIVERING
-      - DELIVERED
-      - VIEWED
-      - EFFECTIVE_DATE
-      - PAID
-      - UNREACHABLE
-      - CANCELLED
-      - REFUSED
-      - CANCELLATION_IN_PROGRESS
+        - IN_VALIDATION
+        - ACCEPTED
+        - DELIVERING
+        - DELIVERED
+        - VIEWED
+        - EFFECTIVE_DATE
+        - PAID
+        - UNREACHABLE
+        - CANCELLED
+        - REFUSED
+        - CANCELLATION_IN_PROGRESS
     
-    PhysicalCommunicationType:
+    BffPhysicalCommunicationType:
       type: string
       enum:
-      - AR_REGISTERED_LETTER
-      - REGISTERED_LETTER_890
+        - AR_REGISTERED_LETTER
+        - REGISTERED_LETTER_890
     
-    NotificationDeliveryMode:
+    BffNotificationDeliveryMode:
       type: string
       enum:
-      - analog
-      - digital
+        - analog
+        - digital
     
-    AppIoCourtesyMessageEventType:
+    BffAppIoCourtesyMessageEventType:
       type: string
       enum:
-      - SENT_COURTESY
-      - SENT_OPTIN
-      - NOT_SENT_OPTIN_ALREADY_SENT
+        - SENT_COURTESY
+        - SENT_OPTIN
+        - NOT_SENT_OPTIN_ALREADY_SENT
     
-    SimpleResponseStatus:
+    BffSimpleResponseStatus:
       type: string
       enum:
-      - OK
-      - KO
+        - OK
+        - KO
     
-    ResponseStatus:
+    BffResponseStatus:
       type: string
       enum:
-      - OK
-      - PROGRESS
-      - PROGRESS_WITH_RETRY
-      - KO
+        - OK
+        - PROGRESS
+        - PROGRESS_WITH_RETRY
+        - KO
     
-    LegalFactType:
+    BffLegalFactType:
       type: string
       enum:
-      - AAR
-      - SENDER_ACK
-      - DIGITAL_DELIVERY
-      - ANALOG_DELIVERY
-      - RECIPIENT_ACCESS
-      - PEC_RECEIPT
-      - ANALOG_FAILURE_DELIVERY
+        - AAR
+        - SENDER_ACK
+        - DIGITAL_DELIVERY
+        - ANALOG_DELIVERY
+        - RECIPIENT_ACCESS
+        - PEC_RECEIPT
+        - ANALOG_FAILURE_DELIVERY

@@ -116,7 +116,7 @@ public class NotificationDetailUtility {
      * @param b the second timeline element
      * @return an integer representing the order between the two elements
      */
-    public static Integer fromLatestToEarliest(NotificationDetailTimeline a, NotificationDetailTimeline b) {
+    public static Integer fromLatestToEarliest(BffNotificationDetailTimeline a, BffNotificationDetailTimeline b) {
         long differenceInTimeline = b.getTimestamp().toInstant().toEpochMilli() - a.getTimestamp().toInstant().toEpochMilli();
         int differenceInIndex = (b.getIndex() != null && a.getIndex() != null) ? b.getIndex() - a.getIndex() : 0;
 
@@ -136,7 +136,7 @@ public class NotificationDetailUtility {
      * @param step - The timeline step to check
      * @return true if the step is an internal app IO event, false otherwise
      */
-    public static boolean isInternalAppIoEvent(NotificationDetailTimeline step) {
+    public static boolean isInternalAppIoEvent(BffNotificationDetailTimeline step) {
         if (step.getCategory().equals(BffTimelineCategory.SEND_COURTESY_MESSAGE)) {
             BffNotificationDetailTimelineDetails details = step.getDetails();
             return details.getDigitalAddress().getType().equals("APPIO")
@@ -154,7 +154,7 @@ public class NotificationDetailUtility {
      * @param t - The timeline element to check
      * @return true if the timeline element must be shown, false otherwise
      */
-    public static boolean timelineElementMustBeShown(NotificationDetailTimeline t) {
+    public static boolean timelineElementMustBeShown(BffNotificationDetailTimeline t) {
         if (TimelineAllowedAnalogCategories.contains(t.getCategory())) {
             String deliveryDetailCode = t.getDetails().getDeliveryDetailCode();
             return deliveryDetailCode != null && AnalogFlowAllowedCodes.contains(deliveryDetailCode);
@@ -173,21 +173,21 @@ public class NotificationDetailUtility {
      * @param bffFullNotificationV1 the notification to populate
      */
     public static void insertCancelledStatusInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationDetailTimeline timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
+        BffNotificationDetailTimeline timelineCancelledElement = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLED)
                 .findFirst()
                 .orElse(null);
 
         if (timelineCancelledElement == null) {
-            NotificationDetailTimeline timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
+            BffNotificationDetailTimeline timelineCancellationRequestElement = bffFullNotificationV1.getTimeline().stream()
                     .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)
                     .findFirst()
                     .orElse(null);
 
             if (timelineCancellationRequestElement != null) {
 
-                NotificationStatusHistory notificationStatusHistoryElement =
-                        new NotificationStatusHistory(NotificationStatus.CANCELLATION_IN_PROGRESS,
+                BffNotificationStatusHistory notificationStatusHistoryElement =
+                        new BffNotificationStatusHistory(BffNotificationStatus.CANCELLATION_IN_PROGRESS,
                                 timelineCancellationRequestElement.getTimestamp(),
                                 new ArrayList<>(),
                                 new ArrayList<>(),
@@ -196,7 +196,7 @@ public class NotificationDetailUtility {
                         );
 
                 bffFullNotificationV1.getNotificationStatusHistory().add(notificationStatusHistoryElement);
-                bffFullNotificationV1.setNotificationStatus(NotificationStatus.CANCELLATION_IN_PROGRESS);
+                bffFullNotificationV1.setNotificationStatus(BffNotificationStatus.CANCELLATION_IN_PROGRESS);
             }
         }
     }
@@ -207,16 +207,16 @@ public class NotificationDetailUtility {
      * @param bffFullNotificationV1 the notification to populate
      */
     public static void populateOtherDocuments(BffFullNotificationV1 bffFullNotificationV1) {
-        List<NotificationDetailDocument> otherDocuments = new ArrayList<>();
+        List<BffNotificationDetailDocument> otherDocuments = new ArrayList<>();
 
-        List<NotificationDetailTimeline> timelineFiltered = bffFullNotificationV1.getTimeline().stream()
+        List<BffNotificationDetailTimeline> timelineFiltered = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.AAR_GENERATION)
                 .toList();
 
         if (!timelineFiltered.isEmpty()) {
             final boolean isMultiRecipient = timelineFiltered.size() > 1;
 
-            for (NotificationDetailTimeline timeline : timelineFiltered) {
+            for (BffNotificationDetailTimeline timeline : timelineFiltered) {
                 final Integer recIndex = timeline.getDetails().getRecIndex();
                 final List<NotificationRecipientV23> recipients = bffFullNotificationV1.getRecipients();
                 final String recipientData = isMultiRecipient && recIndex != null
@@ -224,10 +224,10 @@ public class NotificationDetailUtility {
                         : "";
                 final String title = "Avviso di avvenuta ricezione" + recipientData;
 
-                NotificationDetailDocument document = new NotificationDetailDocument()
+                BffNotificationDetailDocument document = new BffNotificationDetailDocument()
                         .recIndex(recIndex)
                         .documentId(timeline.getDetails().getGeneratedAarUrl())
-                        .documentType(LegalFactType.AAR.toString())
+                        .documentType(BffLegalFactType.AAR.toString())
                         .title(title)
                         .digests(
                                 new NotificationAttachmentDigests()
@@ -271,25 +271,25 @@ public class NotificationDetailUtility {
      * @param acceptedStatusItems the accepted status items
      * @return the populated macro step
      */
-    public static NotificationDetailTimeline populateMacroStep(
+    public static BffNotificationDetailTimeline populateMacroStep(
             BffFullNotificationV1 notificationDetail,
             String timelineElement,
-            NotificationStatusHistory status,
+            BffNotificationStatusHistory status,
             List<String> acceptedStatusItems
     ) {
-        final NotificationDetailTimeline step = notificationDetail.getTimeline().stream()
+        final BffNotificationDetailTimeline step = notificationDetail.getTimeline().stream()
                 .filter(t -> t.getElementId().equals(timelineElement))
                 .findFirst()
                 .orElse(null);
 
-        NotificationDetailTimeline timelineStep = new NotificationDetailTimeline();
+        BffNotificationDetailTimeline timelineStep = new BffNotificationDetailTimeline();
 
 
         if (step != null) {
             BeanUtils.copyProperties(step, timelineStep);
 
             // hide accepted status micro steps
-            if (status.getStatus().equals(NotificationStatus.ACCEPTED)) {
+            if (status.getStatus().equals(BffNotificationStatus.ACCEPTED)) {
                 timelineStep.setHidden(true);
                 status.addStepsItem(timelineStep);
                 // PN-4484 - hide the internal events related to the courtesy messages sent through app IO
@@ -301,9 +301,9 @@ public class NotificationDetailUtility {
                 // Cfr. comment in the definition of INotificationDetailTimeline in src/models/NotificationDetail.ts.
             } else if (step.getCategory().equals(BffTimelineCategory.ANALOG_FAILURE_WORKFLOW)
                     && step.getDetails().getGeneratedAarUrl() != null) {
-                timelineStep.setLegalFactsIds(java.util.List.of(new LegalFactId(
+                timelineStep.setLegalFactsIds(java.util.List.of(new BffLegalFactId(
                         step.getDetails().getGeneratedAarUrl(),
-                        LegalFactType.AAR
+                        BffLegalFactType.AAR
                 )));
                 status.addStepsItem(timelineStep);
                 // remove legal facts for those microsteps that are related to the accepted status
@@ -331,18 +331,18 @@ public class NotificationDetailUtility {
      */
     public static void populateMacroSteps(BffFullNotificationV1 bffFullNotificationV1) {
         ArrayList<String> acceptedStatusItems = new ArrayList<>();
-        NotificationDeliveryMode deliveryMode = null;
-        NotificationStatusHistory deliveringStatus = null;
+        BffNotificationDeliveryMode deliveryMode = null;
+        BffNotificationStatusHistory deliveringStatus = null;
         int lastDeliveredIndexToShift = -1;
         boolean lastDeliveredIndexToShiftIsFixed = false;
         boolean preventShiftFromDeliveredToDelivering = false;
 
-        for (NotificationStatusHistory status : bffFullNotificationV1.getNotificationStatusHistory()) {
-            if (status.getStatus().equals(NotificationStatus.DELIVERING)) {
+        for (BffNotificationStatusHistory status : bffFullNotificationV1.getNotificationStatusHistory()) {
+            if (status.getStatus().equals(BffNotificationStatus.DELIVERING)) {
                 deliveringStatus = status;
             }
 
-            if (status.getStatus().equals(NotificationStatus.ACCEPTED) && !status.getRelatedTimelineElements().isEmpty()) {
+            if (status.getStatus().equals(BffNotificationStatus.ACCEPTED) && !status.getRelatedTimelineElements().isEmpty()) {
                 acceptedStatusItems = new ArrayList<>(status.getRelatedTimelineElements());
             } else if (!acceptedStatusItems.isEmpty()) {
                 status.getRelatedTimelineElements().addAll(0, acceptedStatusItems);
@@ -352,7 +352,7 @@ public class NotificationDetailUtility {
 
             for (int ix = 0; ix < status.getRelatedTimelineElements().size(); ix++) {
                 String timelineElement = status.getRelatedTimelineElements().get(ix);
-                NotificationDetailTimeline step = populateMacroStep(
+                BffNotificationDetailTimeline step = populateMacroStep(
                         bffFullNotificationV1,
                         timelineElement,
                         status,
@@ -361,13 +361,13 @@ public class NotificationDetailUtility {
 
                 if (step != null) {
                     if (deliveryMode == null && step.getCategory().equals(BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
-                        deliveryMode = NotificationDeliveryMode.DIGITAL;
+                        deliveryMode = BffNotificationDeliveryMode.DIGITAL;
                     } else if (deliveryMode == null && (step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
                             || step.getCategory().equals(BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
-                        deliveryMode = NotificationDeliveryMode.ANALOG;
+                        deliveryMode = BffNotificationDeliveryMode.ANALOG;
                     }
 
-                    if (status.getStatus().equals(NotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
+                    if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
                         if ((step.getCategory().equals(BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW)
                                 || step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
                                 || step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
@@ -385,13 +385,13 @@ public class NotificationDetailUtility {
                 }
             }
 
-            if (status.getStatus().equals(NotificationStatus.DELIVERED)
+            if (status.getStatus().equals(BffNotificationStatus.DELIVERED)
                     && deliveringStatus != null
                     && deliveringStatus.getSteps() != null
                     && !preventShiftFromDeliveredToDelivering
                     && lastDeliveredIndexToShift > -1) {
 
-                List<NotificationDetailTimeline> stepsToShift = new ArrayList<>(status.getSteps().subList(0, lastDeliveredIndexToShift + 1));
+                List<BffNotificationDetailTimeline> stepsToShift = new ArrayList<>(status.getSteps().subList(0, lastDeliveredIndexToShift + 1));
                 stepsToShift.sort(NotificationDetailUtility::fromLatestToEarliest);
                 deliveringStatus.getSteps().addAll(0, stepsToShift);
                 status.setSteps(new ArrayList<>(status.getSteps().subList(lastDeliveredIndexToShift + 1, status.getSteps().size())));
@@ -400,21 +400,21 @@ public class NotificationDetailUtility {
 
             status.getSteps().sort(NotificationDetailUtility::fromLatestToEarliest);
 
-            if (!status.getStatus().equals(NotificationStatus.ACCEPTED) && !acceptedStatusItems.isEmpty()) {
+            if (!status.getStatus().equals(BffNotificationStatus.ACCEPTED) && !acceptedStatusItems.isEmpty()) {
                 acceptedStatusItems = new ArrayList<>();
             }
 
-            if (status.getStatus().equals(NotificationStatus.DELIVERED) && deliveryMode != null) {
+            if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && deliveryMode != null) {
                 status.setDeliveryMode(deliveryMode);
             }
 
-            if (status.getStatus().equals(NotificationStatus.VIEWED)) {
-                List<NotificationDetailTimeline> viewedSteps = status.getSteps().stream()
+            if (status.getStatus().equals(BffNotificationStatus.VIEWED)) {
+                List<BffNotificationDetailTimeline> viewedSteps = status.getSteps().stream()
                         .filter(s -> s.getCategory().equals(BffTimelineCategory.NOTIFICATION_VIEWED))
                         .toList();
 
                 if (!viewedSteps.isEmpty()) {
-                    NotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
+                    BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
 
                     if (mostOldViewedStep.getDetails() != null) {
                         BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();

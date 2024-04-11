@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: zHWsJn4JMjm1hMM/XGfR0PHAhCXIOvQEqr2fqDbKnQE=
+  version: 3wlWbxnVuLVywHgwnsXoZa3jclImut9WLXtDZjks7I0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -422,6 +422,8 @@ paths:
         type: http_proxy
 components:
   parameters:
+    BffPathIun:
+      $ref: '#/components/parameters/pathIun'
     pathIun:
       description: Identificativo Univoco Notifica
       name: iun
@@ -432,6 +434,8 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    BffNotificationSearchMandateId:
+      $ref: '#/components/parameters/notificationSearchMandateId'
     notificationSearchMandateId:
       name: mandateId
       in: query
@@ -460,19 +464,19 @@ components:
             notificationStatusHistory:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationStatusHistory'
+                $ref: '#/components/schemas/BffNotificationStatusHistory'
             notificationStatus:
-              $ref: '#/components/schemas/NotificationStatus'
+              $ref: '#/components/schemas/BffNotificationStatus'
             timeline:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailTimeline'
+                $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
-              $ref: '#/components/schemas/NotificationDetailTimeline'
+              $ref: '#/components/schemas/BffNotificationDetailTimeline'
             otherDocuments:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailDocument'
+                $ref: '#/components/schemas/BffNotificationDetailDocument'
     Problem:
       properties:
         type:
@@ -988,7 +992,7 @@ components:
             version:
               type: string
               description: Indica la versione della notifica
-    NotificationStatus:
+    BffNotificationStatus:
       type: string
       enum:
         - IN_VALIDATION
@@ -1002,7 +1006,7 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
-    LegalFactType:
+    BffLegalFactType:
       type: string
       enum:
         - AAR
@@ -1012,7 +1016,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
-    LegalFactId:
+    BffLegalFactId:
       type: object
       required:
         - key
@@ -1023,7 +1027,7 @@ components:
           pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
           maxLength: 512
         category:
-          $ref: '#/components/schemas/LegalFactType'
+          $ref: '#/components/schemas/BffLegalFactType'
     TimelineElementCategoryV23:
       type: string
       description: |
@@ -2176,7 +2180,7 @@ components:
         - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
         - $ref: '#/components/schemas/NotificationCancelledDetails'
         - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
-    NotificationDetailTimeline:
+    BffNotificationDetailTimeline:
       type: object
       required:
         - elementId
@@ -2193,7 +2197,7 @@ components:
         legalFactsIds:
           type: array
           items:
-            $ref: '#/components/schemas/LegalFactId'
+            $ref: '#/components/schemas/BffLegalFactId'
         category:
           $ref: '#/components/schemas/TimelineElementCategoryV23'
         details:
@@ -2202,12 +2206,12 @@ components:
           type: boolean
         index:
           type: number
-    NotificationDeliveryMode:
+    BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-    NotificationStatusHistory:
+    BffNotificationStatusHistory:
       type: object
       additionalProperties: false
       required:
@@ -2216,7 +2220,7 @@ components:
         - relatedTimelineElements
       properties:
         status:
-          $ref: '#/components/schemas/NotificationStatus'
+          $ref: '#/components/schemas/BffNotificationStatus'
         activeFrom:
           type: string
           format: date-time
@@ -2227,12 +2231,12 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/NotificationDetailTimeline'
+            $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
           type: string
         deliveryMode:
-          $ref: '#/components/schemas/NotificationDeliveryMode'
-    NotificationDetailDocument:
+          $ref: '#/components/schemas/BffNotificationDeliveryMode'
+    BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
         - $ref: '#/components/schemas/NotificationMetadataAttachment'

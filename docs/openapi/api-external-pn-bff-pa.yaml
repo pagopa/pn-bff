@@ -12,34 +12,34 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
-- name: NotificationSent
-  description: >-
-    Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste
-    di notifica inviate e delle notifiche accettate.
+  - name: NotificationSent
+    description: >-
+      Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
+      di notifica inviate e delle notifiche accettate.
 
 paths:
-  
+
   '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica versione 1'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
-      - NotificationSent
+        - NotificationSent
       operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
-      security: # ONLY EXTERNAL
-      - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -61,18 +61,18 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-  
+
   parameters:
-    ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/pathIun'
-  
-  schemas:
-    StatusSchema:
-      $ref: './common-refs.yaml#/components/schemas/StatusSchema'
+    ### PARAMETRI DI AUTENTICAZIONE
     
+    ### PARAMETRI RECUPERO NOTIFICA
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+
+  schemas:
+
     BffFullNotificationV1:
       $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-    
+
     Problem:
       $ref: './common-refs.yaml#/components/schemas/Problem'
