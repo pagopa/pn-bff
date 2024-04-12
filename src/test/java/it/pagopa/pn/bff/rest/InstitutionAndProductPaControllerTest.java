@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.InfoPaService;
+import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -16,27 +16,25 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
-
 @Slf4j
-@WebFluxTest(InfoPaController.class)
-public class InfoPaControllerTest {
+@WebFluxTest(InstitutionAndProductPaController.class)
+public class InstitutionAndProductPaControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
     @MockBean
-    private InfoPaService infoPaService;
+    private InstitutionAndProductPaService institutionAndProductPaService;
 
     @Test
     void getInstitutionsV1() {
         Mockito
-                .when(infoPaService.getInstitutions(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<List<String>>any(),
-                        Mockito.<String>any()))
+                .when(institutionAndProductPaService.getInstitutions(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()))
                 .thenReturn(Flux.just(new BffInstitution()));
         webTestClient
                 .get()
@@ -55,13 +53,13 @@ public class InfoPaControllerTest {
     void getInstitutionsV1Error() {
         Mockito
                 .doThrow(new PnBffException("Err", "Err", "Err", 404, "Err", null))
-                .when(infoPaService).getInstitutions(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<List<String>>any(),
-                        Mockito.<String>any());
+                .when(institutionAndProductPaService).getInstitutions(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString());
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH).build())
@@ -77,14 +75,14 @@ public class InfoPaControllerTest {
     @Test
     void getInstitutionProductV1() {
         Mockito
-                .when(infoPaService.getInstitutionProducts(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<List<String>>any(),
-                        Mockito.<String>any()))
+                .when(institutionAndProductPaService.getInstitutionProducts(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()))
                 .thenReturn(Flux.just(new BffInstitutionProduct()));
         webTestClient
                 .get()
@@ -103,14 +101,14 @@ public class InfoPaControllerTest {
     void getInstitutionProductErrorV1Error() {
         Mockito
                 .doThrow(new PnBffException("Err", "Err", "Err", 404, "Err", null))
-                .when(infoPaService).getInstitutionProducts(
-                        Mockito.<String>any(),
-                        Mockito.<CxTypeAuthFleet>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<String>any(),
-                        Mockito.<List<String>>any(),
-                        Mockito.<String>any());
+                .when(institutionAndProductPaService).getInstitutionProducts(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString());
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH + "/{institutionId}/products").build("institutionId"))

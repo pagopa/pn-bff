@@ -236,7 +236,7 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-institution-and-product.yaml
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-institution-and-product.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>

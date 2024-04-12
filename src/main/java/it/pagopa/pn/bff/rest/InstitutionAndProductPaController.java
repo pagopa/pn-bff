@@ -1,12 +1,11 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.InstitutionProductsApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.InstitutionsApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.InfoPaService;
+import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import lombok.CustomLog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +18,12 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class InfoPaController implements InstitutionProductsApi, InstitutionsApi {
+public class InstitutionAndProductPaController implements InfoPaApi {
 
-    private final InfoPaService infoPaService;
+    private final InstitutionAndProductPaService institutionAndProductPaService;
 
-    public InfoPaController(InfoPaService infoPaService) {
-        this.infoPaService = infoPaService;
+    public InstitutionAndProductPaController(InstitutionAndProductPaService institutionAndProductPaService) {
+        this.institutionAndProductPaService = institutionAndProductPaService;
     }
 
     /**
@@ -41,11 +40,11 @@ public class InfoPaController implements InstitutionProductsApi, InstitutionsApi
      */
     @Override
     public Mono<ResponseEntity<Flux<BffInstitution>>> getInstitutionsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, ServerWebExchange exchange) {
-        log.logStartingProcess("getInstitutesV1");
-        Flux<BffInstitution> bffInstitutions = infoPaService
+        log.logStartingProcess("getInstitutionsV1");
+        Flux<BffInstitution> bffInstitutions = institutionAndProductPaService
                 .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-        log.logEndingProcess("getInstitutesV1");
+        log.logEndingProcess("getInstitutionsV1");
         return bffInstitutions
                 .collectList()
                 .map(institution -> ResponseEntity.ok(Flux.fromIterable(institution)));
@@ -67,7 +66,7 @@ public class InfoPaController implements InstitutionProductsApi, InstitutionsApi
     @Override
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, String institutionId, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionProductsV1");
-        Flux<BffInstitutionProduct> bffInstitutionProducts = infoPaService
+        Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, institutionId, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
         log.logEndingProcess("getInstitutionProductsV1");

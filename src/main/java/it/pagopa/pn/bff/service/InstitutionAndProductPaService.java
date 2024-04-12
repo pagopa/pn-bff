@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.InfoPaMapper;
+import it.pagopa.pn.bff.mappers.InstitutionProductMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class InfoPaService {
+public class InstitutionAndProductPaService {
     private final PnInfoPaClientImpl pnInfoPaClient;
 
     @Value("${pn.selfcare.baseurl}")
@@ -34,7 +34,7 @@ public class InfoPaService {
         String pathProdId = "&productId=" + prodId;
         return pnInfoPaClient
                 .getInstitutions(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnSrcCh, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
-                .map(InfoPaMapper.infoPaMapper::toBffInstitution)
+                .map(it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper::toBffInstitution)
                 .map(institution -> {
                     institution.setEntityUrl(selfcareUrl + pathTokenExchange + institution.getId() + pathProdId);
                     return institution;
@@ -46,7 +46,7 @@ public class InfoPaService {
         log.info("getInstitutionProducts");
         return pnInfoPaClient
                 .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnSrcCh, institutionId, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
-                .map(InfoPaMapper.infoPaMapper::toBffInstitutionProduct)
+                .map(InstitutionProductMapper.institutionProductMapper::toBffInstitutionProduct)
                 .map(product -> {
                     product.setProductUrl(selfcareUrl + "/token-exchange?institutionId=" + institutionId + "&productId=" + product.getId());
                     return product;

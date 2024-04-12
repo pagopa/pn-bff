@@ -9,18 +9,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InfoPaMapperTest {
+public class InstitutionProductMapperTest {
     @Test
     void testBffInstitutionMapper() {
         InstitutionResourcePN institutionResourcePN = new InstitutionResourcePN();
         institutionResourcePN.setRootParent(new RootParentResourcePN());
         institutionResourcePN.getRootParent().setDescription("Parent Description");
 
-        BffInstitution bffInstitution = InfoPaMapper.infoPaMapper.toBffInstitution(institutionResourcePN);
+        BffInstitution bffInstitution = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitution(institutionResourcePN);
         assertNotNull(bffInstitution);
         assertEquals("Parent Description", bffInstitution.getParentName());
 
-        BffInstitution bffInstitutionNull = InfoPaMapper.infoPaMapper.toBffInstitution(null);
+        BffInstitution bffInstitutionNull = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitution(null);
         assertNull(bffInstitutionNull);
     }
 
@@ -28,10 +28,10 @@ public class InfoPaMapperTest {
     void testBffInstitutionProductMapper() {
         ProductResourcePN productResourcePN = new ProductResourcePN();
 
-        BffInstitutionProduct bffInstitutionProduct = InfoPaMapper.infoPaMapper.toBffInstitutionProduct(productResourcePN);
+        BffInstitutionProduct bffInstitutionProduct = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitutionProduct(productResourcePN);
         assertNotNull(bffInstitutionProduct);
 
-        BffInstitutionProduct bffInstitutionProductNull = InfoPaMapper.infoPaMapper.toBffInstitutionProduct(null);
+        BffInstitutionProduct bffInstitutionProductNull = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitutionProduct(null);
         assertNull(bffInstitutionProductNull);
     }
 }

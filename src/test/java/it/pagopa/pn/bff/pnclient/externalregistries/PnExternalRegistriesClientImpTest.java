@@ -52,12 +52,12 @@ public class PnExternalRegistriesClientImpTest {
     @Test
     void getInstitutionsTestError() {
         when(infoPaApi.getInstitutions(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<List<String>>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
@@ -73,13 +73,13 @@ public class PnExternalRegistriesClientImpTest {
     @Test
     void getInstitutionProductsTest() {
         when(infoPaApi.getInstitutionProducts(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<List<String>>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Flux.just(mock(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN.class)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
@@ -96,13 +96,13 @@ public class PnExternalRegistriesClientImpTest {
     @Test
     void getInstitutionProductsTestError() {
         when(infoPaApi.getInstitutionProducts(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<List<String>>any(),
-                Mockito.<String>any()
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(

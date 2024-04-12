@@ -12,9 +12,15 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface InfoPaMapper {
-    InfoPaMapper infoPaMapper = Mappers.getMapper(InfoPaMapper.class);
+public interface InstitutionProductMapper {
+    InstitutionProductMapper institutionProductMapper = Mappers.getMapper(InstitutionProductMapper.class);
 
+    /**
+     * Maps an institution resource to a BffInstitution
+     *
+     * @param institutionResourcePN The institution resource to map
+     * @return The mapped BffInstitution
+     */
     @Mapping(source = "description", target = "name")
     @Mapping(source = "userProductRoles", target = "productRole", qualifiedByName = "mapRoles")
     @Mapping(source = "rootParent.description", target = "parentName")
@@ -34,5 +40,11 @@ public interface InfoPaMapper {
         return null;
     }
 
+    /**
+     * Maps a product resource to a BffInstitutionProduct
+     *
+     * @param productResourcePN The product resource to map
+     * @return The mapped BffInstitutionProduct
+     */
     BffInstitutionProduct toBffInstitutionProduct(ProductResourcePN productResourcePN);
 }

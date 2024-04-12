@@ -33,8 +33,10 @@ paths:
       description: |-
         This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - Institutions
+      - InfoPA
       parameters:
       - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
@@ -68,8 +70,10 @@ paths:
       description: |-
         This operation retrieves all active products associated with the specified institution and user.
       operationId: getInstitutionProductsV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InstitutionProducts
+      - InfoPA
       parameters:
       - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
