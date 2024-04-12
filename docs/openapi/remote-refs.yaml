@@ -85,13 +85,4 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/ContactPhase'
     TimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV23'
-    
-    ############################################################################################
-    ###                          STRUTTURE DATI DI PN-SELFCARE-INTERNAL                      ###
-    ############################################################################################
-    InstitutionResourceList:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/InstitutionResourceList'
-    SelfCarePaId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
-    ProductResourceList:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/ProductResourceList'
+

@@ -82,7 +82,7 @@ paths:
         in: path
         required: true
         schema:
-          $ref: 'remote-refs.yaml#/components/schemas/SelfCarePaId'
+          $ref: '#/components/schemas/BffSelfCarePaId'
       responses:
         '200':
           description: OK
@@ -158,3 +158,5 @@ components:
         productUrl:
           type: string
           description: The URL of the product
+    BffSelfCarePaId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
