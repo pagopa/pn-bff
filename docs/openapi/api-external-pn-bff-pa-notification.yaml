@@ -39,7 +39,7 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -64,15 +64,15 @@ components:
 
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
-
+    
     ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
 
   schemas:
 
     BffFullNotificationV1:
-      $ref: './notificationSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+      $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'
