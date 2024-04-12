@@ -1,12 +1,12 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.ProductResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.InfoPaMapper;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,17 +27,17 @@ public class InfoPaServiceTest {
     private final InfoPaMapper infoPaMapper = mock(InfoPaMapper.class);
     @Autowired
     private InfoPaService infoPaService;
-    private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
+    private PnInfoPaClientImpl pnInfoPaClient;
 
     @BeforeEach
     void setup() {
-        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
-        this.infoPaService = new InfoPaService(pnExternalRegistriesClient);
+        pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+        this.infoPaService = new InfoPaService(pnInfoPaClient);
     }
 
     @Test
     void getInstitutionsTest() {
-        when(pnExternalRegistriesClient.getInstitutions(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
+        when(pnInfoPaClient.getInstitutions(Mockito.<String>any(), Mockito.any(CxTypeAuthFleet.class), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
                 .thenReturn(Flux.just(mock(InstitutionResourcePN.class)));
         when(infoPaMapper.toBffInstitution(any(InstitutionResourcePN.class)))
                 .thenReturn(new BffInstitution());
@@ -50,7 +50,7 @@ public class InfoPaServiceTest {
 
     @Test
     void getInstitutionsTestError() {
-        when(pnExternalRegistriesClient.getInstitutions(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
+        when(pnInfoPaClient.getInstitutions(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
@@ -61,18 +61,18 @@ public class InfoPaServiceTest {
 
     @Test
     void getInstitutionProductTest() {
-        when(pnExternalRegistriesClient.getInstitutionProduct(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
                 .thenReturn(Flux.just(mock(ProductResourcePN.class)));
 
         StepVerifier
-                .create(infoPaService.getInstitutionProducts("xPagopaPnUid", CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(infoPaService.getInstitutionProducts("xPagopaPnUid", CxType, "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
                 .expectNextCount(1)
                 .verifyComplete();
     }
 
     @Test
     void getInstitutionProductTestError() {
-        when(pnExternalRegistriesClient.getInstitutionProduct(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.<String>any(), Mockito.<CxTypeAuthFleet>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<String>any(), Mockito.<List<String>>any(), Mockito.<String>any()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier

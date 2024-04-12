@@ -4,8 +4,9 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.InfoPaMapper;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class InfoPaService {
-    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
+    private final PnInfoPaClientImpl pnInfoPaClient;
 
     @Value("${pn.selfcare.baseurl}")
     private String selfcareUrl;
@@ -31,8 +32,8 @@ public class InfoPaService {
         log.info("getInstitutions");
         String pathTokenExchange = "/token-exchange?institutionId=";
         String pathProdId = "&productId=" + prodId;
-        return pnExternalRegistriesClient
-                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
+        return pnInfoPaClient
+                .getInstitutions(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnSrcCh, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
                 .map(InfoPaMapper.infoPaMapper::toBffInstitution)
                 .map(institution -> {
                     institution.setEntityUrl(selfcareUrl + pathTokenExchange + institution.getId() + pathProdId);
@@ -43,8 +44,8 @@ public class InfoPaService {
 
     public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, String institutionId, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails) {
         log.info("getInstitutionProducts");
-        return pnExternalRegistriesClient
-                .getInstitutionProduct(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, institutionId, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
+        return pnInfoPaClient
+                .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnSrcCh, institutionId, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
                 .map(InfoPaMapper.infoPaMapper::toBffInstitutionProduct)
                 .map(product -> {
                     product.setProductUrl(selfcareUrl + "/token-exchange?institutionId=" + institutionId + "&productId=" + product.getId());

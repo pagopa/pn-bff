@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.pnclient.externalregistries;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.api.InfoPaApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.InstitutionResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -20,11 +20,11 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {PnExternalRegistriesClientImpl.class})
+@ContextConfiguration(classes = {PnInfoPaClientImpl.class})
 @ExtendWith(SpringExtension.class)
 public class PnExternalRegistriesClientImpTest {
     @Autowired
-    private PnExternalRegistriesClientImpl pnExternalRegistriesClientImpl;
+    private PnInfoPaClientImpl pnInfoPaClient;
     @MockBean
     private InfoPaApi infoPaApi;
 
@@ -39,9 +39,9 @@ public class PnExternalRegistriesClientImpTest {
                 Mockito.<String>any()
         )).thenReturn(Flux.just(mock(InstitutionResourcePN.class)));
 
-        StepVerifier.create(pnExternalRegistriesClientImpl.getInstitutions(
+        StepVerifier.create(pnInfoPaClient.getInstitutions(
                 "xPagopaPnUid",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                CxTypeAuthFleet.PA,
                 "xPagopaPnCxId",
                 "xPagopaPnSrcCh",
                 List.of("xPagopaPnCxGroups"),
@@ -60,9 +60,9 @@ public class PnExternalRegistriesClientImpTest {
                 Mockito.<String>any()
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnExternalRegistriesClientImpl.getInstitutions(
+        StepVerifier.create(pnInfoPaClient.getInstitutions(
                 "xPagopaPnUid",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                CxTypeAuthFleet.PA,
                 "xPagopaPnCxId",
                 "xPagopaPnSrcCh",
                 List.of("xPagopaPnCxGroups"),
@@ -80,11 +80,11 @@ public class PnExternalRegistriesClientImpTest {
                 Mockito.<String>any(),
                 Mockito.<List<String>>any(),
                 Mockito.<String>any()
-        )).thenReturn(Flux.just(mock(it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.ProductResourcePN.class)));
+        )).thenReturn(Flux.just(mock(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN.class)));
 
-        StepVerifier.create(pnExternalRegistriesClientImpl.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
                 "xPagopaPnUid",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                CxTypeAuthFleet.PA,
                 "xPagopaPnSrcCh",
                 "xPagopaPnSrcChDetails",
                 "xPagopaPnProductType",
@@ -105,9 +105,9 @@ public class PnExternalRegistriesClientImpTest {
                 Mockito.<String>any()
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnExternalRegistriesClientImpl.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
                 "xPagopaPnUid",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                CxTypeAuthFleet.PA,
                 "xPagopaPnSrcCh",
                 "xPagopaPnSrcChDetails",
                 "xPagopaPnProductType",

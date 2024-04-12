@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries.model.ProductResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import org.mapstruct.Mapper;
