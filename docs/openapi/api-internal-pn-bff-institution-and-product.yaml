@@ -36,12 +36,12 @@ paths:
       tags:
       - Institutions
       parameters:
-      - $ref: 'remote-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/headerSourceChannel'                 # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/headerSourceChannelDetails'          # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/headerSourceChannel'                 # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/headerSourceChannelDetails'          # NO EXTERNAL
       responses:
         '200':
           description: OK
@@ -54,13 +54,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
   
   '/bff/v1/institutions/{institutionId}/products':
     get:
@@ -71,12 +71,12 @@ paths:
       tags:
       - InstitutionProducts
       parameters:
-      - $ref: 'remote-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/headerSourceChannel'                 # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/headerSourceChannelDetails'          # NO EXTERNAL                                                                             # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/headerSourceChannel'                 # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/headerSourceChannelDetails'          # NO EXTERNAL                                                                             # NO EXTERNAL
       - name: institutionId
         description: The identifier of one PA
         in: path
@@ -95,13 +95,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
 
 
 components:

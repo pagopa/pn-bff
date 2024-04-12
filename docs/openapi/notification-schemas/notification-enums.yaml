@@ -2,19 +2,19 @@ info:
   version: v1.0
 components:
   schemas:
-    RecipientType:
+    BffRecipientType:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-notification.yaml#/components/schemas/RecipientType'
-
-    AddressSource:
+    
+    BffAddressSource:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/DigitalAddressSource'
-
-    ContactPhase:
+    
+    BffContactPhase:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/ContactPhase'
-
-    TimelineCategory:
+    
+    BffTimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV23'
-
-    NotificationStatus:
+    
+    BffNotificationStatus:
       type: string
       enum:
         - IN_VALIDATION
@@ -28,41 +28,41 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
-
-    PhysicalCommunicationType:
+    
+    BffPhysicalCommunicationType:
       type: string
       enum:
         - AR_REGISTERED_LETTER
         - REGISTERED_LETTER_890
-
-    NotificationDeliveryMode:
+    
+    BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-
-    AppIoCourtesyMessageEventType:
+    
+    BffAppIoCourtesyMessageEventType:
       type: string
       enum:
         - SENT_COURTESY
         - SENT_OPTIN
         - NOT_SENT_OPTIN_ALREADY_SENT
-
-    SimpleResponseStatus:
+    
+    BffSimpleResponseStatus:
       type: string
       enum:
         - OK
         - KO
-
-    ResponseStatus:
+    
+    BffResponseStatus:
       type: string
       enum:
         - OK
         - PROGRESS
         - PROGRESS_WITH_RETRY
         - KO
-
-    LegalFactType:
+    
+    BffLegalFactType:
       type: string
       enum:
         - AAR

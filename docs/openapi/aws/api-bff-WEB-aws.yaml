@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 4jV7MM1BKJx0yoIH0a4VeNG+A+X1e0nOq5L7acNAjVs=
+  version: 3wlWbxnVuLVywHgwnsXoZa3jclImut9WLXtDZjks7I0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -20,6 +20,8 @@ paths:
       tags:
         - NotificationSent
       operationId: retrieveSentNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -41,8 +43,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
@@ -84,6 +84,8 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/notificationSearchMandateId'
@@ -108,8 +110,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}
@@ -142,21 +142,44 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/institutions:
+  /v1/api-keys:
     get:
-      summary: Get Institutions list
-      description: This operation retrieves the institutions from Self Care.
-      operationId: getInstitutionsV1
+      summary: Ricerca api keys
+      description: servizio di consultazione della lista delle api keys
       tags:
-        - Institutions
-      parameters: []
+        - ApiKeys
+      operationId: getApiKeysV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lastUpdate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showVirtualKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffInstitutionList'
+                $ref: '#/components/schemas/BffApiKeysResponse'
         '400':
           description: Bad request
           content:
@@ -164,16 +187,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '500':
-          description: Internal server error
+          description: Internal error
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -189,11 +210,63 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-    options:
-      operationId: Options for /v1/institutions API CORS
+    post:
+      summary: Creazione api key
+      description: servizio di creazione di un'api key
+      tags:
+        - ApiKeys
+      operationId: newApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestNewApiKey'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseNewApiKey'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/api-keys API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -201,46 +274,47 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/institutions/{institutionId}/products:
-    get:
-      summary: Get Products list of an Institution
-      description: >-
-        This operation retrieves all active products associated with the
-        specified institution and user.
-      operationId: getInstitutionProductsV1
+  /v1/api-keys/{id}:
+    delete:
+      summary: Rimozione api key
+      description: servizio di rimozione dell'api key
       tags:
-        - InstitutionProducts
+        - ApiKeys
+      operationId: deleteApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - name: institutionId
-          description: The identifier of one PA
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/SelfCarePaId'
+        - $ref: '#/components/parameters/pathApiKey'
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BffInstitutionProductList'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '500':
-          description: Internal server error
+        '404':
+          description: Not found
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
+        '409':
+          description: Wrong state transition (i.e. delete an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/{institutionId}/products
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -252,26 +326,104 @@ paths:
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-          integration.request.path.institutionId: method.request.path.institutionId
+          integration.request.path.id: method.request.path.id
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/institutions/{institutionId}/products API CORS
+      operationId: Options for /v1/api-keys/{id} API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/{institutionId}/products
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
-          integration.request.path.institutionId: method.request.path.institutionId
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/api-keys/{id}/status:
+    put:
+      summary: Cambia lo stato dell'api key
+      description: servizio di cambio stato dell'api key
+      tags:
+        - ApiKeys
+      operationId: changeStatusApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathApiKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestApiKeyStatus'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/api-keys/{id}/status API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.id: method.request.path.id
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
 components:
   parameters:
+    BffPathIun:
+      $ref: '#/components/parameters/pathIun'
     pathIun:
       description: Identificativo Univoco Notifica
       name: iun
@@ -282,6 +434,8 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    BffNotificationSearchMandateId:
+      $ref: '#/components/parameters/notificationSearchMandateId'
     notificationSearchMandateId:
       name: mandateId
       in: query
@@ -289,18 +443,14 @@ components:
       description: identificativo della delega
       schema:
         type: string
+    pathApiKey:
+      description: Identificativo univoco dell'api key
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
-    StatusSchema:
-      title: Stato dell'applicazione
-      type: object
-      properties:
-        status:
-          type: string
-          description: Stato dell'applicazione.
-      required:
-        - status
-      example:
-        status: OK
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
@@ -314,19 +464,19 @@ components:
             notificationStatusHistory:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationStatusHistory'
+                $ref: '#/components/schemas/BffNotificationStatusHistory'
             notificationStatus:
-              $ref: '#/components/schemas/NotificationStatus'
+              $ref: '#/components/schemas/BffNotificationStatus'
             timeline:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailTimeline'
+                $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
-              $ref: '#/components/schemas/NotificationDetailTimeline'
+              $ref: '#/components/schemas/BffNotificationDetailTimeline'
             otherDocuments:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailDocument'
+                $ref: '#/components/schemas/BffNotificationDetailDocument'
     Problem:
       properties:
         type:
@@ -842,7 +992,7 @@ components:
             version:
               type: string
               description: Indica la versione della notifica
-    NotificationStatus:
+    BffNotificationStatus:
       type: string
       enum:
         - IN_VALIDATION
@@ -856,7 +1006,7 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
-    LegalFactType:
+    BffLegalFactType:
       type: string
       enum:
         - AAR
@@ -866,7 +1016,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
-    LegalFactId:
+    BffLegalFactId:
       type: object
       required:
         - key
@@ -877,7 +1027,7 @@ components:
           pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
           maxLength: 512
         category:
-          $ref: '#/components/schemas/LegalFactType'
+          $ref: '#/components/schemas/BffLegalFactType'
     TimelineElementCategoryV23:
       type: string
       description: |
@@ -2030,7 +2180,7 @@ components:
         - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
         - $ref: '#/components/schemas/NotificationCancelledDetails'
         - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
-    NotificationDetailTimeline:
+    BffNotificationDetailTimeline:
       type: object
       required:
         - elementId
@@ -2047,7 +2197,7 @@ components:
         legalFactsIds:
           type: array
           items:
-            $ref: '#/components/schemas/LegalFactId'
+            $ref: '#/components/schemas/BffLegalFactId'
         category:
           $ref: '#/components/schemas/TimelineElementCategoryV23'
         details:
@@ -2056,12 +2206,12 @@ components:
           type: boolean
         index:
           type: number
-    NotificationDeliveryMode:
+    BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-    NotificationStatusHistory:
+    BffNotificationStatusHistory:
       type: object
       additionalProperties: false
       required:
@@ -2070,7 +2220,7 @@ components:
         - relatedTimelineElements
       properties:
         status:
-          $ref: '#/components/schemas/NotificationStatus'
+          $ref: '#/components/schemas/BffNotificationStatus'
         activeFrom:
           type: string
           format: date-time
@@ -2081,12 +2231,12 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/NotificationDetailTimeline'
+            $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
           type: string
         deliveryMode:
-          $ref: '#/components/schemas/NotificationDeliveryMode'
-    NotificationDetailDocument:
+          $ref: '#/components/schemas/BffNotificationDeliveryMode'
+    BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
         - $ref: '#/components/schemas/NotificationMetadataAttachment'
@@ -2130,65 +2280,136 @@ components:
           type: string
       required:
         - code
-    BffInstitutionList:
-      description: The list of institutions
-      type: array
-      items:
-        $ref: '#/components/schemas/BffInstitution'
-    BffInstitution:
+    BffApiKeysResponse:
+      title: Elenco di api keys
+      description: Dto contenente la lista delle api keys associate ad un utente.
       type: object
       required:
-        - id
-        - name
-        - productRole
-        - entityUrl
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyRow'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: number
+    BffRequestNewApiKey:
+      $ref: '#/components/schemas/RequestNewApiKey'
+    BffResponseNewApiKey:
+      $ref: '#/components/schemas/ResponseNewApiKey'
+    BffRequestApiKeyStatus:
+      $ref: '#/components/schemas/RequestApiKeyStatus'
+    BffApiKeyGroup:
+      description: Gruppo a cui appartiene l'api key
+      type: object
       properties:
         id:
           type: string
-          description: The identifier of the institution
+          description: id del gruppo
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
         name:
           type: string
-          description: The name of the institution
-        productRole:
-          type: string
-          description: The role of the product
-        logoUrl:
-          type: string
-          description: The URL of the logo
-        parentName:
-          type: string
-          description: The name of the parent institution
-        entityUrl:
-          type: string
-          description: The URL of the entity
-    BffInstitutionProductList:
-      description: The list of products
-      type: array
-      items:
-        $ref: '#/components/schemas/BffInstitutionProduct'
-    BffInstitutionProduct:
+          description: nome del gruppo
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+    BffApiKeyStatus:
+      description: Stato dell'api key
+      type: string
+      enum:
+        - CREATED
+        - ENABLED
+        - BLOCKED
+        - ROTATED
+    BffApiKeyStatusHistory:
       type: object
-      required:
-        - id
-        - title
-        - productUrl
+      properties:
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        date:
+          type: string
+          description: data a cui corrisponde il cambio di stato
+          format: date-time
+        changedByDenomination:
+          type: string
+          description: nome dell'utente che ha effettuato il cambio di stato
+    BffApiKeyRow:
+      type: object
       properties:
         id:
           type: string
-          description: The identifier of the product
-        title:
+          description: Id dell'api key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        name:
           type: string
-          description: The title of the product
-        productUrl:
+          description: Nome dell'api key
+        value:
           type: string
-          description: The URL of the product
-    SelfCarePaId:
-      title: The PA id used by self care
-      description: An unique ID that identify a Public Administration
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[ -~ ]*$
+          description: Valore dell'api key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        lastUpdate:
+          type: string
+          description: Data ultima modifica
+          format: date-time
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyGroup'
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        statusHistory:
+          type: array
+          description: Storico degli stati dell'api key
+          items:
+            $ref: '#/components/schemas/BffApiKeyStatusHistory'
+    RequestNewApiKey:
+      title: Request creazione api key
+      description: Request per la creazione di una nuova api key
+      type: object
+      required:
+        - name
+        - groups
+      properties:
+        name:
+          type: string
+          description: nome dell'api key
+        groups:
+          type: array
+          description: Gruppi a cui appartiene l'api key (indicare l'id dei gruppi)
+          items:
+            type: string
+    ResponseNewApiKey:
+      title: Response creazione api key
+      description: Response per la creazione di una nuova api key
+      type: object
+      required:
+        - id
+        - apiKey
+      properties:
+        id:
+          type: string
+          description: id dell'api key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        apiKey:
+          type: string
+          description: Valore dell'api key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+    RequestApiKeyStatus:
+      title: Richiesta di cambio stato per una api key
+      description: Richiesta di cambio stato per una api key
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Action per il cambio stato di un'api key
+          enum:
+            - BLOCK
+            - ENABLE
+            - ROTATE
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -2205,8 +2426,6 @@ components:
         identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-]+)$
         type: token
 tags:
-  - name: HealthCheck
-    description: Invocazioni per sapere lo stato del microservizio
   - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle
@@ -2215,10 +2434,8 @@ tags:
     description: >-
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle
       notifiche a loro destinate.
-  - name: Institutions
-    description: Invocazioni per sapere gli enti disponibili
-  - name: InstitutionProducts
-    description: Invocazioni per sapere i portali disponibili di un ente
+  - name: ApiKeys
+    description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

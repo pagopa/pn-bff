@@ -12,6 +12,7 @@ public class PnBffRestConstants {
     public static final String NOTIFICATION_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received/{iun}";
     public static final String NOTIFICATION_SENT_PATH = BFF_PATH + VERSION_1 + "/notifications/sent/{iun}";
     public static final String INSTIUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
+    public static final String GET_APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
 
     private PnBffRestConstants() {
     }

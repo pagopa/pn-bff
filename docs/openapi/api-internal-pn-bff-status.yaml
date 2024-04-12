@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Health check
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-health-check
+  x-summary: "API di pn-bff per la verifica dello stato dell' applicazione"
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: HealthCheck
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+
+paths:
+  '/status':
+    get:
+      summary: Get Status of application
+      operationId: status
+      tags:
+        - HealthCheck
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusSchema'
+        '500':
+          description: InternalServerError
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+
+components:
+  schemas:
+    StatusSchema:
+      title: Stato dell'applicazione
+      type: object
+      properties:
+        status:
+          type: string
+          description: Stato dell'applicazione.
+      required:
+        - status
+      example:
+        status: OK

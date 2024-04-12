@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN BFF BE Microservice - Destinatari
+  title: PN BFF BE Microservice - Notifiche Destinatari
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
   x-api-id: api-internal-pn-bff-recipient
-  x-summary: 'API di pn-bff esposte al Web per i destinatari'
+  x-summary: 'API di pn-bff esposte al Web ai destinatari per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -21,33 +21,11 @@ servers:
   - url: https://webapi.dev.notifichedigitali.it
     description: Ambiente di sviluppo
 tags:
-  - name: HealthCheck
-    description: >-
-      Invocazioni per sapere lo stato del microservizio
   - name: NotificationReceived
     description: >-
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
-  '/status':
-    get:
-      summary: Get Status of application
-      operationId: status
-      tags:
-        - HealthCheck
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatusSchema'
-        '500':
-          description: InternalServerError
-          content:
-            application/problem+json:
-              schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/received/{iun}':
     get:
@@ -58,11 +36,11 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: '#/components/parameters/BffPathIun'
+        - $ref: '#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK
@@ -89,23 +67,20 @@ components:
 
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
-
+    
     ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
-    notificationSearchMandateId:
-      $ref: './parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
-
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+    BffNotificationSearchMandateId:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+  
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
-
+  
   schemas:
-    StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
-
     BffFullNotificationV1:
-      $ref: './notificationDetailSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+      $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'
