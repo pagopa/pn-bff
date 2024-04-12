@@ -28,8 +28,8 @@ tags:
 paths:
   '/bff/v1/tos-privacy':
     parameters:
-      - $ref: 'remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
-      - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
     get:
@@ -80,9 +80,9 @@ components:
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet:                                                               # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
     uidAuthFleet:                                                                  # NO EXTERNAL
-      $ref: './remote-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
 
   schemas:
     BffTosPrivacyConsent:
@@ -95,4 +95,4 @@ components:
       $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyActionBody'
 
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'

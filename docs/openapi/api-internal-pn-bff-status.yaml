@@ -44,7 +44,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
 
 components:
   schemas:
