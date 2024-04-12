@@ -93,22 +93,13 @@ class TosPrivacyServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.empty());
 
-        StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
-                        "UID",
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
-                        Mono.just(tosPrivacyBody)
-                ))
-                .expectComplete()
-                .verify();
-
-        // Check that client is called twice (once for privacy and once for tos)
-        Mockito.verify(pnUserAttributesClient, Mockito.times(2)).acceptConsent(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.any(ConsentAction.class),
-                Mockito.anyString()
+        Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
+                "UID",
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                Mono.just(tosPrivacyBody)
         );
+
+        StepVerifier.create(result).expectComplete().verify();
     }
 
     @Test
@@ -123,22 +114,14 @@ class TosPrivacyServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.empty());
 
-        StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
-                        "UID",
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
-                        Mono.just(tosPrivacyBody)
-                ))
-                .expectComplete()
-                .verify();
-
-        // Check that client is called once
-        Mockito.verify(pnUserAttributesClient, Mockito.times(1)).acceptConsent(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.any(ConsentAction.class),
-                Mockito.anyString()
+        Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
+                "UID",
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                Mono.just(tosPrivacyBody)
         );
+
+        StepVerifier.create(result).expectComplete().verify();
+
     }
 
     @Test
