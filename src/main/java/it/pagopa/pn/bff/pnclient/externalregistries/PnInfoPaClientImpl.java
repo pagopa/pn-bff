@@ -1,13 +1,8 @@
 package it.pagopa.pn.bff.pnclient.externalregistries;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;

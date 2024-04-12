@@ -43,7 +43,7 @@ public class InfoPaServiceTest {
                 .thenReturn(new BffInstitution());
 
         StepVerifier
-                .create(infoPaService.getInstitutions("xPagopaPnUid", CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(infoPaService.getInstitutions("xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
                 .expectNextCount(1)
                 .verifyComplete();
     }
@@ -54,7 +54,7 @@ public class InfoPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(infoPaService.getInstitutions("xPagopaPnUid", CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(infoPaService.getInstitutions("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
@@ -65,7 +65,7 @@ public class InfoPaServiceTest {
                 .thenReturn(Flux.just(mock(ProductResourcePN.class)));
 
         StepVerifier
-                .create(infoPaService.getInstitutionProducts("xPagopaPnUid", CxType, "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(infoPaService.getInstitutionProducts("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
                 .expectNextCount(1)
                 .verifyComplete();
     }
@@ -76,7 +76,7 @@ public class InfoPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(infoPaService.getInstitutionProducts("xPagopaPnUid", CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(infoPaService.getInstitutionProducts("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
