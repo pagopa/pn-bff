@@ -46,7 +46,7 @@ class NotificationDetailUtilityTest {
 
         Assertions.assertEquals(1, calculatedParsedNotification.getOtherDocuments().size());
 
-        Assertions.assertEquals(new NotificationDetailDocument()
+        Assertions.assertEquals(new BffNotificationDetailDocument()
                         .recIndex(0)
                         .documentId(AARTimelineElements.get(0).getDetails().getGeneratedAarUrl())
                         .documentType("AAR")
@@ -68,7 +68,7 @@ class NotificationDetailUtilityTest {
 
         int index = 0;
         for (TimelineElementV23 element : AARTimelineElementsMultiRecipient) {
-            Assertions.assertEquals(new NotificationDetailDocument()
+            Assertions.assertEquals(new BffNotificationDetailDocument()
                             .recIndex(element.getDetails().getRecIndex())
                             .documentId(element.getDetails().getGeneratedAarUrl())
                             .documentType("AAR")
@@ -87,15 +87,15 @@ class NotificationDetailUtilityTest {
 
     @Test
     void checkRADDInTimeline() {
-        NotificationDetailTimeline raddFromTimeline = notificationDetailPaMock.notificationToFERADD().getRadd();
+        BffNotificationDetailTimeline raddFromTimeline = notificationDetailPaMock.notificationToFERADD().getRadd();
 
-        Assertions.assertEquals(new NotificationDetailTimeline()
+        Assertions.assertEquals(new BffNotificationDetailTimeline()
                         .elementId("NOTIFICATION_RADD_RETRIEVED_mock")
                         .timestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                         .legalFactsIds(List.of())
-                        .category(TimelineCategory.NOTIFICATION_RADD_RETRIEVED)
+                        .category(BffTimelineCategory.NOTIFICATION_RADD_RETRIEVED)
                         .details(
-                                new NotificationDetailTimelineDetails()
+                                new BffNotificationDetailTimelineDetails()
                                         .recIndex(1)
                                         .eventTimestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                                         .raddType("ALT")
@@ -123,15 +123,15 @@ class NotificationDetailUtilityTest {
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
                 .mapSentNotificationDetail(cancellationInProgressNotification);
 
-        NotificationStatusHistory cancellationInProgressStatusHistory =
+        BffNotificationStatusHistory cancellationInProgressStatusHistory =
                 calculatedParsedNotification.getNotificationStatusHistory().stream()
-                        .filter(status -> status.getStatus().equals(NotificationStatus.CANCELLATION_IN_PROGRESS))
+                        .filter(status -> status.getStatus().equals(BffNotificationStatus.CANCELLATION_IN_PROGRESS))
                         .findFirst()
                         .orElse(null);
 
         Assertions.assertNotNull(cancellationInProgressStatusHistory);
 
-        Assertions.assertEquals(NotificationStatus.CANCELLATION_IN_PROGRESS, calculatedParsedNotification.getNotificationStatus());
+        Assertions.assertEquals(BffNotificationStatus.CANCELLATION_IN_PROGRESS, calculatedParsedNotification.getNotificationStatus());
     }
 
     @Test
@@ -165,22 +165,22 @@ class NotificationDetailUtilityTest {
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(analogNotification);
 
-        NotificationDetailTimeline sendAnalogProgressElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_PROGRESS))
+        BffNotificationDetailTimeline sendAnalogProgressElem = calculatedParsedNotification.getTimeline().stream()
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_ANALOG_PROGRESS))
                 .findFirst()
                 .orElseThrow();
 
         Assertions.assertTrue(sendAnalogProgressElem.getHidden());
 
-        NotificationDetailTimeline sendAnalogFeedbackElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_ANALOG_FEEDBACK))
+        BffNotificationDetailTimeline sendAnalogFeedbackElem = calculatedParsedNotification.getTimeline().stream()
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_ANALOG_FEEDBACK))
                 .findFirst()
                 .orElseThrow();
 
         Assertions.assertFalse(sendAnalogFeedbackElem.getHidden());
 
-        NotificationDetailTimeline sendAnalogRegisteredLetterElem = calculatedParsedNotification.getTimeline().stream()
-                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
+        BffNotificationDetailTimeline sendAnalogRegisteredLetterElem = calculatedParsedNotification.getTimeline().stream()
+                .filter(t -> t.getCategory().equals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS))
                 .findFirst()
                 .orElseThrow();
         Assertions.assertTrue(sendAnalogRegisteredLetterElem.getHidden());
@@ -211,13 +211,13 @@ class NotificationDetailUtilityTest {
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(analogFailureNotification);
 
-        NotificationStatusHistory bffDeliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory bffDeliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
                 .findFirst()
                 .orElseThrow();
 
-        NotificationDetailTimeline analogFailureStep = bffDeliveredStatus.getSteps()
+        BffNotificationDetailTimeline analogFailureStep = bffDeliveredStatus.getSteps()
                 .stream()
                 .filter((step) -> step.getElementId().equals(analogFailure.getElementId()))
                 .findFirst()
@@ -226,9 +226,9 @@ class NotificationDetailUtilityTest {
         Assertions.assertEquals(
                 analogFailureStep.getLegalFactsIds(),
                 Collections.singletonList(
-                        new LegalFactId()
+                        new BffLegalFactId()
                                 .key("https://www.aar.com")
-                                .category(LegalFactType.AAR)
+                                .category(BffLegalFactType.AAR)
                 )
         );
     }
@@ -239,13 +239,13 @@ class NotificationDetailUtilityTest {
                 notificationDetailPaMock.getOneRecipientNotification()
         );
 
-        NotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
                 .findFirst()
                 .orElseThrow();
 
-        Assertions.assertEquals(deliveredStep.getDeliveryMode(), NotificationDeliveryMode.DIGITAL);
+        Assertions.assertEquals(deliveredStep.getDeliveryMode(), BffNotificationDeliveryMode.DIGITAL);
     }
 
     @Test
@@ -266,13 +266,13 @@ class NotificationDetailUtilityTest {
         digitalSuccess.setCategory(TimelineElementCategoryV23.SEND_SIMPLE_REGISTERED_LETTER);
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
-        NotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
                 .findFirst()
                 .orElseThrow();
 
-        Assertions.assertEquals(deliveredStep.getDeliveryMode(), NotificationDeliveryMode.ANALOG);
+        Assertions.assertEquals(deliveredStep.getDeliveryMode(), BffNotificationDeliveryMode.ANALOG);
     }
 
     @Test
@@ -289,7 +289,7 @@ class NotificationDetailUtilityTest {
         );
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
-        NotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
                 .findFirst()
@@ -307,7 +307,7 @@ class NotificationDetailUtilityTest {
         boolean previousStepIsAccepted = false;
         ArrayList<String> acceptedItems = new ArrayList<>();
 
-        for (NotificationStatusHistory status : ArrayHelpers.reverseArray(calculatedParsedNotification.getNotificationStatusHistory())) {
+        for (BffNotificationStatusHistory status : ArrayHelpers.reverseArray(calculatedParsedNotification.getNotificationStatusHistory())) {
             if (String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.ACCEPTED))) {
                 previousStepIsAccepted = true;
                 acceptedItems = notificationDTO.getNotificationStatusHistory()
@@ -319,7 +319,7 @@ class NotificationDetailUtilityTest {
                         .getRelatedTimelineElements()
                         .stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-                for (NotificationDetailTimeline step : status.getSteps()) {
+                for (BffNotificationDetailTimeline step : status.getSteps()) {
                     Assertions.assertTrue(step.getHidden());
                     Assertions.assertTrue(step.getLegalFactsIds().isEmpty());
                 }
@@ -346,8 +346,8 @@ class NotificationDetailUtilityTest {
             }
 
             OffsetDateTime previousStepTimestamp = null;
-            for (NotificationDetailTimeline step : status.getSteps()) {
-                NotificationDetailTimeline timelineStep = calculatedParsedNotification.getTimeline()
+            for (BffNotificationDetailTimeline step : status.getSteps()) {
+                BffNotificationDetailTimeline timelineStep = calculatedParsedNotification.getTimeline()
                         .stream()
                         .filter((timelineElem) -> timelineElem.getElementId().equals(step.getElementId()))
                         .findFirst()
@@ -387,9 +387,9 @@ class NotificationDetailUtilityTest {
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(ioNotification);
 
-        NotificationDetailTimeline ioStep;
+        BffNotificationDetailTimeline ioStep;
 
-        for (NotificationStatusHistory status : calculatedParsedNotification.getNotificationStatusHistory()) {
+        for (BffNotificationStatusHistory status : calculatedParsedNotification.getNotificationStatusHistory()) {
             ioStep = status.getSteps()
                     .stream()
                     .filter((st) -> st.getElementId().equals(sendCourtesy.getElementId()))
@@ -471,13 +471,13 @@ class NotificationDetailUtilityTest {
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
 
-        NotificationStatusHistory deliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory deliveredStatus = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERED)))
                 .findFirst()
                 .orElseThrow();
 
-        NotificationStatusHistory deliveringStatus = calculatedParsedNotification.getNotificationStatusHistory()
+        BffNotificationStatusHistory deliveringStatus = calculatedParsedNotification.getNotificationStatusHistory()
                 .stream()
                 .filter((status) -> String.valueOf(status.getStatus()).equals(String.valueOf(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus.DELIVERING)))
                 .findFirst()
@@ -485,19 +485,19 @@ class NotificationDetailUtilityTest {
 
         Assertions.assertEquals(deliveredStatus.getSteps().size(), deliveredCount - digitalSuccessElIndex - 3);
 
-        NotificationDetailTimeline prepareLetterEl = deliveringStatus.getSteps()
+        BffNotificationDetailTimeline prepareLetterEl = deliveringStatus.getSteps()
                 .stream()
                 .filter((step) -> step.getElementId().equals(prepareLetter.getElementId()))
                 .findFirst()
                 .orElseThrow();
 
-        NotificationDetailTimeline sendLetterEl = deliveringStatus.getSteps()
+        BffNotificationDetailTimeline sendLetterEl = deliveringStatus.getSteps()
                 .stream()
                 .filter((step) -> step.getElementId().equals(sendLetter.getElementId()))
                 .findFirst()
                 .orElseThrow();
 
-        NotificationDetailTimeline digitalFailureEl = deliveringStatus.getSteps()
+        BffNotificationDetailTimeline digitalFailureEl = deliveringStatus.getSteps()
                 .stream()
                 .filter((step) -> step.getElementId().equals(digitalFailure.getElementId()))
                 .findFirst()
@@ -534,9 +534,9 @@ class NotificationDetailUtilityTest {
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
                 .mapSentNotificationDetail(viewedNotification);
 
-        NotificationStatusHistory viewedStatusHistory =
+        BffNotificationStatusHistory viewedStatusHistory =
                 calculatedParsedNotification.getNotificationStatusHistory().stream()
-                        .filter(status -> status.getStatus().equals(NotificationStatus.VIEWED))
+                        .filter(status -> status.getStatus().equals(BffNotificationStatus.VIEWED))
                         .findFirst()
                         .orElse(null);
 
@@ -578,9 +578,9 @@ class NotificationDetailUtilityTest {
         BffFullNotificationV1 calculatedParsedNotification = NotificationDetailMapper.modelMapper
                 .mapSentNotificationDetail(viewedNotification);
 
-        NotificationStatusHistory viewedStatusHistory =
+        BffNotificationStatusHistory viewedStatusHistory =
                 calculatedParsedNotification.getNotificationStatusHistory().stream()
-                        .filter(status -> status.getStatus().equals(NotificationStatus.VIEWED))
+                        .filter(status -> status.getStatus().equals(BffNotificationStatus.VIEWED))
                         .findFirst()
                         .orElse(null);
 
