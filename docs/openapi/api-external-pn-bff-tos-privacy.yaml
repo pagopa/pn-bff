@@ -27,9 +27,6 @@ tags:
 
 paths:
   '/bff/v1/tos-privacy':
-    parameters:
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
     get:
       summary: Accettazione TOS e Privacy
       description: >-
@@ -37,6 +34,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '200':
           description: OK
@@ -58,6 +57,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacy
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         required: true
         content:

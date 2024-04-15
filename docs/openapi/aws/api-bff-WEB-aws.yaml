@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: nXVaEK2LjTViwvCI2zXb6BPLv7kOCfLtq//2gO5tfkI=
+  version: zD5ZUxktAtYVusZQYrmjzvW7Fp5x+M5LdDju5Khmn+0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -143,34 +143,14 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
   /v1/tos-privacy:
-    parameters:
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters:
-          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
-          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
-          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
-          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
-          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
-          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
-          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
-      parameters: []
     get:
       summary: Accettazione TOS e Privacy
       description: Ritorna lo stato di accettazione dei TOS e della Privacy.
       tags:
         - UserConsents
       operationId: getTosPrivacyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
         '200':
           description: OK
@@ -184,8 +164,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
@@ -211,6 +189,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacy
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
         required: true
         content:
@@ -226,8 +206,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
