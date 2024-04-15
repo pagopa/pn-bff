@@ -1,8 +1,7 @@
-package it.pagopa.pn.bff.mappers;
+package it.pagopa.pn.bff.mappers.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestApiKeyStatus;
-import it.pagopa.pn.bff.mappers.apikeys.RequestApiKeyStatusMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

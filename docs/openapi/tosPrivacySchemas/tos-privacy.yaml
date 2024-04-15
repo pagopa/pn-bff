@@ -1,0 +1,36 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    BffConsent:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
+
+    BffTosPrivacyConsent:
+      type: object
+      required:
+        - tos
+        - privacy
+      properties:
+        tos:
+          $ref: '#/components/schemas/BffConsent'
+        privacy:
+          $ref: '#/components/schemas/BffConsent'
+
+    BffTosPrivacyBody:
+      type: object
+      properties:
+        tos:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+        privacy:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+
+    BffTosPrivacyActionBody:
+      required:
+        - version
+        - action
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
+        - type: object
+          properties:
+            version:
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'

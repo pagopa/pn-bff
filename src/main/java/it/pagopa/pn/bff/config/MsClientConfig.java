@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,5 +56,15 @@ public class MsClientConfig extends CommonBaseClient {
                 );
         apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
         return new InfoPaApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    ConsentsApi consentsApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient consentsApi =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        consentsApi.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new ConsentsApi(consentsApi);
     }
 }
