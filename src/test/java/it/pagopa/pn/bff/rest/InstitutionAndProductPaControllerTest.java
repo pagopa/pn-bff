@@ -9,6 +9,7 @@ import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,21 @@ import reactor.core.publisher.Flux;
 @Slf4j
 @WebFluxTest(InstitutionAndProductPaController.class)
 public class InstitutionAndProductPaControllerTest {
+
     @Autowired
     WebTestClient webTestClient;
+
     @MockBean
     private InstitutionAndProductPaService institutionAndProductPaService;
-    @MockBean
-    private PnBffConfigs pnBffConfigs;
+
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+
+    @BeforeAll
+    static void beforeAll() {
+        PnBffConfigs pnBffConfigs = Mockito.mock(PnBffConfigs.class);
+        Mockito.when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
+        Mockito.when(pnBffConfigs.getSelfcareSendProdId()).thenReturn("foo-prod-id");
+    }
 
     @Test
     void getInstitutionsV1() {
@@ -64,8 +73,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString());
+                        Mockito.any(),
+                        Mockito.any());
 
         webTestClient
                 .get()
@@ -88,12 +97,9 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString()))
+                        Mockito.any(),
+                        Mockito.any()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionProductsMock()));
-        Mockito
-                .when(pnBffConfigs.getSelfcareBaseUrl())
-                .thenReturn("https://fooselfcare.com");
 
         webTestClient
                 .get()
@@ -119,8 +125,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString());
+                        Mockito.any(),
+                        Mockito.any());
 
         webTestClient
                 .get()
