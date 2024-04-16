@@ -76,7 +76,6 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-  parameters:
 
   schemas:
     BffTosPrivacyConsent:
