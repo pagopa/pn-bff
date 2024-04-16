@@ -5,22 +5,24 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.RootParentResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
+import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InstitutionProductMapperTest {
+public class InstitutionMapperTest {
     @Test
     void testBffInstitutionMapper() {
         InstitutionResourcePN institutionResourcePN = new InstitutionResourcePN();
         institutionResourcePN.setRootParent(new RootParentResourcePN());
         institutionResourcePN.getRootParent().setDescription("Parent Description");
 
-        BffInstitution bffInstitution = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitution(institutionResourcePN);
+        BffInstitution bffInstitution = InstitutionMapper.INSTITUTION_MAPPER.toBffInstitution(institutionResourcePN);
         assertNotNull(bffInstitution);
         assertEquals("Parent Description", bffInstitution.getParentName());
 
-        BffInstitution bffInstitutionNull = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitution(null);
+        BffInstitution bffInstitutionNull = InstitutionMapper.INSTITUTION_MAPPER.toBffInstitution(null);
         assertNull(bffInstitutionNull);
     }
 
@@ -28,10 +30,10 @@ public class InstitutionProductMapperTest {
     void testBffInstitutionProductMapper() {
         ProductResourcePN productResourcePN = new ProductResourcePN();
 
-        BffInstitutionProduct bffInstitutionProduct = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitutionProduct(productResourcePN);
+        BffInstitutionProduct bffInstitutionProduct = ProductMapper.PRODUCT_MAPPER.toBffInstitutionProduct(productResourcePN);
         assertNotNull(bffInstitutionProduct);
 
-        BffInstitutionProduct bffInstitutionProductNull = it.pagopa.pn.bff.mappers.InstitutionProductMapper.institutionProductMapper.toBffInstitutionProduct(null);
+        BffInstitutionProduct bffInstitutionProductNull = ProductMapper.PRODUCT_MAPPER.toBffInstitutionProduct(null);
         assertNull(bffInstitutionProductNull);
     }
 }

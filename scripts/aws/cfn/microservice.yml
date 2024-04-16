@@ -184,6 +184,14 @@ Parameters:
     AllowedValues:
       - true
       - false
+  
+  # SelfCare parameters
+    SelfCareBaseURL:
+        Type: String
+        Description: 'SelfCare base URL'
+    SelfCareSendProdId:
+        Type: String
+        Description: 'SelfCare send prod id'
 
 Resources:
 
@@ -215,6 +223,8 @@ Resources:
         ContainerEnvEntry3: !Sub 'PN_BFF_DELIVERYBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry4: !Sub 'PN_BFF_APIKEYMANAGERBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry5: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry6: !Sub 'PN_BFF_SELF_CARE_BASE_URL=${SelfCareBaseURL}'
+        ContainerEnvEntry7: !Sub 'PN_BFF_SELF_CARE_SEND_PROD_ID=${SelfCareSendProdId}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds

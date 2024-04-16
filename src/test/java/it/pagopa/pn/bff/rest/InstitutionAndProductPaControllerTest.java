@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -25,6 +27,11 @@ public class InstitutionAndProductPaControllerTest {
     @MockBean
     private InstitutionAndProductPaService institutionAndProductPaService;
 
+    @SpyBean
+    private InstitutionAndProductPaController institutionAndProductPaController;
+
+    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+
     @Test
     void getInstitutionsV1() {
         Mockito
@@ -35,18 +42,20 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList(),
                         Mockito.anyString()))
-                .thenReturn(Flux.just(new BffInstitution()));
+                        .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutions()));
+
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH).build())
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, "iud")
-                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, "institutionId")
                 .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(BffInstitution.class);
+                .expectBodyList(BffInstitution.class)
+                .isEqualTo(institutionAndProductMock.getBffInstitutions());
     }
 
     @Test
@@ -62,7 +71,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString());
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH).build())
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, "iud")
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
@@ -86,7 +95,7 @@ public class InstitutionAndProductPaControllerTest {
                 .thenReturn(Flux.just(new BffInstitutionProduct()));
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, "iud")
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
@@ -111,7 +120,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString());
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTIUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, "iud")
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())

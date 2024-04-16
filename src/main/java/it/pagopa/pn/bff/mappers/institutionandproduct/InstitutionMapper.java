@@ -1,9 +1,7 @@
-package it.pagopa.pn.bff.mappers;
+package it.pagopa.pn.bff.mappers.institutionandproduct;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -12,8 +10,8 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface InstitutionProductMapper {
-    InstitutionProductMapper institutionProductMapper = Mappers.getMapper(InstitutionProductMapper.class);
+public interface InstitutionMapper {
+    InstitutionMapper INSTITUTION_MAPPER = Mappers.getMapper(InstitutionMapper.class);
 
     /**
      * Maps an institution resource to a BffInstitution
@@ -34,17 +32,6 @@ public interface InstitutionProductMapper {
      */
     @Named("mapRoles")
     default String mapRoles(List<String> roles) {
-        if (roles != null && !roles.isEmpty()) {
-            return roles.get(0);
-        }
-        return null;
+        return roles != null && !roles.isEmpty() ? roles.get(0) : "";
     }
-
-    /**
-     * Maps a product resource to a BffInstitutionProduct
-     *
-     * @param productResourcePN The product resource to map
-     * @return The mapped BffInstitutionProduct
-     */
-    BffInstitutionProduct toBffInstitutionProduct(ProductResourcePN productResourcePN);
 }

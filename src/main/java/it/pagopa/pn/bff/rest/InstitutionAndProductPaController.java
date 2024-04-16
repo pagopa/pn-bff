@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.InstitutionAndProductApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class InstitutionAndProductPaController implements InfoPaApi {
+public class InstitutionAndProductPaController implements InstitutionAndProductApi {
 
     private final InstitutionAndProductPaService institutionAndProductPaService;
 

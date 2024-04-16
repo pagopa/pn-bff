@@ -1,3 +1,6 @@
 {
-  "Parameters" : {}
+  "Parameters" : {
+    "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
+    "SelfCareSendProdId": "prod-pn-dev"
+  }
 }
