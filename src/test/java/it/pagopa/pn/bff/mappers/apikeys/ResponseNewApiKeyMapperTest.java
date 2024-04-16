@@ -1,8 +1,7 @@
-package it.pagopa.pn.bff.mappers;
+package it.pagopa.pn.bff.mappers.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ResponseNewApiKey;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
-import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import org.junit.jupiter.api.Test;
 

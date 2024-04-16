@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers;
+package it.pagopa.pn.bff.mappers.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeyRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
@@ -6,7 +6,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeyGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeyRow;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
-import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;

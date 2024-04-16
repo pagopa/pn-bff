@@ -20,6 +20,7 @@ public class PnBffConfigs {
     private String externalRegistriesBaseUrl;
     private String selfcareBaseUrl;
     private String selfcareSendProdId;
+    private String userAttributesBaseUrl;
 
     @PostConstruct
     public void init() {
