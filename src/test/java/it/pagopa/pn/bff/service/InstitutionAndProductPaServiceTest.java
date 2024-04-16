@@ -2,14 +2,12 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
-import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
+import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,36 +18,41 @@ import reactor.test.StepVerifier;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {InstitutionAndProductPaService.class})
 public class InstitutionAndProductPaServiceTest {
-    private final InstitutionMapper institutionMapper = mock(InstitutionMapper.class);
-    private final ProductMapper productMapper = mock(ProductMapper.class);
-
     @Autowired
-    private InstitutionAndProductPaService institutionAndProductPaService;
-    private PnInfoPaClientImpl pnInfoPaClient;
+    private static InstitutionAndProductPaService institutionAndProductPaService;
+    private static PnInfoPaClientImpl pnInfoPaClient;
+    private static PnBffConfigs pnBffConfigs;
+    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
 
-    @BeforeEach
-    void setup() {
+    @BeforeAll
+    public static void setup() {
         pnInfoPaClient = mock(PnInfoPaClientImpl.class);
-        PnBffConfigs pnBffConfigs = mock(PnBffConfigs.class);
-        this.institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
+        pnBffConfigs = mock(PnBffConfigs.class);
+        institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
     }
 
     @Test
     void getInstitutionsTest() {
-        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
-                .thenReturn(Flux.just(mock(InstitutionResourcePN.class)));
-        when(institutionMapper.toBffInstitution(any(InstitutionResourcePN.class)))
-                .thenReturn(new BffInstitution());
+        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
+        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
+        when(pnBffConfigs.getSelfcareSendProdId()).thenReturn("foo-prod-id");
+
+        Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
+                "xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                "xPagopaPnCxId",
+                "xPagopaPnSrcCh",
+                List.of("xPagopaPnCxGroups"),
+                "xPagopaPnSrcChDetails");
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutions("xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA, "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
-                .expectNextCount(1)
+                .create(result.collectList())
+                .expectNext(institutionAndProductMock.getBffInstitutionsMock())
                 .verifyComplete();
     }
 
@@ -67,13 +70,20 @@ public class InstitutionAndProductPaServiceTest {
     @Test
     void getInstitutionProductTest() {
         when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
-                .thenReturn(Flux.just(mock(ProductResourcePN.class)));
-        when(productMapper.toBffInstitutionProduct(any(ProductResourcePN.class)))
-                .thenReturn(new BffInstitutionProduct());
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
+        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
+
+        Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
+                "xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                "xPagopaPnCxId",
+                "xPagopaPnSrcCh",
+                "fooInstitutionId",
+                List.of("xPagopaPnCxGroups"),
+                "xPagopaPnSrcChDetails");
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutionProducts("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
-                .expectNextCount(1)
+                .create(result.collectList())
+                .expectNext(institutionAndProductMock.getBffInstitutionProductsMock())
                 .verifyComplete();
     }
 

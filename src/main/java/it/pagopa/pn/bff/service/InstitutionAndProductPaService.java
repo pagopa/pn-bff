@@ -61,9 +61,15 @@ public class InstitutionAndProductPaService {
      */
     public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, String institutionId, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails) {
         log.info("getInstitutionProducts");
+        String pathTokenExchange = "/token-exchange?institutionId=";
+        String pathProdId = "&productId=";
         return pnInfoPaClient
                 .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnSrcCh, institutionId, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
                 .map(ProductMapper.PRODUCT_MAPPER::toBffInstitutionProduct)
+                .map(product -> {
+                    product.setProductUrl(pnBffConfigs.getSelfcareBaseUrl() + pathTokenExchange + institutionId + pathProdId + product.getId());
+                    return product;
+                })
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

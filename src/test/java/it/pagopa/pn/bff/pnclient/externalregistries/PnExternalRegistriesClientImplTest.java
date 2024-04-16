@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.pnclient.externalregistries;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
+import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -17,12 +17,12 @@ import reactor.test.StepVerifier;
 
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnInfoPaClientImpl.class})
 @ExtendWith(SpringExtension.class)
-public class PnExternalRegistriesClientImpTest {
+public class PnExternalRegistriesClientImplTest {
+    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired
     private PnInfoPaClientImpl pnInfoPaClient;
     @MockBean
@@ -31,13 +31,13 @@ public class PnExternalRegistriesClientImpTest {
     @Test
     void getInstitutionsTest() {
         when(infoPaApi.getInstitutions(
-                Mockito.<String>any(),
-                Mockito.<CxTypeAuthFleet>any(),
-                Mockito.<String>any(),
-                Mockito.<String>any(),
-                Mockito.<List<String>>any(),
-                Mockito.<String>any()
-        )).thenReturn(Flux.just(mock(InstitutionResourcePN.class)));
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
                 "xPagopaPnUid",
@@ -46,7 +46,7 @@ public class PnExternalRegistriesClientImpTest {
                 "xPagopaPnSrcCh",
                 List.of("xPagopaPnCxGroups"),
                 "xPagopaPnSrcChDetails"
-        )).expectNextCount(1).verifyComplete();
+        )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNSMock()).verifyComplete();
     }
 
     @Test
@@ -80,7 +80,7 @@ public class PnExternalRegistriesClientImpTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyString()
-        )).thenReturn(Flux.just(mock(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN.class)));
+        )).thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
                 "xPagopaPnUid",
@@ -90,7 +90,7 @@ public class PnExternalRegistriesClientImpTest {
                 "xPagopaPnProductType",
                 List.of("xPagopaPnCxGroups"),
                 "xPagopaPnCxId"
-        )).expectNextCount(1).verifyComplete();
+        )).expectNextSequence(institutionAndProductMock.getProductResourcePNSMock()).verifyComplete();
     }
 
     @Test

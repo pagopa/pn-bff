@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InstitutionMapperTest {
+public class InstitutionAndProductMapperTest {
     @Test
     void testBffInstitutionMapper() {
         InstitutionResourcePN institutionResourcePN = new InstitutionResourcePN();

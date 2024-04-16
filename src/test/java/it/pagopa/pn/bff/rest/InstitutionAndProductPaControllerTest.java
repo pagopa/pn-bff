@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
@@ -13,7 +14,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -23,13 +23,10 @@ import reactor.core.publisher.Flux;
 public class InstitutionAndProductPaControllerTest {
     @Autowired
     WebTestClient webTestClient;
-
     @MockBean
     private InstitutionAndProductPaService institutionAndProductPaService;
-
-    @SpyBean
-    private InstitutionAndProductPaController institutionAndProductPaController;
-
+    @MockBean
+    private PnBffConfigs pnBffConfigs;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
 
     @Test
@@ -40,9 +37,9 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString()))
-                        .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutions()));
+                        Mockito.any(),
+                        Mockito.any()))
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionsMock()));
 
         webTestClient
                 .get()
@@ -55,7 +52,7 @@ public class InstitutionAndProductPaControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitution.class)
-                .isEqualTo(institutionAndProductMock.getBffInstitutions());
+                .isEqualTo(institutionAndProductMock.getBffInstitutionsMock());
     }
 
     @Test
@@ -69,6 +66,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList(),
                         Mockito.anyString());
+
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH).build())
@@ -92,7 +90,11 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList(),
                         Mockito.anyString()))
-                .thenReturn(Flux.just(new BffInstitutionProduct()));
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionProductsMock()));
+        Mockito
+                .when(pnBffConfigs.getSelfcareBaseUrl())
+                .thenReturn("https://fooselfcare.com");
+
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
@@ -103,7 +105,8 @@ public class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(BffInstitution.class);
+                .expectBodyList(BffInstitutionProduct.class)
+                .isEqualTo(institutionAndProductMock.getBffInstitutionProductsMock());
     }
 
     @Test
@@ -118,6 +121,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList(),
                         Mockito.anyString());
+
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
