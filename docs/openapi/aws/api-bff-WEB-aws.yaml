@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: EJqmPgKr0pgfVd0i7jDt6HD/JWfIVD/lrAGy7GX/P1w=
+  version: K2/nXuK7beiWZCDRzvACvL5myWi5thFUkahgGJqUzqc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -429,7 +429,6 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InstitutionAndProduct
-      parameters: []
       responses:
         '200':
           description: OK
@@ -467,6 +466,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/institutions API CORS
       x-amazon-apigateway-integration:
@@ -490,13 +490,12 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InstitutionAndProduct
-      parameters:
         - name: institutionId
           description: The identifier of one PA
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/SelfCarePaId'
+            $ref: '#/components/schemas/BffSelfCarePaId'
       responses:
         '200':
           description: OK
@@ -535,6 +534,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/institutions/{institutionId}/products API CORS
       x-amazon-apigateway-integration:

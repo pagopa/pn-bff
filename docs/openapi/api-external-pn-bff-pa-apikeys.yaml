@@ -199,7 +199,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-  parameters: #NO EXTERNAL
+  parameters:
     
     ### PARAMETRI RICERCA API KEY
     pathApiKey:

@@ -37,7 +37,6 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      parameters:
       responses:
         '200':
           description: OK
@@ -68,7 +67,6 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      parameters:
       - name: institutionId
         description: The identifier of one PA
         in: path

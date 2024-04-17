@@ -216,7 +216,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
 
 components:
-  parameters: #NO EXTERNAL
+  parameters:
     ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
     cxTypeAuthFleet: # NO EXTERNAL
       $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL

@@ -37,7 +37,7 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      parameters:
+      parameters: # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
@@ -74,7 +74,7 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      parameters:
+      parameters: # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
       - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
