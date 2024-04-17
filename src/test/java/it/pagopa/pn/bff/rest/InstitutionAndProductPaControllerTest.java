@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @Slf4j
 @WebFluxTest(InstitutionAndProductPaController.class)
 public class InstitutionAndProductPaControllerTest {
@@ -46,8 +48,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(),
-                        Mockito.any()))
+                        Mockito.nullable(List.class),
+                        Mockito.nullable(String.class)))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionsMock()));
 
         webTestClient
@@ -73,8 +75,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(),
-                        Mockito.any());
+                        Mockito.nullable(List.class),
+                        Mockito.nullable(String.class));
 
         webTestClient
                 .get()
@@ -97,8 +99,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(),
-                        Mockito.any()))
+                        Mockito.nullable(List.class),
+                        Mockito.nullable(String.class)))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionProductsMock()));
 
         webTestClient
@@ -125,8 +127,8 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(),
-                        Mockito.any());
+                        Mockito.nullable(List.class),
+                        Mockito.nullable(String.class));
 
         webTestClient
                 .get()
