@@ -27,7 +27,6 @@ public class TosPrivacyControllerTest {
     @Autowired
     WebTestClient webTestClient;
     ConsentsMock consentsMock = new ConsentsMock();
-    UserMock userMock = new UserMock();
     @MockBean
     private TosPrivacyService tosPrivacyService;
     @SpyBean
@@ -85,7 +84,7 @@ public class TosPrivacyControllerTest {
         Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.any(Mono.class)))
+                        Mockito.any()))
                 .thenReturn(Mono.empty());
 
         BffTosPrivacyBody request = BffTosPrivacyBody.builder()
@@ -108,7 +107,7 @@ public class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(Mono.class)
+                Mockito.any()
         );
     }
 
@@ -118,7 +117,7 @@ public class TosPrivacyControllerTest {
                 .when(tosPrivacyService).acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.any(Mono.class)
+                        Mockito.any()
                 );
 
         webTestClient
