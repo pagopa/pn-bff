@@ -1,0 +1,27 @@
+info:
+  version: v1.0
+components:
+  
+  parameters:
+    ############################################################################################
+    ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
+    ############################################################################################
+    cxTypeAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTypeAuthFleet'
+    cxIdAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxIdAuthFleet'
+    cxGroupsAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroupsAuthFleet'
+    uidAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
+    cxTaxIdAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
+  
+  schemas:
+    ############################################################################################
+    ###                          STRUTTURE DATI DI PN-COMMONS                                ###
+    ############################################################################################
+    Problem:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/938c49f1c8c51dcff8c2a3c5d4a33f286c639e63/docs/openapi/pn-errors.yaml#/components/schemas/Problem'
+    ProblemError:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/938c49f1c8c51dcff8c2a3c5d4a33f286c639e63/docs/openapi/pn-errors.yaml#/components/schemas/ProblemError'

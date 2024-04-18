@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - TOS e Privacy
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-tos-privacy
+  x-summary: 'API di pn-bff esposte al Web per TOS e Privacy'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: UserConsents
+    description: >-
+      Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
+
+paths:
+  '/bff/v1/tos-privacy':
+    parameters: # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+    get:
+      summary: Accettazione TOS e Privacy
+      description: >-
+        Ritorna lo stato di accettazione dei TOS e della Privacy.
+      tags:
+        - UserConsents
+      operationId: getTosPrivacyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffTosPrivacyConsent'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+    put:
+      summary: Accettazione TOS e Privacy
+      description: >-
+        Permette di accettare i TOS e la Privacy.
+      tags:
+        - UserConsents
+      operationId: acceptTosPrivacy
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffTosPrivacyBody'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+components:
+  parameters: # NO EXTERNAL
+    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
+    cxTypeAuthFleet: # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
+    uidAuthFleet: # NO EXTERNAL
+      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'  # NO EXTERNAL
+
+  schemas:
+    BffTosPrivacyConsent:
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
+
+    BffTosPrivacyBody:
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
+
+    BffTosPrivacyActionBody:
+      $ref: './tosPrivacySchemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyActionBody'
+
+    Problem:
+      $ref: './common-refs.yaml#/components/schemas/Problem'

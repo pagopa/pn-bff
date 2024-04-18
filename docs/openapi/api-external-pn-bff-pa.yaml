@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: PN BFF BE Microservice - Mittenti
+  title: PN BFF BE Microservice - Notifiche Mittenti
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
   x-api-id: api-internal-pn-bff-pa
-  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  x-summary: 'API di pn-bff esposte al Web ai mittenti per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
     email: pn@pagopa.it
@@ -21,34 +21,12 @@ servers:
   - url: https://webapi.dev.notifichedigitali.it
     description: Ambiente di sviluppo
 tags:
-  - name: HealthCheck
-    description: >-
-      Invocazioni per sapere lo stato del microservizio
   - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle richieste 
       di notifica inviate e delle notifiche accettate.
 
 paths:
-  '/status':
-    get:
-      summary: Get Status of application
-      operationId: status
-      tags:
-        - HealthCheck
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatusSchema'
-        '500':
-          description: InternalServerError
-          content:
-            application/problem+json:
-              schema:
-                $ref: 'remote-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/sent/{iun}':
     get:
@@ -58,8 +36,10 @@ paths:
       tags:
         - NotificationSent
       operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -84,17 +64,15 @@ components:
 
   parameters:
     ### PARAMETRI DI AUTENTICAZIONE
-
+    
     ### PARAMETRI RECUPERO NOTIFICA
-    pathIun:
-      $ref: './parameters-notification-search.yaml#/components/parameters/pathIun'
+    BffPathIun:
+      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
 
   schemas:
-    StatusSchema:
-      $ref: './remote-refs.yaml#/components/schemas/StatusSchema'
 
     BffFullNotificationV1:
-      $ref: './notificationDetailSchemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+      $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
 
     Problem:
-      $ref: './remote-refs.yaml#/components/schemas/Problem'
+      $ref: './common-refs.yaml#/components/schemas/Problem'

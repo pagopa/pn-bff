@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: s/Xew+rp6DouwSel/aygGXTeOfcZDZ12+8CK8ExQUGs=
+  version: M8Z9CSQV84Fx2vuV4KyE3ICOuO9Pp6T5283dOW/kkQ4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -20,6 +20,8 @@ paths:
       tags:
         - NotificationSent
       operationId: retrieveSentNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/pathIun'
       responses:
@@ -41,8 +43,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
@@ -84,6 +84,8 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/notificationSearchMandateId'
@@ -108,8 +110,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}
@@ -142,8 +142,383 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/api-keys:
+    get:
+      summary: Ricerca api keys
+      description: servizio di consultazione della lista delle api keys
+      tags:
+        - ApiKeys
+      operationId: getApiKeysV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lastUpdate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showVirtualKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffApiKeysResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      summary: Creazione api key
+      description: servizio di creazione di un'api key
+      tags:
+        - ApiKeys
+      operationId: newApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestNewApiKey'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseNewApiKey'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/api-keys API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/api-keys/{id}:
+    delete:
+      summary: Rimozione api key
+      description: servizio di rimozione dell'api key
+      tags:
+        - ApiKeys
+      operationId: deleteApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathApiKey'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. delete an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/api-keys/{id} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/api-keys/{id}/status:
+    put:
+      summary: Cambia lo stato dell'api key
+      description: servizio di cambio stato dell'api key
+      tags:
+        - ApiKeys
+      operationId: changeStatusApiKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathApiKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestApiKeyStatus'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/api-keys/{id}/status API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/tos-privacy:
+    get:
+      summary: Accettazione TOS e Privacy
+      description: Ritorna lo stato di accettazione dei TOS e della Privacy.
+      tags:
+        - UserConsents
+      operationId: getTosPrivacyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffTosPrivacyConsent'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    put:
+      summary: Accettazione TOS e Privacy
+      description: Permette di accettare i TOS e la Privacy.
+      tags:
+        - UserConsents
+      operationId: acceptTosPrivacy
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffTosPrivacyBody'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/tos-privacy API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
+    BffPathIun:
+      $ref: '#/components/parameters/pathIun'
     pathIun:
       description: Identificativo Univoco Notifica
       name: iun
@@ -154,6 +529,8 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    BffNotificationSearchMandateId:
+      $ref: '#/components/parameters/notificationSearchMandateId'
     notificationSearchMandateId:
       name: mandateId
       in: query
@@ -161,18 +538,14 @@ components:
       description: identificativo della delega
       schema:
         type: string
+    pathApiKey:
+      description: Identificativo univoco dell'api key
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
-    StatusSchema:
-      title: Stato dell'applicazione
-      type: object
-      properties:
-        status:
-          type: string
-          description: Stato dell'applicazione.
-      required:
-        - status
-      example:
-        status: OK
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
@@ -186,19 +559,19 @@ components:
             notificationStatusHistory:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationStatusHistory'
+                $ref: '#/components/schemas/BffNotificationStatusHistory'
             notificationStatus:
-              $ref: '#/components/schemas/NotificationStatus'
+              $ref: '#/components/schemas/BffNotificationStatus'
             timeline:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailTimeline'
+                $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
-              $ref: '#/components/schemas/NotificationDetailTimeline'
+              $ref: '#/components/schemas/BffNotificationDetailTimeline'
             otherDocuments:
               type: array
               items:
-                $ref: '#/components/schemas/NotificationDetailDocument'
+                $ref: '#/components/schemas/BffNotificationDetailDocument'
     Problem:
       properties:
         type:
@@ -714,7 +1087,7 @@ components:
             version:
               type: string
               description: Indica la versione della notifica
-    NotificationStatus:
+    BffNotificationStatus:
       type: string
       enum:
         - IN_VALIDATION
@@ -728,7 +1101,7 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
-    LegalFactType:
+    BffLegalFactType:
       type: string
       enum:
         - AAR
@@ -738,7 +1111,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
-    LegalFactId:
+    BffLegalFactId:
       type: object
       required:
         - key
@@ -749,7 +1122,7 @@ components:
           pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
           maxLength: 512
         category:
-          $ref: '#/components/schemas/LegalFactType'
+          $ref: '#/components/schemas/BffLegalFactType'
     TimelineElementCategoryV23:
       type: string
       description: |
@@ -1902,7 +2275,7 @@ components:
         - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
         - $ref: '#/components/schemas/NotificationCancelledDetails'
         - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
-    NotificationDetailTimeline:
+    BffNotificationDetailTimeline:
       type: object
       required:
         - elementId
@@ -1919,7 +2292,7 @@ components:
         legalFactsIds:
           type: array
           items:
-            $ref: '#/components/schemas/LegalFactId'
+            $ref: '#/components/schemas/BffLegalFactId'
         category:
           $ref: '#/components/schemas/TimelineElementCategoryV23'
         details:
@@ -1928,12 +2301,12 @@ components:
           type: boolean
         index:
           type: number
-    NotificationDeliveryMode:
+    BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-    NotificationStatusHistory:
+    BffNotificationStatusHistory:
       type: object
       additionalProperties: false
       required:
@@ -1942,7 +2315,7 @@ components:
         - relatedTimelineElements
       properties:
         status:
-          $ref: '#/components/schemas/NotificationStatus'
+          $ref: '#/components/schemas/BffNotificationStatus'
         activeFrom:
           type: string
           format: date-time
@@ -1953,12 +2326,12 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/NotificationDetailTimeline'
+            $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
           type: string
         deliveryMode:
-          $ref: '#/components/schemas/NotificationDeliveryMode'
-    NotificationDetailDocument:
+          $ref: '#/components/schemas/BffNotificationDeliveryMode'
+    BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
         - $ref: '#/components/schemas/NotificationMetadataAttachment'
@@ -2002,6 +2375,201 @@ components:
           type: string
       required:
         - code
+    BffApiKeysResponse:
+      title: Elenco di api keys
+      description: Dto contenente la lista delle api keys associate ad un utente.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyRow'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: number
+    BffRequestNewApiKey:
+      $ref: '#/components/schemas/RequestNewApiKey'
+    BffResponseNewApiKey:
+      $ref: '#/components/schemas/ResponseNewApiKey'
+    BffRequestApiKeyStatus:
+      $ref: '#/components/schemas/RequestApiKeyStatus'
+    BffApiKeyGroup:
+      description: Gruppo a cui appartiene l'api key
+      type: object
+      properties:
+        id:
+          type: string
+          description: id del gruppo
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        name:
+          type: string
+          description: nome del gruppo
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+    BffApiKeyStatus:
+      description: Stato dell'api key
+      type: string
+      enum:
+        - CREATED
+        - ENABLED
+        - BLOCKED
+        - ROTATED
+    BffApiKeyStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        date:
+          type: string
+          description: data a cui corrisponde il cambio di stato
+          format: date-time
+        changedByDenomination:
+          type: string
+          description: nome dell'utente che ha effettuato il cambio di stato
+    BffApiKeyRow:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id dell'api key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        name:
+          type: string
+          description: Nome dell'api key
+        value:
+          type: string
+          description: Valore dell'api key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        lastUpdate:
+          type: string
+          description: Data ultima modifica
+          format: date-time
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyGroup'
+        status:
+          $ref: '#/components/schemas/BffApiKeyStatus'
+        statusHistory:
+          type: array
+          description: Storico degli stati dell'api key
+          items:
+            $ref: '#/components/schemas/BffApiKeyStatusHistory'
+    RequestNewApiKey:
+      title: Request creazione api key
+      description: Request per la creazione di una nuova api key
+      type: object
+      required:
+        - name
+        - groups
+      properties:
+        name:
+          type: string
+          description: nome dell'api key
+        groups:
+          type: array
+          description: Gruppi a cui appartiene l'api key (indicare l'id dei gruppi)
+          items:
+            type: string
+    ResponseNewApiKey:
+      title: Response creazione api key
+      description: Response per la creazione di una nuova api key
+      type: object
+      required:
+        - id
+        - apiKey
+      properties:
+        id:
+          type: string
+          description: id dell'api key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        apiKey:
+          type: string
+          description: Valore dell'api key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+    RequestApiKeyStatus:
+      title: Richiesta di cambio stato per una api key
+      description: Richiesta di cambio stato per una api key
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Action per il cambio stato di un'api key
+          enum:
+            - BLOCK
+            - ENABLE
+            - ROTATE
+    BffTosPrivacyConsent:
+      type: object
+      required:
+        - tos
+        - privacy
+      properties:
+        tos:
+          $ref: '#/components/schemas/Consent'
+        privacy:
+          $ref: '#/components/schemas/Consent'
+    BffTosPrivacyBody:
+      type: object
+      properties:
+        tos:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+        privacy:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+    BffTosPrivacyActionBody:
+      required:
+        - version
+        - action
+      allOf:
+        - $ref: '#/components/schemas/ConsentAction'
+        - type: object
+          properties:
+            version:
+              $ref: '#/components/schemas/ConsentVersion'
+    ConsentType:
+      type: string
+      description: type of consent
+      enum:
+        - TOS
+        - DATAPRIVACY
+    ConsentVersion:
+      type: string
+      description: version of consent
+      maxLength: 10
+      pattern: ^[a-zA-Z0-9_.-]*$
+    Consent:
+      type: object
+      required:
+        - consentType
+        - recipientId
+        - consentVersion
+      properties:
+        recipientId:
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        consentType:
+          $ref: '#/components/schemas/ConsentType'
+        accepted:
+          type: boolean
+        consentVersion:
+          $ref: '#/components/schemas/ConsentVersion'
+        isFirstAccept:
+          type: boolean
+    ConsentAction:
+      type: object
+      properties:
+        action:
+          type: string
+          description: action on consent
+          enum:
+            - ACCEPT
+            - DECLINE
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -2018,8 +2586,6 @@ components:
         identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-]+)$
         type: token
 tags:
-  - name: HealthCheck
-    description: Invocazioni per sapere lo stato del microservizio
   - name: NotificationSent
     description: >-
       Invocazioni utilizzabili dai mittenti per verificare lo stato delle
@@ -2028,6 +2594,10 @@ tags:
     description: >-
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle
       notifiche a loro destinate.
+  - name: ApiKeys
+    description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+  - name: UserConsents
+    description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

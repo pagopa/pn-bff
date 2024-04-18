@@ -1,0 +1,49 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    BffNotificationDetailTimeline:
+      type: object
+      required:
+        - elementId
+        - timestamp
+        - category
+        - details
+      additionalProperties: false
+      properties:
+        elementId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        legalFactsIds:
+          type: array
+          items:
+            $ref: "#/components/schemas/BffLegalFactId"
+        category:
+          $ref: "#/components/schemas/BffTimelineCategory"
+        details:
+          $ref: "#/components/schemas/BffNotificationDetailTimelineDetails"
+        hidden:
+          type: boolean
+        index:
+          type: integer
+    
+    BffTimelineCategory:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV23"
+    
+    BffNotificationDetailTimelineDetails:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementDetailsV23'
+    
+    BffLegalFactId:
+      type: object
+      required:
+        - key
+        - category
+      properties:
+        key:
+          type: string
+          pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
+          maxLength: 512
+        category:
+          $ref: "./notification-enums.yaml#/components/schemas/BffLegalFactType"

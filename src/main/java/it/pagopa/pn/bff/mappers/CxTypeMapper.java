@@ -9,7 +9,11 @@ public interface CxTypeMapper {
 
     CxTypeMapper cxTypeMapper = Mappers.getMapper(CxTypeMapper.class);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertRecipientCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertDeliveryRecipientCXType(CxTypeAuthFleet cxType);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet convertPACXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet convertDeliveryPACXType(CxTypeAuthFleet cxType);
+
+    it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet convertApiKeysPACXType(CxTypeAuthFleet cxType);
+
+    it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet convertUserAttributesCXType(CxTypeAuthFleet cxType);
 }
