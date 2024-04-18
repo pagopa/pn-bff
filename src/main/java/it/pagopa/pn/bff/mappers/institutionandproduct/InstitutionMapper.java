@@ -9,6 +9,9 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
+/**
+ * Mapstruct mapper interface, used to map the InstitutionResourcePN to the BffInstitution
+ */
 @Mapper
 public interface InstitutionMapper {
     InstitutionMapper INSTITUTION_MAPPER = Mappers.getMapper(InstitutionMapper.class);

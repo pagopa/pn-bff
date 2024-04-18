@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PnInfoPaClientImpl {
     private final InfoPaApi infoPaApi;
+    
     public Flux<PaGroup> getGroups(String xPagopaPnUid,
                                    String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
                                    PaGroupStatus paGroupStatus) {

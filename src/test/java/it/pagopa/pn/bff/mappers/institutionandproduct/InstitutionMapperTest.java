@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InstitutionMapperTest {
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+
     @Test
     void testBffInstitutionMapper() {
         InstitutionResourcePN institutionResourcePN = institutionAndProductMock.getInstitutionResourcePNSMock().get(0);

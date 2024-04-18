@@ -5,6 +5,9 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the Consent to the BffConsent
+ */
 @Mapper
 public interface TosPrivacyConsentMapper {
     TosPrivacyConsentMapper tosPrivacyConsentMapper = Mappers.getMapper(TosPrivacyConsentMapper.class);
@@ -15,5 +18,5 @@ public interface TosPrivacyConsentMapper {
      * @param consent the Consent to map
      * @return the mapped BffConsent
      */
-    public BffConsent mapConsent(Consent consent);
+    BffConsent mapConsent(Consent consent);
 }
