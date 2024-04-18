@@ -16,10 +16,6 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
     cxTaxIdAuthFleet:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
-    headerSourceChannel:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/parameters/headerSourceChannel'
-    headerSourceChannelDetails:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/parameters/headerSourceChannelDetails'
 
   schemas:
     ############################################################################################

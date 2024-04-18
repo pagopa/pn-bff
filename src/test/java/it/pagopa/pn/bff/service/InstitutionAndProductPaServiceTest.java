@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -22,17 +23,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {InstitutionAndProductPaService.class})
+@TestPropertySource(locations="classpath:application-test.properties")
 public class InstitutionAndProductPaServiceTest {
     @Autowired
     private static InstitutionAndProductPaService institutionAndProductPaService;
     private static PnInfoPaClientImpl pnInfoPaClient;
-    private static PnBffConfigs pnBffConfigs;
+    private static final PnBffConfigs pnBffConfigs = mock(PnBffConfigs.class);
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
 
     @BeforeAll
     public static void setup() {
         pnInfoPaClient = mock(PnInfoPaClientImpl.class);
-        pnBffConfigs = mock(PnBffConfigs.class);
         institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
     }
 
@@ -40,8 +41,6 @@ public class InstitutionAndProductPaServiceTest {
     void getInstitutionsTest() {
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
-        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
-        when(pnBffConfigs.getSelfcareSendProdId()).thenReturn("foo-prod-id");
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
                 "xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,

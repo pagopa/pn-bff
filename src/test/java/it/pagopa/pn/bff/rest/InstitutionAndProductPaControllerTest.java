@@ -1,15 +1,15 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +33,12 @@ public class InstitutionAndProductPaControllerTest {
 
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
 
-    @BeforeAll
-    static void beforeAll() {
-        PnBffConfigs pnBffConfigs = Mockito.mock(PnBffConfigs.class);
-        Mockito.when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
-        Mockito.when(pnBffConfigs.getSelfcareSendProdId()).thenReturn("foo-prod-id");
-    }
-
     @Test
     void getInstitutionsV1() {
+        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNSMock()
+                .stream()
+                .map(InstitutionMapper.INSTITUTION_MAPPER::toBffInstitution)
+                .toList();
         Mockito
                 .when(institutionAndProductPaService.getInstitutions(
                         Mockito.anyString(),
@@ -50,7 +47,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.nullable(List.class),
                         Mockito.nullable(String.class)))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionsMock()));
+                .thenReturn(Flux.fromIterable(bffInstitutions));
 
         webTestClient
                 .get()
@@ -92,6 +89,10 @@ public class InstitutionAndProductPaControllerTest {
 
     @Test
     void getInstitutionProductV1() {
+        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNSMock()
+                .stream()
+                .map(ProductMapper.PRODUCT_MAPPER::toBffInstitutionProduct)
+                .toList();
         Mockito
                 .when(institutionAndProductPaService.getInstitutionProducts(
                         Mockito.anyString(),
@@ -101,7 +102,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.nullable(List.class),
                         Mockito.nullable(String.class)))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getBffInstitutionProductsMock()));
+                .thenReturn(Flux.fromIterable(bffInstitutionProducts));
 
         webTestClient
                 .get()
