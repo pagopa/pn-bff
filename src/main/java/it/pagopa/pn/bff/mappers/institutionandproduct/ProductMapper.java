@@ -5,6 +5,9 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the ProductResourcePN to the BffInstitutionProduct
+ */
 @Mapper
 public interface ProductMapper {
     ProductMapper PRODUCT_MAPPER = Mappers.getMapper(ProductMapper.class);

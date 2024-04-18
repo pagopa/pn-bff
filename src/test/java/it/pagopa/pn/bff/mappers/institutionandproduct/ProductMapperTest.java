@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductMapperTest {
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+
     @Test
     void testBffInstitutionProductMapper() {
         ProductResourcePN productResourcePN = institutionAndProductMock.getProductResourcePNSMock().get(0);
