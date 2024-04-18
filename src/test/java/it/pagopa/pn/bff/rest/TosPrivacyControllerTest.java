@@ -26,12 +26,11 @@ public class TosPrivacyControllerTest {
     public static final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
     @Autowired
     WebTestClient webTestClient;
+    ConsentsMock consentsMock = new ConsentsMock();
     @MockBean
     private TosPrivacyService tosPrivacyService;
     @SpyBean
     private TosPrivacyController tosPrivacyController;
-    ConsentsMock consentsMock = new ConsentsMock();
-    UserMock userMock = new UserMock();
 
     @Test
     void getTosPrivacy() {
@@ -85,7 +84,7 @@ public class TosPrivacyControllerTest {
         Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.any(Mono.class)))
+                        Mockito.any()))
                 .thenReturn(Mono.empty());
 
         BffTosPrivacyBody request = BffTosPrivacyBody.builder()
@@ -97,18 +96,18 @@ public class TosPrivacyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), BffTosPrivacyBody.class)
                 .headers(httpHeaders -> {
-                    httpHeaders.set("x-pagopa-pn-uid", UserMock.PN_UID);
-                    httpHeaders.set("x-pagopa-pn-cx-type", CX_TYPE.toString());
+                    httpHeaders.set(PnBffRestConstants.UID_HEADER, UserMock.PN_UID);
+                    httpHeaders.set(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString());
                 })
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody(Void.class);
-        
+
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(Mono.class)
+                Mockito.any()
         );
     }
 
@@ -118,7 +117,7 @@ public class TosPrivacyControllerTest {
                 .when(tosPrivacyService).acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.any(Mono.class)
+                        Mockito.any()
                 );
 
         webTestClient

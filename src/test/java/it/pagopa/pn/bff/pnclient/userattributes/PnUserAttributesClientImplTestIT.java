@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,7 +32,6 @@ public class PnUserAttributesClientImplTestIT {
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";
     private final ConsentsMock consentsMock = new ConsentsMock();
-    private final String UID = "1234567890";
     private final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
     @Autowired
     private PnUserAttributesClientImpl pnUserAttributesClient;
@@ -65,7 +65,7 @@ public class PnUserAttributesClientImplTestIT {
                 );
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE
         )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
     }
@@ -76,7 +76,7 @@ public class PnUserAttributesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE
         )).expectError().verify();
     }
@@ -93,7 +93,7 @@ public class PnUserAttributesClientImplTestIT {
                 );
 
         StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE
         )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
     }
@@ -104,7 +104,7 @@ public class PnUserAttributesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE
         )).expectError().verify();
     }
@@ -121,7 +121,7 @@ public class PnUserAttributesClientImplTestIT {
                 );
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
@@ -137,7 +137,7 @@ public class PnUserAttributesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
-                UID,
+                UserMock.PN_UID,
                 CX_TYPE,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
