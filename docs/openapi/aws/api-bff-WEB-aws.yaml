@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: GWF6/WuR0twrvUlhH7Ivgy03VJiriliB4lqQOj+tHyE=
+  version: 8ryq9f2LpN6DiuqN2uzSXTntahh+mlqYbEQKVpSK2lg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -490,12 +490,13 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InstitutionAndProduct
+      parameters:
         - name: institutionId
           description: The identifier of one PA
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/BffSelfCarePaId'
+            $ref: '#/components/schemas/SelfCarePaId'
       responses:
         '200':
           description: OK
@@ -534,7 +535,6 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-      parameters: []
     options:
       operationId: Options for /v1/institutions/{institutionId}/products API CORS
       x-amazon-apigateway-integration:
@@ -2785,8 +2785,6 @@ tags:
       notifiche a loro destinate.
   - name: ApiKeys
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
-  - name: Institutions
-    description: Invocazioni per sapere gli enti disponibili
   - name: InstitutionProducts
     description: Invocazioni per sapere i portali disponibili di un ente
   - name: UserConsents

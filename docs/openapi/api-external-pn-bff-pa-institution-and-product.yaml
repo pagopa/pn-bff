@@ -12,19 +12,17 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
-- name: Institutions
-  description: Invocazioni per sapere gli enti disponibili
-- name: InstitutionProducts
-  description: Invocazioni per sapere i portali disponibili di un ente
+  - name: InstitutionProducts
+    description: Invocazioni per sapere i portali disponibili di un ente
 
 paths:
   '/bff/v1/institutions':
@@ -36,7 +34,7 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InstitutionAndProduct
+        - InstitutionAndProduct
       responses:
         '200':
           description: OK
@@ -67,12 +65,13 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      - name: institutionId
-        description: The identifier of one PA
-        in: path
-        required: true
-        schema:
-          $ref: '#/components/schemas/BffSelfCarePaId'
+      parameters:
+        - name: institutionId
+          description: The identifier of one PA
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BffSelfCarePaId'
       responses:
         '200':
           description: OK
@@ -93,7 +92,6 @@ paths:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
 
-
 components:
   schemas:
     BffInstitutionList:
@@ -101,13 +99,14 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitution'
+
     BffInstitution:
       type: object
       required:
-      - id
-      - name
-      - productRole
-      - entityUrl
+        - id
+        - name
+        - productRole
+        - entityUrl
       properties:
         id:
           type: string
@@ -127,17 +126,19 @@ components:
         entityUrl:
           type: string
           description: The URL of the entity
+
     BffInstitutionProductList:
       description: The list of products
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
+
     BffInstitutionProduct:
       type: object
       required:
-      - id
-      - title
-      - productUrl
+        - id
+        - title
+        - productUrl
       properties:
         id:
           type: string
@@ -148,5 +149,6 @@ components:
         productUrl:
           type: string
           description: The URL of the product
+
     BffSelfCarePaId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/release/2.4.2/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
