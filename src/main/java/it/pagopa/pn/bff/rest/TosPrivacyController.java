@@ -59,10 +59,10 @@ public class TosPrivacyController implements UserConsentsApi {
      * @return
      */
     @Override
-    public Mono<ResponseEntity<Void>> acceptTosPrivacy(String xPagopaPnUid,
-                                                       CxTypeAuthFleet xPagopaPnCxType,
-                                                       Mono<BffTosPrivacyBody> tosPrivacyBody,
-                                                       ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Void>> acceptTosPrivacyV1(String xPagopaPnUid,
+                                                         CxTypeAuthFleet xPagopaPnCxType,
+                                                         Mono<BffTosPrivacyBody> tosPrivacyBody,
+                                                         ServerWebExchange exchange) {
         log.logStartingProcess("putTosPrivacyV1");
 
         Mono<Void> serviceResponse;

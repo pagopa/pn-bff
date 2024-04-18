@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: K2/nXuK7beiWZCDRzvACvL5myWi5thFUkahgGJqUzqc=
+  version: GWF6/WuR0twrvUlhH7Ivgy03VJiriliB4lqQOj+tHyE=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -594,7 +594,7 @@ paths:
       description: Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
-      operationId: acceptTosPrivacy
+      operationId: acceptTosPrivacyV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:

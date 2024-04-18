@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -23,11 +24,11 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnUserAttributesClientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnUserAttributesClientImplTest {
+    private final ConsentsMock consentsMock = new ConsentsMock();
     @Autowired
     private PnUserAttributesClientImpl pnUserAttributesClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi")
     private ConsentsApi consentsApi;
-    private final ConsentsMock consentsMock = new ConsentsMock();
 
     @Test
     void getTosConsentTest() throws RestClientException {
@@ -39,7 +40,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.just(consentsMock.getTosConsentResponseMock()));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF
         )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
     }
@@ -54,7 +55,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF
         )).expectError(PnBffException.class).verify();
     }
@@ -69,7 +70,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.just(consentsMock.getPrivacyConsentResponseMock()));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF
         )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
     }
@@ -84,7 +85,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF
         )).expectError(PnBffException.class).verify();
     }
@@ -100,7 +101,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.empty());
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
@@ -119,7 +120,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
-                "UID",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),

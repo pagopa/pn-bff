@@ -6,8 +6,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
-import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,11 +24,10 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {TosPrivacyService.class})
 class TosPrivacyServiceTest {
+    ConsentsMock consentsMock = new ConsentsMock();
     @Autowired
     private TosPrivacyService tosPrivacyService;
     private PnUserAttributesClientImpl pnUserAttributesClient;
-    TosPrivacyConsentMapper modelMapperMock = mock(TosPrivacyConsentMapper.class);
-    ConsentsMock consentsMock = new ConsentsMock();
 
     @BeforeEach
     void setup() {
@@ -53,7 +52,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.just(privacyConsent));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
-                        "UID",
+                        UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
                 ))
                 .expectNext(consentsMock.getBffTosPrivacyConsentMock())
@@ -73,7 +72,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
-                        "UID",
+                        UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
@@ -94,7 +93,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.empty());
 
         Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
-                "UID",
+                UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                 Mono.just(tosPrivacyBody)
         );
@@ -115,7 +114,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.empty());
 
         Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
-                "UID",
+                UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                 Mono.just(tosPrivacyBody)
         );
@@ -135,7 +134,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.error(new WebClientResponseException(400, "Bad Request", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
-                        "UID",
+                        UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         Mono.just(new BffTosPrivacyBody())
                 ))
