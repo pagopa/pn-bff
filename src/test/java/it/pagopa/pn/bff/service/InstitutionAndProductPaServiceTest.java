@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-
-import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,11 +42,12 @@ public class InstitutionAndProductPaServiceTest {
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
-                "xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails");
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS);
 
         StepVerifier
                 .create(result.collectList())
@@ -61,7 +61,13 @@ public class InstitutionAndProductPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutions("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(institutionAndProductPaService.getInstitutions(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                        UserMock.PN_CX_ID,
+                        UserMock.SEARCH_CHANNEL,
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.SEARCH_DETAILS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
@@ -73,12 +79,13 @@ public class InstitutionAndProductPaServiceTest {
         when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
-                "xPagopaPnUid", it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                "fooInstitutionId",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails");
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.INSTITUTION_ID,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS);
 
         StepVerifier
                 .create(result.collectList())
@@ -92,7 +99,13 @@ public class InstitutionAndProductPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutionProducts("xPagopaPnUid",it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA , "xPagopaPnCxId", "xPagopaPnSrcCh", "xPagopaPnProductId", List.of("xPagopaPnCxGroups"), "xPagopaPnSrcChDetails"))
+                .create(institutionAndProductPaService.getInstitutionProducts(UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                        UserMock.PN_CX_ID,
+                        UserMock.SEARCH_CHANNEL,
+                        UserMock.INSTITUTION_ID,
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.SEARCH_DETAILS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }

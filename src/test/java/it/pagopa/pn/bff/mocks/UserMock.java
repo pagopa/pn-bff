@@ -11,6 +11,10 @@ public class UserMock {
 
     public static final String PN_UID = "UID";
     public static final String PN_CX_ID = "CX_ID";
+    public static final String SOURCECHANNEL = "WEB";
+    public static final String SEARCH_CHANNEL = "SRCHANEL";
+    public static final String SEARCH_DETAILS = "SRCDETAILS";
+    public static final String INSTITUTION_ID = "INSTITUTION_ID";
     public static final List<String> PN_CX_GROUPS = Collections.singletonList("group");
     
     private PaGroup getPaGroupMock(String id, String name, PaGroupStatus status) {

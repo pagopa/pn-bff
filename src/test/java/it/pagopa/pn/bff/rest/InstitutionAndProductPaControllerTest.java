@@ -7,6 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
@@ -23,6 +25,7 @@ import java.util.List;
 
 @Slf4j
 @WebFluxTest(InstitutionAndProductPaController.class)
+@TestPropertySource(locations="classpath:application-test.properties")
 public class InstitutionAndProductPaControllerTest {
 
     @Autowired
@@ -53,10 +56,10 @@ public class InstitutionAndProductPaControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, "iud")
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
-                .header(PnBffRestConstants.CX_ID_HEADER, "institutionId")
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitution.class)
@@ -79,10 +82,10 @@ public class InstitutionAndProductPaControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, "iud")
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
-                .header(PnBffRestConstants.CX_ID_HEADER, "institutionId")
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -108,10 +111,10 @@ public class InstitutionAndProductPaControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, "iud")
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
-                .header(PnBffRestConstants.CX_ID_HEADER, "institutionId")
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitutionProduct.class)
@@ -135,10 +138,10 @@ public class InstitutionAndProductPaControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, "iud")
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
-                .header(PnBffRestConstants.CX_ID_HEADER, "institutionId")
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, "WEB")
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isNotFound();
     }
