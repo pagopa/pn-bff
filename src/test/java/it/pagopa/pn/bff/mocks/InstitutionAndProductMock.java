@@ -2,8 +2,6 @@ package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,38 +10,6 @@ import java.util.UUID;
 public class InstitutionAndProductMock {
     private static final UUID institutionIdOne = UUID.randomUUID();
     private static final UUID institutionIdTwo = UUID.randomUUID();
-
-    public List<BffInstitution> getBffInstitutionsMock(){
-        List<BffInstitution> bffInstitutionsMock = new ArrayList<>();
-        BffInstitution bffInstitutionOne = new BffInstitution();
-        bffInstitutionOne.setId(institutionIdOne.toString());
-        bffInstitutionOne.setName("Institution One");
-        bffInstitutionOne.setProductRole("admin");
-        bffInstitutionOne.setEntityUrl("https://fooselfcare.com/token-exchange?institutionId=" + institutionIdOne + "&productId=foo-send-prod-id");
-        BffInstitution bffInstitutionTwo = new BffInstitution();
-        bffInstitutionTwo.setId(institutionIdTwo.toString());
-        bffInstitutionTwo.setName("Institution Two");
-        bffInstitutionTwo.setProductRole("admin");
-        bffInstitutionTwo.setEntityUrl("https://fooselfcare.com/token-exchange?institutionId=" + institutionIdTwo + "&productId=foo-send-prod-id");
-        bffInstitutionsMock.add(bffInstitutionOne);
-        bffInstitutionsMock.add(bffInstitutionTwo);
-        return bffInstitutionsMock;
-    }
-
-    public List<BffInstitutionProduct> getBffInstitutionProductsMock(){
-        List<BffInstitutionProduct> bffInstitutionProductsMock = new ArrayList<>();
-        BffInstitutionProduct bffInstitutionProductOne = new BffInstitutionProduct();
-        bffInstitutionProductOne.setId("foo-one-dev-id");
-        bffInstitutionProductOne.setTitle("Product One");
-        bffInstitutionProductOne.setProductUrl("https://fooselfcare.com/token-exchange?institutionId=INSTITUTION_ID&productId=" + bffInstitutionProductOne.getId());
-        BffInstitutionProduct bffInstitutionProductTwo = new BffInstitutionProduct();
-        bffInstitutionProductTwo.setId("foo-two-dev-id");
-        bffInstitutionProductTwo.setTitle("Product Two");
-        bffInstitutionProductTwo.setProductUrl("https://fooselfcare.com/token-exchange?institutionId=INSTITUTION_ID&productId=" + bffInstitutionProductTwo.getId());
-        bffInstitutionProductsMock.add(bffInstitutionProductOne);
-        bffInstitutionProductsMock.add(bffInstitutionProductTwo);
-        return bffInstitutionProductsMock;
-    }
 
     public List<InstitutionResourcePN> getInstitutionResourcePNMock() {
         List<InstitutionResourcePN> institutionResourcePNSMock = new ArrayList<>();
