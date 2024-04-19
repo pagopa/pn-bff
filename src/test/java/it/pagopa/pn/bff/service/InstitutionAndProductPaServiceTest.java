@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
@@ -88,9 +89,12 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductTest() {
+        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNSMock()
+                .stream()
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
+                .toList();
         when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
-        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,
@@ -103,7 +107,7 @@ public class InstitutionAndProductPaServiceTest {
 
         StepVerifier
                 .create(result.collectList())
-                .expectNext(institutionAndProductMock.getBffInstitutionProductsMock())
+                .expectNext(bffInstitutionProducts)
                 .verifyComplete();
     }
 

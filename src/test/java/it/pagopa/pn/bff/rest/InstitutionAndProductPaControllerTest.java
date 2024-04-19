@@ -100,7 +100,7 @@ public class InstitutionAndProductPaControllerTest {
     void getInstitutionProductV1() {
         List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNSMock()
                 .stream()
-                .map(ProductMapper.PRODUCT_MAPPER::toBffInstitutionProduct)
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
                 .toList();
         Mockito
                 .when(institutionAndProductPaService.getInstitutionProducts(
