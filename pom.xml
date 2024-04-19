@@ -148,13 +148,15 @@
 
                     <!-- OPEN API PN-BFF RECIPIENT NOTIFICATION-->
                     <execution>
-                        <id>pn-internal-bff-private-recipient-notification</id>
+                        <id>pn-internal-bff-private-recipient-notifications</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-recipient.yaml</inputSpec>
+                            <inputSpec>
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-notifications.yaml
+                            </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
                             <modelNameSuffix/>
@@ -189,13 +191,14 @@
 
                     <!-- OPEN API PN-BFF PA NOTIFICATION-->
                     <execution>
-                        <id>pn-internal-bff-private-pa-notification</id>
+                        <id>pn-internal-bff-private-pa-notifications</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-pa.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-pa-notifications.yaml
+                            </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
                             <modelNameSuffix/>

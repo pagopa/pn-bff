@@ -3,8 +3,8 @@
     {
       "intendedUsage": "WEB",
       "openapiFiles": [
-        "api-internal-pn-bff-pa.yaml",
-        "api-internal-pn-bff-recipient.yaml",
+        "api-internal-pn-bff-pa-notifications.yaml",
+        "api-internal-pn-bff-recipient-notifications.yaml",
         "api-internal-pn-bff-pa-apikeys.yaml",
         "api-internal-pn-bff-tos-privacy.yaml"
       ],
