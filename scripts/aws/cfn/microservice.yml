@@ -184,7 +184,7 @@ Parameters:
     AllowedValues:
       - true
       - false
-  
+
   # SelfCare parameters
     SelfCareBaseURL:
         Type: String
@@ -192,6 +192,32 @@ Parameters:
     SelfCareSendProdId:
         Type: String
         Description: 'SelfCare send prod id'
+
+  # Logging parameters
+  WireTapLogActivation:
+    Type: String
+    Default: false
+    Description: Activation of wire logs
+    AllowedValues:
+      - true
+      - false
+
+  PnCronAnalyzer:
+    Type: String
+    Default: '-'
+    Description: Cron for which you send the metric to CloudWatch
+
+  # EFS parameters
+  FargateEFSFileSystemID:
+    Type: String
+    Description: "EFS Filesystem"
+
+  MountEfs:
+    Type: String
+    Default: false
+    AllowedValues:
+      - "true"
+      - "false"
 
 Resources:
 
@@ -220,12 +246,14 @@ Resources:
         ContainerImageURI: !Sub '${ContainerImageUri}'
         ContainerEnvEntry1: !Sub 'AWS_REGION=${AWS::Region}'
         ContainerEnvEntry2: !Sub 'CORS_ALLOWED_DOMAINS=${CorsAllowedDomains}'
-        ContainerEnvEntry3: !Sub 'PN_BFF_DELIVERYBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry4: !Sub 'PN_BFF_APIKEYMANAGERBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry5: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry6: !Sub 'PN_BFF_USERATTRIBUTESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry7: !Sub 'PN_BFF_SELF_CARE_BASE_URL=${SelfCareBaseURL}'
-        ContainerEnvEntry8: !Sub 'PN_BFF_SELF_CARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        ContainerEnvEntry3: !Sub 'PN_CRON_ANALYZER=${PnCronAnalyzer}'
+        ContainerEnvEntry4: !Sub 'WIRE_TAP_LOG=${WireTapLogActivation}'
+        ContainerEnvEntry5: !Sub 'PN_BFF_DELIVERYBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry6: !Sub 'PN_BFF_APIKEYMANAGERBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry7: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry8: !Sub 'PN_BFF_USERATTRIBUTESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry9: !Sub 'PN_BFF_SELF_CARE_BASE_URL=${SelfCareBaseURL}'
+        ContainerEnvEntry10: !Sub 'PN_BFF_SELF_CARE_SEND_PROD_ID=${SelfCareSendProdId}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
@@ -236,6 +264,9 @@ Resources:
         TaskRoleManagedPolicyArn: !Ref PnBffMicroserviceTaskManagedPolicy
         EcsLogGroup: !Ref EcsLogGroup
         LogAlarmStrategyV1: !Ref LogAlarmStrategy
+        EfsFilesystem: !Ref FargateEFSFileSystemID
+        MountEfs: !Ref MountEfs
+        WireTapLogActivation: !Ref WireTapLogActivation
 
   PnBffMicroserviceTaskManagedPolicy:
     Type: AWS::IAM::ManagedPolicy

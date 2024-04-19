@@ -1,5 +1,8 @@
 {
-  "Parameters" : {
+  "Parameters": {
+    "PnCronAnalyzer": "* */1 * * * *",
+    "WireTapLogActivation": "false",
+    "MountEfs": "false",
     "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
     "SelfCareSendProdId": "prod-pn-dev"
   }
