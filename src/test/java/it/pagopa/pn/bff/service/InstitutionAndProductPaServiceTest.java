@@ -11,9 +11,7 @@ import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -22,24 +20,28 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {InstitutionAndProductPaService.class})
-@TestPropertySource(locations="classpath:application-test.properties")
 public class InstitutionAndProductPaServiceTest {
-    @Autowired
     private static InstitutionAndProductPaService institutionAndProductPaService;
     private static PnInfoPaClientImpl pnInfoPaClient;
-    private static final PnBffConfigs pnBffConfigs = mock(PnBffConfigs.class);
+    private static PnBffConfigs pnBffConfigs;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final String SELF_CARE_BASE_URL = "https://fooselfcare.com";
+    private final String SELF_CARE_SEND_PROD_ID = "foo-send-prod-id";
 
     @BeforeAll
     public static void setup() {
         pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+        pnBffConfigs = mock(PnBffConfigs.class);
         institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
     }
 
     @Test
     void getInstitutionsTest() {
+        // When
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
+        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn(SELF_CARE_BASE_URL);
+        when(pnBffConfigs.getSelfcareSendProdId()).thenReturn(SELF_CARE_SEND_PROD_ID);
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
                 UserMock.PN_UID,
@@ -76,7 +78,7 @@ public class InstitutionAndProductPaServiceTest {
     void getInstitutionProductTest() {
         when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
-        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
+        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn(SELF_CARE_BASE_URL);
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,

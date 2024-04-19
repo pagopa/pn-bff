@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
@@ -25,7 +24,6 @@ import java.util.List;
 
 @Slf4j
 @WebFluxTest(InstitutionAndProductPaController.class)
-@TestPropertySource(locations="classpath:application-test.properties")
 public class InstitutionAndProductPaControllerTest {
 
     @Autowired
@@ -63,7 +61,7 @@ public class InstitutionAndProductPaControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitution.class)
-                .isEqualTo(institutionAndProductMock.getBffInstitutionsMock());
+                .isEqualTo(bffInstitutions);
     }
 
     @Test
@@ -118,7 +116,7 @@ public class InstitutionAndProductPaControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitutionProduct.class)
-                .isEqualTo(institutionAndProductMock.getBffInstitutionProductsMock());
+                .isEqualTo(bffInstitutionProducts);
     }
 
     @Test

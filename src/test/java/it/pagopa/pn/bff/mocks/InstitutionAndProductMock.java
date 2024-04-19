@@ -32,12 +32,12 @@ public class InstitutionAndProductMock {
         bffInstitutionOne.setId(institutionIdOne.toString());
         bffInstitutionOne.setName("Institution One");
         bffInstitutionOne.setProductRole("admin");
-        bffInstitutionOne.setEntityUrl("https://uat.selfcare.pagopa.it/token-exchange?institutionId=" + institutionIdOne + "&productId=prod-pn-dev");
+        bffInstitutionOne.setEntityUrl("https://fooselfcare.com/token-exchange?institutionId=" + institutionIdOne + "&productId=foo-send-prod-id");
         BffInstitution bffInstitutionTwo = new BffInstitution();
         bffInstitutionTwo.setId(institutionIdTwo.toString());
         bffInstitutionTwo.setName("Institution Two");
         bffInstitutionTwo.setProductRole("admin");
-        bffInstitutionTwo.setEntityUrl("https://uat.selfcare.pagopa.it/token-exchange?institutionId=" + institutionIdTwo + "&productId=prod-pn-dev");
+        bffInstitutionTwo.setEntityUrl("https://fooselfcare.com/token-exchange?institutionId=" + institutionIdTwo + "&productId=foo-send-prod-id");
         this.bffInstitutionsMock.add(bffInstitutionOne);
         this.bffInstitutionsMock.add(bffInstitutionTwo);
     }
@@ -47,11 +47,11 @@ public class InstitutionAndProductMock {
         BffInstitutionProduct bffInstitutionProductOne = new BffInstitutionProduct();
         bffInstitutionProductOne.setId("foo-one-dev-id");
         bffInstitutionProductOne.setTitle("Product One");
-        bffInstitutionProductOne.setProductUrl("https://uat.selfcare.pagopa.it/token-exchange?institutionId=fooInstitutionId&productId=" + bffInstitutionProductOne.getId());
+        bffInstitutionProductOne.setProductUrl("https://fooselfcare.com/token-exchange?institutionId=INSTITUTION_ID&productId=" + bffInstitutionProductOne.getId());
         BffInstitutionProduct bffInstitutionProductTwo = new BffInstitutionProduct();
         bffInstitutionProductTwo.setId("foo-two-dev-id");
         bffInstitutionProductTwo.setTitle("Product Two");
-        bffInstitutionProductTwo.setProductUrl("https://uat.selfcare.pagopa.it/token-exchange?institutionId=fooInstitutionId&productId=" + bffInstitutionProductTwo.getId());
+        bffInstitutionProductTwo.setProductUrl("https://fooselfcare.com/token-exchange?institutionId=INSTITUTION_ID&productId=" + bffInstitutionProductTwo.getId());
         this.bffInstitutionProductsMock.add(bffInstitutionProductOne);
         this.bffInstitutionProductsMock.add(bffInstitutionProductTwo);
     }
