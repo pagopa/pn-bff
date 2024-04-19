@@ -48,13 +48,13 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionsTest() {
-        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNSMock()
+        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
 
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
                 UserMock.PN_UID,
@@ -89,12 +89,12 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductTest() {
-        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNSMock()
+        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
                 .toList();
         when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
+                .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,

@@ -21,7 +21,7 @@ public class ProductMapperTest {
     private PnBffConfigs pnBffConfigs;
     @Test
     void testBffInstitutionProductMapper() {
-        ProductResourcePN productResourcePN = institutionAndProductMock.getProductResourcePNSMock().get(0);
+        ProductResourcePN productResourcePN = institutionAndProductMock.getProductResourcePNMock().get(0);
 
         BffInstitutionProduct bffInstitutionProduct = ProductMapper.modelMapper.toBffInstitutionProduct(productResourcePN, pnBffConfigs, "institutionId");
         assertNotNull(bffInstitutionProduct);

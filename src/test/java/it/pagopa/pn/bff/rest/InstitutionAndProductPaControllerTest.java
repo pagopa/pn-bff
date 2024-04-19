@@ -44,7 +44,7 @@ public class InstitutionAndProductPaControllerTest {
 
     @Test
     void getInstitutionsV1() {
-        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNSMock()
+        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
@@ -98,7 +98,7 @@ public class InstitutionAndProductPaControllerTest {
 
     @Test
     void getInstitutionProductV1() {
-        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNSMock()
+        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
                 .toList();

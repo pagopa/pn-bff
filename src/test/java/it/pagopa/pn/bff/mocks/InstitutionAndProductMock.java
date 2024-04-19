@@ -4,30 +4,17 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
 public class InstitutionAndProductMock {
-    private List<BffInstitution> bffInstitutionsMock;
-    private List<BffInstitutionProduct> bffInstitutionProductsMock;
-    private List<InstitutionResourcePN> institutionResourcePNSMock;
-    private List<ProductResourcePN> productResourcePNSMock;
-    private final UUID institutionIdOne = UUID.randomUUID();
-    private final UUID institutionIdTwo = UUID.randomUUID();
+    private static final UUID institutionIdOne = UUID.randomUUID();
+    private static final UUID institutionIdTwo = UUID.randomUUID();
 
-    public InstitutionAndProductMock() {
-        initBffInstitution();
-        initBffInstitutionProduct();
-        initInstitutionResourcePN();
-        initProductResourcePN();
-    }
-
-    private void initBffInstitution(){
-        this.bffInstitutionsMock = new ArrayList<>();
+    public List<BffInstitution> getBffInstitutionsMock(){
+        List<BffInstitution> bffInstitutionsMock = new ArrayList<>();
         BffInstitution bffInstitutionOne = new BffInstitution();
         bffInstitutionOne.setId(institutionIdOne.toString());
         bffInstitutionOne.setName("Institution One");
@@ -38,12 +25,13 @@ public class InstitutionAndProductMock {
         bffInstitutionTwo.setName("Institution Two");
         bffInstitutionTwo.setProductRole("admin");
         bffInstitutionTwo.setEntityUrl("https://fooselfcare.com/token-exchange?institutionId=" + institutionIdTwo + "&productId=foo-send-prod-id");
-        this.bffInstitutionsMock.add(bffInstitutionOne);
-        this.bffInstitutionsMock.add(bffInstitutionTwo);
+        bffInstitutionsMock.add(bffInstitutionOne);
+        bffInstitutionsMock.add(bffInstitutionTwo);
+        return bffInstitutionsMock;
     }
 
-    private void initBffInstitutionProduct(){
-        this.bffInstitutionProductsMock = new ArrayList<>();
+    public List<BffInstitutionProduct> getBffInstitutionProductsMock(){
+        List<BffInstitutionProduct> bffInstitutionProductsMock = new ArrayList<>();
         BffInstitutionProduct bffInstitutionProductOne = new BffInstitutionProduct();
         bffInstitutionProductOne.setId("foo-one-dev-id");
         bffInstitutionProductOne.setTitle("Product One");
@@ -52,12 +40,13 @@ public class InstitutionAndProductMock {
         bffInstitutionProductTwo.setId("foo-two-dev-id");
         bffInstitutionProductTwo.setTitle("Product Two");
         bffInstitutionProductTwo.setProductUrl("https://fooselfcare.com/token-exchange?institutionId=INSTITUTION_ID&productId=" + bffInstitutionProductTwo.getId());
-        this.bffInstitutionProductsMock.add(bffInstitutionProductOne);
-        this.bffInstitutionProductsMock.add(bffInstitutionProductTwo);
+        bffInstitutionProductsMock.add(bffInstitutionProductOne);
+        bffInstitutionProductsMock.add(bffInstitutionProductTwo);
+        return bffInstitutionProductsMock;
     }
 
-    private void initInstitutionResourcePN() {
-        this.institutionResourcePNSMock = new ArrayList<>();
+    public List<InstitutionResourcePN> getInstitutionResourcePNMock() {
+        List<InstitutionResourcePN> institutionResourcePNSMock = new ArrayList<>();
         InstitutionResourcePN institutionResourcePNOne = new InstitutionResourcePN();
         institutionResourcePNOne.setAddress("Address One");
         institutionResourcePNOne.setDescription("Institution One");
@@ -82,12 +71,13 @@ public class InstitutionAndProductMock {
         institutionResourcePNTwo.setTaxCode("12345678902");
         institutionResourcePNTwo.setStatus("ACTIVE");
         institutionResourcePNTwo.setUserProductRoles(userProductRoles);
-        this.institutionResourcePNSMock.add(institutionResourcePNOne);
-        this.institutionResourcePNSMock.add(institutionResourcePNTwo);
+        institutionResourcePNSMock.add(institutionResourcePNOne);
+        institutionResourcePNSMock.add(institutionResourcePNTwo);
+        return institutionResourcePNSMock;
     }
 
-    private void initProductResourcePN() {
-        this.productResourcePNSMock = new ArrayList<>();
+    public List<ProductResourcePN> getProductResourcePNMock() {
+        List<ProductResourcePN>productResourcePNSMock = new ArrayList<>();
         ProductResourcePN productResourcePNOne = new ProductResourcePN();
         productResourcePNOne.setDescription("Description One");
         productResourcePNOne.setId("foo-one-dev-id");
@@ -103,7 +93,8 @@ public class InstitutionAndProductMock {
         productResourcePNTwo.setLogoBgColor("FFFFFF");
         productResourcePNTwo.setIdentityTokenAudience("identityTokenAudience");
         productResourcePNTwo.setTitle("Product Two");
-        this.productResourcePNSMock.add(productResourcePNOne);
-        this.productResourcePNSMock.add(productResourcePNTwo);
+        productResourcePNSMock.add(productResourcePNOne);
+        productResourcePNSMock.add(productResourcePNTwo);
+        return productResourcePNSMock;
     }
 }

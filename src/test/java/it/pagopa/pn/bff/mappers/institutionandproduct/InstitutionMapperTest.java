@@ -24,7 +24,7 @@ public class InstitutionMapperTest {
 
     @Test
     void testBffInstitutionMapper() {
-        InstitutionResourcePN institutionResourcePN = institutionAndProductMock.getInstitutionResourcePNSMock().get(0);
+        InstitutionResourcePN institutionResourcePN = institutionAndProductMock.getInstitutionResourcePNMock().get(0);
 
         institutionResourcePN.setRootParent(new RootParentResourcePN());
         institutionResourcePN.getRootParent().setDescription("Parent Description");
