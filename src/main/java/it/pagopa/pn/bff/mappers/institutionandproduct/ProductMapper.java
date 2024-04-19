@@ -16,6 +16,9 @@ import org.mapstruct.factory.Mappers;
 public interface ProductMapper {
     ProductMapper modelMapper = Mappers.getMapper(ProductMapper.class);
 
+    String pathTokenExchange = "/token-exchange?institutionId=";
+    String pathProdId = "&productId=";
+
     /**
      * Maps a product resource to a BffInstitutionProduct
      *
@@ -28,14 +31,14 @@ public interface ProductMapper {
     /**
      * Compose the product url
      *
-     * @param id           the product id
-     * @param pnBffConfigs the spring configuration
+     * @param id            the product id
+     * @param pnBffConfigs  the spring configuration
      * @param institutionId the institution id
      * @return the product url
      */
     @Named("mapProductUrl")
     default String mapProductUrl(String id, @Context PnBffConfigs pnBffConfigs, @Context String institutionId) {
-        return pnBffConfigs.getSelfcareBaseUrl() + "/token-exchange?institutionId=" + institutionId + "&productId=" + id;
+        return pnBffConfigs.getSelfcareBaseUrl() + pathTokenExchange + institutionId + pathProdId + id;
     }
 
 }
