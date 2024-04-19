@@ -60,8 +60,8 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/904912c89be224a8a7dc75df24aaf676cdd0aa56/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
   
   parameters:
-    headerSourceChannel:
+    BffHeaderSourceChannel:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/904912c89be224a8a7dc75df24aaf676cdd0aa56/docs/openapi/pn-selfcare-internal-v1.yaml#/components/parameters/headerSourceChannel'
 
-    headerSourceChannelDetails:
+    BffHeaderSourceChannelDetails:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/904912c89be224a8a7dc75df24aaf676cdd0aa56/docs/openapi/pn-selfcare-internal-v1.yaml#/components/parameters/headerSourceChannelDetails'

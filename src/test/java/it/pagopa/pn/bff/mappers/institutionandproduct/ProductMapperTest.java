@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -19,6 +20,7 @@ public class ProductMapperTest {
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired
     private PnBffConfigs pnBffConfigs;
+
     @Test
     void testBffInstitutionProductMapper() {
         ProductResourcePN productResourcePN = institutionAndProductMock.getProductResourcePNMock().get(0);

@@ -234,7 +234,7 @@
 
                     <!-- OPEN API PN-BFF INSTITUTION AND PRODUCT -->
                     <execution>
-                        <id>pn-internal-bff-private-institution-and-product</id>
+                        <id>pn-internal-bff-institution-and-product</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
