@@ -5,43 +5,55 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
+import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {InstitutionAndProductPaService.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
+@EnableConfigurationProperties(value = PnBffConfigs.class)
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class InstitutionAndProductPaServiceTest {
-    private static InstitutionAndProductPaService institutionAndProductPaService;
+
     private static PnInfoPaClientImpl pnInfoPaClient;
-    private static PnBffConfigs pnBffConfigs;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
-    private final String SELF_CARE_BASE_URL = "https://fooselfcare.com";
-    private final String SELF_CARE_SEND_PROD_ID = "foo-send-prod-id";
+    @Autowired
+    private PnBffConfigs pnBffConfigs;
+    private InstitutionAndProductPaService institutionAndProductPaService;
 
     @BeforeAll
-    public static void setup() {
+    public void setup() {
         pnInfoPaClient = mock(PnInfoPaClientImpl.class);
-        pnBffConfigs = mock(PnBffConfigs.class);
         institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
     }
 
     @Test
     void getInstitutionsTest() {
-        // When
+        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNSMock()
+                .stream()
+                .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
+                .toList();
+
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNSMock()));
-        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn(SELF_CARE_BASE_URL);
-        when(pnBffConfigs.getSelfcareSendProdId()).thenReturn(SELF_CARE_SEND_PROD_ID);
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
                 UserMock.PN_UID,
@@ -53,7 +65,7 @@ public class InstitutionAndProductPaServiceTest {
 
         StepVerifier
                 .create(result.collectList())
-                .expectNext(institutionAndProductMock.getBffInstitutionsMock())
+                .expectNext(bffInstitutions)
                 .verifyComplete();
     }
 
@@ -78,7 +90,7 @@ public class InstitutionAndProductPaServiceTest {
     void getInstitutionProductTest() {
         when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNSMock()));
-        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn(SELF_CARE_BASE_URL);
+        when(pnBffConfigs.getSelfcareBaseUrl()).thenReturn("https://fooselfcare.com");
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,

@@ -21,9 +21,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "pn.bff.external-registries-base-url=http://localhost:9998",
-})
+@TestPropertySource(locations = "classpath:application-test.properties")
 class PnInfoPaClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;

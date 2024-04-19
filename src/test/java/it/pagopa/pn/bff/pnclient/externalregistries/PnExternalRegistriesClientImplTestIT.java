@@ -23,9 +23,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "pn.bff.external-registries-base-url=http://localhost:9998",
-})
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class PnExternalRegistriesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
@@ -39,11 +37,13 @@ public class PnExternalRegistriesClientImplTestIT {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
     }
+
     @AfterAll
     public static void stopMockServer() {
         mockServerClient.close();
         mockServer.stop();
     }
+
     @AfterEach
     public void resetMockServerClient() {
         mockServerClient.reset();

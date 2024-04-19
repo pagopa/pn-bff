@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 8ryq9f2LpN6DiuqN2uzSXTntahh+mlqYbEQKVpSK2lg=
+  version: 3XCF4gPP93qcbRx10TIChyPYKrpcMPKaiLC3yxLpU5o=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2633,11 +2633,6 @@ components:
             - BLOCK
             - ENABLE
             - ROTATE
-    BffInstitutionList:
-      description: The list of institutions
-      type: array
-      items:
-        $ref: '#/components/schemas/BffInstitution'
     BffInstitution:
       type: object
       required:
@@ -2664,11 +2659,18 @@ components:
         entityUrl:
           type: string
           description: The URL of the entity
-    BffInstitutionProductList:
-      description: The list of products
+    BffInstitutionList:
+      description: The list of institutions
       type: array
       items:
-        $ref: '#/components/schemas/BffInstitutionProduct'
+        $ref: '#/components/schemas/BffInstitution'
+    SelfCarePaId:
+      title: The PA id used by self care
+      description: An unique ID that identify a Public Administration
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: ^[ -~ ]*$
     BffInstitutionProduct:
       type: object
       required:
@@ -2685,15 +2687,11 @@ components:
         productUrl:
           type: string
           description: The URL of the product
-    BffSelfCarePaId:
-      $ref: '#/components/schemas/SelfCarePaId'
-    SelfCarePaId:
-      title: The PA id used by self care
-      description: An unique ID that identify a Public Administration
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[ -~ ]*$
+    BffInstitutionProductList:
+      description: The list of products
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitutionProduct'
     BffTosPrivacyConsent:
       type: object
       required:
