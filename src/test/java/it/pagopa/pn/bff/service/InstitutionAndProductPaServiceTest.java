@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.PnBffConfigs;
+import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
