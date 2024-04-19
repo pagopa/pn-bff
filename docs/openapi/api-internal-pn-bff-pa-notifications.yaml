@@ -40,52 +40,27 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/uidAuthFleet'            # NO EXTERNAL
-        - $ref: '#/components/parameters/cxTypeAuthFleet'         # NO EXTERNAL
-        - $ref: '#/components/parameters/cxIdAuthFleet'           # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet'       # NO EXTERNAL
-        - $ref: '#/components/parameters/BffPathIun'
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullNotificationV1'
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-
-components:
-
-  parameters:
-    ### PARAMETRI DI AUTENTICAZIONE
-    cxTypeAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
-    cxIdAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
-    cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-    uidAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
-    
-    ### PARAMETRI RECUPERO NOTIFICA
-    BffPathIun:
-      $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
-
-  schemas:
-
-    BffFullNotificationV1:
-      $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
-
-    Problem:
-      $ref: './common-refs.yaml#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'

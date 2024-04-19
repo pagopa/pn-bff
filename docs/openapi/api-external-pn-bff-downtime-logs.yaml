@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Downtime logs
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-pa-apikeys
+  x-summary: 'API di pn-bff esposte al Web per la visualizzazione dello stato dei servizi di Piattaforma Notifiche'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Downtime
+    description: >-
+      Invocazioni utilizzabili dai mittenti per la visualizzazione dello stato dei servizi
+
+paths:
+  "/downtime/v1/status":
+    get:
+      summary: Stato attuale
+      description: >-
+        Metodo che restituisce l'elenco delle funzionalità di Piattaforma Notifiche e l'elenco
+        dei disservizi presenti al momento dell'invocazione.
+      tags:
+        - Downtime
+      security:                                                                                         # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
+      operationId: currentStatus
+      x-api-permissions:
+        - 'api-key-read'
+        - 'log-downtime-read'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/schemas/BffPnStatusResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  "/downtime/v1/history":
+    get:
+      summary: Ricerca storico disservizi
+      description: >-
+        Elenco dei disservizi di Piattafoma Notifiche riscontrate nel lasso di tempo specificato 
+        dai parametri _fromTime_ e _toTime_. <br/>
+        Il parametro _functionality_ è opzionale e ripetibile; permette di filtrare i disservizi 
+        estratti limitandoli a quelli impattanti le funzionalità elencate.
+      tags:
+        - Downtime
+      security:                                                                                         # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
+      operationId: statusHistory
+      x-api-permissions:
+        - 'api-key-read'
+        - 'log-downtime-read'
+      parameters:
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFromTime'
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryToTime'
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFunctionality'
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryPage'
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQuerySize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/schemas/BffPnDowntimeHistoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  "/downtime/v1/legal-facts/{legalFactId}":
+    get:
+      summary: Ottieni atto opponibile a terzi
+      description: >-
+        Fornisce le informazioni per scaricare un atto opponibile a terzi o, se tale atto va 
+        recuperato dagli archivi, fornisce una stima per eccesso di quanti secondi bisogna 
+        attendere.
+      tags:
+        - Downtime
+      security:                                                                                         # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
+      operationId: getLegalFact
+      x-api-permissions:
+        - 'api-key-read'
+        - 'log-downtime-read'
+      parameters:
+        - name: legalFactId
+          in: path
+          required: true
+          description: Identificativo dell'atto opponibile a terzi che si vuole scaricare
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/schemas/BffLegalFactDownloadMetadataResponse'
+        '204':
+          description: Not signed
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

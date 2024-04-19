@@ -1,0 +1,27 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    ###########################################################################################
+    ###                          PARAMETRI DI RICERCA DEI DOWNTIME                          ###
+    ###########################################################################################
+
+    BffQueryFromTime:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFromTime'
+    BffQueryToTime:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
+    BffQueryFunctionality:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFunctionality'
+    BffQueryPage:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
+    BffQuerySize:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
+
+  schemas:
+    BffPnStatusResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse'
+    BffPnDowntimeHistoryResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
+    BffLegalFactDownloadMetadataResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'

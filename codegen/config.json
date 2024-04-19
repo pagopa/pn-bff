@@ -6,7 +6,8 @@
         "api-internal-pn-bff-pa-notifications.yaml",
         "api-internal-pn-bff-recipient-notifications.yaml",
         "api-internal-pn-bff-pa-apikeys.yaml",
-        "api-internal-pn-bff-tos-privacy.yaml"
+        "api-internal-pn-bff-tos-privacy.yaml",
+        "api-internal-pn-bff-downtime-logs.yaml"
       ],
       "servicePath": "bff"
     }

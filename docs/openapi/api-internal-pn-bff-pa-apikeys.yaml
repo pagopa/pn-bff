@@ -37,10 +37,10 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
         - name: limit
           in: query
           schema:
@@ -68,19 +68,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffApiKeysResponse'
+                $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
     post:
       summary: Creazione api key
       description: >-
@@ -91,15 +91,15 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
-        - $ref: '#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: '#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: '#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BffRequestNewApiKey"
+              $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestNewApiKey'
         required: true
       responses:
         '200':
@@ -107,19 +107,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffResponseNewApiKey'
+                $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffResponseNewApiKey'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
   "/bff/v1/api-keys/{id}":
     delete:
@@ -132,10 +132,10 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathApiKey'
       responses:
         '200':
@@ -145,25 +145,25 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '409':
           description: Wrong state transition (i.e. delete an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
   "/bff/v1/api-keys/{id}/status":
     put:
@@ -176,16 +176,16 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: '#/components/parameters/uidAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathApiKey'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BffRequestApiKeyStatus"
+              $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestApiKeyStatus'
         required: true
       responses:
         '200':
@@ -195,38 +195,28 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '409':
           description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
 components:
   parameters:
-    ### PARAMETRI DI AUTENTICAZIONE # NO EXTERNAL
-    cxTypeAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-    cxIdAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-    cxGroupsAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-    uidAuthFleet: # NO EXTERNAL
-      $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-    
     ### PARAMETRI RICERCA API KEY
     pathApiKey:
       description: >-
@@ -237,19 +227,3 @@ components:
       schema:
         type: string
         x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-
-  schemas:
-    Problem:
-      $ref: './common-refs.yaml#/components/schemas/Problem'
-
-    BffApiKeysResponse:
-      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffApiKeysResponse'
-
-    BffRequestNewApiKey:
-      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestNewApiKey'
-
-    BffResponseNewApiKey:
-      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffResponseNewApiKey'
-
-    BffRequestApiKeyStatus:
-      $ref: './apikeys-schemas/api-keys.yaml#/components/schemas/BffRequestApiKeyStatus'
