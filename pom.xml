@@ -143,7 +143,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>6.0.0</version>
                 <executions>
 
                     <!-- OPEN API PN-BFF RECIPIENT NOTIFICATION-->
@@ -163,7 +163,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/server
                             </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -205,7 +205,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/server
                             </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -246,7 +246,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/server
                             </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -288,7 +288,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/server
                             </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -330,7 +330,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/server
                             </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
@@ -372,7 +372,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
@@ -409,7 +409,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.api
@@ -446,7 +446,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.apikey-pa.api
@@ -483,7 +483,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>
@@ -521,7 +521,7 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.user-attributes.api
@@ -551,14 +551,14 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/6.0.0/client
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.user-attributes.api

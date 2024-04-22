@@ -8,20 +8,31 @@ components:
     ###########################################################################################
 
     BffQueryFromTime:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFromTime'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFromTime'
     BffQueryToTime:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
     BffQueryFunctionality:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFunctionality'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFunctionality'
     BffQueryPage:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
     BffQuerySize:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
 
   schemas:
     BffPnStatusResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse'
+      type: object
+      properties:
+        lastCheckTimestamp:
+          type: string
+          description: data a cui corrisponde l'ultimo check sullo stato della piattaforma
+          format: date-time
+        appIsFullyOperative:
+          type: boolean
+          nullable: false
+          description: Flag per indicare se l'applicazione è operativa
+
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse'
     BffPnDowntimeHistoryResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
     BffLegalFactDownloadMetadataResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/300befc364f0a51b5f7b36138010e1cde01a990f/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
