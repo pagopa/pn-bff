@@ -26,7 +26,7 @@ tags:
       Invocazioni utilizzabili dai mittenti per la visualizzazione dello stato dei servizi
 
 paths:
-  "/downtime/v1/status":
+  "/bff/v1/downtime/status":
     get:
       summary: Stato attuale
       description: >-
@@ -36,7 +36,7 @@ paths:
         - Downtime
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
-      operationId: currentStatus
+      operationId: getCurrentStatusV1
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
@@ -54,7 +54,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/downtime/v1/history":
+  "/bff/v1/downtime/history":
     get:
       summary: Ricerca storico disservizi
       description: >-
@@ -66,7 +66,7 @@ paths:
         - Downtime
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
-      operationId: statusHistory
+      operationId: statusHistoryV1
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
@@ -90,7 +90,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/downtime/v1/legal-facts/{legalFactId}":
+  "/bff/v1/downtime/legal-facts/{legalFactId}":
     get:
       summary: Ottieni atto opponibile a terzi
       description: >-
@@ -101,7 +101,7 @@ paths:
         - Downtime
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
-      operationId: getLegalFact
+      operationId: getLegalFactV1
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'

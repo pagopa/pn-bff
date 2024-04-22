@@ -38,8 +38,7 @@ public class NotificationDetailRecipientService {
                                                              String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
                                                              String mandateId) {
         log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
-        Mono<FullReceivedNotificationV23> notificationDetail;
-        notificationDetail = pnDeliveryClient.getReceivedNotification(
+        Mono<FullReceivedNotificationV23> notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,

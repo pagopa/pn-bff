@@ -12,7 +12,14 @@ components:
     BffQueryToTime:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
     BffQueryFunctionality:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryFunctionality'
+      name: functionality
+      in: query
+      required: false
+      description: funzionalità di Piattaforma Notifiche di cui elencare i disservizi
+      schema:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnFunctionality'
     BffQueryPage:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
     BffQuerySize:
@@ -21,6 +28,9 @@ components:
   schemas:
     BffPnStatusResponse:
       type: object
+      required:
+        - lastCheckTimestamp
+        - appIsFullyOperative
       properties:
         lastCheckTimestamp:
           type: string
@@ -31,7 +41,6 @@ components:
           nullable: false
           description: Flag per indicare se l'applicazione è operativa
 
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnStatusResponse'
     BffPnDowntimeHistoryResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
     BffLegalFactDownloadMetadataResponse:

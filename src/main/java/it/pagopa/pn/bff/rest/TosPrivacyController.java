@@ -66,7 +66,9 @@ public class TosPrivacyController implements UserConsentsApi {
         log.logStartingProcess("putTosPrivacyV1");
 
         Mono<Void> serviceResponse;
-        serviceResponse = tosPrivacyService.acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+        serviceResponse = tosPrivacyService
+                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         log.logEndingProcess("putTosPrivacyV1");
 

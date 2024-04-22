@@ -21,6 +21,7 @@ public class PnBffConfigs {
     private String apikeyManagerBaseUrl;
     private String externalRegistriesBaseUrl;
     private String userAttributesBaseUrl;
+    private String downtimeLogsBaseUrl;
 
     @PostConstruct
     public void init() {
