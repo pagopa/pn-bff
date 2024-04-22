@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ public class ProductMapperTest {
     void testBffInstitutionProductMapper() {
         ProductResourcePN productResourcePN = institutionAndProductMock.getProductResourcePNMock().get(0);
 
-        BffInstitutionProduct bffInstitutionProduct = ProductMapper.modelMapper.toBffInstitutionProduct(productResourcePN, pnBffConfigs, "institutionId");
+        BffInstitutionProduct bffInstitutionProduct = ProductMapper.modelMapper.toBffInstitutionProduct(productResourcePN, pnBffConfigs, UserMock.INSTITUTION_ID);
         assertNotNull(bffInstitutionProduct);
         assertEquals(bffInstitutionProduct.getId(), productResourcePN.getId());
         assertEquals(bffInstitutionProduct.getTitle(), productResourcePN.getTitle());
 
-        BffInstitutionProduct bffInstitutionProductNull = ProductMapper.modelMapper.toBffInstitutionProduct(null, pnBffConfigs, "institutionId");
+        BffInstitutionProduct bffInstitutionProductNull = ProductMapper.modelMapper.toBffInstitutionProduct(null, pnBffConfigs, UserMock.INSTITUTION_ID);
         assertNull(bffInstitutionProductNull);
     }
 }

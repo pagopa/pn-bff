@@ -115,7 +115,7 @@ public class InstitutionAndProductPaControllerTest {
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build(UserMock.INSTITUTION_ID))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
@@ -142,7 +142,7 @@ public class InstitutionAndProductPaControllerTest {
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build("institutionId"))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build(UserMock.INSTITUTION_ID))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())

@@ -18,15 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class PnExternalRegistriesClientImplTestIT {
+public class PnInfoPaClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
@@ -65,12 +63,12 @@ public class PnExternalRegistriesClientImplTestIT {
                 );
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNMock()).verifyComplete();
     }
 
@@ -80,12 +78,12 @@ public class PnExternalRegistriesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectError().verify();
     }
 
@@ -93,7 +91,7 @@ public class PnExternalRegistriesClientImplTestIT {
     void getInstitutionProducts() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(institutionAndProductMock.getProductResourcePNMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/xPagopaPnSrcChDetails/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/PRODUCT_ID/products"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -101,29 +99,29 @@ public class PnExternalRegistriesClientImplTestIT {
                 );
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                "xPagopaPnSrcChDetails",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                "PRODUCT_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
     }
 
     @Test
     void getInstitutionProductsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/xPagopaPnSrcChDetails/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/PRODUCT_ID/products"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                "xPagopaPnSrcChDetails",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                "PRODUCT_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectError().verify();
     }
 

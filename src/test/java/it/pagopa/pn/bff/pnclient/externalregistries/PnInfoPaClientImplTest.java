@@ -18,13 +18,11 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnInfoPaClientImpl.class})
 @ExtendWith(SpringExtension.class)
-public class PnExternalRegistriesClientImplTest {
+public class PnInfoPaClientImplTest {
     private final UserMock userMock = new UserMock();
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired
@@ -44,12 +42,12 @@ public class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNMock()).verifyComplete();
     }
 
@@ -65,12 +63,12 @@ public class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnCxId",
-                "xPagopaPnSrcCh",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnSrcChDetails"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectError(PnBffException.class).verify();
     }
 
@@ -87,13 +85,13 @@ public class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnSrcCh",
-                "xPagopaPnSrcChDetails",
-                "xPagopaPnProductType",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnCxId"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                "PRODUCT_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
     }
 
@@ -110,13 +108,13 @@ public class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
-                "xPagopaPnUid",
+                UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
-                "xPagopaPnSrcCh",
-                "xPagopaPnSrcChDetails",
-                "xPagopaPnProductType",
-                List.of("xPagopaPnCxGroups"),
-                "xPagopaPnCxId"
+                UserMock.PN_CX_ID,
+                UserMock.SEARCH_CHANNEL,
+                "PRODUCT_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.SEARCH_DETAILS
         )).expectError(PnBffException.class).verify();
     }
 
