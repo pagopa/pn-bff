@@ -45,9 +45,7 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS
+                UserMock.PN_CX_GROUPS
         )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNMock()).verifyComplete();
     }
 
@@ -66,9 +64,7 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS
+                UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }
 
@@ -88,10 +84,8 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
-                "PRODUCT_ID",
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS
+                UserMock.INSTITUTION_ID,
+                UserMock.PN_CX_GROUPS
         )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
     }
 
@@ -111,10 +105,8 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
-                "PRODUCT_ID",
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS
+                UserMock.INSTITUTION_ID,
+                UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }
 

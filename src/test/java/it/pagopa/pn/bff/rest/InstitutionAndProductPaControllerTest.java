@@ -53,9 +53,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.nullable(List.class),
-                        Mockito.nullable(String.class)))
+                        Mockito.nullable(List.class)))
                 .thenReturn(Flux.fromIterable(bffInstitutions));
 
         webTestClient
@@ -65,7 +63,6 @@ public class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitution.class)
@@ -80,9 +77,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.nullable(List.class),
-                        Mockito.nullable(String.class));
+                        Mockito.nullable(List.class));
 
         webTestClient
                 .get()
@@ -91,7 +86,6 @@ public class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -108,9 +102,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.nullable(List.class),
-                        Mockito.nullable(String.class)))
+                        Mockito.nullable(List.class)))
                 .thenReturn(Flux.fromIterable(bffInstitutionProducts));
 
         webTestClient
@@ -120,7 +112,6 @@ public class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BffInstitutionProduct.class)
@@ -136,9 +127,7 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.nullable(List.class),
-                        Mockito.nullable(String.class));
+                        Mockito.nullable(List.class));
 
         webTestClient
                 .get()
@@ -147,7 +136,6 @@ public class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header(PnBffRestConstants.SOURCECHANNEL_HEADER, UserMock.SOURCECHANNEL)
                 .exchange()
                 .expectStatus().isNotFound();
     }

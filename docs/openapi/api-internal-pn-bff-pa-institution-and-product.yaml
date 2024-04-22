@@ -40,8 +40,6 @@ paths:
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
-        - $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/parameters/BffHeaderSourceChannel'                 # NO EXTERNAL
-        - $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/parameters/BffHeaderSourceChannelDetails'          # NO EXTERNAL
       responses:
         '200':
           description: OK
@@ -77,8 +75,6 @@ paths:
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
-        - $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/parameters/BffHeaderSourceChannel'                 # NO EXTERNAL
-        - $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/parameters/BffHeaderSourceChannelDetails'          # NO EXTERNAL                                                                             # NO EXTERNAL
         - name: institutionId
           description: The identifier of one PA
           in: path

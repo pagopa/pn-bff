@@ -53,16 +53,14 @@ public class InstitutionAndProductPaServiceTest {
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
 
-        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
+        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS);
+                UserMock.PN_CX_GROUPS);
 
         StepVerifier
                 .create(result.collectList())
@@ -72,7 +70,7 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionsTestError() {
-        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
+        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
@@ -80,9 +78,7 @@ public class InstitutionAndProductPaServiceTest {
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
-                        UserMock.SEARCH_CHANNEL,
-                        UserMock.PN_CX_GROUPS,
-                        UserMock.SEARCH_DETAILS))
+                        UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
@@ -93,17 +89,15 @@ public class InstitutionAndProductPaServiceTest {
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
                 .toList();
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.SEARCH_CHANNEL,
                 UserMock.INSTITUTION_ID,
-                UserMock.PN_CX_GROUPS,
-                UserMock.SEARCH_DETAILS);
+                UserMock.PN_CX_GROUPS);
 
         StepVerifier
                 .create(result.collectList())
@@ -113,17 +107,15 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductTestError() {
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyString()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
                 .create(institutionAndProductPaService.getInstitutionProducts(UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
-                        UserMock.SEARCH_CHANNEL,
                         UserMock.INSTITUTION_ID,
-                        UserMock.PN_CX_GROUPS,
-                        UserMock.SEARCH_DETAILS))
+                        UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }

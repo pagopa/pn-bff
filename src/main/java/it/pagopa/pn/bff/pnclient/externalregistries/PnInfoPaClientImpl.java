@@ -31,17 +31,17 @@ public class PnInfoPaClientImpl {
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 
-    public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails) {
+    public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutions");
         return infoPaApi
-                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
+                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, "")
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 
-    public Flux<ProductResourcePN> getInstitutionProduct(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnSrcCh, String id, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails) {
+    public Flux<ProductResourcePN> getInstitutionProduct(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String id, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutionProduct");
         return infoPaApi
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, id, xPagopaPnCxGroups, xPagopaPnSrcChDetails)
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", id, xPagopaPnCxGroups, "")
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }
