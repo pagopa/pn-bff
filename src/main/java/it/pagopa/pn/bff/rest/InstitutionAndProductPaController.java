@@ -62,8 +62,6 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     @Override
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String institutionId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionProductsV1");
-        log.info("institutionId: " + institutionId);
-        log.info("xPagopaPnCxId: " + xPagopaPnCxId);
         Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, institutionId, xPagopaPnCxGroups)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
