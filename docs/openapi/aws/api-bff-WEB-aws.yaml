@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: lAHIH84DINmIwQx+D3OwmgRqIPML2sJrG8AvhLZj3X4=
+  version: aRWK42ZdnwtUBYlMYqN8w5UPNkCqI+ubDZBL+CXOAZY=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -490,7 +490,6 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InstitutionAndProduct
-      parameters: []
       responses:
         '200':
           description: OK
@@ -528,6 +527,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/institutions/products API CORS
       x-amazon-apigateway-integration:

@@ -65,7 +65,6 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
       - InstitutionAndProduct
-      parameters:
       responses:
         '200':
           description: OK
