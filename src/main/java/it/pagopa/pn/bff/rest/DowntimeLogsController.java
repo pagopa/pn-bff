@@ -31,25 +31,34 @@ public class DowntimeLogsController implements DowntimeApi {
      */
     @Override
     public Mono<ResponseEntity<BffPnStatusResponse>> getCurrentStatusV1(final ServerWebExchange exchange) {
-        log.logStartingProcess("getCurrentStatus");
+        log.logStartingProcess("getCurrentStatusV1");
 
         Mono<BffPnStatusResponse> serviceResponse = downtimeLogsService.getCurrentStatus()
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("getCurrentStatus");
+        log.logEndingProcess("getCurrentStatusV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
+    /**
+     * GET bff/v1/downtime/history: Application status history
+     * Get the history of the events related to application status
+     *
+     * @param page     page number
+     * @param size     number of elements per page
+     * @param exchange
+     * @return the application status history
+     */
     @Override
     public Mono<ResponseEntity<BffPnDowntimeHistoryResponse>> getStatusHistoryV1(String page, String size, final ServerWebExchange exchange) {
-        log.logStartingProcess("getStatusHistory");
+        log.logStartingProcess("getStatusHistoryV1");
 
         Mono<BffPnDowntimeHistoryResponse> serviceResponse = downtimeLogsService.getStatusHistory(page, size)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("getStatusHistory");
+        log.logEndingProcess("getStatusHistoryV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }
