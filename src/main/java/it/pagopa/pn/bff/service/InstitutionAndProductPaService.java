@@ -47,15 +47,14 @@ public class InstitutionAndProductPaService {
      * @param xPagopaPnUid          User Identifier
      * @param xPagopaPnCxType       Public Administration Type
      * @param xPagopaPnCxId         Public Administration id
-     * @param institutionId         Institution id
      * @param xPagopaPnCxGroups     Public Administration Group id List
      * @return the list of the products or error
      */
-    public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String institutionId, List<String> xPagopaPnCxGroups) {
+    public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.info("getInstitutionProducts");
         return pnInfoPaClient
-                .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, institutionId, xPagopaPnCxGroups)
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, institutionId))
+                .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

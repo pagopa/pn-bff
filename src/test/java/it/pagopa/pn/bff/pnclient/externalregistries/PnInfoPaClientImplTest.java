@@ -84,7 +84,6 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.INSTITUTION_ID,
                 UserMock.PN_CX_GROUPS
         )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
     }
@@ -105,7 +104,6 @@ public class PnInfoPaClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.INSTITUTION_ID,
                 UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }

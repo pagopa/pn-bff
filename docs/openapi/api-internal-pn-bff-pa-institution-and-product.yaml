@@ -60,7 +60,7 @@ paths:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
   
-  '/bff/v1/institutions/{institutionId}/products':
+  '/bff/v1/institutions/products':
     get:
       summary: Get Products list of an Institution
       description: |-
@@ -75,12 +75,6 @@ paths:
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
-        - name: institutionId
-          description: The identifier of one PA
-          in: path
-          required: true
-          schema:
-            $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffSelfCarePaId'
       responses:
         '200':
           description: OK

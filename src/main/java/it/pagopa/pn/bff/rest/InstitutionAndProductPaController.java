@@ -55,15 +55,14 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
      * @param xPagopaPnUid          The user id
      * @param xPagopaPnCxType       The type of the user
      * @param xPagopaPnCxId         The id of the user
-     * @param institutionId         The id of the institution (path variable)
      * @param xPagopaPnCxGroups     The groups of the user
      * @return The list of products of an institution
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String institutionId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionProductsV1");
         Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, institutionId, xPagopaPnCxGroups)
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
         log.logEndingProcess("getInstitutionProductsV1");
         return bffInstitutionProducts

@@ -94,20 +94,19 @@ public class InstitutionAndProductPaControllerTest {
     void getInstitutionProductV1() {
         List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
         Mockito
                 .when(institutionAndProductPaService.getInstitutionProducts(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.nullable(List.class)))
                 .thenReturn(Flux.fromIterable(bffInstitutionProducts));
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build(UserMock.INSTITUTION_ID))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/products").build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
@@ -126,12 +125,11 @@ public class InstitutionAndProductPaControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.nullable(List.class));
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/{institutionId}/products").build(UserMock.INSTITUTION_ID))
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.INSTITUTIONS_PATH + "/products").build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())

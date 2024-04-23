@@ -87,7 +87,7 @@ public class PnInfoPaClientImplTestIT {
     void getInstitutionProducts() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(institutionAndProductMock.getProductResourcePNMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/INSTITUTION_ID/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -98,21 +98,19 @@ public class PnInfoPaClientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.INSTITUTION_ID,
                 UserMock.PN_CX_GROUPS
         )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
     }
 
     @Test
     void getInstitutionProductsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/INSTITUTION_ID/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.INSTITUTION_ID,
                 UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }

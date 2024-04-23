@@ -87,16 +87,15 @@ public class InstitutionAndProductPaServiceTest {
     void getInstitutionProductTest() {
         List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.INSTITUTION_ID))
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.INSTITUTION_ID,
                 UserMock.PN_CX_GROUPS);
 
         StepVerifier
@@ -107,14 +106,13 @@ public class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductTestError() {
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList()))
+        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
                 .create(institutionAndProductPaService.getInstitutionProducts(UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
-                        UserMock.INSTITUTION_ID,
                         UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
