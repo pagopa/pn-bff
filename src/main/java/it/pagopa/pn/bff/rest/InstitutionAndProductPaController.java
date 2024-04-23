@@ -27,13 +27,13 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     }
 
     /**
-     * GET /v1/institutions
+     * GET bff/v1/institutions
      * Get the list of institutions
      *
-     * @param xPagopaPnUid          The user id
-     * @param xPagopaPnCxType       The type of the user
-     * @param xPagopaPnCxId         The id of the user
-     * @param xPagopaPnCxGroups     The groups of the user
+     * @param xPagopaPnUid      The user id
+     * @param xPagopaPnCxType   The type of the user
+     * @param xPagopaPnCxId     The id of the user
+     * @param xPagopaPnCxGroups The groups of the user
      * @return The list of institutions
      */
     @Override
@@ -49,22 +49,22 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     }
 
     /**
-     * GET /v1/institutions/{institutionId}/products
+     * GET bff/v1/institutions/products
      * Get the list of products of an institution
      *
-     * @param xPagopaPnUid          The user id
-     * @param xPagopaPnCxType       The type of the user
-     * @param xPagopaPnCxId         The id of the user
-     * @param xPagopaPnCxGroups     The groups of the user
+     * @param xPagopaPnUid      The user id
+     * @param xPagopaPnCxType   The type of the user
+     * @param xPagopaPnCxId     The id of the user
+     * @param xPagopaPnCxGroups The groups of the user
      * @return The list of products of an institution
      */
     @Override
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("getInstitutionProductsV1");
+        log.logStartingProcess("getInstitutionProducts");
         Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-        log.logEndingProcess("getInstitutionProductsV1");
+        log.logEndingProcess("getInstitutionProducts");
         return bffInstitutionProducts
                 .collectList()
                 .map(institutionProduct -> ResponseEntity.ok(Flux.fromIterable(institutionProduct)));

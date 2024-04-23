@@ -49,14 +49,14 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                                  String lastUpdate,
                                                                  Boolean showVirtualKey,
                                                                  final ServerWebExchange exchange) {
-        log.logStartingProcess("getApiKeys");
+        log.logStartingProcess("getApiKeysV1");
 
         Mono<BffApiKeysResponse> serviceResponse = apiKeysPaService.getApiKeys(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, limit, lastKey, lastUpdate, showVirtualKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("getApiKeys");
+        log.logEndingProcess("getApiKeysV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -78,14 +78,14 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                                   Mono<BffRequestNewApiKey> bffRequestNewApiKey,
                                                                   List<String> xPagopaPnCxGroups,
                                                                   final ServerWebExchange exchange) {
-        log.logStartingProcess("newApiKey");
+        log.logStartingProcess("newApiKeyV1");
 
         Mono<BffResponseNewApiKey> serviceResponse = apiKeysPaService.newApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffRequestNewApiKey, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("newApiKey");
+        log.logEndingProcess("newApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -108,14 +108,14 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                      String id,
                                                      List<String> xPagopaPnCxGroups,
                                                      final ServerWebExchange exchange) {
-        log.logStartingProcess("deleteApiKey");
+        log.logStartingProcess("deleteApiKeyV1");
 
         Mono<Void> serviceResponse = apiKeysPaService.deleteApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("deleteApiKey");
+        log.logEndingProcess("deleteApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -140,14 +140,14 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                            Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
                                                            List<String> xPagopaPnCxGroups,
                                                            final ServerWebExchange exchange) {
-        log.logStartingProcess("changeStatusApiKey");
+        log.logStartingProcess("changeStatusApiKeyV1");
 
         Mono<Void> serviceResponse = apiKeysPaService.changeStatusApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, bffRequestApiKeyStatus, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 
-        log.logEndingProcess("changeStatusApiKey");
+        log.logEndingProcess("changeStatusApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

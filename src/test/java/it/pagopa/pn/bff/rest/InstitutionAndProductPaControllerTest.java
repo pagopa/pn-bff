@@ -32,7 +32,7 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class InstitutionAndProductPaControllerTest {
+class InstitutionAndProductPaControllerTest {
 
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired

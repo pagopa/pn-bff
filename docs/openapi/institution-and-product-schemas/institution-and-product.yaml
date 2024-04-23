@@ -55,6 +55,3 @@ components:
         productUrl:
           type: string
           description: The URL of the product
-    
-    BffSelfCarePaId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/904912c89be224a8a7dc75df24aaf676cdd0aa56/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'

@@ -24,7 +24,7 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class PnInfoPaClientImplTestIT {
+class PnInfoPaClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";

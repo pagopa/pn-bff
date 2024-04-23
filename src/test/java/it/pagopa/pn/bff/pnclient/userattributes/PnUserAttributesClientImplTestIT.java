@@ -25,7 +25,7 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class PnUserAttributesClientImplTestIT {
+class PnUserAttributesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";

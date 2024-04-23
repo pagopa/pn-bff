@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnInfoPaClientImpl.class})
 @ExtendWith(SpringExtension.class)
-public class PnInfoPaClientImplTest {
+class PnInfoPaClientImplTest {
     private final UserMock userMock = new UserMock();
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired

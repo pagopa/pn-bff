@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class InstitutionAndProductPaServiceTest {
+class InstitutionAndProductPaServiceTest {
 
     private static PnInfoPaClientImpl pnInfoPaClient;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
