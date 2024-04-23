@@ -38,8 +38,7 @@ public class TosPrivacyController implements UserConsentsApi {
                                                                       final ServerWebExchange exchange) {
         log.logStartingProcess("getTosPrivacyV1");
 
-        Mono<BffTosPrivacyConsent> serviceResponse;
-        serviceResponse = tosPrivacyService
+        Mono<BffTosPrivacyConsent> serviceResponse = tosPrivacyService
                 .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
@@ -65,8 +64,7 @@ public class TosPrivacyController implements UserConsentsApi {
                                                          ServerWebExchange exchange) {
         log.logStartingProcess("putTosPrivacyV1");
 
-        Mono<Void> serviceResponse;
-        serviceResponse = tosPrivacyService
+        Mono<Void> serviceResponse = tosPrivacyService
                 .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
