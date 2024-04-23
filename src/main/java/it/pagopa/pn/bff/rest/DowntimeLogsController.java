@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.DowntimeApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
 import lombok.CustomLog;
@@ -37,6 +38,18 @@ public class DowntimeLogsController implements DowntimeApi {
 
 
         log.logEndingProcess("getCurrentStatus");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    @Override
+    public Mono<ResponseEntity<BffPnDowntimeHistoryResponse>> getStatusHistoryV1(String page, String size, final ServerWebExchange exchange) {
+        log.logStartingProcess("getStatusHistory");
+
+        Mono<BffPnDowntimeHistoryResponse> serviceResponse = downtimeLogsService.getStatusHistory(page, size)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+
+        log.logEndingProcess("getStatusHistory");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

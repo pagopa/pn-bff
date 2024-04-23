@@ -1,6 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
+import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
@@ -35,8 +37,6 @@ public class DowntimeLogsControllerTest {
         Mockito.when(downtimeLogsService.getCurrentStatus())
                 .thenReturn(Mono.just(response));
 
-        // response.setLastCheckTimestamp(response.getLastCheckTimestamp().atZoneSameInstant(ZoneOffset.UTC));
-
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.DOWNTIME_LOGS_PATH + "/status").build())
@@ -64,5 +64,51 @@ public class DowntimeLogsControllerTest {
                 .isNotFound();
 
         Mockito.verify(downtimeLogsService).getCurrentStatus();
+    }
+
+    @Test
+    void getStatusHistory() {
+        BffPnDowntimeHistoryResponse response = DowntimeHistoryResponseMapper.modelMapper.mapPnDowntimeHistoryResponse(downtimeLogsMock.getDowntimeHistoryMock());
+
+        Mockito.when(downtimeLogsService.getStatusHistory(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Mono.just(response));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.DOWNTIME_LOGS_PATH + "/history")
+                                .queryParam("page", "1")
+                                .queryParam("size", "10")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffPnDowntimeHistoryResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(downtimeLogsService).getStatusHistory("1", "10");
+    }
+
+    @Test
+    void getStatusHistoryError() {
+        Mockito.when(downtimeLogsService.getStatusHistory(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.DOWNTIME_LOGS_PATH + "/history")
+                                .queryParam("page", "1")
+                                .queryParam("size", "10")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(downtimeLogsService).getStatusHistory("1", "10");
     }
 }

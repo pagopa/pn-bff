@@ -66,14 +66,11 @@ paths:
         - Downtime
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
-      operationId: statusHistoryV1
+      operationId: getStatusHistoryV1
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
       parameters:
-        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFromTime'
-        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryToTime'
-        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFunctionality'
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryPage'
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQuerySize'
       responses:

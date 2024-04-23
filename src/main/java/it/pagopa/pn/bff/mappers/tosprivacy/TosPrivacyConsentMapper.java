@@ -15,5 +15,5 @@ public interface TosPrivacyConsentMapper {
      * @param consent the Consent to map
      * @return the mapped BffConsent
      */
-    public BffConsent mapConsent(Consent consent);
+    BffConsent mapConsent(Consent consent);
 }

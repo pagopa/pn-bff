@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: NVWxCuLI9pgWBHrP2fhMZbiKn5XX0kaCegvB4Mza1mU=
+  version: r3Gy5o0TvkTlOc/wKyyzH53bU2Svxre6CmiTQ5y3RIE=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -587,14 +587,11 @@ paths:
         - Downtime
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
-      operationId: statusHistoryV1
+      operationId: getStatusHistoryV1
       x-api-permissions:
         - api-key-read
         - log-downtime-read
       parameters:
-        - $ref: '#/components/parameters/queryFromTime'
-        - $ref: '#/components/parameters/queryToTime'
-        - $ref: '#/components/parameters/BffQueryFunctionality'
         - $ref: '#/components/parameters/queryPage'
         - $ref: '#/components/parameters/querySize'
       responses:
@@ -741,31 +738,6 @@ components:
       required: true
       schema:
         type: string
-    queryFromTime:
-      name: fromTime
-      in: query
-      required: true
-      description: data/ora di inizio dell'intervallo entro cui eseguire la ricerca
-      schema:
-        type: string
-        format: date-time
-    queryToTime:
-      name: toTime
-      in: query
-      required: false
-      description: data/ora di fine dell'intervallo entro cui eseguire la ricerca
-      schema:
-        type: string
-        format: date-time
-    BffQueryFunctionality:
-      name: functionality
-      in: query
-      required: false
-      description: funzionalità di Piattaforma Notifiche di cui elencare i disservizi
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/PnFunctionality'
     queryPage:
       name: page
       in: query

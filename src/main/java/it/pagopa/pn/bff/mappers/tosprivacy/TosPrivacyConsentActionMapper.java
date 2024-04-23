@@ -17,5 +17,5 @@ public interface TosPrivacyConsentActionMapper {
      */
     @ValueMapping(source = "DECLINE", target = "DECLINE")
     @ValueMapping(source = "ACCEPT", target = "ACCEPT")
-    public it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction.ActionEnum convertConsentAction(ActionEnum consent);
+    it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction.ActionEnum convertConsentAction(ActionEnum consent);
 }

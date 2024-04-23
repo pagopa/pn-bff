@@ -7,6 +7,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -45,6 +46,6 @@ public interface StatusResponseMapper {
      */
     @AfterMapping
     default void mapLastCheckTimestamp(@MappingTarget BffPnStatusResponse bffPnStatusResponse) {
-        bffPnStatusResponse.setLastCheckTimestamp(OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        bffPnStatusResponse.setLastCheckTimestamp(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
     }
 }

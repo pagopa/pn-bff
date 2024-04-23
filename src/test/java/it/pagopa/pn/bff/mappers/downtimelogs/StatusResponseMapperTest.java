@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +22,7 @@ public class StatusResponseMapperTest {
         BffPnStatusResponse bffPnStatusResponse = StatusResponseMapper.modelMapper.mapPnStatusResponse(statusResponse);
         assertNotNull(bffPnStatusResponse);
         assertEquals(true, bffPnStatusResponse.getAppIsFullyOperative());
-        assertEquals(bffPnStatusResponse.getLastCheckTimestamp(), OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(bffPnStatusResponse.getLastCheckTimestamp(), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
 
         BffPnStatusResponse bffPnStatusResponseNull = StatusResponseMapper.modelMapper.mapPnStatusResponse(null);
         assertNull(bffPnStatusResponseNull);
@@ -34,7 +35,7 @@ public class StatusResponseMapperTest {
         BffPnStatusResponse bffPnStatusResponse = StatusResponseMapper.modelMapper.mapPnStatusResponse(statusResponse);
         assertNotNull(bffPnStatusResponse);
         assertEquals(false, bffPnStatusResponse.getAppIsFullyOperative());
-        assertEquals(bffPnStatusResponse.getLastCheckTimestamp(), OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(bffPnStatusResponse.getLastCheckTimestamp(), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
 
         BffPnStatusResponse bffPnStatusResponseNull = StatusResponseMapper.modelMapper.mapPnStatusResponse(null);
         assertNull(bffPnStatusResponseNull);

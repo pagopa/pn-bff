@@ -1,9 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeEntry;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionalityStatus;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -11,7 +8,7 @@ import java.util.List;
 
 public class DowntimeLogsMock {
 
-    private List<PnFunctionality> getFunctionalityMock() {
+    public List<PnFunctionality> getFunctionalityMock() {
         List<PnFunctionality> functionalityList = new ArrayList<>();
         functionalityList.add(PnFunctionality.NOTIFICATION_VISUALIZATION);
         functionalityList.add(PnFunctionality.NOTIFICATION_CREATE);
@@ -19,14 +16,19 @@ public class DowntimeLogsMock {
         return functionalityList;
     }
 
-    private List<PnDowntimeEntry> getIncidentsMock() {
-        List<PnDowntimeEntry> incidentList = new ArrayList<>();
+    private PnDowntimeEntry getIncidentMock(PnFunctionality functionality, OffsetDateTime endDate, String legalFactId) {
         PnDowntimeEntry incident = new PnDowntimeEntry();
         incident.setStatus(PnFunctionalityStatus.KO);
-        incident.setFunctionality(PnFunctionality.NOTIFICATION_CREATE);
+        incident.setFunctionality(functionality);
         incident.setStartDate(OffsetDateTime.parse("2022-09-21T09:33:58.709695008Z"));
-        incidentList.add(incident);
-        return incidentList;
+        if (endDate != null) {
+            incident.setEndDate(endDate);
+        }
+        if (legalFactId != null) {
+            incident.setFileAvailable(true);
+            incident.setLegalFactId(legalFactId);
+        }
+        return incident;
     }
 
     public PnStatusResponse getStatusMockOK() {
@@ -44,7 +46,21 @@ public class DowntimeLogsMock {
         statusResponse.setTitle("KO");
         statusResponse.setDetail("KO");
         statusResponse.setFunctionalities(getFunctionalityMock());
-        statusResponse.setOpenIncidents(getIncidentsMock());
+        List<PnDowntimeEntry> downtimeEntries = new ArrayList<>();
+        downtimeEntries.add(getIncidentMock(PnFunctionality.NOTIFICATION_CREATE, null, null));
+        statusResponse.setOpenIncidents(downtimeEntries);
         return statusResponse;
+    }
+
+    public PnDowntimeHistoryResponse getDowntimeHistoryMock() {
+        PnDowntimeHistoryResponse downtimeHistoryResponse = new PnDowntimeHistoryResponse();
+        downtimeHistoryResponse.setNextPage("1");
+        List<PnDowntimeEntry> downtimeEntries = new ArrayList<>();
+        downtimeEntries.add(getIncidentMock(PnFunctionality.NOTIFICATION_CREATE, null, null));
+        downtimeEntries.add(getIncidentMock(PnFunctionality.NOTIFICATION_VISUALIZATION, OffsetDateTime.parse("2022-07-19T09:33:58.709695008Z"), "LEGAL_FACT_1"));
+        downtimeEntries.add(getIncidentMock(PnFunctionality.NOTIFICATION_VISUALIZATION, OffsetDateTime.parse("2022-07-01T09:33:58.709695008Z"), null));
+        downtimeEntries.add(getIncidentMock(PnFunctionality.NOTIFICATION_WORKFLOW, OffsetDateTime.parse("2022-07-19T09:33:58.709695008Z"), "LEGAL_FACT_2"));
+        downtimeHistoryResponse.setResult(downtimeEntries);
+        return downtimeHistoryResponse;
     }
 }
