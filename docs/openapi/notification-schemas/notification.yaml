@@ -2,7 +2,7 @@ info:
   version: v1.0
 components:
   schemas:
-    
+
     BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend
@@ -30,7 +30,7 @@ components:
               type: array
               items:
                 $ref: './notification-documents.yaml#/components/schemas/BffNotificationDetailDocument'
-    
+
     BffNotificationStatusHistory:
       type: object
       additionalProperties: false
@@ -56,9 +56,9 @@ components:
           type: string
         deliveryMode:
           $ref: './notification-enums.yaml#/components/schemas/BffNotificationDeliveryMode'
-    
+
     BffPhysicalAddress:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-addresses.yaml#/components/schemas/PhysicalAddress'
-    
+
     BffDigitalAddress:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-addresses.yaml#/components/schemas/DigitalAddress'

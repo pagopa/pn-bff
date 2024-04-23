@@ -5,6 +5,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the internal ActionEnum to the microservice ActionEnum
+ */
 @Mapper
 public interface TosPrivacyConsentActionMapper {
     TosPrivacyConsentActionMapper tosPrivacyConsentActionMapper = Mappers.getMapper(TosPrivacyConsentActionMapper.class);

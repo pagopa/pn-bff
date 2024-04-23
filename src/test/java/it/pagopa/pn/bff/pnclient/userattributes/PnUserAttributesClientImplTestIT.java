@@ -24,10 +24,8 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "pn.bff.user-attributes-base-url=http://localhost:9998",
-})
-public class PnUserAttributesClientImplTestIT {
+@TestPropertySource(locations = "classpath:application-test.properties")
+class PnUserAttributesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";

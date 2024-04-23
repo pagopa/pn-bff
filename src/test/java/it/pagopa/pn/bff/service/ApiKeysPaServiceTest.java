@@ -28,8 +28,8 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ApiKeysPaServiceTest {
-    
+class ApiKeysPaServiceTest {
+
     private static ApiKeysPaService apiKeysPaService;
     private static PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
     private static PnInfoPaClientImpl pnInfoPaClient;

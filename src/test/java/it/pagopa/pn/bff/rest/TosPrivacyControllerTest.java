@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(TosPrivacyController.class)
-public class TosPrivacyControllerTest {
+class TosPrivacyControllerTest {
     public static final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
     @Autowired
     WebTestClient webTestClient;
