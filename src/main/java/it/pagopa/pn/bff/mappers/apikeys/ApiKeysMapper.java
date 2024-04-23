@@ -16,9 +16,9 @@ import java.util.List;
  * to the BffApiKeysResponse
  */
 @Mapper
-public abstract class ApiKeysMapper {
+public interface ApiKeysMapper {
     // Instance of the mapper
-    public static final ApiKeysMapper modelMapper = Mappers.getMapper(ApiKeysMapper.class);
+    ApiKeysMapper modelMapper = Mappers.getMapper(ApiKeysMapper.class);
 
     /**
      * Maps a ApiKeysResponse to a BffApiKeysResponse
@@ -27,7 +27,7 @@ public abstract class ApiKeysMapper {
      * @param paGroups        groups retrieved from selfcare and linked to current Public Administration and user
      * @return the mapped BffApiKeysResponse
      */
-    public abstract BffApiKeysResponse mapApiKeysResponse(ApiKeysResponse apiKeysResponse, @Context List<PaGroup> paGroups);
+    BffApiKeysResponse mapApiKeysResponse(ApiKeysResponse apiKeysResponse, @Context List<PaGroup> paGroups);
 
     /**
      * Map api keys groups (String) to paGroups
@@ -36,7 +36,7 @@ public abstract class ApiKeysMapper {
      * @param paGroups groups retrieved from selfcare and linked to current Public Administration and user
      * @return the list of groups where each element is made by id and name
      */
-    protected List<BffApiKeyGroup> mapGroups(List<String> groups, @Context List<PaGroup> paGroups) {
+    default List<BffApiKeyGroup> mapGroups(List<String> groups, @Context List<PaGroup> paGroups) {
         List<BffApiKeyGroup> apiKeyGroups = new ArrayList<>();
         for (String group : groups) {
             BffApiKeyGroup apiKeyGroup = new BffApiKeyGroup();

@@ -27,9 +27,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "pn.bff.delivery-base-url=http://localhost:9998",
-})
+@TestPropertySource(locations = "classpath:application-test.properties")
 class PnDeliveryClientRecipientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;

@@ -2,8 +2,7 @@ package it.pagopa.pn.bff.pnclient.externalregistries;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +29,19 @@ public class PnInfoPaClientImpl {
                 xPagopaPnCxGroups,
                 paGroupStatus
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutions");
+        return infoPaApi
+                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, null)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Flux<ProductResourcePN> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutionProducts");
+        return infoPaApi
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxId, xPagopaPnCxGroups, null)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

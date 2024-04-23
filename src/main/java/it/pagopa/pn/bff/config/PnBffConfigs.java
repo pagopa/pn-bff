@@ -20,6 +20,8 @@ public class PnBffConfigs {
     private String deliveryBaseUrl;
     private String apikeyManagerBaseUrl;
     private String externalRegistriesBaseUrl;
+    private String selfcareBaseUrl;
+    private String selfcareSendProdId;
     private String userAttributesBaseUrl;
 
     @PostConstruct

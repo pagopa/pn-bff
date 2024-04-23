@@ -1,0 +1,96 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Institutions and Products
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-institution-and-product
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: InstitutionProducts
+    description: Invocazioni per sapere i portali disponibili di un ente
+
+paths:
+  '/bff/v1/institutions':
+    get:
+      summary: Get Institutions list
+      description: |-
+        This operation retrieves the institutions from Self Care.
+      operationId: getInstitutionsV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InstitutionAndProduct
+      parameters: # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/institutions/products':
+    get:
+      summary: Get Products list of an Institution
+      description: |-
+        This operation retrieves all active products associated with the specified institution and user.
+      operationId: getInstitutionProductsV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+      - InstitutionAndProduct
+      parameters:
+        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionProductList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'

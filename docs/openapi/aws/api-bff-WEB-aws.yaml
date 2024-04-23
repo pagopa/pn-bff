@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: yve5QwirJNNAbluvu0KfkYjHTGi5UxR2AYLYosCBEIQ=
+  version: lAHIH84DINmIwQx+D3OwmgRqIPML2sJrG8AvhLZj3X4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -416,6 +416,126 @@ paths:
         httpMethod: ANY
         requestParameters:
           integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/institutions:
+    get:
+      summary: Get Institutions list
+      description: This operation retrieves the institutions from Self Care.
+      operationId: getInstitutionsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InstitutionAndProduct
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffInstitutionList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/institutions API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/institutions/products:
+    get:
+      summary: Get Products list of an Institution
+      description: >-
+        This operation retrieves all active products associated with the
+        specified institution and user.
+      operationId: getInstitutionProductsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InstitutionAndProduct
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffInstitutionProductList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/institutions/products API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -2505,6 +2625,58 @@ components:
             - BLOCK
             - ENABLE
             - ROTATE
+    BffInstitution:
+      type: object
+      required:
+        - id
+        - name
+        - productRole
+        - entityUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the institution
+        name:
+          type: string
+          description: The name of the institution
+        productRole:
+          type: string
+          description: The role of the product
+        logoUrl:
+          type: string
+          description: The URL of the logo
+        parentName:
+          type: string
+          description: The name of the parent institution
+        entityUrl:
+          type: string
+          description: The URL of the entity
+    BffInstitutionList:
+      description: The list of institutions
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitution'
+    BffInstitutionProduct:
+      type: object
+      required:
+        - id
+        - title
+        - productUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the product
+        title:
+          type: string
+          description: The title of the product
+        productUrl:
+          type: string
+          description: The URL of the product
+    BffInstitutionProductList:
+      description: The list of products
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitutionProduct'
     BffTosPrivacyConsent:
       type: object
       required:
@@ -2596,6 +2768,8 @@ tags:
       notifiche a loro destinate.
   - name: ApiKeys
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+  - name: InstitutionProducts
+    description: Invocazioni per sapere i portali disponibili di un ente
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
 x-amazon-apigateway-gateway-responses:
