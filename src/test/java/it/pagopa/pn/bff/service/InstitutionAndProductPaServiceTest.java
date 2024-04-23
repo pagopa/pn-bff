@@ -89,7 +89,7 @@ class InstitutionAndProductPaServiceTest {
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
+        when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
@@ -106,7 +106,7 @@ class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductTestError() {
-        when(pnInfoPaClient.getInstitutionProduct(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
+        when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier

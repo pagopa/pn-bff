@@ -38,7 +38,7 @@ class PnInfoPaClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.nullable(String.class)
         )).thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
@@ -57,7 +57,7 @@ class PnInfoPaClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.nullable(String.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnInfoPaClient.getInstitutions(
@@ -77,10 +77,10 @@ class PnInfoPaClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.nullable(String.class)
         )).thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
-        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProducts(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -97,10 +97,10 @@ class PnInfoPaClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.nullable(String.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProducts(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,

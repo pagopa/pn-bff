@@ -94,7 +94,7 @@ class PnInfoPaClientImplTestIT {
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProducts(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -107,7 +107,7 @@ class PnInfoPaClientImplTestIT {
         mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnInfoPaClient.getInstitutionProduct(
+        StepVerifier.create(pnInfoPaClient.getInstitutionProducts(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,

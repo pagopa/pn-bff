@@ -27,10 +27,10 @@ public class InstitutionAndProductPaService {
     /**
      * Get a paginated list of the institutions that are accessible by the current user
      *
-     * @param xPagopaPnUid          User Identifier
-     * @param xPagopaPnCxType       Public Administration Type
-     * @param xPagopaPnCxId         Public Administration id
-     * @param xPagopaPnCxGroups     Public Administration Group id List
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the list of the institutions or error
      */
     public Flux<BffInstitution> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
@@ -44,16 +44,16 @@ public class InstitutionAndProductPaService {
     /**
      * Get a paginated list of the products that belong to an institution and are accessible by the current user
      *
-     * @param xPagopaPnUid          User Identifier
-     * @param xPagopaPnCxType       Public Administration Type
-     * @param xPagopaPnCxId         Public Administration id
-     * @param xPagopaPnCxGroups     Public Administration Group id List
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the list of the products or error
      */
     public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.info("getInstitutionProducts");
         return pnInfoPaClient
-                .getInstitutionProduct(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
+                .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
