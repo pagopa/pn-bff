@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DowntimeHistoryResponseMapperTest {
+class DowntimeHistoryResponseMapperTest {
     private final DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
 
     @Test

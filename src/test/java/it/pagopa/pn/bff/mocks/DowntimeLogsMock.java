@@ -63,4 +63,13 @@ public class DowntimeLogsMock {
         downtimeHistoryResponse.setResult(downtimeEntries);
         return downtimeHistoryResponse;
     }
+
+    public LegalFactDownloadMetadataResponse getLegalFactMetadataMock() {
+        LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = new LegalFactDownloadMetadataResponse();
+        legalFactDownloadMetadataResponse.setContentLength(100);
+        legalFactDownloadMetadataResponse.setFilename("LEGAL_FACT_NAME");
+        legalFactDownloadMetadataResponse.setUrl("https://www.legal-fact-url.com");
+        legalFactDownloadMetadataResponse.setRetryAfter(0);
+        return legalFactDownloadMetadataResponse;
+    }
 }

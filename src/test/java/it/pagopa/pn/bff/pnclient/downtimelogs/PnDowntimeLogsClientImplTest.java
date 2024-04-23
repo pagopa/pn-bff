@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class PnDowntimeLogsClientImplTest {
     private final DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
+    private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     @Autowired
     private PnDowntimeLogsClientImpl pnDowntimeLogsClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi")
@@ -78,6 +79,28 @@ class PnDowntimeLogsClientImplTest {
                 downtimeLogsMock.getFunctionalityMock(),
                 "0",
                 "10"
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void getLegalFactHistory() throws RestClientException {
+        when(downtimeApi.getLegalFact(
+                Mockito.anyString()
+        )).thenReturn(Mono.just(downtimeLogsMock.getLegalFactMetadataMock()));
+
+        StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
+                LEGAL_FACT_ID
+        )).expectNext(downtimeLogsMock.getLegalFactMetadataMock()).verifyComplete();
+    }
+
+    @Test
+    void getLegalFactError() {
+        when(downtimeApi.getLegalFact(
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
+                LEGAL_FACT_ID
         )).expectError(PnBffException.class).verify();
     }
 }

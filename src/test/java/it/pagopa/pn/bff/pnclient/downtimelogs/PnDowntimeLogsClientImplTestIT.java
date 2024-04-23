@@ -34,6 +34,7 @@ public class PnDowntimeLogsClientImplTestIT {
     private static MockServerClient mockServerClient;
     private final DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
     private final String path = "/downtime/v1";
+    private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     @Autowired
     private PnDowntimeLogsClientImpl pnDowntimeLogsClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi")
@@ -73,7 +74,7 @@ public class PnDowntimeLogsClientImplTestIT {
 
     @Test
     void getCurrentStatusError() {
-        mockServer.when(request().withMethod("GET").withPath(path + "/status"))
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/status"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnDowntimeLogsClient.getCurrentStatus())
@@ -105,7 +106,7 @@ public class PnDowntimeLogsClientImplTestIT {
 
     @Test
     void getStatusHistoryError() {
-        mockServer.when(request().withMethod("GET").withPath(path + "/history"))
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/history"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnDowntimeLogsClient.getStatusHistory(
@@ -114,6 +115,34 @@ public class PnDowntimeLogsClientImplTestIT {
                         downtimeLogsMock.getFunctionalityMock(),
                         "0",
                         "10"
+                ))
+                .expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void getLegalFact() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(downtimeLogsMock.getLegalFactMetadataMock());
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/legal-facts/" + LEGAL_FACT_ID))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
+                        LEGAL_FACT_ID
+                ))
+                .expectNext(downtimeLogsMock.getLegalFactMetadataMock()).verifyComplete();
+    }
+
+    @Test
+    void getLegalFactError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/legal-facts/" + LEGAL_FACT_ID))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
+                        LEGAL_FACT_ID
                 ))
                 .expectError(PnBffException.class).verify();
     }

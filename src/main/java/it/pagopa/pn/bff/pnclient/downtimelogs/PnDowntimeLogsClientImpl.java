@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.pnclient.downtimelogs;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
@@ -19,9 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PnDowntimeLogsClientImpl {
     private final DowntimeApi downtimeApi;
+    private final String serviceName = "pn-downtime-logs";
 
     public Mono<PnStatusResponse> getCurrentStatus() {
-        log.logInvokingExternalService("pn-downtime-logs", "currentStatus");
+        log.logInvokingExternalService(serviceName, "currentStatus");
         return downtimeApi.currentStatus()
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
@@ -31,8 +33,14 @@ public class PnDowntimeLogsClientImpl {
                                                             List<PnFunctionality> functionalities,
                                                             String page,
                                                             String size) {
-        log.logInvokingExternalService("pn-downtime-logs", "statusHistory");
+        log.logInvokingExternalService(serviceName, "statusHistory");
         return downtimeApi.statusHistory(fromTime, toTime, functionalities, page, size)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Mono<LegalFactDownloadMetadataResponse> getLegalFact(String legalFactId) {
+        log.logInvokingExternalService(serviceName, "getLegalFact");
+        return downtimeApi.getLegalFact(legalFactId)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }
