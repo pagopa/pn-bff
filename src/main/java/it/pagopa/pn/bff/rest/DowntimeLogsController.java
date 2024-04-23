@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.DowntimeApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
@@ -59,6 +60,26 @@ public class DowntimeLogsController implements DowntimeApi {
 
 
         log.logEndingProcess("getStatusHistoryV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * GET /bff/v1/downtime/legal-facts/{legalFactId}: Downtime legal fact
+     * Get the legal fact linked to a downtime event
+     *
+     * @param legalFactId legal fact id
+     * @param exchange
+     * @return downtime legal fact
+     */
+    @Override
+    public Mono<ResponseEntity<BffLegalFactDownloadMetadataResponse>> getLegalFactV1(String legalFactId, final ServerWebExchange exchange) {
+        log.logStartingProcess("getLegalFactV1");
+
+        Mono<BffLegalFactDownloadMetadataResponse> serviceResponse = downtimeLogsService.getLegalFact(legalFactId)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+
+        log.logEndingProcess("getLegalFactV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

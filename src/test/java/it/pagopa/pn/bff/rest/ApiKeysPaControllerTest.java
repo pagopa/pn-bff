@@ -61,7 +61,7 @@ class ApiKeysPaControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("lastUpdate", LAST_UPDATE)
@@ -108,7 +108,7 @@ class ApiKeysPaControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("lastUpdate", LAST_UPDATE)
@@ -158,7 +158,7 @@ class ApiKeysPaControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -204,7 +204,7 @@ class ApiKeysPaControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -241,7 +241,7 @@ class ApiKeysPaControllerTest {
         webTestClient.delete()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -276,7 +276,7 @@ class ApiKeysPaControllerTest {
         webTestClient.delete()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -314,7 +314,7 @@ class ApiKeysPaControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -356,7 +356,7 @@ class ApiKeysPaControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)

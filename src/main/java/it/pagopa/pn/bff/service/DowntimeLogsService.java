@@ -1,12 +1,15 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
 import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
+import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.pnclient.downtimelogs.PnDowntimeLogsClientImpl;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +62,20 @@ public class DowntimeLogsService {
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
         return pnDowntimeHistoryResponse.map(DowntimeHistoryResponseMapper.modelMapper::mapPnDowntimeHistoryResponse);
+    }
+
+    /**
+     * Get the legal fact linked to a downtime event
+     *
+     * @param legalFactId the legal fact id
+     * @return the downtime legal fact
+     */
+    public Mono<BffLegalFactDownloadMetadataResponse> getLegalFact(String legalFactId) {
+        log.info("Get downtime legal fact");
+
+        Mono<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = pnDowntimeLogsClient.getLegalFact(legalFactId)
+                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        return legalFactDownloadMetadataResponse.map(LegalFactDownloadResponseMapper.modelMapper::mapLegalFactDownloadMetadataResponse);
     }
 }

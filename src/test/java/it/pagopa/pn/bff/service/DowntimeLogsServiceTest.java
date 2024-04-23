@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
 import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
+import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import it.pagopa.pn.bff.pnclient.downtimelogs.PnDowntimeLogsClientImpl;
@@ -23,6 +25,7 @@ public class DowntimeLogsServiceTest {
 
     private static DowntimeLogsService downtimeLogsService;
     private static PnDowntimeLogsClientImpl pnDowntimeLogsClient;
+    private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
 
     @BeforeAll
@@ -82,6 +85,31 @@ public class DowntimeLogsServiceTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(downtimeLogsService.getStatusHistory("1", "10"))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void testGetLegalFact() {
+        LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = downtimeLogsMock.getLegalFactMetadataMock();
+
+        when(pnDowntimeLogsClient.getLegalFact(
+                Mockito.anyString()
+        )).thenReturn(Mono.just(legalFactDownloadMetadataResponse));
+
+        StepVerifier.create(downtimeLogsService.getLegalFact(LEGAL_FACT_ID))
+                .expectNext(LegalFactDownloadResponseMapper.modelMapper.mapLegalFactDownloadMetadataResponse(legalFactDownloadMetadataResponse))
+                .verifyComplete();
+    }
+
+    @Test
+    void testGetLegalFactError() {
+        when(pnDowntimeLogsClient.getLegalFact(
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(downtimeLogsService.getLegalFact(LEGAL_FACT_ID))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();

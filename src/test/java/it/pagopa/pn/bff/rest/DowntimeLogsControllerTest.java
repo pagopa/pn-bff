@@ -1,8 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
 import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
+import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
@@ -22,6 +24,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @WebFluxTest(DowntimeLogsController.class)
 public class DowntimeLogsControllerTest {
+    private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     @Autowired
     WebTestClient webTestClient;
     DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
@@ -110,5 +113,47 @@ public class DowntimeLogsControllerTest {
                 .isNotFound();
 
         Mockito.verify(downtimeLogsService).getStatusHistory("1", "10");
+    }
+
+    @Test
+    void getLegalFact() {
+        BffLegalFactDownloadMetadataResponse response = LegalFactDownloadResponseMapper.modelMapper.mapLegalFactDownloadMetadataResponse(downtimeLogsMock.getLegalFactMetadataMock());
+
+        Mockito.when(downtimeLogsService.getLegalFact(Mockito.anyString()))
+                .thenReturn(Mono.just(response));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.DOWNTIME_LOGS_PATH + "/legal-facts/{legalFactId}")
+                                .build(LEGAL_FACT_ID))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffLegalFactDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(downtimeLogsService).getLegalFact(LEGAL_FACT_ID);
+    }
+
+    @Test
+    void getLegalFactError() {
+        Mockito.when(downtimeLogsService.getLegalFact(Mockito.anyString()))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.DOWNTIME_LOGS_PATH + "/legal-facts/{legalFactId}")
+                                .build(LEGAL_FACT_ID))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(downtimeLogsService).getLegalFact(LEGAL_FACT_ID);
     }
 }
