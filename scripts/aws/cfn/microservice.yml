@@ -186,12 +186,12 @@ Parameters:
       - false
 
   # SelfCare parameters
-    SelfCareBaseURL:
-        Type: String
-        Description: 'SelfCare base URL'
-    SelfCareSendProdId:
-        Type: String
-        Description: 'SelfCare send prod id'
+  SelfCareBaseURL:
+      Type: String
+      Description: 'SelfCare base URL'
+  SelfCareSendProdId:
+      Type: String
+      Description: 'SelfCare send prod id'
 
   # Logging parameters
   WireTapLogActivation:
