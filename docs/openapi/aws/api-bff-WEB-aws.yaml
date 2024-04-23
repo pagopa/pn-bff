@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 3XCF4gPP93qcbRx10TIChyPYKrpcMPKaiLC3yxLpU5o=
+  version: lAHIH84DINmIwQx+D3OwmgRqIPML2sJrG8AvhLZj3X4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -479,7 +479,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/institutions/{institutionId}/products:
+  /v1/institutions/products:
     get:
       summary: Get Products list of an Institution
       description: >-
@@ -490,13 +490,7 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InstitutionAndProduct
-      parameters:
-        - name: institutionId
-          description: The identifier of one PA
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/SelfCarePaId'
+      parameters: []
       responses:
         '200':
           description: OK
@@ -518,7 +512,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/{institutionId}/products
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -530,20 +524,18 @@ paths:
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-          integration.request.path.institutionId: method.request.path.institutionId
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/institutions/{institutionId}/products API CORS
+      operationId: Options for /v1/institutions/products API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/{institutionId}/products
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
-        requestParameters:
-          integration.request.path.institutionId: method.request.path.institutionId
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -2664,13 +2656,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitution'
-    SelfCarePaId:
-      title: The PA id used by self care
-      description: An unique ID that identify a Public Administration
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[ -~ ]*$
     BffInstitutionProduct:
       type: object
       required:
