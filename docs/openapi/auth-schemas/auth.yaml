@@ -1,0 +1,50 @@
+info:
+  version: v1.0
+components:
+  schemas:
+
+    TokenExchangeBody:
+      title: Body della richiesta di token exchange
+      description: >-
+        Body della richiesta di token exchange
+      type: object
+      required:
+        - authorizationToken
+      properties:
+        authorizationToken:
+          type: string
+          description: >-
+            Token di autorizzazione
+
+    TokenExchangeResponse:
+        title: Risposta della token exchange
+        description: >-
+          Risposta della token exchange
+        type: object
+        properties:
+          aud:
+            type: string
+          exp:
+            type: integer
+          family_name:
+            type: string
+          fiscal_number:
+            type: string
+          from_aa:
+            type: boolean
+          iat:
+            type: integer
+          iss:
+            type: string
+          jti:
+            type: string
+          level:
+            type: string
+          name:
+            type: string
+          sessionToken:
+            type: string
+          spid_level:
+            type: string
+          uid:
+            type: string
