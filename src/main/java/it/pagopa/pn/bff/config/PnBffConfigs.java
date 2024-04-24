@@ -23,6 +23,7 @@ public class PnBffConfigs {
     private String selfcareBaseUrl;
     private String selfcareSendProdId;
     private String userAttributesBaseUrl;
+    private String downtimeLogsBaseUrl;
 
     @PostConstruct
     public void init() {

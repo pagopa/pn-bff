@@ -82,7 +82,7 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void getSentNotificationV23Error() {
-        mockServer.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnDeliveryClient.getReceivedNotification(

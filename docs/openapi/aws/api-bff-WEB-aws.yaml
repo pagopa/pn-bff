@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: aRWK42ZdnwtUBYlMYqN8w5UPNkCqI+ubDZBL+CXOAZY=
+  version: HrX9yiVK4THFBMplSKT+JjmP2wBopaoAuqmJLSUCgn0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -103,7 +103,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
         '401':
-          $ref: '#/components/responses/UnauthorizedError'
+          description: Access token is missing or invalid
         '404':
           description: Not Found
           content:
@@ -635,10 +635,205 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/downtime/status:
+    get:
+      summary: Stato attuale
+      description: >-
+        Metodo che restituisce l'elenco delle funzionalità di Piattaforma
+        Notifiche e l'elenco dei disservizi presenti al momento
+        dell'invocazione.
+      tags:
+        - Downtime
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      operationId: getCurrentStatusV1
+      x-api-permissions:
+        - api-key-read
+        - log-downtime-read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPnStatusResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/downtime/status API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/downtime/history:
+    get:
+      summary: Ricerca storico disservizi
+      description: >-
+        Elenco dei disservizi di Piattafoma Notifiche riscontrate nel lasso di
+        tempo specificato  dai parametri _fromTime_ e _toTime_. <br/> Il
+        parametro _functionality_ è opzionale e ripetibile; permette di filtrare
+        i disservizi  estratti limitandoli a quelli impattanti le funzionalità
+        elencate.
+      tags:
+        - Downtime
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      operationId: getStatusHistoryV1
+      x-api-permissions:
+        - api-key-read
+        - log-downtime-read
+      parameters:
+        - $ref: '#/components/parameters/queryPage'
+        - $ref: '#/components/parameters/querySize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PnDowntimeHistoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/history
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/downtime/history API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/history
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/downtime/legal-facts/{legalFactId}:
+    get:
+      summary: Ottieni atto opponibile a terzi
+      description: >-
+        Fornisce le informazioni per scaricare un atto opponibile a terzi o, se
+        tale atto va  recuperato dagli archivi, fornisce una stima per eccesso
+        di quanti secondi bisogna  attendere.
+      tags:
+        - Downtime
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      operationId: getLegalFactV1
+      x-api-permissions:
+        - api-key-read
+        - log-downtime-read
+      parameters:
+        - name: legalFactId
+          in: path
+          required: true
+          description: Identificativo dell'atto opponibile a terzi che si vuole scaricare
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegalFactDownloadMetadataResponse'
+        '204':
+          description: Not signed
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/legal-facts/{legalFactId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.legalFactId: method.request.path.legalFactId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/downtime/legal-facts/{legalFactId} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/legal-facts/{legalFactId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.legalFactId: method.request.path.legalFactId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
-    BffPathIun:
-      $ref: '#/components/parameters/pathIun'
     pathIun:
       description: Identificativo Univoco Notifica
       name: iun
@@ -649,8 +844,6 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
-    BffNotificationSearchMandateId:
-      $ref: '#/components/parameters/notificationSearchMandateId'
     notificationSearchMandateId:
       name: mandateId
       in: query
@@ -665,78 +858,21 @@ components:
       required: true
       schema:
         type: string
+    queryPage:
+      name: page
+      in: query
+      required: false
+      description: Pagina di risultati a cui il client è interessato
+      schema:
+        type: string
+    querySize:
+      name: size
+      in: query
+      required: false
+      description: Size della pagina di risultati a cui il client è interessato
+      schema:
+        type: string
   schemas:
-    BffFullNotificationV1:
-      description: Dettaglio notifica con elementi per il Frontend
-      allOf:
-        - $ref: '#/components/schemas/SentNotificationV23'
-        - type: object
-          required:
-            - notificationStatusHistory
-            - notificationStatus
-            - timeline
-          properties:
-            notificationStatusHistory:
-              type: array
-              items:
-                $ref: '#/components/schemas/BffNotificationStatusHistory'
-            notificationStatus:
-              $ref: '#/components/schemas/BffNotificationStatus'
-            timeline:
-              type: array
-              items:
-                $ref: '#/components/schemas/BffNotificationDetailTimeline'
-            radd:
-              $ref: '#/components/schemas/BffNotificationDetailTimeline'
-            otherDocuments:
-              type: array
-              items:
-                $ref: '#/components/schemas/BffNotificationDetailDocument'
-    Problem:
-      properties:
-        type:
-          description: URI reference of type definition
-          type: string
-        status:
-          description: >-
-            The HTTP status code generated by the origin server for this
-            occurrence of the problem.
-          type: number
-          example: 503
-          maximum: 600
-          minimum: 100
-          exclusiveMaximum: true
-        title:
-          description: >-
-            A short, summary of the problem type. Written in english and
-            readable
-          example: Service Unavailable
-          maxLength: 64
-          pattern: ^[ -~]{0,64}$
-          type: string
-        detail:
-          description: A human readable explanation of the problem.
-          example: Request took too long to complete.
-          maxLength: 4096
-          pattern: ^.{0,4096}$
-          type: string
-        traceId:
-          description: Internal support identifier associated to error
-          example: 123e4567-e89b-12d3-a456-426614174000
-          type: string
-        timestamp:
-          description: date and time referred to UTC
-          example: '2022-07-27T12:22:33.444Z'
-          type: string
-          format: date-time
-        errors:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/ProblemError'
-      required:
-        - status
-        - errors
     TaxId:
       description: C.F. persona fisica o persona giuridica
       type: string
@@ -2474,6 +2610,32 @@ components:
               type: string
             recIndex:
               type: number
+    BffFullNotificationV1:
+      description: Dettaglio notifica con elementi per il Frontend
+      allOf:
+        - $ref: '#/components/schemas/SentNotificationV23'
+        - type: object
+          required:
+            - notificationStatusHistory
+            - notificationStatus
+            - timeline
+          properties:
+            notificationStatusHistory:
+              type: array
+              items:
+                $ref: '#/components/schemas/BffNotificationStatusHistory'
+            notificationStatus:
+              $ref: '#/components/schemas/BffNotificationStatus'
+            timeline:
+              type: array
+              items:
+                $ref: '#/components/schemas/BffNotificationDetailTimeline'
+            radd:
+              $ref: '#/components/schemas/BffNotificationDetailTimeline'
+            otherDocuments:
+              type: array
+              items:
+                $ref: '#/components/schemas/BffNotificationDetailDocument'
     ProblemError:
       properties:
         code:
@@ -2495,29 +2657,51 @@ components:
           type: string
       required:
         - code
-    BffApiKeysResponse:
-      title: Elenco di api keys
-      description: Dto contenente la lista delle api keys associate ad un utente.
-      type: object
-      required:
-        - items
+    Problem:
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/BffApiKeyRow'
-        lastKey:
+        type:
+          description: URI reference of type definition
           type: string
-        lastUpdate:
-          type: string
-        total:
+        status:
+          description: >-
+            The HTTP status code generated by the origin server for this
+            occurrence of the problem.
           type: number
-    BffRequestNewApiKey:
-      $ref: '#/components/schemas/RequestNewApiKey'
-    BffResponseNewApiKey:
-      $ref: '#/components/schemas/ResponseNewApiKey'
-    BffRequestApiKeyStatus:
-      $ref: '#/components/schemas/RequestApiKeyStatus'
+          example: 503
+          maximum: 600
+          minimum: 100
+          exclusiveMaximum: true
+        title:
+          description: >-
+            A short, summary of the problem type. Written in english and
+            readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+        - status
+        - errors
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object
@@ -2579,6 +2763,23 @@ components:
           description: Storico degli stati dell'api key
           items:
             $ref: '#/components/schemas/BffApiKeyStatusHistory'
+    BffApiKeysResponse:
+      title: Elenco di api keys
+      description: Dto contenente la lista delle api keys associate ad un utente.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffApiKeyRow'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: number
     RequestNewApiKey:
       title: Request creazione api key
       description: Request per la creazione di una nuova api key
@@ -2677,33 +2878,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
-    BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/Consent'
-        privacy:
-          $ref: '#/components/schemas/Consent'
-    BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-    BffTosPrivacyActionBody:
-      required:
-        - version
-        - action
-      allOf:
-        - $ref: '#/components/schemas/ConsentAction'
-        - type: object
-          properties:
-            version:
-              $ref: '#/components/schemas/ConsentVersion'
     ConsentType:
       type: string
       description: type of consent
@@ -2733,6 +2907,16 @@ components:
           $ref: '#/components/schemas/ConsentVersion'
         isFirstAccept:
           type: boolean
+    BffTosPrivacyConsent:
+      type: object
+      required:
+        - tos
+        - privacy
+      properties:
+        tos:
+          $ref: '#/components/schemas/Consent'
+        privacy:
+          $ref: '#/components/schemas/Consent'
     ConsentAction:
       type: object
       properties:
@@ -2742,9 +2926,145 @@ components:
           enum:
             - ACCEPT
             - DECLINE
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
+    BffTosPrivacyActionBody:
+      required:
+        - version
+        - action
+      allOf:
+        - $ref: '#/components/schemas/ConsentAction'
+        - type: object
+          properties:
+            version:
+              $ref: '#/components/schemas/ConsentVersion'
+    BffTosPrivacyBody:
+      type: object
+      properties:
+        tos:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+        privacy:
+          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+    BffPnStatusResponse:
+      type: object
+      required:
+        - lastCheckTimestamp
+        - appIsFullyOperative
+      properties:
+        lastCheckTimestamp:
+          type: string
+          description: data a cui corrisponde l'ultimo check sullo stato della piattaforma
+          format: date-time
+        appIsFullyOperative:
+          type: boolean
+          nullable: false
+          description: Flag per indicare se l'applicazione è operativa
+    PnFunctionality:
+      title: Funzionalità di PN
+      description: >-
+        - __NOTIFICATION_CREATE__: la possibilità di creare nuove notifiche.
+
+        - __NOTIFICATION_VISUALIZATION__: la possibilità di visualizzare le
+        notifiche e scaricare gli atti. 
+
+        - __NOTIFICATION_WORKFLOW__: l'avanzamento del processo di notifica. 
+      type: string
+      enum:
+        - NOTIFICATION_CREATE
+        - NOTIFICATION_VISUALIZATION
+        - NOTIFICATION_WORKFLOW
+      x-enum-varnames:
+        - NOTIFICATION_CREATE
+        - NOTIFICATION_VISUALIZATION
+        - NOTIFICATION_WORKFLOW
+    PnFunctionalityStatus:
+      type: string
+      enum:
+        - KO
+        - OK
+    PnDowntimeEntry:
+      title: Dati relativi ad un disservizio di PN.
+      type: object
+      required:
+        - functionality
+        - status
+        - startDate
+      properties:
+        functionality:
+          $ref: '#/components/schemas/PnFunctionality'
+        status:
+          $ref: '#/components/schemas/PnFunctionalityStatus'
+        startDate:
+          title: data inizio disservizio
+          type: string
+          format: date-time
+        endDate:
+          title: data fine disservizio
+          description: >-
+            se il disservizio è ancora attivo questo campo sarà assente o con
+            valore _null_
+          type: string
+          format: date-time
+        legalFactId:
+          title: id dell'atto opponibile a terzi
+          description: >-
+            Se assente o valorizzato _null_ indica che l'atto opponibile a terzi
+            non è ancora disponibile. Questo avviene per i disservizi ancora
+            aperti e per i disservizi  terminati da pochi minuti. <br/> Questo
+            valore è da utilizzare con l'API _getLegalFact_ di questo stesso
+            servizio.
+          type: string
+        fileAvailable:
+          type: boolean
+    PnDowntimeHistoryResponse:
+      title: Elenco disservizi con paginazione
+      description: Risposta a una query dello storico dei disservizi
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          title: Elenco di disservizi
+          type: array
+          items:
+            $ref: '#/components/schemas/PnDowntimeEntry'
+        nextPage:
+          title: prossima pagina di risultati
+          description: >-
+            Se questo attributo non è presente o valorizzato _null_ indica che
+            la query eseguita non presenta ulteriori risultati. <br/> Se questo
+            attributo è valorizzato indica che la query può contenere ulteriori 
+            risultati. La richiesta va rieseguita inserendo nel parametro _page_
+            il valore  di questo campo.
+          type: string
+    LegalFactDownloadMetadataResponse:
+      title: Url e metadati per il download di un allegato di una notifica
+      description: |-
+        I due campi più importanti sono __url__ e __retryAfter__. <br/>
+          - __url__ è presente se il file è pronto per essere scaricato ed indica l'url a cui fare GET. <br/>
+          - __retryAfter__ indica che il file non è stato archiviato e bisognerà aspettare un numero di
+            secondi non inferiore a quanto indicato dal campo _retryAfter_. <br/>
+      type: object
+      required:
+        - filename
+        - contentLength
+      properties:
+        filename:
+          type: string
+        contentLength:
+          type: number
+          example: 54092
+          description: dimensione, in byte, del contenuto.
+        url:
+          type: string
+          description: >-
+            URL preautorizzato a cui effettuare una richiesta GET per ottenere
+            il  contenuto del documento. Presente solo se il documento è pronto
+            per il download.
+        retryAfter:
+          type: number
+          description: >-
+            Stima del numero di secondi da aspettare prima che il contenuto del 
+            documento sia scaricabile.
+  responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
       type: apiKey
@@ -2772,6 +3092,10 @@ tags:
     description: Invocazioni per sapere i portali disponibili di un ente
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
+  - name: Downtime
+    description: >-
+      Invocazioni utilizzabili dai mittenti per la visualizzazione dello stato
+      dei servizi
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

@@ -1,0 +1,33 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    ###########################################################################################
+    ###                          PARAMETRI DI RICERCA DEI DOWNTIME                          ###
+    ###########################################################################################
+    BffQueryPage:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
+    BffQuerySize:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
+
+  schemas:
+    BffPnStatusResponse:
+      type: object
+      required:
+        - lastCheckTimestamp
+        - appIsFullyOperative
+      properties:
+        lastCheckTimestamp:
+          type: string
+          description: data a cui corrisponde l'ultimo check sullo stato della piattaforma
+          format: date-time
+        appIsFullyOperative:
+          type: boolean
+          nullable: false
+          description: Flag per indicare se l'applicazione è operativa
+
+    BffPnDowntimeHistoryResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
+    BffLegalFactDownloadMetadataResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'

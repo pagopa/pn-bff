@@ -79,7 +79,7 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationError() {
-        mockServer.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(paDeliveryClient.getSentNotification(

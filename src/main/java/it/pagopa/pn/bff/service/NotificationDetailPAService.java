@@ -37,8 +37,8 @@ public class NotificationDetailPAService {
                                                                  String xPagopaPnCxId, String iun,
                                                                  List<String> xPagopaPnCxGroups
     ) {
-        Mono<FullSentNotificationV23> notificationDetail;
-        notificationDetail = pnDeliveryClientPA.getSentNotification(
+        log.info("Get notification detail for iun {}", iun);
+        Mono<FullSentNotificationV23> notificationDetail = pnDeliveryClientPA.getSentNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,

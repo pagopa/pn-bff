@@ -9,7 +9,6 @@ import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class NotificationDetailRecipientServiceTest {
-    @Autowired
+
     private static NotificationDetailRecipientService notificationDetailRecipientService;
     private static PnDeliveryClientRecipientImpl pnDeliveryClientRecipient;
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();

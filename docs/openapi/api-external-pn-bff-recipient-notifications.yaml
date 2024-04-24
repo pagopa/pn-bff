@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Notifiche Destinatari
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-recipient
+  x-summary: 'API di pn-bff esposte al Web ai destinatari per la visualizzazione e gestione delle notifiche'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: NotificationReceived
+    description: >-
+      Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
+
+paths:
+
+  '/bff/v1/notifications/received/{iun}':
+    get:
+      summary: Accesso notifiche ricevute
+      description: >-
+        Utilizzato da Persone Fisiche e Persone Giuridiche per accedere ai dettagli delle 
+        notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '401':
+          description: Access token is missing or invalid

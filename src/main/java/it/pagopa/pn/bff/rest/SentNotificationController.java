@@ -45,8 +45,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                              List<String> xPagopaPnCxGroups,
                                                                              final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationV1");
-        Mono<BffFullNotificationV1> serviceResponse;
-        serviceResponse = notificationDetailPAService.getSentNotificationDetail(
+        Mono<BffFullNotificationV1> serviceResponse = notificationDetailPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 

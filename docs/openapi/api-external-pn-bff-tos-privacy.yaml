@@ -42,13 +42,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffTosPrivacyConsent'
+                $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
         '400':
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
     put:
       summary: Accettazione TOS e Privacy
@@ -64,7 +64,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffTosPrivacyBody'
+              $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
       responses:
         '200':
           description: OK
@@ -73,19 +73,4 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-
-components:
-
-  schemas:
-    BffTosPrivacyConsent:
-      $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
-
-    BffTosPrivacyBody:
-      $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
-
-    BffTosPrivacyActionBody:
-      $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyActionBody'
-
-    Problem:
-      $ref: './common-refs.yaml#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
