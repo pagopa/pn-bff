@@ -7,6 +7,7 @@ import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
+import it.pagopa.pn.bff.utils.helpers.MonoHelpers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,19 +40,6 @@ class ApiKeysPaControllerTest {
     private ApiKeysPaService apiKeysPaService;
     @SpyBean
     private ApiKeysPaController apiKeysPaController;
-
-    private <TC, FC> boolean monoComparator(TC argumentToCompare, FC argumentForComparison) {
-        if (argumentToCompare == null || argumentForComparison == null) {
-            return false;
-        }
-        if (!(argumentToCompare instanceof Mono) || !(argumentForComparison instanceof Mono)) {
-            return false;
-        }
-        Mono<Boolean> result = ((Mono<?>) argumentToCompare)
-                .zipWith((Mono<?>) argumentForComparison)
-                .map((args) -> args.getT1().equals(args.getT2()));
-        return Boolean.TRUE.equals(result.block());
-    }
 
     @Test
     void getApiKeys() {
@@ -188,7 +176,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -232,7 +220,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -343,7 +331,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -384,7 +372,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
