@@ -47,15 +47,17 @@ public class DowntimeLogsService {
     /**
      * Get application status history
      *
-     * @param page page to return
-     * @param size number of results to return
+     * @param fromDate the min date of the events
+     * @param toDate   the max date of the events
+     * @param page     page to return
+     * @param size     number of results to return
      * @return the list of the events related to the application status
      */
-    public Mono<BffPnDowntimeHistoryResponse> getStatusHistory(String page, String size) {
+    public Mono<BffPnDowntimeHistoryResponse> getStatusHistory(OffsetDateTime fromDate, OffsetDateTime toDate, String page, String size) {
         log.info("Get application status history");
 
-        OffsetDateTime fromTime = OffsetDateTime.parse("1900-01-01T00:00:00Z");
-        OffsetDateTime toTime = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
+        OffsetDateTime fromTime = fromDate == null ? OffsetDateTime.parse("1900-01-01T00:00:00Z") : fromDate;
+        OffsetDateTime toTime = toDate == null ? OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS) : toDate;
         List<PnFunctionality> functionalities = new ArrayList<>(Arrays.asList(PnFunctionality.values()));
 
         Mono<PnDowntimeHistoryResponse> pnDowntimeHistoryResponse = pnDowntimeLogsClient.getStatusHistory(fromTime, toTime, functionalities, page, size)

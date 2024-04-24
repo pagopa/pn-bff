@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: HrX9yiVK4THFBMplSKT+JjmP2wBopaoAuqmJLSUCgn0=
+  version: Gq7VCIoxxBbhYEESGYoPwSQ0/ta5R2oN7Wl3km6nT7U=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -712,6 +712,8 @@ paths:
         - api-key-read
         - log-downtime-read
       parameters:
+        - $ref: '#/components/parameters/BffQueryFromTime'
+        - $ref: '#/components/parameters/queryToTime'
         - $ref: '#/components/parameters/queryPage'
         - $ref: '#/components/parameters/querySize'
       responses:
@@ -858,6 +860,22 @@ components:
       required: true
       schema:
         type: string
+    BffQueryFromTime:
+      name: fromTime
+      in: query
+      required: false
+      description: data/ora di inizio dell'intervallo entro cui eseguire la ricerca
+      schema:
+        type: string
+        format: date-time
+    queryToTime:
+      name: toTime
+      in: query
+      required: false
+      description: data/ora di fine dell'intervallo entro cui eseguire la ricerca
+      schema:
+        type: string
+        format: date-time
     queryPage:
       name: page
       in: query

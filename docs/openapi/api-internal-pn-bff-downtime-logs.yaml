@@ -71,6 +71,8 @@ paths:
         - 'api-key-read'
         - 'log-downtime-read'
       parameters:
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFromTime'
+        - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryToTime'
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryPage'
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQuerySize'
       responses:

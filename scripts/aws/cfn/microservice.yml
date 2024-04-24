@@ -252,8 +252,9 @@ Resources:
         ContainerEnvEntry6: !Sub 'PN_BFF_APIKEYMANAGERBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry7: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry8: !Sub 'PN_BFF_USERATTRIBUTESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry9: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
-        ContainerEnvEntry10: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        ContainerEnvEntry9: !Sub 'PN_BFF_DOWNTIME_LOGS_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry10: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
+        ContainerEnvEntry11: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
