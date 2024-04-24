@@ -21,9 +21,17 @@ components:
         description: >-
           Risposta della token exchange
         type: object
+        required:
+          - exp
+          - iat
+          - name
+          - sessionToken
+          - uid
         properties:
           aud:
             type: string
+          desired_exp:
+            type: integer
           exp:
             type: integer
           family_name:
@@ -42,9 +50,48 @@ components:
             type: string
           name:
             type: string
+          organization:
+            $ref: '#/components/schemas/TokenExchangeOrganization'
           sessionToken:
             type: string
           spid_level:
             type: string
           uid:
             type: string
+          hasGroup:
+            type: boolean
+
+    TokenExchangeOrganization:
+      title: Organizzazione
+      description: >-
+        Organizzazione
+      type: object
+      required:
+        - id
+        - name
+        - roles
+        - fiscal_code
+      properties:
+        fiscal_code:
+          type: string
+        hasGroups:
+          type: boolean
+        id:
+          type: string
+        ipaCode:
+          type: string
+        name:
+          type: string
+        groups:
+          type: array
+          items:
+            type: string
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              partyRole:
+                type: string
+              role:
+                type: string

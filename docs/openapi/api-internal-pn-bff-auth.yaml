@@ -39,28 +39,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenExchangeBody'
+              $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeBody'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenExchangeResponse'
+                $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeResponse'
         '400':
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-
-components:
-  schemas:
-    TokenExchangeBody:
-      $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeBody'
-
-    TokenExchangeResponse:
-      $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeResponse'
-
-    Problem:
-      $ref: './common-refs.yaml#/components/schemas/Problem'
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
