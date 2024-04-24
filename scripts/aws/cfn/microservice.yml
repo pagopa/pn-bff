@@ -210,6 +210,10 @@ Parameters:
     AllowedValues:
       - "true"
       - "false"
+      -
+  AuthFleetBaseUrl:
+    Type: String
+    Description: 'AuthFleet base URL'
 
 Resources:
 
@@ -244,7 +248,7 @@ Resources:
         ContainerEnvEntry6: !Sub 'PN_BFF_APIKEYMANAGERBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry7: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry8: !Sub 'PN_BFF_USERATTRIBUTESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry9: !Sub 'PN_BFF_AUTHFLEETURL=http://${WebApiDnsName}:8080'
+        ContainerEnvEntry9: !Sub 'PN_BFF_AUTHFLEETBASEURL=${AuthFleetBaseUrl}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds

@@ -2,6 +2,7 @@
   "Parameters": {
     "PnCronAnalyzer": "* */1 * * * *",
     "WireTapLogActivation": "true",
-    "MountEfs": "true"
+    "MountEfs": "true",
+    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it"
   }
 }

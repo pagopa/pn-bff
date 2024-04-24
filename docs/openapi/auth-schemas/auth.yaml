@@ -23,13 +23,10 @@ components:
         type: object
         required:
           - exp
-          - iat
           - name
           - sessionToken
           - uid
         properties:
-          aud:
-            type: string
           desired_exp:
             type: integer
           exp:
@@ -38,23 +35,11 @@ components:
             type: string
           fiscal_number:
             type: string
-          from_aa:
-            type: boolean
-          iat:
-            type: integer
-          iss:
-            type: string
-          jti:
-            type: string
-          level:
-            type: string
           name:
             type: string
           organization:
             $ref: '#/components/schemas/TokenExchangeOrganization'
           sessionToken:
-            type: string
-          spid_level:
             type: string
           uid:
             type: string
@@ -62,9 +47,9 @@ components:
             type: boolean
 
     TokenExchangeOrganization:
-      title: Organizzazione
+      title: Organization
       description: >-
-        Organizzazione
+        Organization dell'utente
       type: object
       required:
         - id
@@ -77,8 +62,6 @@ components:
         hasGroups:
           type: boolean
         id:
-          type: string
-        ipaCode:
           type: string
         name:
           type: string
