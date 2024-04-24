@@ -6,6 +6,16 @@ components:
     ###########################################################################################
     ###                          PARAMETRI DI RICERCA DEI DOWNTIME                          ###
     ###########################################################################################
+    BffQueryFromTime:
+      name: fromTime
+      in: query
+      required: false
+      description: data/ora di inizio dell'intervallo entro cui eseguire la ricerca
+      schema:
+        type: string
+        format: date-time
+    BffQueryToTime:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
     BffQueryPage:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/81c2ff5905a116f97f38f602094bb0fa00232915/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
     BffQuerySize:

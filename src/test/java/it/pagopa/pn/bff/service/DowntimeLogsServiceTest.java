@@ -69,7 +69,7 @@ public class DowntimeLogsServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.just(downtimeHistoryResponse));
 
-        StepVerifier.create(downtimeLogsService.getStatusHistory("1", "10"))
+        StepVerifier.create(downtimeLogsService.getStatusHistory(null, null, "1", "10"))
                 .expectNext(DowntimeHistoryResponseMapper.modelMapper.mapPnDowntimeHistoryResponse(downtimeHistoryResponse))
                 .verifyComplete();
     }
@@ -84,7 +84,7 @@ public class DowntimeLogsServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(downtimeLogsService.getStatusHistory("1", "10"))
+        StepVerifier.create(downtimeLogsService.getStatusHistory(null, null, "1", "10"))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();

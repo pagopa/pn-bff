@@ -14,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.time.OffsetDateTime;
+
 @CustomLog
 @RestController
 public class DowntimeLogsController implements DowntimeApi {
@@ -46,16 +48,18 @@ public class DowntimeLogsController implements DowntimeApi {
      * GET bff/v1/downtime/history: Application status history
      * Get the history of the events related to application status
      *
+     * @param fromDate the min date of the events
+     * @param toDate   the max date of the events
      * @param page     page number
      * @param size     number of elements per page
      * @param exchange
      * @return the application status history
      */
     @Override
-    public Mono<ResponseEntity<BffPnDowntimeHistoryResponse>> getStatusHistoryV1(String page, String size, final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffPnDowntimeHistoryResponse>> getStatusHistoryV1(OffsetDateTime fromDate, OffsetDateTime toDate, String page, String size, final ServerWebExchange exchange) {
         log.logStartingProcess("getStatusHistoryV1");
 
-        Mono<BffPnDowntimeHistoryResponse> serviceResponse = downtimeLogsService.getStatusHistory(page, size)
+        Mono<BffPnDowntimeHistoryResponse> serviceResponse = downtimeLogsService.getStatusHistory(fromDate, toDate, page, size)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 
 

@@ -21,6 +21,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.time.OffsetDateTime;
+
 @Slf4j
 @WebFluxTest(DowntimeLogsController.class)
 public class DowntimeLogsControllerTest {
@@ -73,7 +75,12 @@ public class DowntimeLogsControllerTest {
     void getStatusHistory() {
         BffPnDowntimeHistoryResponse response = DowntimeHistoryResponseMapper.modelMapper.mapPnDowntimeHistoryResponse(downtimeLogsMock.getDowntimeHistoryMock());
 
-        Mockito.when(downtimeLogsService.getStatusHistory(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(downtimeLogsService.getStatusHistory(
+                        Mockito.nullable(OffsetDateTime.class),
+                        Mockito.nullable(OffsetDateTime.class),
+                        Mockito.anyString(),
+                        Mockito.anyString())
+                )
                 .thenReturn(Mono.just(response));
 
         webTestClient
@@ -91,12 +98,17 @@ public class DowntimeLogsControllerTest {
                 .expectBody(BffPnDowntimeHistoryResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(downtimeLogsService).getStatusHistory("1", "10");
+        Mockito.verify(downtimeLogsService).getStatusHistory(null, null, "1", "10");
     }
 
     @Test
     void getStatusHistoryError() {
-        Mockito.when(downtimeLogsService.getStatusHistory(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(downtimeLogsService.getStatusHistory(
+                        Mockito.nullable(OffsetDateTime.class),
+                        Mockito.nullable(OffsetDateTime.class),
+                        Mockito.anyString(),
+                        Mockito.anyString())
+                )
                 .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         webTestClient
@@ -112,7 +124,7 @@ public class DowntimeLogsControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(downtimeLogsService).getStatusHistory("1", "10");
+        Mockito.verify(downtimeLogsService).getStatusHistory(null, null, "1", "10");
     }
 
     @Test
