@@ -3,10 +3,12 @@
     {
       "intendedUsage": "WEB",
       "openapiFiles": [
-        "api-internal-pn-bff-pa.yaml",
-        "api-internal-pn-bff-recipient.yaml",
+        "api-internal-pn-bff-pa-notifications.yaml",
+        "api-internal-pn-bff-recipient-notifications.yaml",
         "api-internal-pn-bff-pa-apikeys.yaml",
+        "api-internal-pn-bff-pa-institution-and-product.yaml",
         "api-internal-pn-bff-tos-privacy.yaml",
+        "api-internal-pn-bff-downtime-logs.yaml",
         "api-internal-pn-bff-auth.yaml"
       ],
       "servicePath": "bff"

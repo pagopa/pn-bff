@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoHelpers;
+import it.pagopa.pn.bff.utils.helpers.MonoComparator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -60,7 +60,7 @@ class ApiKeysPaControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("lastUpdate", LAST_UPDATE)
@@ -107,7 +107,7 @@ class ApiKeysPaControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("lastUpdate", LAST_UPDATE)
@@ -157,7 +157,7 @@ class ApiKeysPaControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -203,7 +203,7 @@ class ApiKeysPaControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH)
+                                .path(PnBffRestConstants.APIKEYS_PATH)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -220,7 +220,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -240,7 +240,7 @@ class ApiKeysPaControllerTest {
         webTestClient.delete()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -275,7 +275,7 @@ class ApiKeysPaControllerTest {
         webTestClient.delete()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -313,7 +313,7 @@ class ApiKeysPaControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -331,7 +331,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -355,7 +355,7 @@ class ApiKeysPaControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.GET_APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -372,7 +372,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request)))),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }

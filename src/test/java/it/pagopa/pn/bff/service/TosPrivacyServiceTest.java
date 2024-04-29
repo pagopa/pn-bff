@@ -9,10 +9,9 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -24,16 +23,14 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {TosPrivacyService.class})
 class TosPrivacyServiceTest {
+    private static TosPrivacyService tosPrivacyService;
+    private static PnUserAttributesClientImpl pnUserAttributesClient;
     ConsentsMock consentsMock = new ConsentsMock();
-    @Autowired
-    private TosPrivacyService tosPrivacyService;
-    private PnUserAttributesClientImpl pnUserAttributesClient;
 
-    @BeforeEach
-    void setup() {
-        this.pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
-
-        this.tosPrivacyService = new TosPrivacyService(pnUserAttributesClient);
+    @BeforeAll
+    public static void setup() {
+        pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
+        tosPrivacyService = new TosPrivacyService(pnUserAttributesClient);
     }
 
     @Test

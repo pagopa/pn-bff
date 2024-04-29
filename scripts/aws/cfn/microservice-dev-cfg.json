@@ -1,8 +1,10 @@
 {
   "Parameters": {
     "PnCronAnalyzer": "* */1 * * * *",
-    "WireTapLogActivation": "true",
-    "MountEfs": "true",
+    "WireTapLogActivation": "false",
+    "MountEfs": "false",
+    "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
+    "SelfCareSendProdId": "prod-pn-dev",
     "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it"
   }
 }

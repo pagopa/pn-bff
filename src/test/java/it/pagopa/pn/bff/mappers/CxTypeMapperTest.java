@@ -31,4 +31,12 @@ class CxTypeMapperTest {
         assertNotNull(actualConvertPACXTypeResult);
         assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
     }
+
+    @Test
+    void testConvertExternalRegistriesSelfCare(){
+        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet actualConvertExternalRegistriesSelfCare = CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertExternalRegistriesSelfCare);
+        assertEquals(actualConvertExternalRegistriesSelfCare.getValue(), cxTypeAuthFleet.getValue());
+    }
 }

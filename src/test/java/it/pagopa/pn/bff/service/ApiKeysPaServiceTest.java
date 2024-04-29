@@ -17,7 +17,6 @@ import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,8 +28,8 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ApiKeysPaServiceTest {
-    @Autowired
+class ApiKeysPaServiceTest {
+
     private static ApiKeysPaService apiKeysPaService;
     private static PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
     private static PnInfoPaClientImpl pnInfoPaClient;

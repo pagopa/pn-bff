@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.config;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
@@ -60,10 +61,20 @@ public class MsClientConfig extends CommonBaseClient {
     @Bean
     @Primary
     ConsentsApi consentsApi(PnBffConfigs cfg) {
-        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient consentsApi =
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
                 new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
-        consentsApi.setBasePath(cfg.getUserAttributesBaseUrl());
-        return new ConsentsApi(consentsApi);
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new ConsentsApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    DowntimeApi downtimeLogsApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getDowntimeLogsBaseUrl());
+        return new DowntimeApi(apiClient);
     }
 }
