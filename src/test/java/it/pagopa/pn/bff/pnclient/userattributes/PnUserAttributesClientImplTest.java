@@ -31,7 +31,7 @@ class PnUserAttributesClientImplTest {
     private ConsentsApi consentsApi;
 
     @Test
-    void getTosConsentTest() throws RestClientException {
+    void getTosConsent() throws RestClientException {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -46,7 +46,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void getTosContentErrorTest() {
+    void getTosContentError() {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -61,7 +61,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void getPrivacyConsentTest() throws RestClientException {
+    void getPrivacyConsent() throws RestClientException {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -76,7 +76,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void getPrivacyContentErrorTest() {
+    void getPrivacyContentError() {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -91,7 +91,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void acceptConsentTest() {
+    void acceptConsent() {
         when(consentsApi.consentAction(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -110,7 +110,7 @@ class PnUserAttributesClientImplTest {
     }
 
     @Test
-    void acceptConsentErrorTest() {
+    void acceptConsentError() {
         when(consentsApi.consentAction(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

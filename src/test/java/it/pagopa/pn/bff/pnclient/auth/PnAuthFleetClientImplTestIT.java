@@ -49,7 +49,7 @@ public class PnAuthFleetClientImplTestIT {
     }
 
     @Test
-    void postTokenExchangeOk() throws JsonProcessingException {
+    void tokenExchange() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeBody());
         String response = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeResponse());
@@ -71,7 +71,7 @@ public class PnAuthFleetClientImplTestIT {
     }
 
     @Test
-    void postTokenExchangeError() throws JsonProcessingException {
+    void tokenExchangeError() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeBody());
 
