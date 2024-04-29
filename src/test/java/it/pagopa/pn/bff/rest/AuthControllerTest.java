@@ -39,7 +39,7 @@ public class AuthControllerTest {
 
 
     @Test
-    void postTokenExchange() {
+    void tokenExchange() {
         BffTokenExchangeBody request = new BffTokenExchangeBody();
         request.authorizationToken("authorizationToken");
         BffTokenExchangeResponse response = authFleetMock.getTokenExchangeResponse();
@@ -68,12 +68,12 @@ public class AuthControllerTest {
     }
 
     @Test
-    void postTokenExchangeError() {
+    void tokenExchangeError() {
         BffTokenExchangeBody request = new BffTokenExchangeBody();
         request.authorizationToken("authorizationToken");
 
         Mockito.when(authService.tokenExchange(
-                Mockito.any(),
+                Mockito.anyString(),
                 Mockito.any()
         )).thenReturn(Mono.error(new WebClientResponseException(500, "Error", null, null, null)));
 
