@@ -1,21 +1,21 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 
 public class AuthFleetMock {
 
-    public final String ORIGIN = "http://localhost:8080";
+    public final static String ORIGIN = "http://localhost:8080";
 
-    public TokenExchangeBody getTokenExchangeBody() {
-        TokenExchangeBody tokenExchangeBody = new TokenExchangeBody();
+    public BffTokenExchangeBody getTokenExchangeBody() {
+        BffTokenExchangeBody tokenExchangeBody = new BffTokenExchangeBody();
         tokenExchangeBody.authorizationToken("authorization-token");
 
         return tokenExchangeBody;
     }
 
-    public TokenExchangeResponse getTokenExchangeResponse() {
-        TokenExchangeResponse tokenExchangeResponse = new TokenExchangeResponse();
+    public BffTokenExchangeResponse getTokenExchangeResponse() {
+        BffTokenExchangeResponse tokenExchangeResponse = new BffTokenExchangeResponse();
         tokenExchangeResponse.sessionToken("mock-access-token");
         tokenExchangeResponse.exp(3600);
         tokenExchangeResponse.desiredExp(3600);

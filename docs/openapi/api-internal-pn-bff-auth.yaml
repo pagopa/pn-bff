@@ -39,14 +39,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeBody'
+              $ref: './auth-schemas/auth.yaml#/components/schemas/BffTokenExchangeBody'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: './auth-schemas/auth.yaml#/components/schemas/TokenExchangeResponse'
+                $ref: './auth-schemas/auth.yaml#/components/schemas/BffTokenExchangeResponse'
         '400':
           description: Bad Request
           content:

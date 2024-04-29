@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.TokenExchangeApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.bff.service.AuthService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -22,12 +22,12 @@ public class AuthController implements TokenExchangeApi {
     }
 
     @Override
-    public Mono<ResponseEntity<TokenExchangeResponse>> tokenExchangeV1(
-            Mono<TokenExchangeBody> tokenExchangeBodyMono,
+    public Mono<ResponseEntity<BffTokenExchangeResponse>> tokenExchangeV1(
+            Mono<BffTokenExchangeBody> tokenExchangeBodyMono,
             final ServerWebExchange exchange
     ) {
         log.logStartingProcess("tokenExchangeV1");
-        Mono<TokenExchangeResponse> serviceResponse = authService.tokenExchange(
+        Mono<BffTokenExchangeResponse> serviceResponse = authService.tokenExchange(
                 exchange.getRequest().getHeaders().getOrigin(),
                 tokenExchangeBodyMono
         );

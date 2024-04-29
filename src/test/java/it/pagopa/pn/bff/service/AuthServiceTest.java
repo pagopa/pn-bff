@@ -1,11 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.bff.mocks.AuthFleetMock;
 import it.pagopa.pn.bff.pnclient.auth.PnAuthFleetClientImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +20,28 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {AuthService.class})
 public class AuthServiceTest {
     @Autowired
-    private AuthService authService;
-    private PnAuthFleetClientImpl pnAuthFleetClient;
+    private static AuthService authService;
+    private static PnAuthFleetClientImpl pnAuthFleetClient;
     private final AuthFleetMock authFleetMock = new AuthFleetMock();
 
-    @BeforeEach
-    void setup() {
-        this.pnAuthFleetClient = mock(PnAuthFleetClientImpl.class);
+    @BeforeAll
+    public static void setup() {
+        pnAuthFleetClient = mock(PnAuthFleetClientImpl.class);
 
-        this.authService = new AuthService(pnAuthFleetClient);
+        authService = new AuthService(pnAuthFleetClient);
     }
 
     @Test
-    void testPostTokenExchangeOk() {
-        TokenExchangeResponse tokenExchangeResponse = authFleetMock.getTokenExchangeResponse();
+    void testTokenExchange() {
+        BffTokenExchangeResponse tokenExchangeResponse = authFleetMock.getTokenExchangeResponse();
 
         when(pnAuthFleetClient.postTokenExchange(
                 Mockito.anyString(),
-                Mockito.any(TokenExchangeBody.class)
+                Mockito.any(BffTokenExchangeBody.class)
         )).thenReturn(Mono.just(tokenExchangeResponse));
 
         StepVerifier.create(authService.tokenExchange(
-                        authFleetMock.ORIGIN,
+                        AuthFleetMock.ORIGIN,
                         Mono.just(authFleetMock.getTokenExchangeBody())
                 ))
                 .expectNext(authFleetMock.getTokenExchangeResponse())
@@ -49,14 +49,14 @@ public class AuthServiceTest {
     }
 
     @Test
-    void testPostTokenExchangeError() {
+    void testTokenExchangeError() {
         when(pnAuthFleetClient.postTokenExchange(
                 Mockito.anyString(),
-                Mockito.any(TokenExchangeBody.class)
+                Mockito.any(BffTokenExchangeBody.class)
         )).thenReturn(Mono.error(new WebClientResponseException(400, "Bad Request", null, null, null)));
 
         StepVerifier.create(authService.tokenExchange(
-                        authFleetMock.ORIGIN,
+                        AuthFleetMock.ORIGIN,
                         Mono.just(authFleetMock.getTokenExchangeBody())
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException

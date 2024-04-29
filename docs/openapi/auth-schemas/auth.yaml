@@ -3,7 +3,7 @@ info:
 components:
   schemas:
 
-    TokenExchangeBody:
+    BffTokenExchangeBody:
       title: Body della richiesta di token exchange
       description: >-
         Body della richiesta di token exchange
@@ -16,7 +16,7 @@ components:
           description: >-
             Token di autorizzazione
 
-    TokenExchangeResponse:
+    BffTokenExchangeResponse:
         title: Risposta della token exchange
         description: >-
           Risposta della token exchange
@@ -35,18 +35,22 @@ components:
             type: string
           fiscal_number:
             type: string
+            minLength: 16
+            maxLength: 16
+            pattern: ([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$/i
+            x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           name:
             type: string
           organization:
-            $ref: '#/components/schemas/TokenExchangeOrganization'
+            $ref: '#/components/schemas/BffTokenExchangeOrganization'
           sessionToken:
             type: string
           uid:
             type: string
-          hasGroup:
-            type: boolean
+            pattern: ^[ -~]*$
+            maxLength: 64
 
-    TokenExchangeOrganization:
+    BffTokenExchangeOrganization:
       title: Organization
       description: >-
         Organization dell'utente
@@ -59,6 +63,10 @@ components:
       properties:
         fiscal_code:
           type: string
+          minLength: 16
+          maxLength: 16
+          pattern: ([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$/i
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
         hasGroups:
           type: boolean
         id:

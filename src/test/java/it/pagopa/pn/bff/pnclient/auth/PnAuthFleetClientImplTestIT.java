@@ -13,17 +13,16 @@ import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-@SpringBootTest(properties = {
-        "pn.bff.auth-fleet-base-url=http://localhost:9998",
-        "cors.allowed.domains=http://localhost:8080"
-})
-public class PnAuthFleetClientImplTest {
+@SpringBootTest
+@TestPropertySource(locations = "classpath:application-test.properties")
+public class PnAuthFleetClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/token-exchange";
@@ -58,7 +57,7 @@ public class PnAuthFleetClientImplTest {
         mockServerClient.when(request()
                 .withMethod("POST")
                 .withPath(path)
-                .withHeader(HttpHeaders.ORIGIN, authFleetMock.ORIGIN)
+                .withHeader(HttpHeaders.ORIGIN, AuthFleetMock.ORIGIN)
                 .withBody(request)
         ).respond(response()
                 .withStatusCode(200)
@@ -66,7 +65,7 @@ public class PnAuthFleetClientImplTest {
                 .withBody(response)
         );
 
-        StepVerifier.create(pnAuthFleetClient.postTokenExchange(authFleetMock.ORIGIN, authFleetMock.getTokenExchangeBody()))
+        StepVerifier.create(pnAuthFleetClient.postTokenExchange(AuthFleetMock.ORIGIN, authFleetMock.getTokenExchangeBody()))
                 .expectNext(authFleetMock.getTokenExchangeResponse())
                 .verifyComplete();
     }
@@ -79,7 +78,7 @@ public class PnAuthFleetClientImplTest {
         mockServerClient.when(request()
                         .withMethod("POST")
                         .withPath(path)
-                        .withHeader(HttpHeaders.ORIGIN, authFleetMock.ORIGIN)
+                        .withHeader(HttpHeaders.ORIGIN, AuthFleetMock.ORIGIN)
                         .withBody(request)
                 )
                 .respond(response()
@@ -88,7 +87,7 @@ public class PnAuthFleetClientImplTest {
                         .withBody("error")
                 );
 
-        StepVerifier.create(pnAuthFleetClient.postTokenExchange(authFleetMock.ORIGIN, authFleetMock.getTokenExchangeBody()))
+        StepVerifier.create(pnAuthFleetClient.postTokenExchange(AuthFleetMock.ORIGIN, authFleetMock.getTokenExchangeBody()))
                 .expectError()
                 .verify();
     }

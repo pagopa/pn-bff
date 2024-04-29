@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.pnclient.auth;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import lombok.CustomLog;
 import org.springframework.http.MediaType;
@@ -27,7 +27,7 @@ public class PnAuthFleetClientImpl extends CommonBaseClient {
         this.webClient = super.enrichBuilder(WebClient.builder().baseUrl(pnAuthFleetBaseUrl)).build();
     }
 
-    public Mono<TokenExchangeResponse> postTokenExchange(String origin, TokenExchangeBody body) {
+    public Mono<BffTokenExchangeResponse> postTokenExchange(String origin, BffTokenExchangeBody body) {
         log.info("Invoking pn-auth-fleet token-exchange");
 
         return this.webClient.post()
@@ -36,7 +36,7 @@ public class PnAuthFleetClientImpl extends CommonBaseClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(body)
                 .retrieve()
-                .bodyToMono(TokenExchangeResponse.class)
+                .bodyToMono(BffTokenExchangeResponse.class)
                 .doOnSuccess(response -> log.info("Response from pn-auth-fleet: {}", response))
                 .doOnError(throwable -> log.error("Error in pn-auth-fleet token-exchange", throwable));
     }

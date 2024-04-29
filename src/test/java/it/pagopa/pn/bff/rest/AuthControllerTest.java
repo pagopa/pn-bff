@@ -1,11 +1,11 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.TokenExchangeResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.bff.mocks.AuthFleetMock;
 import it.pagopa.pn.bff.service.AuthService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoHelpers;
+import it.pagopa.pn.bff.utils.helpers.MonoComparator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,12 +40,12 @@ public class AuthControllerTest {
 
     @Test
     void postTokenExchange() {
-        TokenExchangeBody request = new TokenExchangeBody();
+        BffTokenExchangeBody request = new BffTokenExchangeBody();
         request.authorizationToken("authorizationToken");
-        TokenExchangeResponse response = authFleetMock.getTokenExchangeResponse();
+        BffTokenExchangeResponse response = authFleetMock.getTokenExchangeResponse();
 
         Mockito.when(authService.tokenExchange(
-                Mockito.any(),
+                Mockito.anyString(),
                 Mockito.any()
         )).thenReturn(Mono.just(response));
 
@@ -53,23 +53,23 @@ public class AuthControllerTest {
                 .uri(PnBffRestConstants.TOKEN_EXCHANGE_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Origin", authFleetMock.ORIGIN)
+                .header("Origin", AuthFleetMock.ORIGIN)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(TokenExchangeResponse.class)
+                .expectBody(BffTokenExchangeResponse.class)
                 .isEqualTo(response);
 
         Mockito.verify(authService).tokenExchange(
-                eq(authFleetMock.ORIGIN),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request))))
+                eq(AuthFleetMock.ORIGIN),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
         );
     }
 
     @Test
     void postTokenExchangeError() {
-        TokenExchangeBody request = new TokenExchangeBody();
+        BffTokenExchangeBody request = new BffTokenExchangeBody();
         request.authorizationToken("authorizationToken");
 
         Mockito.when(authService.tokenExchange(
@@ -81,15 +81,15 @@ public class AuthControllerTest {
                 .uri(PnBffRestConstants.TOKEN_EXCHANGE_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Origin", authFleetMock.ORIGIN)
+                .header("Origin", AuthFleetMock.ORIGIN)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
                 .is5xxServerError();
 
         Mockito.verify(authService).tokenExchange(
-                eq(authFleetMock.ORIGIN),
-                argThat((argumentToCompare -> MonoHelpers.monoComparator(argumentToCompare, Mono.just(request))))
+                eq(AuthFleetMock.ORIGIN),
+                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
         );
     }
 }
