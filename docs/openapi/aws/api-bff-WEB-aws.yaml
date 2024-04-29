@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 4X2Vt5O9rt3dgfTOn6XUJTKb5TTN6c82fDP8Nu+06xo=
+  version: QU42c3CDnxIFHZFsH/h5i72ZLrS8QrZpZsTPq7v0hus=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3157,6 +3157,7 @@ components:
         authorizationToken:
           type: string
           description: Token di autorizzazione
+          pattern: ^[A-Za-z0-9-._~+/]+$
     BffTokenExchangeOrganization:
       title: Organization
       description: Organization dell'utente
@@ -3222,6 +3223,7 @@ components:
           $ref: '#/components/schemas/BffTokenExchangeOrganization'
         sessionToken:
           type: string
+          pattern: ^[A-Za-z0-9-._~+/]+$
         uid:
           type: string
           pattern: ^[ -~]*$
