@@ -9,3 +9,24 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
     BffNotificationSearchMandateId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+    BffNotificationSearchStartDate:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchStartDate'
+    BffNotificationSearchEndDate:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchEndDate'
+    BffNotificationSearchRecipientId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchRecipientId'
+    BffNotificationSearchStatus:
+      name: status
+      in: query
+      required: false
+      description: stato della notifica
+      schema:
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/remote-refs.yaml#/components/schemas/NotificationStatus'
+    BffNotificationSearchSubject:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchSubject'
+    BffSearchIun:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchIun'
+    BffNotificationSearchPageSize:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchPageSize'
+    BffNotificationSearchNextPagesKey:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchNextPagesKey'

@@ -17,9 +17,17 @@ class CxTypeMapperTest {
     }
 
     @Test
-    void testConvertDeliveryPACXType() {
+    void testConvertDeliveryB2bPACXType() {
         CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
-        it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryPACXType(cxTypeAuthFleet);
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertPACXTypeResult);
+        assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
+    }
+
+    @Test
+    void testConvertDeliveryWebPACXType() {
+        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryWebPACXType(cxTypeAuthFleet);
         assertNotNull(actualConvertPACXTypeResult);
         assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
     }

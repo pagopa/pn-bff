@@ -442,10 +442,10 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-DELIVERY PA-->
+                    <!-- OPEN API PN-DELIVERY B2B PA-->
                     <execution>
                         <phase>generate-resources</phase>
-                        <id>generate-client-pn-delivery-pa</id>
+                        <id>generate-client-pn-delivery-b2b-pa</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -461,10 +461,47 @@
                                 ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
                             </templateDirectory>
                             <configOptions>
-                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-pa.api
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-b2b-pa.api
                                 </apiPackage>
                                 <modelPackage>
-                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-pa.model
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-b2b-pa.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-DELIVERY WEB PA-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-delivery-web-pa</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-pa.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-web-pa.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-web-pa.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
