@@ -41,7 +41,6 @@ class ApiKeysPaControllerTest {
     @SpyBean
     private ApiKeysPaController apiKeysPaController;
 
-
     @Test
     void getApiKeys() {
         BffApiKeysResponse response = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), userMock.getPaGroupsMock());

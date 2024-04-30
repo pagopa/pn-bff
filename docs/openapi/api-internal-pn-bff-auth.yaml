@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Auth
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-auth
+  x-summary: "API di pn-bff esposte al Web per la gestione dell'autenticazione"
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: TokenExchange
+    description: >-
+      Invocazioni per la token exchange
+
+paths:
+  '/bff/v1/token-exchange':
+    post:
+      summary: Token Exchange
+      description: >-
+        Autorizzazione di un utente per l'accesso ai portali
+      tags:
+        - TokenExchange
+      operationId: tokenExchangeV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './auth-schemas/auth.yaml#/components/schemas/BffTokenExchangeBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './auth-schemas/auth.yaml#/components/schemas/BffTokenExchangeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

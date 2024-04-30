@@ -31,7 +31,7 @@ class PnInfoPaClientImplTest {
     private InfoPaApi infoPaApi;
 
     @Test
-    void getInstitutionsTest() {
+    void getInstitutions() {
         when(infoPaApi.getInstitutions(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -50,7 +50,7 @@ class PnInfoPaClientImplTest {
     }
 
     @Test
-    void getInstitutionsTestError() {
+    void getInstitutionsError() {
         when(infoPaApi.getInstitutions(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -69,7 +69,7 @@ class PnInfoPaClientImplTest {
     }
 
     @Test
-    void getInstitutionProductsTest() {
+    void getInstitutionProducts() {
         when(infoPaApi.getInstitutionProducts(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -89,7 +89,7 @@ class PnInfoPaClientImplTest {
     }
 
     @Test
-    void getInstitutionProductsTestError() {
+    void getInstitutionProductsError() {
         when(infoPaApi.getInstitutionProducts(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
