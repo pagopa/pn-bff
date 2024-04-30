@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: U4gx1nLSZQBvmbg/MxpjcnYQU0U6Vgjc9wXG2TzvWbs=
+  version: oAeghsTU/FZXy3FgqV78LEvL3kmm019LCBPcjbHQ+jE=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -906,6 +906,71 @@ paths:
         httpMethod: ANY
         requestParameters:
           integration.request.path.legalFactId: method.request.path.legalFactId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/token-exchange:
+    post:
+      summary: Token Exchange
+      description: Autorizzazione di un utente per l'accesso ai portali
+      tags:
+        - TokenExchange
+      operationId: tokenExchangeV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffTokenExchangeBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffTokenExchangeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/token-exchange
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/token-exchange API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/token-exchange
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -3228,6 +3293,87 @@ components:
           description: >-
             Stima del numero di secondi da aspettare prima che il contenuto del 
             documento sia scaricabile.
+    BffTokenExchangeBody:
+      title: Body della richiesta di token exchange
+      description: Body della richiesta di token exchange
+      type: object
+      required:
+        - authorizationToken
+      properties:
+        authorizationToken:
+          type: string
+          description: Token di autorizzazione
+          pattern: ^[A-Za-z0-9-._~+/]+$
+    BffTokenExchangeOrganization:
+      title: Organization
+      description: Organization dell'utente
+      type: object
+      required:
+        - id
+        - name
+        - roles
+        - fiscal_code
+      properties:
+        fiscal_code:
+          type: string
+          minLength: 16
+          maxLength: 16
+          pattern: >-
+            ([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$/i
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        hasGroups:
+          type: boolean
+        id:
+          type: string
+        name:
+          type: string
+        groups:
+          type: array
+          items:
+            type: string
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              partyRole:
+                type: string
+              role:
+                type: string
+    BffTokenExchangeResponse:
+      title: Risposta della token exchange
+      description: Risposta della token exchange
+      type: object
+      required:
+        - exp
+        - name
+        - sessionToken
+        - uid
+      properties:
+        desired_exp:
+          type: number
+        exp:
+          type: number
+        family_name:
+          type: string
+        fiscal_number:
+          type: string
+          minLength: 16
+          maxLength: 16
+          pattern: >-
+            ([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$/i
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        name:
+          type: string
+        organization:
+          $ref: '#/components/schemas/BffTokenExchangeOrganization'
+        sessionToken:
+          type: string
+          pattern: ^[A-Za-z0-9-._~+/]+$
+        uid:
+          type: string
+          pattern: ^[ -~]*$
+          maxLength: 64
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -3260,6 +3406,8 @@ tags:
     description: >-
       Invocazioni utilizzabili dai mittenti per la visualizzazione dello stato
       dei servizi
+  - name: TokenExchange
+    description: Invocazioni per la token exchange
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
