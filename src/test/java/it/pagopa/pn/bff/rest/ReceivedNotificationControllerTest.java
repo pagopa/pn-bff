@@ -33,12 +33,12 @@ class ReceivedNotificationControllerTest {
     private final String MANDATE_ID = "MANDATE-001";
     private final String RECIPIENT_ID = "RECIPIENT-001";
     private final String GROUP = "GROUP";
-    private final String STATUS = NotificationStatus.ACCEPTED.getValue();
-    private final String SUBJECT_REGEXP = ".*";
-    private final String START_DATE = "2014-04-30T00%3A00%3A00.000Z";
-    private final String END_DATE = "2024-04-30T23%3A59%3A59.999Z";
+    private final NotificationStatus STATUS = NotificationStatus.ACCEPTED;
+    private final String SUBJECT_REGEXP = "test";
+    private final String START_DATE = "2014-04-30T00:00:00.000Z";
+    private final String END_DATE = "2024-04-30T00:00:00.000Z";
     private final int SIZE = 10;
-    private final String NEXT_PAGES_KEY = "nextPagesKey";
+    private final String NEXT_PAGES_KEY = "XXXYYYZZZ";
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationReceivedMock notificationReceivedMock = new NotificationReceivedMock();
     @Autowired
@@ -151,7 +151,7 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("iunMatch", IUN)
                                 .queryParam("mandateId", MANDATE_ID)
                                 .queryParam("senderId", SENDER_ID)
-                                .queryParam("status", STATUS)
+                                .queryParam("status", STATUS.getValue())
                                 .queryParam("startDate", START_DATE)
                                 .queryParam("endDate", END_DATE)
                                 .queryParam("subjectRegExp", SUBJECT_REGEXP)
@@ -175,14 +175,14 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_CX_ID,
                 IUN,
                 UserMock.PN_CX_GROUPS,
-                "mandate",
-                "sender",
-                NotificationStatus.DELIVERED,
-                OffsetDateTime.parse("2021-01-01T00:00:00Z"),
-                OffsetDateTime.parse("2021-12-31T23:59:59Z"),
-                "subjectRegExp",
-                10,
-                "nextPagesKey"
+                MANDATE_ID,
+                SENDER_ID,
+                STATUS,
+                OffsetDateTime.parse(START_DATE),
+                OffsetDateTime.parse(END_DATE),
+                SUBJECT_REGEXP,
+                SIZE,
+                NEXT_PAGES_KEY
         );
     }
 
@@ -234,14 +234,14 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_CX_ID,
                 IUN,
                 UserMock.PN_CX_GROUPS,
-                "mandate",
-                "sender",
-                NotificationStatus.DELIVERED,
-                OffsetDateTime.parse("2021-01-01T00:00:00Z"),
-                OffsetDateTime.parse("2021-12-31T23:59:59Z"),
-                "subjectRegExp",
-                10,
-                "nextPagesKey"
+                MANDATE_ID,
+                SENDER_ID,
+                STATUS,
+                OffsetDateTime.parse(START_DATE),
+                OffsetDateTime.parse(END_DATE),
+                SUBJECT_REGEXP,
+                SIZE,
+                NEXT_PAGES_KEY
         );
     }
 
@@ -273,7 +273,7 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("senderId", SENDER_ID)
                                 .queryParam("recipientId", RECIPIENT_ID)
                                 .queryParam("group", GROUP)
-                                .queryParam("status", STATUS)
+                                .queryParam("status", STATUS.getValue())
                                 .queryParam("startDate", START_DATE)
                                 .queryParam("endDate", END_DATE)
                                 .queryParam("size", SIZE)
@@ -296,14 +296,73 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_CX_ID,
                 IUN,
                 UserMock.PN_CX_GROUPS,
-                "sender",
-                "recipient",
-                "group",
-                NotificationStatus.DELIVERED,
-                OffsetDateTime.now(),
-                OffsetDateTime.now().minusYears(10),
-                10,
-                "nextPagesKey"
+                SENDER_ID,
+                RECIPIENT_ID,
+                GROUP,
+                STATUS,
+                OffsetDateTime.parse(START_DATE),
+                OffsetDateTime.parse(END_DATE),
+                SIZE,
+                NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
+    void searchReceivedDelegatedNotificationsError() {
+        Mockito.when(notificationDetailRecipientService.searchReceivedDelegatedNotification(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(NotificationStatus.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.anyInt(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DELEGATED_PATH)
+                                .queryParam("iunMatch", IUN)
+                                .queryParam("senderId", SENDER_ID)
+                                .queryParam("recipientId", RECIPIENT_ID)
+                                .queryParam("group", GROUP)
+                                .queryParam("status", STATUS)
+                                .queryParam("startDate", START_DATE)
+                                .queryParam("endDate", END_DATE)
+                                .queryParam("size", SIZE)
+                                .queryParam("nextPagesKey", NEXT_PAGES_KEY)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationDetailRecipientService).searchReceivedDelegatedNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                IUN,
+                UserMock.PN_CX_GROUPS,
+                SENDER_ID,
+                RECIPIENT_ID,
+                GROUP,
+                STATUS,
+                OffsetDateTime.parse(START_DATE),
+                OffsetDateTime.parse(END_DATE),
+                SIZE,
+                NEXT_PAGES_KEY
         );
     }
 }

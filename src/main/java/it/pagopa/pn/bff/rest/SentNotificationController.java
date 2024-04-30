@@ -88,7 +88,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                       String iunMatch,
                                                                                       Integer size,
                                                                                       String nextPagesKey,
-                                                                                      ServerWebExchange exchange) {
+                                                                                      final ServerWebExchange exchange) {
         log.logStartingProcess("searchSentNotificationsV1");
         Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status, subjectRegExp, startDate, endDate, size, nextPagesKey

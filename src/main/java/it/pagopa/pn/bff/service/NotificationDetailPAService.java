@@ -66,33 +66,23 @@ public class NotificationDetailPAService {
      * @param subjectRegExp     Regular Expression for the subject
      * @param startDate         Start Date
      * @param endDate           End Date
-     * @param page              Page number
-     * @param pageSize          Page size
+     * @param size              Page number
+     * @param nextPagesKey          Page size
      * @return the list of notifications sent by a Public Administration
      */
     public Mono<BffNotificationsResponseV1> searchSentNotifications(String xPagopaPnUid,
-                                                                     CxTypeAuthFleet xPagopaPnCxType,
-                                                                     String xPagopaPnCxId,
-                                                                     List<String> xPagopaPnCxGroups,
-                                                                     String iun,
-                                                                     String senderId,
-                                                                     NotificationStatus status,
-                                                                     String subjectRegExp,
-                                                                     OffsetDateTime startDate,
-                                                                     OffsetDateTime endDate,
-                                                                     int page,
-                                                                     String pageSize) {
-        log.info("Search xPagopaPnUid {}", xPagopaPnUid);
-        log.info("Search xPagopaPnCxType {}", xPagopaPnCxType);
-        log.info("Search xPagopaPnCxId {}", xPagopaPnCxId);
+                                                                    CxTypeAuthFleet xPagopaPnCxType,
+                                                                    String xPagopaPnCxId,
+                                                                    List<String> xPagopaPnCxGroups,
+                                                                    String iun,
+                                                                    String senderId,
+                                                                    NotificationStatus status,
+                                                                    String subjectRegExp,
+                                                                    OffsetDateTime startDate,
+                                                                    OffsetDateTime endDate,
+                                                                    Integer size,
+                                                                    String nextPagesKey) {
         log.info("Search notification for iun {}", iun);
-        log.info("Search notification for senderId {}", senderId);
-        log.info("Search notification for status {}", status);
-        log.info("Search notification for subjectRegExp {}", subjectRegExp);
-        log.info("Search notification for startDate {}", startDate);
-        log.info("Search notification for endDate {}", endDate);
-        log.info("Search notification for page {}", page);
-        log.info("Search notification for pageSize {}", pageSize);
         return pnDeliveryClientPA
                 .searchSentNotification(
                 xPagopaPnUid,
@@ -105,8 +95,8 @@ public class NotificationDetailPAService {
                 NotificationStatusMapper.notificationStatusMapper.convertDeliveryWebPANotificationStatus(status),
                 subjectRegExp,
                 iun,
-                page,
-                pageSize)
+                size,
+                nextPagesKey)
                 .map(NotificationSentMapper.modelMapper::toBffNotificationsResponseV1)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }

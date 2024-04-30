@@ -95,7 +95,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                           String iunMatch,
                                                                                           Integer size,
                                                                                           String nextPagesKey,
-                                                                                          ServerWebExchange exchange) {
+                                                                                          final ServerWebExchange exchange) {
     log.logStartingProcess("searchReceivedNotificationsV1");
 
     Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailRecipientService.searchReceivedNotification(
@@ -152,7 +152,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                    String iunMatch,
                                                                                                    Integer size,
                                                                                                    String nextPagesKey,
-                                                                                                   ServerWebExchange exchange) {
+                                                                                                   final ServerWebExchange exchange) {
     log.logStartingProcess("searchReceivedDelegatedNotificationsV1");
 
     Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailRecipientService.searchReceivedDelegatedNotification(

@@ -84,7 +84,7 @@ public class NotificationDetailRecipientService {
                                                                        OffsetDateTime startDate,
                                                                        OffsetDateTime endDate,
                                                                        String subjectRegExp,
-                                                                       int size,
+                                                                       Integer size,
                                                                        String nextPagesKey) {
         log.info("Search received notifications for user {}", xPagopaPnUid);
         return pnDeliveryClient
@@ -125,18 +125,18 @@ public class NotificationDetailRecipientService {
      * @return the list of notifications
      */
     public Mono<BffNotificationsResponseV1> searchReceivedDelegatedNotification(String xPagopaPnUid,
-                                                                              CxTypeAuthFleet xPagopaPnCxType,
-                                                                              String xPagopaPnCxId,
-                                                                              String iunMatch,
-                                                                              List<String> xPagopaPnCxGroups,
-                                                                              String senderId,
-                                                                              String recipientId,
-                                                                              String group,
-                                                                              NotificationStatus status,
-                                                                              OffsetDateTime startDate,
-                                                                              OffsetDateTime endDate,
-                                                                              int size,
-                                                                              String nextPagesKey) {
+                                                                                CxTypeAuthFleet xPagopaPnCxType,
+                                                                                String xPagopaPnCxId,
+                                                                                String iunMatch,
+                                                                                List<String> xPagopaPnCxGroups,
+                                                                                String senderId,
+                                                                                String recipientId,
+                                                                                String group,
+                                                                                NotificationStatus status,
+                                                                                OffsetDateTime startDate,
+                                                                                OffsetDateTime endDate,
+                                                                                Integer size,
+                                                                                String nextPagesKey) {
         log.info("Search received delegated notifications for user {}", xPagopaPnUid);
         return pnDeliveryClient
                 .searchReceivedDelegatedNotification(
