@@ -8,4 +8,5 @@ import org.mapstruct.factory.Mappers;
 public interface NotificationStatusMapper {
     NotificationStatusMapper notificationStatusMapper = Mappers.getMapper(NotificationStatusMapper.class);
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus convertDeliveryWebPANotificationStatus(NotificationStatus notificationStatus);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus convertDeliveryRecipientNotificationStatus(NotificationStatus notificationStatus);
 }

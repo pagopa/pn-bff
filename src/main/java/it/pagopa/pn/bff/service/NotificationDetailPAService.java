@@ -7,8 +7,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.notification.NotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notification.NotificationStatusMapper;
-import it.pagopa.pn.bff.mappers.notification.SentNotificationMapper;
 import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import lombok.RequiredArgsConstructor;
@@ -107,7 +107,7 @@ public class NotificationDetailPAService {
                 iun,
                 page,
                 pageSize)
-                .map(SentNotificationMapper.modelMapper::toBffNotificationsResponseV1)
+                .map(NotificationSentMapper.modelMapper::toBffNotificationsResponseV1)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

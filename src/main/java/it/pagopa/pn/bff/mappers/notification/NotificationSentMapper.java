@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface SentNotificationMapper {
-    SentNotificationMapper modelMapper = Mappers.getMapper(SentNotificationMapper.class);
+public interface NotificationSentMapper {
+    NotificationSentMapper modelMapper = Mappers.getMapper(NotificationSentMapper.class);
 
     /**
      * Maps a NotificationSearchResponse to a BffNotificationsResponseV1

@@ -15,4 +15,12 @@ public class NotificationStatusMapperTest {
         assertNotNull(actualConvertDeliveryWebPANotificationStatusResult);
         assertEquals(actualConvertDeliveryWebPANotificationStatusResult.getValue(), notificationStatus.getValue());
     }
+
+    @Test
+    void testConvertDeliveryRecipientNotificationStatus(){
+        NotificationStatus notificationStatus = NotificationStatus.ACCEPTED;
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus actualConvertDeliveryRecipientNotificationStatusResult = NotificationStatusMapper.notificationStatusMapper.convertDeliveryRecipientNotificationStatus(notificationStatus);
+        assertNotNull(actualConvertDeliveryRecipientNotificationStatusResult);
+        assertEquals(actualConvertDeliveryRecipientNotificationStatusResult.getValue(), notificationStatus.getValue());
+    }
 }

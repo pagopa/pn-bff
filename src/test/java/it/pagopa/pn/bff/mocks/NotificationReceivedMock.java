@@ -1,17 +1,16 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotificationSentMock {
-
-    public NotificationSearchResponse getNotificationSentPNMock(){
+public class NotificationReceivedMock {
+    public NotificationSearchResponse getNotificationReceivedPNMock(){
         NotificationSearchResponse notificationSearchResponse = new NotificationSearchResponse();
         List<NotificationSearchRow> notificationSearchRows = new ArrayList<>();
         NotificationSearchRow notificationSearchRowOne = new NotificationSearchRow();

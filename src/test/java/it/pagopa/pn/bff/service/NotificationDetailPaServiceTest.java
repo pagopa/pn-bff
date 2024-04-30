@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeA
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
-import it.pagopa.pn.bff.mappers.notification.SentNotificationMapper;
+import it.pagopa.pn.bff.mappers.notification.NotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.NotificationSentMock;
@@ -98,7 +98,7 @@ class NotificationDetailPaServiceTest {
                 Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
-        )).thenReturn(Mono.just(notificationSentMock.getSentNotificationPNMock()));
+        )).thenReturn(Mono.just(notificationSentMock.getNotificationSentPNMock()));
 
         Mono<BffNotificationsResponseV1> result = notificationDetailPAService.searchSentNotifications(
                 UserMock.PN_UID,
@@ -115,7 +115,7 @@ class NotificationDetailPaServiceTest {
                 "10");
 
         StepVerifier.create(result)
-                .expectNext(SentNotificationMapper.modelMapper.toBffNotificationsResponseV1(notificationSentMock.getSentNotificationPNMock()))
+                .expectNext(NotificationSentMapper.modelMapper.toBffNotificationsResponseV1(notificationSentMock.getNotificationSentPNMock()))
                 .verifyComplete();
     }
 

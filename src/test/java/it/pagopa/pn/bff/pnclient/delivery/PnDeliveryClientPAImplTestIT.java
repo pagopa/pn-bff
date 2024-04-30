@@ -105,7 +105,7 @@ class PnDeliveryClientPAImplTestIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
-        String response = objectMapper.writeValueAsString(notificationSentMock.getSentNotificationPNMock());
+        String response = objectMapper.writeValueAsString(notificationSentMock.getNotificationSentPNMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathWithoutIun))
                 .respond(response()
                         .withStatusCode(200)
@@ -126,7 +126,7 @@ class PnDeliveryClientPAImplTestIT {
                 "IUN",
                 10,
                 "NEXT_PAGES_KEY"
-        )).expectNext(notificationSentMock.getSentNotificationPNMock()).verifyComplete();
+        )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
     }
 
     @Test

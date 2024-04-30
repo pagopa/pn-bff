@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.mappers.notification;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
-import it.pagopa.pn.bff.mocks.NotificationSentMock;
+import it.pagopa.pn.bff.mocks.NotificationReceivedMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class SentNotificationMapperTest {
-    private final NotificationSentMock notificationSentMock = new NotificationSentMock();
+public class NotificationReceivedMapperTest {
+    private final NotificationReceivedMock notificationReceivedMock = new NotificationReceivedMock();
 
     @Test
     void testBffNotificationsResponseV1Mapper() {
-        NotificationSearchResponse notificationSearchResponse = notificationSentMock.getSentNotificationPNMock();
+        NotificationSearchResponse notificationSearchResponse = notificationReceivedMock.getNotificationReceivedPNMock();
 
-        BffNotificationsResponseV1 bffNotificationsResponseV1 = SentNotificationMapper.modelMapper.toBffNotificationsResponseV1(notificationSearchResponse);
+        BffNotificationsResponseV1 bffNotificationsResponseV1 = NotificationReceivedMapper.modelMapper.toBffNotificationsResponseV1(notificationSearchResponse);
         assertNotNull(bffNotificationsResponseV1);
 
         assertEquals(bffNotificationsResponseV1.getResultsPage().get(0).getIun(), notificationSearchResponse.getResultsPage().get(0).getIun());
@@ -38,7 +38,8 @@ public class SentNotificationMapperTest {
         assertEquals(bffNotificationsResponseV1.getMoreResult(), notificationSearchResponse.getMoreResult());
         assertEquals(bffNotificationsResponseV1.getNextPagesKey(), notificationSearchResponse.getNextPagesKey());
 
-        BffNotificationsResponseV1 bffNotificationsResponseV1Null = SentNotificationMapper.modelMapper.toBffNotificationsResponseV1(null);
+        BffNotificationsResponseV1 bffNotificationsResponseV1Null = NotificationReceivedMapper.modelMapper.toBffNotificationsResponseV1(null);
         assertNull(bffNotificationsResponseV1Null);
     }
+
 }

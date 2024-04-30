@@ -89,7 +89,7 @@ class PnDeliveryClientPAImplTest {
                 Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
-        )).thenReturn(Mono.just(notificationSentMock.getSentNotificationPNMock()));
+        )).thenReturn(Mono.just(notificationSentMock.getNotificationSentPNMock()));
 
         StepVerifier.create(pnDeliveryClientPAImpl.searchSentNotification(
                 UserMock.PN_UID,
@@ -104,7 +104,7 @@ class PnDeliveryClientPAImplTest {
                 "IUN",
                 10,
                 "NEXT_PAGES_KEY"
-        )).expectNext(notificationSentMock.getSentNotificationPNMock()).verifyComplete();
+        )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
     }
 
     @Test
