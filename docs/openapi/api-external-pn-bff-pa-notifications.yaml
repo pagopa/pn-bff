@@ -35,11 +35,11 @@ paths:
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
         - NotificationSent
-      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+      operationId: getSentNotificationV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -55,6 +55,46 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/{iun}/documents/{documentType}':
+    get:
+      summary: |-
+        Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationDocumentV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryLegalFactType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
           content:
             application/problem+json:
               schema:

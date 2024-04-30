@@ -1,0 +1,62 @@
+info:
+  version: v1.0
+components:
+  parameters:
+    ############################################################################################
+    ###                     PARAMETRI RICERCA NOTIFICHE                                      ###
+    ############################################################################################
+    BffPathIun:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
+
+    BffNotificationSearchMandateId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+
+    BffPathDocumentType:
+      description: Tipo documento
+      name: documentType
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - ATTACHMENT
+          - LEGALFACT
+          - AAR
+
+    BffQueryDocumentId:
+      description: Identificativo o indice del documento
+      name: documentId
+      in: query
+      required: true
+      # serialize this object as ?key1=value1&key2=value2
+      style: form
+      explode: true
+      schema:
+        type: object
+        properties:
+          aarId:
+            type: string
+            pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
+            maxLength: 512
+          attachmentIdx:
+            type: integer
+            format: int32
+          legalFactId:
+            pattern: ^[ -~]*$
+            maxLength: 1024
+
+    BffQueryLegalFactType:
+      description: >-
+        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a disposizione dei suoi utenti.
+      name: legalFactType
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - SENDER_ACK
+          - DIGITAL_DELIVERY
+          - ANALOG_DELIVERY
+          - RECIPIENT_ACCESS
+          - PEC_RECEIPT
+          - ANALOG_FAILURE_DELIVERY

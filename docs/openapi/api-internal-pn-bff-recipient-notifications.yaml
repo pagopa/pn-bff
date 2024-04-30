@@ -43,8 +43,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'              # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'          # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK

@@ -39,8 +39,8 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK
