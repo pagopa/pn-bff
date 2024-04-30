@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
-import it.pagopa.pn.bff.mocks.NotificationLegalFactMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +33,7 @@ class PnLegalFactsClientImplTestIT {
     private final LegalFactCategory legalFactCategory = LegalFactCategory.DIGITAL_DELIVERY;
     private final String legalFactId = "LEGAL_FACT_ID";
     private final String path = "/delivery-push/" + iun + "/legal-facts/" + legalFactCategory + "/" + legalFactId;
-    private final NotificationLegalFactMock notificationLegalFactMock = new NotificationLegalFactMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     private PnLegalFactsClientImpl pnLegalFactsClient;
 
@@ -57,7 +57,7 @@ class PnLegalFactsClientImplTestIT {
     @Test
     void getLegalFact() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(notificationLegalFactMock.getLegalFactMock());
+        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getLegalFactMock());
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
@@ -74,7 +74,7 @@ class PnLegalFactsClientImplTestIT {
                 legalFactId,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectNext(notificationLegalFactMock.getLegalFactMock()).verifyComplete();
+        )).expectNext(notificationDownloadDocumentMock.getLegalFactMock()).verifyComplete();
     }
 
     @Test

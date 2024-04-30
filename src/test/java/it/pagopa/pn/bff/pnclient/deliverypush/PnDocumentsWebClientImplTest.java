@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.mocks.NotificationDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnDocumentsWebClientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnDocumentsWebClientImplTest {
-    private final NotificationDocumentMock notificationDocumentMock = new NotificationDocumentMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     private PnDocumentsWebClientImpl pnDocumentsWebClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi")
@@ -42,7 +42,7 @@ class PnDocumentsWebClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any(UUID.class)
-        )).thenReturn(Mono.just(notificationDocumentMock.getDocumentMock()));
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getDocumentMock()));
 
         StepVerifier.create(pnDocumentsWebClient.getDocumentsWeb(
                 UserMock.PN_UID,
@@ -53,7 +53,7 @@ class PnDocumentsWebClientImplTest {
                 "DOCUMENT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectNext(notificationDocumentMock.getDocumentMock()).verifyComplete();
+        )).expectNext(notificationDownloadDocumentMock.getDocumentMock()).verifyComplete();
     }
 
     @Test

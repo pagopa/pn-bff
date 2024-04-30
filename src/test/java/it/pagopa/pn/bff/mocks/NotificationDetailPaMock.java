@@ -17,7 +17,7 @@ public class NotificationDetailPaMock {
     private NotificationDocument getDocumentMock(String idx) {
         NotificationDocument document = new NotificationDocument();
         document.setDocIdx(idx);
-        document.setTitle("Document " + idx);
+        document.setTitle("Document_" + idx);
         document.setContentType("application/pdf");
         document.setDigests(new NotificationAttachmentDigests().sha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=" + idx));
         document.setRef(

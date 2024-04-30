@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.mocks.NotificationDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +31,7 @@ class PnDocumentsWebClientImplTestIT {
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
     private final String path = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
-    private final NotificationDocumentMock notificationDocumentMock = new NotificationDocumentMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     private PnDocumentsWebClientImpl pnDocumentsWebClient;
 
@@ -55,7 +55,7 @@ class PnDocumentsWebClientImplTestIT {
     @Test
     void getDocumentsWeb() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(notificationDocumentMock.getDocumentMock());
+        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getDocumentMock());
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
@@ -72,7 +72,7 @@ class PnDocumentsWebClientImplTestIT {
                 "DOCUMENT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectNext(notificationDocumentMock.getDocumentMock()).verifyComplete();
+        )).expectNext(notificationDownloadDocumentMock.getDocumentMock()).verifyComplete();
     }
 
     @Test

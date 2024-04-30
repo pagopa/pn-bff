@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
-import it.pagopa.pn.bff.mocks.NotificationLegalFactMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnLegalFactsClientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnLegalFactsClientImplTest {
-    private final NotificationLegalFactMock notificationLegalFactMock = new NotificationLegalFactMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     private PnLegalFactsClientImpl pnLegalFactsClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi")
@@ -42,7 +42,7 @@ class PnLegalFactsClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any(UUID.class)
-        )).thenReturn(Mono.just(notificationLegalFactMock.getLegalFactMock()));
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getLegalFactMock()));
 
         StepVerifier.create(pnLegalFactsClient.getLegalFact(
                 UserMock.PN_UID,
@@ -53,7 +53,7 @@ class PnLegalFactsClientImplTest {
                 "LEGAL_FACT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectNext(notificationLegalFactMock.getLegalFactMock()).verifyComplete();
+        )).expectNext(notificationDownloadDocumentMock.getLegalFactMock()).verifyComplete();
     }
 
     @Test
