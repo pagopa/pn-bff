@@ -1,12 +1,10 @@
-package it.pagopa.pn.bff.pnclient.delivery;
+package it.pagopa.pn.bff.pnclient.deliverypush;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
+import it.pagopa.pn.bff.mocks.NotificationDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -20,21 +18,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
+import java.util.UUID;
+
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class PnDeliveryClientRecipientImplTestIT {
+class PnDocumentsWebClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
-    private final String mandateId = "MANDATE_ID";
-    private final String path = "/delivery/v2.3/notifications/received/" + iun;
-    private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
+    private final String path = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
+    private final NotificationDocumentMock notificationDocumentMock = new NotificationDocumentMock();
     @Autowired
-    private PnDeliveryClientRecipientImpl pnDeliveryClient;
+    private PnDocumentsWebClientImpl pnDocumentsWebClient;
 
     @BeforeAll
     public static void startMockServer() {
@@ -54,11 +53,9 @@ class PnDeliveryClientRecipientImplTestIT {
     }
 
     @Test
-    void getReceivedNotification() throws JsonProcessingException {
+    void getDocumentsWeb() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
-        String response = objectMapper.writeValueAsString(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
+        String response = objectMapper.writeValueAsString(notificationDocumentMock.getDocumentMock());
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
@@ -66,28 +63,32 @@ class PnDeliveryClientRecipientImplTestIT {
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnDeliveryClient.getReceivedNotification(
+        StepVerifier.create(pnDocumentsWebClient.getDocumentsWeb(
                 UserMock.PN_UID,
-                CxTypeAuthFleet.PF,
+                CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 iun,
+                DocumentCategory.AAR,
+                "DOCUMENT_ID",
                 UserMock.PN_CX_GROUPS,
-                mandateId
-        )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
+                UUID.randomUUID()
+        )).expectNext(notificationDocumentMock.getDocumentMock()).verifyComplete();
     }
 
     @Test
-    void getSentNotificationV23Error() {
+    void getDocumentsWebError() {
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnDeliveryClient.getReceivedNotification(
+        StepVerifier.create(pnDocumentsWebClient.getDocumentsWeb(
                 UserMock.PN_UID,
-                CxTypeAuthFleet.PF,
+                CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 iun,
+                DocumentCategory.AAR,
+                "DOCUMENT_ID",
                 UserMock.PN_CX_GROUPS,
-                mandateId
-        )).expectError(PnBffException.class).verify();
+                UUID.randomUUID()
+        )).expectError().verify();
     }
 }
