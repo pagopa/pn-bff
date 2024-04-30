@@ -1,19 +1,19 @@
-package it.pagopa.pn.bff.mappers.notificationdetail;
+package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.TimelineElementV23;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationDetailTimeline;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the TimelineElementV23 from the FullSentNotificationV23
+ * Mapstruct mapper interface, used to map the TimelineElementV23 from the FullReceivedNotificationV23
  * to the NotificationDetailTimeline
  */
 @Mapper
-public interface SenderNotificationTimelineMapper {
+public interface RecipientNotificationTimelineMapper {
 
-    SenderNotificationTimelineMapper paTimelineMapper = Mappers.getMapper(SenderNotificationTimelineMapper.class);
+    RecipientNotificationTimelineMapper recipientTimelineMapper = Mappers.getMapper(RecipientNotificationTimelineMapper.class);
 
     @Mapping(target = "hidden", ignore = true)
     @Mapping(target = "index", ignore = true)
