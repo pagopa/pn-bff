@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
+import it.pagopa.pn.bff.service.NotificationsRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +20,10 @@ import java.util.List;
 @RestController
 public class ReceivedNotificationController implements NotificationReceivedApi {
 
-    private final NotificationDetailRecipientService notificationDetailRecipientService;
+    private final NotificationsRecipientService notificationsRecipientService;
 
-    public ReceivedNotificationController(NotificationDetailRecipientService notificationDetailRecipientService) {
-        this.notificationDetailRecipientService = notificationDetailRecipientService;
+    public ReceivedNotificationController(NotificationsRecipientService notificationsRecipientService) {
+        this.notificationsRecipientService = notificationsRecipientService;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                  final ServerWebExchange exchange) {
         log.logStartingProcess("getReceivedNotificationV1");
 
-        Mono<BffFullNotificationV1> serviceResponse = notificationDetailRecipientService.getNotificationDetail(
+        Mono<BffFullNotificationV1> serviceResponse = notificationsRecipientService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups, mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 

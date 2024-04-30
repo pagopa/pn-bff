@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationDetailRecipientService {
+public class NotificationsRecipientService {
 
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
 

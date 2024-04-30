@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -47,4 +48,11 @@ public interface NotificationDownloadDocumentMapper {
      */
     BffDocumentDownloadMetadataResponse mapReceivedAttachmentDownloadResponse(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse document);
 
+    /**
+     * Maps the bff LegalFactCategory to the delivery push LegalFactCategory
+     *
+     * @param legalFactCategory the LegalFactCategory to map
+     * @return the mapped LegalFactCategory
+     */
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory mapLegalFactCategory(LegalFactCategory legalFactCategory);
 }

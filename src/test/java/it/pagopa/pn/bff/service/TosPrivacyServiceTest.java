@@ -17,6 +17,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Objects;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -122,14 +124,6 @@ class TosPrivacyServiceTest {
 
     @Test
     void acceptOrDeclineTosPrivacyEmptyBodyErrorTest() {
-        when(pnUserAttributesClient.acceptConsent(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.any(ConsentAction.class),
-                Mockito.anyString()
-        )).thenReturn(Mono.error(new WebClientResponseException(400, "Bad Request", null, null, null)));
-
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
@@ -137,7 +131,8 @@ class TosPrivacyServiceTest {
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("Missing tos or privacy body")
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The body of the request is missed")
                 )
                 .verify();
     }

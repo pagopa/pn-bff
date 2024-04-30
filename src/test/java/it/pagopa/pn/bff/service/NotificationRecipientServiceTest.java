@@ -1,12 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
+import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
+import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,57 +16,61 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class NotificationDetailPaServiceTest {
+class NotificationRecipientServiceTest {
 
-    private static NotificationDetailPAService notificationDetailPAService;
-    private static PnDeliveryClientPAImpl pnDeliveryClientPA;
-    private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
+    private static NotificationsRecipientService notificationsRecipientService;
+    private static PnDeliveryClientRecipientImpl pnDeliveryClientRecipient;
+    private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
 
     @BeforeAll
     public static void setup() {
-        pnDeliveryClientPA = mock(PnDeliveryClientPAImpl.class);
-        notificationDetailPAService = new NotificationDetailPAService(pnDeliveryClientPA);
+        pnDeliveryClientRecipient = mock(PnDeliveryClientRecipientImpl.class);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient);
     }
 
     @Test
     void testGetNotificationDetail() {
-        when(pnDeliveryClientPA.getSentNotification(
+        when(pnDeliveryClientRecipient.getReceivedNotification(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyList()
-        )).thenReturn(Mono.just(notificationDetailPaMock.getNotificationMultiRecipientMock()));
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationMultiRecipientMock()));
 
-        Mono<BffFullNotificationV1> result = notificationDetailPAService.getSentNotificationDetail(
+        Mono<BffFullNotificationV1> result = notificationsRecipientService.getNotificationDetail(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                UserMock.PN_CX_GROUPS
+                UserMock.PN_CX_GROUPS,
+                "MANDATE_ID"
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock()))
+                .expectNext(NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
                 .verifyComplete();
     }
 
     @Test
     void testGetNotificationDetailError() {
-        when(pnDeliveryClientPA.getSentNotification(
+        when(pnDeliveryClientRecipient.getReceivedNotification(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyList()
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Mono<BffFullNotificationV1> result = notificationDetailPAService.getSentNotificationDetail(
+        Mono<BffFullNotificationV1> result = notificationsRecipientService.getNotificationDetail(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                UserMock.PN_CX_GROUPS
+                UserMock.PN_CX_GROUPS,
+                "MANDATE_ID"
         );
 
         StepVerifier.create(result)

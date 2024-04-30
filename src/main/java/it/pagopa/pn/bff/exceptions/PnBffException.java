@@ -1,21 +1,29 @@
 package it.pagopa.pn.bff.exceptions;
 
 import it.pagopa.pn.commons.exceptions.PnRuntimeException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import it.pagopa.pn.commons.exceptions.dto.ProblemError;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.util.List;
+
+import static it.pagopa.pn.commons.exceptions.PnExceptionsCodes.ERROR_CODE_PN_GENERIC_ERROR;
+
 public class PnBffException extends PnRuntimeException {
-    public PnBffException(@Nullable String message,
-                          @Nullable String code,
-                          @Nullable String detail,
-                          int statusCode,
-                          @NonNull String statusText,
-                          @Nullable Throwable cause) {
-        super(statusText, message, statusCode, code, null, detail, cause);
+    public PnBffException(String message, String description, int status, @NotNull String errorCode, String detail, Throwable cause) {
+        super(message, description, status, errorCode, null, detail, cause);
+    }
+
+    public PnBffException(@NotNull String message, @NotNull String description, int status, @NotNull String errorCode) {
+        super(message, description, status, errorCode, null, null, null);
+    }
+
+
+    public PnBffException(@NotNull String message, @NotNull String description, int status, @NotNull List<ProblemError> problemErrorList, Throwable cause) {
+        super(message, description, status, problemErrorList, cause);
     }
 
     public static PnBffException wrapException(WebClientResponseException e) {
-        return new PnBffException(e.getMessage(), null, null, e.getStatusCode().value(), e.getStatusText(), e);
+        return new PnBffException(e.getMessage(), e.getMessage(), e.getStatusCode().value(), ERROR_CODE_PN_GENERIC_ERROR, e.getStatusText(), e);
     }
 }

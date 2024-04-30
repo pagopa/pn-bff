@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
+import it.pagopa.pn.bff.service.NotificationsRecipientService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -27,14 +27,14 @@ class ReceivedNotificationControllerTest {
     @Autowired
     WebTestClient webTestClient;
     @MockBean
-    private NotificationDetailRecipientService notificationDetailRecipientService;
+    private NotificationsRecipientService notificationsRecipientService;
     @SpyBean
     private ReceivedNotificationController receivedNotificationController;
 
     @Test
     void getReceivedNotification() {
         BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
-        Mockito.when(notificationDetailRecipientService.getNotificationDetail(
+        Mockito.when(notificationsRecipientService.getNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -61,7 +61,7 @@ class ReceivedNotificationControllerTest {
                 .expectBody(BffFullNotificationV1.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
+        Mockito.verify(notificationsRecipientService).getNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
@@ -73,7 +73,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationError() {
-        Mockito.when(notificationDetailRecipientService.getNotificationDetail(
+        Mockito.when(notificationsRecipientService.getNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -98,7 +98,7 @@ class ReceivedNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
+        Mockito.verify(notificationsRecipientService).getNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,

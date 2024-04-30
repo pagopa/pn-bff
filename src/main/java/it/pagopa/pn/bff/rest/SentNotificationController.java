@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.NotificationDetailPAService;
+import it.pagopa.pn.bff.service.NotificationsPAService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,10 @@ import java.util.List;
 @RestController
 public class SentNotificationController implements NotificationSentApi {
 
-    private final NotificationDetailPAService notificationDetailPAService;
+    private final NotificationsPAService notificationsPAService;
 
-    public SentNotificationController(NotificationDetailPAService notificationDetailPAService) {
-        this.notificationDetailPAService = notificationDetailPAService;
+    public SentNotificationController(NotificationsPAService notificationsPAService) {
+        this.notificationsPAService = notificationsPAService;
     }
 
     /**
@@ -45,7 +45,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                              List<String> xPagopaPnCxGroups,
                                                                              final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationV1");
-        Mono<BffFullNotificationV1> serviceResponse = notificationDetailPAService.getSentNotificationDetail(
+        Mono<BffFullNotificationV1> serviceResponse = notificationsPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
 

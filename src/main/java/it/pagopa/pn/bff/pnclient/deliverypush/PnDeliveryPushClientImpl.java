@@ -2,9 +2,8 @@ package it.pagopa.pn.bff.pnclient.deliverypush;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,9 @@ import java.util.UUID;
 @Component
 @CustomLog
 @RequiredArgsConstructor
-public class PnDocumentsWebClientImpl {
+public class PnDeliveryPushClientImpl {
     private final DocumentsWebApi documentsWebApi;
+    private final LegalFactsApi legalFactsApi;
 
     public Mono<DocumentDownloadMetadataResponse> getDocumentsWeb(String xPagopaPnUid,
                                                                   CxTypeAuthFleet xPagopaPnCxType,
@@ -38,6 +38,28 @@ public class PnDocumentsWebClientImpl {
                 iun,
                 documentType,
                 documentId,
+                xPagopaPnCxGroups,
+                mandateId
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+    }
+
+    public Mono<LegalFactDownloadMetadataResponse> getLegalFact(String xPagopaPnUid,
+                                                                CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId,
+                                                                String iun,
+                                                                LegalFactCategory legalFactType,
+                                                                String legalFactId,
+                                                                List<String> xPagopaPnCxGroups,
+                                                                UUID mandateId) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY_PUSH, "getLegalFact");
+
+        return legalFactsApi.getLegalFact(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                legalFactType,
+                legalFactId,
                 xPagopaPnCxGroups,
                 mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);

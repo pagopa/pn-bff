@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.service.NotificationDetailPAService;
+import it.pagopa.pn.bff.service.NotificationsPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -27,14 +27,14 @@ class SentNotificationControllerTest {
     @Autowired
     WebTestClient webTestClient;
     @MockBean
-    private NotificationDetailPAService notificationDetailPAService;
+    private NotificationsPAService notificationsPAService;
     @SpyBean
     private SentNotificationController sentNotificationController;
 
     @Test
     void getSentNotification() {
         BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
-        Mockito.when(notificationDetailPAService.getSentNotificationDetail(
+        Mockito.when(notificationsPAService.getSentNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -60,7 +60,7 @@ class SentNotificationControllerTest {
                 .expectBody(BffFullNotificationV1.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
+        Mockito.verify(notificationsPAService).getSentNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -71,7 +71,7 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationError() {
-        Mockito.when(notificationDetailPAService.getSentNotificationDetail(
+        Mockito.when(notificationsPAService.getSentNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -95,7 +95,7 @@ class SentNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationDetailPAService).getSentNotificationDetail(
+        Mockito.verify(notificationsPAService).getSentNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,

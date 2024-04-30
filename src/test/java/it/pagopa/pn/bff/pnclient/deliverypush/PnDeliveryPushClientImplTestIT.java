@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.deliverypush;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -26,16 +27,17 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class PnLegalFactsClientImplTestIT {
+class PnDeliveryPushClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
     private final LegalFactCategory legalFactCategory = LegalFactCategory.DIGITAL_DELIVERY;
     private final String legalFactId = "LEGAL_FACT_ID";
-    private final String path = "/delivery-push/" + iun + "/legal-facts/" + legalFactCategory + "/" + legalFactId;
+    private final String documentPath = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
+    private final String legalFactPath = "/delivery-push/" + iun + "/legal-facts/" + legalFactCategory + "/" + legalFactId;
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
-    private PnLegalFactsClientImpl pnLegalFactsClient;
+    private PnDeliveryPushClientImpl pnDeliveryPushClient;
 
     @BeforeAll
     public static void startMockServer() {
@@ -55,17 +57,57 @@ class PnLegalFactsClientImplTestIT {
     }
 
     @Test
-    void getLegalFact() throws JsonProcessingException {
+    void getDocumentsWeb() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getLegalFactMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getDocumentMock());
+        mockServerClient.when(request().withMethod("GET").withPath(documentPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnLegalFactsClient.getLegalFact(
+        StepVerifier.create(pnDeliveryPushClient.getDocumentsWeb(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                iun,
+                DocumentCategory.AAR,
+                "DOCUMENT_ID",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID()
+        )).expectNext(notificationDownloadDocumentMock.getDocumentMock()).verifyComplete();
+    }
+
+    @Test
+    void getDocumentsWebError() {
+        mockServerClient.when(request().withMethod("GET").withPath(documentPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryPushClient.getDocumentsWeb(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                iun,
+                DocumentCategory.AAR,
+                "DOCUMENT_ID",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID()
+        )).expectError().verify();
+    }
+
+    @Test
+    void getLegalFact() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getLegalFactMock());
+        mockServerClient.when(request().withMethod("GET").withPath(legalFactPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryPushClient.getLegalFact(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -79,10 +121,10 @@ class PnLegalFactsClientImplTestIT {
 
     @Test
     void getLegalFactError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(legalFactPath))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnLegalFactsClient.getLegalFact(
+        StepVerifier.create(pnDeliveryPushClient.getLegalFact(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,

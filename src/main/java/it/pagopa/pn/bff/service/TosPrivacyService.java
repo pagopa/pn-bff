@@ -13,9 +13,12 @@ import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+
+import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_BODYNOTFOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -66,12 +69,10 @@ public class TosPrivacyService {
 
             if (body.getTos() == null && body.getPrivacy() == null) {
                 return Mono.error(new PnBffException(
-                        "Missing tos or privacy body",
-                        "PN_GENERIC_ERROR",
-                        "Missing tos or privacy body",
-                        400,
-                        "Missing tos or privacy body",
-                        null
+                        "Body not found",
+                        "The body of the request is missed",
+                        HttpStatus.BAD_REQUEST.value(),
+                        ERROR_CODE_BFF_BODYNOTFOUND
                 ));
             }
 

@@ -17,11 +17,7 @@ components:
       in: path
       required: true
       schema:
-        type: string
-        enum:
-          - ATTACHMENT
-          - LEGALFACT
-          - AAR
+        $ref: '#/components/schemas/BffDocumentType'
 
     BffQueryDocumentId:
       description: Identificativo o indice del documento
@@ -42,6 +38,7 @@ components:
             type: integer
             format: int32
           legalFactId:
+            type: string
             pattern: ^[ -~]*$
             maxLength: 1024
 
@@ -52,11 +49,14 @@ components:
       in: query
       required: false
       schema:
-        type: string
-        enum:
-          - SENDER_ACK
-          - DIGITAL_DELIVERY
-          - ANALOG_DELIVERY
-          - RECIPIENT_ACCESS
-          - PEC_RECEIPT
-          - ANALOG_FAILURE_DELIVERY
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/2dfae74710df04b0b4ca855112af536b3e2c7fd1/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
+
+  schemas:
+    # this is needed because the openapi generator doesn't work well if we put the content of this schema
+    # directly into BffPathDocumentType parameter
+    BffDocumentType:
+      type: string
+      enum:
+        - attachment
+        - legal-fact
+        - aar
