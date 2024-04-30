@@ -4,6 +4,7 @@
     "WireTapLogActivation": "false",
     "MountEfs": "false",
     "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
-    "SelfCareSendProdId": "prod-pn-dev"
+    "SelfCareSendProdId": "prod-pn-dev",
+    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it"
   }
 }
