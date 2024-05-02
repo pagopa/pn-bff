@@ -3,8 +3,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 @CustomLog
 @RestController
@@ -55,6 +55,41 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
 
 
         log.logEndingProcess("getReceivedNotificationV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * GET bff/v1/notifications/received/{iun}/documents: Notification document
+     * Download the document linked to a notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param documentId        the document id (safestorage key if aar or legalfact, the index in the array if attachment)
+     * @param documentType      the document type (aar, attachment or legal fact)
+     * @param legalFactCategory the legal fact category (required only if the documentType is legal fact)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the requested document
+     */
+    @Override
+    public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getReceivedNotificationDocumentV1(String xPagopaPnUid,
+                                                                                                       CxTypeAuthFleet xPagopaPnCxType,
+                                                                                                       String xPagopaPnCxId,
+                                                                                                       String iun,
+                                                                                                       BffDocumentType documentType,
+                                                                                                       DocumentId documentId,
+                                                                                                       List<String> xPagopaPnCxGroups,
+                                                                                                       UUID mandateId,
+                                                                                                       LegalFactCategory legalFactCategory,
+                                                                                                       final ServerWebExchange exchange) {
+        log.logStartingProcess("getReceivedNotificationDocumentV1");
+        Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentId, documentType,
+                legalFactCategory, xPagopaPnCxGroups, mandateId
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        log.logEndingProcess("getReceivedNotificationDocumentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

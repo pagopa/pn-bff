@@ -11,6 +11,9 @@ components:
     BffNotificationSearchMandateId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
 
+    BffQueryMandateId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-web-recipient.yaml#/components/parameters/queryMandateId'
+
     BffQueryDocumentType:
       description: Tipo documento
       name: documentType

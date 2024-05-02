@@ -30,7 +30,7 @@ import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_LEG
 @Slf4j
 public class NotificationsPAService {
 
-    private final PnDeliveryClientPAImpl pnDeliveryClientPA;
+    private final PnDeliveryClientPAImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
 
     /**
@@ -49,7 +49,7 @@ public class NotificationsPAService {
                                                                  List<String> xPagopaPnCxGroups
     ) {
         log.info("Get notification detail for iun {}", iun);
-        Mono<FullSentNotificationV23> notificationDetail = pnDeliveryClientPA.getSentNotification(
+        Mono<FullSentNotificationV23> notificationDetail = pnDeliveryClient.getSentNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -92,7 +92,7 @@ public class NotificationsPAService {
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
             }
-            Mono<NotificationAttachmentDownloadMetadataResponse> attachment = pnDeliveryClientPA.getSentNotificationDocument(
+            Mono<NotificationAttachmentDownloadMetadataResponse> attachment = pnDeliveryClient.getSentNotificationDocument(
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertDeliveryPACXType(xPagopaPnCxType),
                     xPagopaPnCxId,
