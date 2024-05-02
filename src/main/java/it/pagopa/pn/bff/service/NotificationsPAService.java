@@ -10,6 +10,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationParamsMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,7 @@ public class NotificationsPAService {
                                                                                  String xPagopaPnCxId, String iun,
                                                                                  DocumentId documentId,
                                                                                  BffDocumentType documentType,
-                                                                                 LegalFactCategory legalFactType,
+                                                                                 LegalFactCategory legalFactCategory,
                                                                                  List<String> xPagopaPnCxGroups
     ) {
         log.info("Get notification {} for iun {}", documentType, iun);
@@ -127,10 +128,10 @@ public class NotificationsPAService {
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
             }
-            if (legalFactType == null) {
+            if (legalFactCategory == null) {
                 return Mono.error(new PnBffException(
-                        "Legal fact type not found",
-                        "The legal fact type is missed",
+                        "Legal fact category not found",
+                        "The legal fact category is missed",
                         HttpStatus.BAD_REQUEST.value(),
                         ERROR_CODE_BFF_LEGALFACTTYPENOTFOUND
                 ));
@@ -141,7 +142,7 @@ public class NotificationsPAService {
                     CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     iun,
-                    NotificationDownloadDocumentMapper.modelMapper.mapLegalFactCategory(legalFactType),
+                    NotificationParamsMapper.modelMapper.mapLegalFactCategory(legalFactCategory),
                     documentId.getLegalFactId(),
                     xPagopaPnCxGroups,
                     null

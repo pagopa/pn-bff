@@ -21,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -154,6 +155,30 @@ class NotificationPaServiceTest {
     }
 
     @Test
+    void testGetNotificationDocumentAARNoDocumentId() {
+        DocumentId documentId = new DocumentId();
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                documentId,
+                BffDocumentType.AAR,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                )
+                .verify();
+    }
+
+    @Test
     void testGetNotificationDocumentLegalFact() {
         when(pnDeliveryPushClient.getLegalFact(
                 Mockito.anyString(),
@@ -219,6 +244,55 @@ class NotificationPaServiceTest {
     }
 
     @Test
+    void testGetNotificationDocumentLegalFactNoDocumentId() {
+        DocumentId documentId = new DocumentId();
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                )
+                .verify();
+    }
+
+    @Test
+    void testGetNotificationDocumentLegalFactNoLegalFactCategory() {
+        DocumentId documentId = new DocumentId();
+        documentId.setLegalFactId("legal-fact-id");
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The legal fact category is missed")
+                )
+                .verify();
+    }
+
+    @Test
     void testGetNotificationDocumentAttachment() {
         when(pnDeliveryClientPA.getSentNotificationDocument(
                 Mockito.anyString(),
@@ -276,6 +350,30 @@ class NotificationPaServiceTest {
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void testGetNotificationDocumentAttachmentNoDocumentId() {
+        DocumentId documentId = new DocumentId();
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                documentId,
+                BffDocumentType.ATTACHMENT,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                )
                 .verify();
     }
 }
