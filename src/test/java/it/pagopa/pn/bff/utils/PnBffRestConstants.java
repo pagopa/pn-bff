@@ -7,6 +7,7 @@ public class PnBffRestConstants {
     public static final String CX_TYPE_HEADER = "x-pagopa-pn-cx-type";
     public static final String CX_GROUPS_HEADER = "x-pagopa-pn-cx-groups";
     public static final String SOURCECHANNEL_HEADER = "x-pagopa-pn-src-ch";
+    public static final String CX_ROLE_HEADER = "x-pagopa-pn-cx-role";
     private static final String BFF_PATH = "/bff";
     private static final String VERSION_1 = "/v1";
     public static final String NOTIFICATION_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received/{iun}";
@@ -19,6 +20,7 @@ public class PnBffRestConstants {
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String TOKEN_EXCHANGE_PATH = BFF_PATH + VERSION_1 + "/token-exchange";
+    public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
 
     private PnBffRestConstants() {
     }

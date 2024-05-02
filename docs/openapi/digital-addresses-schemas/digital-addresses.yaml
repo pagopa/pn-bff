@@ -1,0 +1,46 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    BffUserAddresses:
+      type: array
+      items:
+        $ref: '#/components/schemas/BffUserAddress'
+
+    BffUserAddress:
+      type: object
+      required:
+        - addressType
+        - recipientId
+        - senderId
+        - channelType
+        - value
+      properties:
+        addressType:
+          type: string
+        recipientId:
+          type: string
+        senderId:
+          type: string
+          description: senderId or 'default'
+        senderName:
+          type: string
+          description: name of the sender
+        channelType:
+          $ref: '#/components/schemas/BffChannelType'
+        value:
+          type: string
+        requestId:
+          type: string
+        pecValid:
+          type: boolean
+        codeValid:
+          type: boolean
+
+    BffChannelType:
+      type: string
+      enum:
+        - EMAIL
+        - SMS
+        - PEC
+        - APPIO

@@ -1,10 +1,12 @@
 package it.pagopa.pn.bff.pnclient.userattributes;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mocks.AddressesMock;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
@@ -25,10 +27,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class PnUserAttributesClientImplTest {
     private final ConsentsMock consentsMock = new ConsentsMock();
+    private final AddressesMock addressesMock = new AddressesMock();
     @Autowired
     private PnUserAttributesClientImpl pnUserAttributesClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi")
     private ConsentsApi consentsApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi")
+    private AllApi allAddressesApi;
 
     @Test
     void getTosConsent() throws RestClientException {
@@ -125,6 +130,40 @@ class PnUserAttributesClientImplTest {
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
                 "1"
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void getUserAddresses() {
+        when(allAddressesApi.getAddressesByRecipient(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(addressesMock.getUserAddressesResponseMock()));
+
+        StepVerifier.create(pnUserAttributesClient.getUserAddresses(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.getUserAddressesResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void getUserAddressesError() {
+        when(allAddressesApi.getAddressesByRecipient(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.getUserAddresses(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         )).expectError(PnBffException.class).verify();
     }
 }

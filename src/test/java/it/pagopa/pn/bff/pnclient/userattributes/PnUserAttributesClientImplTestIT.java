@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.mocks.AddressesMock;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
@@ -30,6 +31,7 @@ class PnUserAttributesClientImplTestIT {
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";
     private final ConsentsMock consentsMock = new ConsentsMock();
+    private final AddressesMock addressesMock = new AddressesMock();
     private final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
     @Autowired
     private PnUserAttributesClientImpl pnUserAttributesClient;
@@ -140,6 +142,38 @@ class PnUserAttributesClientImplTestIT {
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
                 "1.0"
+        )).expectError().verify();
+    }
+
+    @Test
+    void getAddressesByRecipient() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(addressesMock.getUserAddressesResponseMock());
+        mockServerClient.when(request().withMethod("GET").withPath("/address-book/v1/digital-address"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnUserAttributesClient.getUserAddresses(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.getUserAddressesResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void getAddressesByRecipientError() {
+        mockServerClient.when(request().withMethod("GET").withPath("/address-book/v1/digital-address"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.getUserAddresses(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         )).expectError().verify();
     }
 }
