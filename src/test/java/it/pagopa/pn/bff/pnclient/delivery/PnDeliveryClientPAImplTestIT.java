@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
+import it.pagopa.pn.bff.mocks.NotificationSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +24,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
+import java.time.OffsetDateTime;
+
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -31,12 +36,16 @@ class PnDeliveryClientPAImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
-    private final String path = "/delivery/v2.3/notifications/sent/" + iun;
+    private final String detailPath = "/delivery/v2.3/notifications/sent/" + iun;
+    private final String listPath = "/delivery/notifications/sent";
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
+    private final NotificationSentMock notificationSentMock = new NotificationSentMock();
     @Autowired
     private PnDeliveryClientPAImpl paDeliveryClient;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.api.SenderReadB2BApi")
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
     private SenderReadB2BApi senderReadB2BApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderWriteB2BApi")
+    private SenderReadWebApi senderReadWebApi;
 
     @BeforeAll
     public static void startMockServer() {
@@ -61,7 +70,7 @@ class PnDeliveryClientPAImplTestIT {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailPaMock.getNotificationMultiRecipientMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -79,7 +88,7 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(paDeliveryClient.getSentNotification(
@@ -88,6 +97,56 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_CX_ID,
                 iun,
                 UserMock.PN_CX_GROUPS
+        )).expectError().verify();
+    }
+
+    @Test
+    void searchSentNotifications() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String response = objectMapper.writeValueAsString(notificationSentMock.getNotificationSentPNMock());
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(paDeliveryClient.searchSentNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                NotificationSentMock.RECIPIENT_ID,
+                NotificationStatus.ACCEPTED,
+                NotificationSentMock.SUBJECT_REG_EXP,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
+        )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchSentNotificationsError() {
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(paDeliveryClient.searchSentNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                NotificationSentMock.RECIPIENT_ID,
+                NotificationStatus.ACCEPTED,
+                NotificationSentMock.SUBJECT_REG_EXP,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         )).expectError().verify();
     }
 }

@@ -26,7 +26,86 @@ tags:
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
+  '/bff/v1/notifications/received':
+    get:
+      summary: 'Destinatario: ricerca notifiche ricevute'
+      description: |-
+        Questa operazione permette di ricercare le notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedNotificationsV1
+      security:                                    # ONLY EXTERNAL
+       - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSenderId'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
+  '/bff/v1/notifications/received/delegated':
+    get:
+      summary: 'Destinatario: ricerca notifiche delegate ricevute'
+      description: |-
+        Questa operazione permette di ricercare le notifiche delegate ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedDelegatedNotificationsV1
+      security:                                    # ONLY EXTERNAL
+       - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSenderId'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchGroup'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+  
   '/bff/v1/notifications/received/{iun}':
     get:
       summary: Accesso notifiche ricevute

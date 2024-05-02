@@ -7,7 +7,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
+import it.pagopa.pn.bff.mocks.NotificationReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +24,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
+import java.time.OffsetDateTime;
+
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -32,9 +36,10 @@ class PnDeliveryClientRecipientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
-    private final String mandateId = "MANDATE_ID";
-    private final String path = "/delivery/v2.3/notifications/received/" + iun;
+    private final String detailPath = "/delivery/v2.3/notifications/received/" + iun;
+    private final String listPath = "/delivery/notifications/received";
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
+    private final NotificationReceivedMock notificationReceivedMock = new NotificationReceivedMock();
     @Autowired
     private PnDeliveryClientRecipientImpl pnDeliveryClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
@@ -63,7 +68,7 @@ class PnDeliveryClientRecipientImplTestIT {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -76,13 +81,13 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_ID,
                 iun,
                 UserMock.PN_CX_GROUPS,
-                mandateId
+                NotificationReceivedMock.MANDATE_ID
         )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
 
     @Test
     void getSentNotificationV23Error() {
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnDeliveryClient.getReceivedNotification(
@@ -91,7 +96,111 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_ID,
                 iun,
                 UserMock.PN_CX_GROUPS,
-                mandateId
+                NotificationReceivedMock.MANDATE_ID
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void searchReceivedNotification() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String response = objectMapper.writeValueAsString(notificationReceivedMock.getNotificationReceivedPNMock());
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.searchReceivedNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                NotificationReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
+        )).expectNext(notificationReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchReceivedNotificationError() {
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.searchReceivedNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                NotificationReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void searchReceivedDelegatedNotification() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String response = objectMapper.writeValueAsString(notificationReceivedMock.getNotificationReceivedPNMock());
+        mockServerClient.when(request().withMethod("GET").withPath(listPath + "/delegated"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.searchReceivedDelegatedNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                NotificationReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
+        )).expectNext(notificationReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchReceivedDelegatedNotificationError() {
+        mockServerClient.when(request().withMethod("GET").withPath(listPath + "/delegated"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.searchReceivedDelegatedNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                NotificationReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         )).expectError(PnBffException.class).verify();
     }
 }
