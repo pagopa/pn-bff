@@ -36,8 +36,8 @@ class PnDeliveryClientPAImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
-    private final String pathWithIun = "/delivery/v2.3/notifications/sent/" + iun;
-    private final String pathWithoutIun = "/delivery/notifications/sent";
+    private final String detailPath = "/delivery/v2.3/notifications/sent/" + iun;
+    private final String listPath = "/delivery/notifications/sent";
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationSentMock notificationSentMock = new NotificationSentMock();
     @Autowired
@@ -70,7 +70,7 @@ class PnDeliveryClientPAImplTestIT {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailPaMock.getNotificationMultiRecipientMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathWithIun))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -88,7 +88,7 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathWithIun))
+        mockServerClient.when(request().withMethod("GET").withPath(detailPath))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(paDeliveryClient.getSentNotification(
@@ -106,7 +106,7 @@ class PnDeliveryClientPAImplTestIT {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationSentMock.getNotificationSentPNMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathWithoutIun))
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -117,36 +117,36 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                "RECIPIENT_ID",
+                UserMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                "SUBJECT",
-                "IUN",
-                10,
-                "NEXT_PAGES_KEY"
+                UserMock.SUBJECT_REG_EXP,
+                UserMock.IUN_MATCH,
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
     }
 
     @Test
     void searchSentNotificationsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathWithoutIun))
+        mockServerClient.when(request().withMethod("GET").withPath(listPath))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(paDeliveryClient.searchSentNotification(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                "RECIPIENT_ID",
+                UserMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                "SUBJECT",
-                "IUN",
-                10,
-                "NEXT_PAGES_KEY"
+                UserMock.SUBJECT_REG_EXP,
+                UserMock.IUN_MATCH,
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         )).expectError().verify();
     }
 }

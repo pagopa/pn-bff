@@ -28,7 +28,7 @@ tags:
 paths:
   '/bff/v1/notifications/received':
     get:
-      summary: 'Destinatario: ricerca notifiche ricevute versione 1'
+      summary: 'Destinatario: ricerca notifiche ricevute'
       description: |-
         Questa operazione permette di ricercare le notifiche ricevute.
       tags:
@@ -56,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponseV1'
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -112,7 +112,7 @@ paths:
   
   '/bff/v1/notifications/received/delegated':
     get:
-      summary: 'Destinatario: ricerca notifiche delegate ricevute versione 1'
+      summary: 'Destinatario: ricerca notifiche delegate ricevute'
       description: |-
         Questa operazione permette di ricercare le notifiche delegate ricevute.
       tags:
@@ -140,7 +140,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponseV1'
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
         '400':
           description: Bad request
           content:

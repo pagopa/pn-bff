@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import it.pagopa.pn.bff.service.NotificationDetailPAService;
@@ -76,21 +76,21 @@ public class SentNotificationController implements NotificationSentApi {
      * @return the list of notifications sent by a Public Administration
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponseV1>> searchSentNotificationsV1(String xPagopaPnUid,
-                                                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                                                      String xPagopaPnCxId,
-                                                                                      OffsetDateTime startDate,
-                                                                                      OffsetDateTime endDate,
-                                                                                      List<String> xPagopaPnCxGroups,
-                                                                                      String recipientId,
-                                                                                      NotificationStatus status,
-                                                                                      String subjectRegExp,
-                                                                                      String iunMatch,
-                                                                                      Integer size,
-                                                                                      String nextPagesKey,
-                                                                                      final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffNotificationsResponse>> searchSentNotificationsV1(String xPagopaPnUid,
+                                                                                    CxTypeAuthFleet xPagopaPnCxType,
+                                                                                    String xPagopaPnCxId,
+                                                                                    OffsetDateTime startDate,
+                                                                                    OffsetDateTime endDate,
+                                                                                    List<String> xPagopaPnCxGroups,
+                                                                                    String recipientId,
+                                                                                    NotificationStatus status,
+                                                                                    String subjectRegExp,
+                                                                                    String iunMatch,
+                                                                                    Integer size,
+                                                                                    String nextPagesKey,
+                                                                                    final ServerWebExchange exchange) {
         log.logStartingProcess("searchSentNotificationsV1");
-        Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailPAService.searchSentNotifications(
+        Mono<BffNotificationsResponse> serviceResponse = notificationDetailPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status, subjectRegExp, startDate, endDate, size, nextPagesKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
         log.logEndingProcess("searchSentNotificationsV1");

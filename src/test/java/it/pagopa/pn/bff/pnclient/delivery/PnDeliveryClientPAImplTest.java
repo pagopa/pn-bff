@@ -50,7 +50,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                "IUN",
+                UserMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         )).expectNext(notificationDetailPaMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
@@ -69,7 +69,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                "IUN",
+                UserMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }
@@ -95,15 +95,15 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                "RECIPIENT_ID",
+                UserMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                "SUBJECT",
-                "IUN",
-                10,
-                "NEXT_PAGES_KEY"
+                UserMock.SUBJECT_REG_EXP,
+                UserMock.IUN_MATCH,
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
     }
 
@@ -128,15 +128,15 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                "RECIPIENT_ID",
+                UserMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                "SUBJECT",
-                "IUN",
-                10,
-                "NEXT_PAGES_KEY"
+                UserMock.SUBJECT_REG_EXP,
+                UserMock.IUN_MATCH,
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         )).expectError(PnBffException.class).verify();
     }
 }

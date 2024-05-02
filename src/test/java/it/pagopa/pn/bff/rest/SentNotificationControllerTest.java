@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import it.pagopa.pn.bff.mappers.notification.NotificationSentMapper;
@@ -29,15 +29,6 @@ import java.time.OffsetDateTime;
 @WebFluxTest(SentNotificationController.class)
 class SentNotificationControllerTest {
     private final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
-    private final String RECIPIENT_ID = "PA-001";
-    private final String STATUS = NotificationStatus.ACCEPTED.getValue();
-    private final String SUBJECT_REGEXP = "test";
-    private final String START_DATE = "2014-04-30T00:00:00.000Z";
-    private final String END_DATE = "2024-04-30T00:00:00.000Z";
-    private final int SIZE = 10;
-    private final String NEXT_PAGES_KEY = "XXXYYYZZZ";
-
-
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationSentMock notificationSentMock = new NotificationSentMock();
     @Autowired
@@ -122,7 +113,7 @@ class SentNotificationControllerTest {
 
     @Test
     void searchSentNotification() {
-        BffNotificationsResponseV1 response = NotificationSentMapper.modelMapper.toBffNotificationsResponseV1(notificationSentMock.getNotificationSentPNMock());
+        BffNotificationsResponse response = NotificationSentMapper.modelMapper.toBffNotificationsResponse(notificationSentMock.getNotificationSentPNMock());
         Mockito.when(notificationDetailPAService.searchSentNotifications(
                         Mockito.any(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -142,14 +133,14 @@ class SentNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SEARCH_PATH)
-                                .queryParam("startDate", START_DATE)
-                                .queryParam("endDate", END_DATE)
-                                .queryParam("size", SIZE)
-                                .queryParam("iunMatch", IUN)
-                                .queryParam("recipientId", RECIPIENT_ID)
-                                .queryParam("status", STATUS)
-                                .queryParam("subjectRegExp", SUBJECT_REGEXP)
-                                .queryParam("nextPagesKey", NEXT_PAGES_KEY)
+                                .queryParam("startDate", UserMock.START_DATE)
+                                .queryParam("endDate", UserMock.END_DATE)
+                                .queryParam("size", UserMock.SIZE)
+                                .queryParam("iunMatch", UserMock.IUN_MATCH)
+                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
+                                .queryParam("status", UserMock.STATUS.getValue())
+                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
+                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -159,7 +150,7 @@ class SentNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponseV1.class)
+                .expectBody(BffNotificationsResponse.class)
                 .isEqualTo(response);
 
         Mockito.verify(notificationDetailPAService).searchSentNotifications(
@@ -167,14 +158,14 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                IUN,
-                RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
-                "test",
-                OffsetDateTime.parse(START_DATE),
-                OffsetDateTime.parse(END_DATE),
-                10,
-                "XXXYYYZZZ"
+                UserMock.IUN_MATCH,
+                UserMock.RECIPIENT_ID,
+                UserMock.STATUS,
+                UserMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         );
     }
 
@@ -199,14 +190,14 @@ class SentNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SEARCH_PATH)
-                                .queryParam("startDate", START_DATE)
-                                .queryParam("endDate", END_DATE)
-                                .queryParam("size", SIZE)
-                                .queryParam("iunMatch", IUN)
-                                .queryParam("recipientId", RECIPIENT_ID)
-                                .queryParam("status", STATUS)
-                                .queryParam("subjectRegExp", SUBJECT_REGEXP)
-                                .queryParam("nextPagesKey", NEXT_PAGES_KEY)
+                                .queryParam("startDate", UserMock.START_DATE)
+                                .queryParam("endDate", UserMock.END_DATE)
+                                .queryParam("size", UserMock.SIZE)
+                                .queryParam("iunMatch", UserMock.IUN_MATCH)
+                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
+                                .queryParam("status", UserMock.STATUS.getValue())
+                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
+                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -222,14 +213,14 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                IUN,
-                RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
-                "test",
-                OffsetDateTime.parse(START_DATE),
-                OffsetDateTime.parse(END_DATE),
-                10,
-                "XXXYYYZZZ"
+                UserMock.IUN_MATCH,
+                UserMock.RECIPIENT_ID,
+                UserMock.STATUS,
+                UserMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
         );
     }
 }

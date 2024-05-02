@@ -4,7 +4,7 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
@@ -82,7 +82,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @return the list of notifications received by the user
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponseV1>> searchReceivedNotificationsV1(String xPagopaPnUid,
+    public Mono<ResponseEntity<BffNotificationsResponse>> searchReceivedNotificationsV1(String xPagopaPnUid,
                                                                                           CxTypeAuthFleet xPagopaPnCxType,
                                                                                           String xPagopaPnCxId,
                                                                                           OffsetDateTime startDate,
@@ -98,7 +98,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                           final ServerWebExchange exchange) {
     log.logStartingProcess("searchReceivedNotificationsV1");
 
-    Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailRecipientService.searchReceivedNotification(
+    Mono<BffNotificationsResponse> serviceResponse = notificationDetailRecipientService.searchReceivedNotification(
             xPagopaPnUid,
             xPagopaPnCxType,
             xPagopaPnCxId,
@@ -139,23 +139,23 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @return the list of notifications received by the user
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponseV1>> searchReceivedDelegatedNotificationsV1(String xPagopaPnUid,
-                                                                                                   CxTypeAuthFleet xPagopaPnCxType,
-                                                                                                   String xPagopaPnCxId,
-                                                                                                   OffsetDateTime startDate,
-                                                                                                   OffsetDateTime endDate,
-                                                                                                   List<String> xPagopaPnCxGroups,
-                                                                                                   String senderId,
-                                                                                                   String recipientId,
-                                                                                                   String group,
-                                                                                                   NotificationStatus status,
-                                                                                                   String iunMatch,
-                                                                                                   Integer size,
-                                                                                                   String nextPagesKey,
-                                                                                                   final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffNotificationsResponse>> searchReceivedDelegatedNotificationsV1(String xPagopaPnUid,
+                                                                                                 CxTypeAuthFleet xPagopaPnCxType,
+                                                                                                 String xPagopaPnCxId,
+                                                                                                 OffsetDateTime startDate,
+                                                                                                 OffsetDateTime endDate,
+                                                                                                 List<String> xPagopaPnCxGroups,
+                                                                                                 String senderId,
+                                                                                                 String recipientId,
+                                                                                                 String group,
+                                                                                                 NotificationStatus status,
+                                                                                                 String iunMatch,
+                                                                                                 Integer size,
+                                                                                                 String nextPagesKey,
+                                                                                                 final ServerWebExchange exchange) {
     log.logStartingProcess("searchReceivedDelegatedNotificationsV1");
 
-    Mono<BffNotificationsResponseV1> serviceResponse = notificationDetailRecipientService.searchReceivedDelegatedNotification(
+    Mono<BffNotificationsResponse> serviceResponse = notificationDetailRecipientService.searchReceivedDelegatedNotification(
             xPagopaPnUid,
             xPagopaPnCxType,
             xPagopaPnCxId,

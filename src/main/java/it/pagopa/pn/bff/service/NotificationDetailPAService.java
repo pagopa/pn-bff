@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
@@ -70,19 +70,19 @@ public class NotificationDetailPAService {
      * @param nextPagesKey          Page size
      * @return the list of notifications sent by a Public Administration
      */
-    public Mono<BffNotificationsResponseV1> searchSentNotifications(String xPagopaPnUid,
-                                                                    CxTypeAuthFleet xPagopaPnCxType,
-                                                                    String xPagopaPnCxId,
-                                                                    List<String> xPagopaPnCxGroups,
-                                                                    String iun,
-                                                                    String senderId,
-                                                                    NotificationStatus status,
-                                                                    String subjectRegExp,
-                                                                    OffsetDateTime startDate,
-                                                                    OffsetDateTime endDate,
-                                                                    Integer size,
-                                                                    String nextPagesKey) {
-        log.info("Search notification for iun {}", iun);
+    public Mono<BffNotificationsResponse> searchSentNotifications(String xPagopaPnUid,
+                                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                                  String xPagopaPnCxId,
+                                                                  List<String> xPagopaPnCxGroups,
+                                                                  String iun,
+                                                                  String senderId,
+                                                                  NotificationStatus status,
+                                                                  String subjectRegExp,
+                                                                  OffsetDateTime startDate,
+                                                                  OffsetDateTime endDate,
+                                                                  Integer size,
+                                                                  String nextPagesKey) {
+        log.info("searchSentNotifications");
         return pnDeliveryClientPA
                 .searchSentNotification(
                 xPagopaPnUid,
@@ -97,7 +97,7 @@ public class NotificationDetailPAService {
                 iun,
                 size,
                 nextPagesKey)
-                .map(NotificationSentMapper.modelMapper::toBffNotificationsResponseV1)
+                .map(NotificationSentMapper.modelMapper::toBffNotificationsResponse)
                 .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
     }
 }

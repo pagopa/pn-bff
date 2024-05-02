@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.mappers.notification.NotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
@@ -50,7 +50,7 @@ class NotificationDetailPaServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                "IUN",
+                UserMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -73,7 +73,7 @@ class NotificationDetailPaServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                "IUN",
+                UserMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -100,22 +100,23 @@ class NotificationDetailPaServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationSentMock.getNotificationSentPNMock()));
 
-        Mono<BffNotificationsResponseV1> result = notificationDetailPAService.searchSentNotifications(
+        Mono<BffNotificationsResponse> result = notificationDetailPAService.searchSentNotifications(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                "IUN",
-                "SENDERID",
+                UserMock.IUN_MATCH,
+                UserMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
-                ".*",
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                0,
-                "10");
+                UserMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
+        );
 
         StepVerifier.create(result)
-                .expectNext(NotificationSentMapper.modelMapper.toBffNotificationsResponseV1(notificationSentMock.getNotificationSentPNMock()))
+                .expectNext(NotificationSentMapper.modelMapper.toBffNotificationsResponse(notificationSentMock.getNotificationSentPNMock()))
                 .verifyComplete();
     }
 
@@ -136,19 +137,20 @@ class NotificationDetailPaServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Mono<BffNotificationsResponseV1> result = notificationDetailPAService.searchSentNotifications(
+        Mono<BffNotificationsResponse> result = notificationDetailPAService.searchSentNotifications(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                "IUN",
-                "SENDERID",
+                UserMock.IUN_MATCH,
+                UserMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
-                ".*",
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                0,
-                "10");
+                UserMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(UserMock.START_DATE),
+                OffsetDateTime.parse(UserMock.END_DATE),
+                UserMock.SIZE,
+                UserMock.NEXT_PAGES_KEY
+        );
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException

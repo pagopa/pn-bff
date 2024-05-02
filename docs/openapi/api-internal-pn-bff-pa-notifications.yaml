@@ -29,7 +29,7 @@ tags:
 paths:
   '/bff/v1/notifications/sent':
     get:
-      summary: 'Mittente: ricerca notifiche inviate versione 1'
+      summary: 'Mittente: ricerca notifiche inviate'
       description: |-
         Questa operazione permette di ricercare le notifiche inviate.
       tags:
@@ -56,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponseV1'
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
         '400':
           description: Bad request
           content:
