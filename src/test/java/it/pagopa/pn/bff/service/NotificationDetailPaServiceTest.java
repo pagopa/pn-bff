@@ -50,7 +50,7 @@ class NotificationDetailPaServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationSentMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -73,7 +73,7 @@ class NotificationDetailPaServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationSentMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -105,14 +105,14 @@ class NotificationDetailPaServiceTest {
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                UserMock.IUN_MATCH,
-                UserMock.SENDER_ID,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
-                UserMock.SUBJECT_REG_EXP,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)
@@ -142,14 +142,14 @@ class NotificationDetailPaServiceTest {
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                UserMock.IUN_MATCH,
-                UserMock.SENDER_ID,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
-                UserMock.SUBJECT_REG_EXP,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)

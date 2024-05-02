@@ -50,7 +50,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationSentMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         )).expectNext(notificationDetailPaMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
@@ -69,7 +69,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationSentMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
         )).expectError(PnBffException.class).verify();
     }
@@ -95,15 +95,15 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                UserMock.RECIPIENT_ID,
+                NotificationSentMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.IUN_MATCH,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.SUBJECT_REG_EXP,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         )).expectNext(notificationSentMock.getNotificationSentPNMock()).verifyComplete();
     }
 
@@ -128,15 +128,15 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
-                UserMock.RECIPIENT_ID,
+                NotificationSentMock.RECIPIENT_ID,
                 NotificationStatus.ACCEPTED,
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.IUN_MATCH,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.SUBJECT_REG_EXP,
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         )).expectError(PnBffException.class).verify();
     }
 }

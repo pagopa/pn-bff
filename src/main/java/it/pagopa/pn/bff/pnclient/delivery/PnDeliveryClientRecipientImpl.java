@@ -27,9 +27,8 @@ public class PnDeliveryClientRecipientImpl {
                                                                      String xPagopaPnCxId, String iun,
                                                                      List<String> xPagopaPnCxGroups, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
-        Mono<FullReceivedNotificationV23> deliveryNotification;
 
-        deliveryNotification = recipientReadApi.getReceivedNotificationV23(
+        return recipientReadApi.getReceivedNotificationV23(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -37,8 +36,6 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnCxGroups,
                 mandateId
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        return deliveryNotification;
     }
 
     public Mono<NotificationSearchResponse> searchReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -47,9 +44,8 @@ public class PnDeliveryClientRecipientImpl {
                                                                        String subjectRegExp,
                                                                        int size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchReceivedNotification");
-        Mono<NotificationSearchResponse> deliveryNotification;
 
-        deliveryNotification = recipientReadApi.searchReceivedNotification(
+        return recipientReadApi.searchReceivedNotification(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -64,18 +60,15 @@ public class PnDeliveryClientRecipientImpl {
                 size,
                 nextPagesKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        return deliveryNotification;
     }
 
     public Mono<NotificationSearchResponse> searchReceivedDelegatedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                               String xPagopaPnCxId, String iunMatch, List<String> xPagopaPnCxGroups,
-                                                                               String senderId, String recipientId, String group, NotificationStatus status,
-                                                                               OffsetDateTime startDate, OffsetDateTime endDate, int size, String nextPagesKey) {
+                                                                                String xPagopaPnCxId, String iunMatch, List<String> xPagopaPnCxGroups,
+                                                                                String senderId, String recipientId, String group, NotificationStatus status,
+                                                                                OffsetDateTime startDate, OffsetDateTime endDate, int size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchReceivedDelegatedNotification");
-        Mono<NotificationSearchResponse> deliveryNotification;
-
-        deliveryNotification = recipientReadApi.searchReceivedDelegatedNotification(
+        
+        return recipientReadApi.searchReceivedDelegatedNotification(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -90,7 +83,5 @@ public class PnDeliveryClientRecipientImpl {
                 size,
                 nextPagesKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        return deliveryNotification;
     }
 }

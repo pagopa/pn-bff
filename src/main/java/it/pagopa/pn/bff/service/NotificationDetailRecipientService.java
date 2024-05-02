@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
@@ -58,19 +59,19 @@ public class NotificationDetailRecipientService {
     /**
      * Search received notifications for a recipient user.
      *
-     * @param xPagopaPnUid    User Identifier
-     * @param xPagopaPnCxType Receiver Type
-     * @param xPagopaPnCxId   Receiver id
-     * @param iunMatch        Notification IUN
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iunMatch          Notification IUN
      * @param xPagopaPnCxGroups Receiver Group id List
-     * @param mandateId       mandate id. It is required if the user, that is requesting the notification, is a mandate
-     * @param senderId        Sender id
-     * @param status          Notification status
-     * @param startDate       Start date
-     * @param endDate         End date
-     * @param subjectRegExp   Regular expression for the subject
-     * @param size            Number of notifications to retrieve
-     * @param nextPagesKey    Key to retrieve the next page
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @param senderId          Sender id
+     * @param status            Notification status
+     * @param startDate         Start date
+     * @param endDate           End date
+     * @param subjectRegExp     Regular expression for the subject
+     * @param size              Number of notifications to retrieve
+     * @param nextPagesKey      Key to retrieve the next page
      * @return the list of notifications
      */
     public Mono<BffNotificationsResponse> searchReceivedNotification(String xPagopaPnUid,
@@ -87,8 +88,7 @@ public class NotificationDetailRecipientService {
                                                                      Integer size,
                                                                      String nextPagesKey) {
         log.info("searchReceivedNotification");
-        return pnDeliveryClient
-                .searchReceivedNotification(
+        Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -101,45 +101,45 @@ public class NotificationDetailRecipientService {
                 endDate,
                 subjectRegExp,
                 size,
-                nextPagesKey)
-                .map(NotificationReceivedMapper.modelMapper::toBffNotificationsResponse)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        return notifications.map(NotificationReceivedMapper.modelMapper::toBffNotificationsResponse);
     }
 
     /**
      * Search received delegated notifications for a recipient user.
      *
-     * @param xPagopaPnUid    User Identifier
-     * @param xPagopaPnCxType Receiver Type
-     * @param xPagopaPnCxId   Receiver id
-     * @param iunMatch        Notification IUN
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iunMatch          Notification IUN
      * @param xPagopaPnCxGroups Receiver Group id List
-     * @param senderId        Sender id
-     * @param recipientId     Recipient id
-     * @param group           Group
-     * @param status          Notification status
-     * @param startDate       Start date
-     * @param endDate         End date
-     * @param size            Number of notifications to retrieve
-     * @param nextPagesKey    Key to retrieve the next page
+     * @param senderId          Sender id
+     * @param recipientId       Recipient id
+     * @param group             Group
+     * @param status            Notification status
+     * @param startDate         Start date
+     * @param endDate           End date
+     * @param size              Number of notifications to retrieve
+     * @param nextPagesKey      Key to retrieve the next page
      * @return the list of notifications
      */
     public Mono<BffNotificationsResponse> searchReceivedDelegatedNotification(String xPagopaPnUid,
-                                                                                CxTypeAuthFleet xPagopaPnCxType,
-                                                                                String xPagopaPnCxId,
-                                                                                String iunMatch,
-                                                                                List<String> xPagopaPnCxGroups,
-                                                                                String senderId,
-                                                                                String recipientId,
-                                                                                String group,
-                                                                                NotificationStatus status,
-                                                                                OffsetDateTime startDate,
-                                                                                OffsetDateTime endDate,
-                                                                                Integer size,
-                                                                                String nextPagesKey) {
+                                                                              CxTypeAuthFleet xPagopaPnCxType,
+                                                                              String xPagopaPnCxId,
+                                                                              String iunMatch,
+                                                                              List<String> xPagopaPnCxGroups,
+                                                                              String senderId,
+                                                                              String recipientId,
+                                                                              String group,
+                                                                              NotificationStatus status,
+                                                                              OffsetDateTime startDate,
+                                                                              OffsetDateTime endDate,
+                                                                              Integer size,
+                                                                              String nextPagesKey) {
         log.info("searchReceivedDelegatedNotification");
-        return pnDeliveryClient
-                .searchReceivedDelegatedNotification(
+        Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedDelegatedNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -152,8 +152,9 @@ public class NotificationDetailRecipientService {
                 startDate,
                 endDate,
                 size,
-                nextPagesKey)
-                .map(NotificationReceivedMapper.modelMapper::toBffNotificationsResponse)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        return notifications.map(NotificationReceivedMapper.modelMapper::toBffNotificationsResponse);
     }
 }

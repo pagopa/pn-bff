@@ -48,6 +48,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                              List<String> xPagopaPnCxGroups,
                                                                              final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationV1");
+
         Mono<BffFullNotificationV1> serviceResponse = notificationDetailPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
@@ -90,9 +91,12 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                     String nextPagesKey,
                                                                                     final ServerWebExchange exchange) {
         log.logStartingProcess("searchSentNotificationsV1");
+
         Mono<BffNotificationsResponse> serviceResponse = notificationDetailPAService.searchSentNotifications(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status, subjectRegExp, startDate, endDate, size, nextPagesKey
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
+                subjectRegExp, startDate, endDate, size, nextPagesKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
         log.logEndingProcess("searchSentNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }

@@ -114,6 +114,7 @@ class ReceivedNotificationControllerTest {
                 null
         );
     }
+
     @Test
     void searchReceivedNotifications() {
         BffNotificationsResponse response = NotificationReceivedMapper.modelMapper.toBffNotificationsResponse(notificationReceivedMock.getNotificationReceivedPNMock());
@@ -138,15 +139,15 @@ class ReceivedNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_SEARCH_PATH)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("mandateId", UserMock.MANDATE_ID)
-                                .queryParam("senderId", UserMock.SENDER_ID)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
+                                .queryParam("mandateId", NotificationReceivedMock.MANDATE_ID)
+                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
+                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
+                                .queryParam("subjectRegExp", NotificationReceivedMock.SUBJECT_REG_EXP)
+                                .queryParam("size", NotificationReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -163,16 +164,16 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID,
-                UserMock.SENDER_ID,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
     }
 
@@ -199,15 +200,15 @@ class ReceivedNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_SEARCH_PATH)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("mandateId", UserMock.MANDATE_ID)
-                                .queryParam("senderId", UserMock.SENDER_ID)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
+                                .queryParam("mandateId", NotificationReceivedMock.MANDATE_ID)
+                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
+                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
+                                .queryParam("subjectRegExp", NotificationReceivedMock.SUBJECT_REG_EXP)
+                                .queryParam("size", NotificationReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -222,16 +223,16 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID,
-                UserMock.SENDER_ID,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
     }
 
@@ -259,15 +260,15 @@ class ReceivedNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DELEGATED_PATH)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("senderId", UserMock.SENDER_ID)
-                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
-                                .queryParam("group", UserMock.GROUP)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
+                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
+                                .queryParam("recipientId", NotificationReceivedMock.RECIPIENT_ID)
+                                .queryParam("group", NotificationReceivedMock.GROUP)
+                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
+                                .queryParam("size", NotificationReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -284,16 +285,16 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.SENDER_ID,
-                UserMock.RECIPIENT_ID,
-                UserMock.GROUP,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
     }
 
@@ -320,15 +321,15 @@ class ReceivedNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DELEGATED_PATH)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("senderId", UserMock.SENDER_ID)
-                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
-                                .queryParam("group", UserMock.GROUP)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
+                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
+                                .queryParam("recipientId", NotificationReceivedMock.RECIPIENT_ID)
+                                .queryParam("group", NotificationReceivedMock.GROUP)
+                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
+                                .queryParam("size", NotificationReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -343,16 +344,16 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.SENDER_ID,
-                UserMock.RECIPIENT_ID,
-                UserMock.GROUP,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
     }
 }

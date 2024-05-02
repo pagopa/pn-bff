@@ -30,27 +30,23 @@ public class PnDeliveryClientPAImpl {
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV23");
 
-        Mono<FullSentNotificationV23> deliveryNotification;
-        deliveryNotification = senderReadB2BApi.getSentNotificationV23(
+        return senderReadB2BApi.getSentNotificationV23(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        return deliveryNotification;
     }
 
     public Mono<NotificationSearchResponse> searchSentNotification(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                    String xPagopaPnCxId, OffsetDateTime startDate,
                                                                    OffsetDateTime endDate, List<String> xPagopaPnCxGroups,
                                                                    String recipientId, NotificationStatus status, String subjectRegExp,
-                                                                   String iunMatch, Integer size, String nextPagesKey){
+                                                                   String iunMatch, Integer size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchSentNotification");
 
-        Mono<NotificationSearchResponse> searchNotification;
-        searchNotification = senderReadWebApi.searchSentNotification(
+        return senderReadWebApi.searchSentNotification(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -64,8 +60,6 @@ public class PnDeliveryClientPAImpl {
                 size,
                 nextPagesKey
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        return searchNotification;
     }
 
 }

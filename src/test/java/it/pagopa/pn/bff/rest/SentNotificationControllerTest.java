@@ -115,32 +115,32 @@ class SentNotificationControllerTest {
     void searchSentNotification() {
         BffNotificationsResponse response = NotificationSentMapper.modelMapper.toBffNotificationsResponse(notificationSentMock.getNotificationSentPNMock());
         Mockito.when(notificationDetailPAService.searchSentNotifications(
-                        Mockito.any(),
-                        Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.anyString(),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
-                    )).thenReturn(Mono.just(response));
+                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(response));
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SEARCH_PATH)
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("startDate", NotificationSentMock.START_DATE)
+                                .queryParam("endDate", NotificationSentMock.END_DATE)
+                                .queryParam("size", NotificationSentMock.SIZE)
+                                .queryParam("iunMatch", NotificationSentMock.IUN_MATCH)
+                                .queryParam("recipientId", NotificationSentMock.RECIPIENT_ID)
+                                .queryParam("status", NotificationSentMock.STATUS.getValue())
+                                .queryParam("subjectRegExp", NotificationSentMock.SUBJECT_REG_EXP)
+                                .queryParam("nextPagesKey", NotificationSentMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -158,46 +158,46 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                UserMock.IUN_MATCH,
-                UserMock.RECIPIENT_ID,
-                UserMock.STATUS,
-                UserMock.SUBJECT_REG_EXP,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.RECIPIENT_ID,
+                NotificationSentMock.STATUS,
+                NotificationSentMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         );
     }
 
     @Test
     void searchSentNotificationError() {
         Mockito.when(notificationDetailPAService.searchSentNotifications(
-                        Mockito.any(),
-                        Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.anyString(),
-                        Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.anyString(),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
-                )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                Mockito.any(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SEARCH_PATH)
-                                .queryParam("startDate", UserMock.START_DATE)
-                                .queryParam("endDate", UserMock.END_DATE)
-                                .queryParam("size", UserMock.SIZE)
-                                .queryParam("iunMatch", UserMock.IUN_MATCH)
-                                .queryParam("recipientId", UserMock.RECIPIENT_ID)
-                                .queryParam("status", UserMock.STATUS.getValue())
-                                .queryParam("subjectRegExp", UserMock.SUBJECT_REG_EXP)
-                                .queryParam("nextPagesKey", UserMock.NEXT_PAGES_KEY)
+                                .queryParam("startDate", NotificationSentMock.START_DATE)
+                                .queryParam("endDate", NotificationSentMock.END_DATE)
+                                .queryParam("size", NotificationSentMock.SIZE)
+                                .queryParam("iunMatch", NotificationSentMock.IUN_MATCH)
+                                .queryParam("recipientId", NotificationSentMock.RECIPIENT_ID)
+                                .queryParam("status", NotificationSentMock.STATUS.getValue())
+                                .queryParam("subjectRegExp", NotificationSentMock.SUBJECT_REG_EXP)
+                                .queryParam("nextPagesKey", NotificationSentMock.NEXT_PAGES_KEY)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -213,14 +213,14 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
-                UserMock.IUN_MATCH,
-                UserMock.RECIPIENT_ID,
-                UserMock.STATUS,
-                UserMock.SUBJECT_REG_EXP,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationSentMock.IUN_MATCH,
+                NotificationSentMock.RECIPIENT_ID,
+                NotificationSentMock.STATUS,
+                NotificationSentMock.SUBJECT_REG_EXP,
+                OffsetDateTime.parse(NotificationSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationSentMock.END_DATE),
+                NotificationSentMock.SIZE,
+                NotificationSentMock.NEXT_PAGES_KEY
         );
     }
 }

@@ -10,7 +10,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NotificationReceivedMock {
-    public NotificationSearchResponse getNotificationReceivedPNMock(){
+
+    public static final String RECIPIENT_ID = "RECIPIENT_ID";
+    public static final String SENDER_ID = "SENDER_ID";
+    public static final String MANDATE_ID = "MANDATE_ID";
+    public static final String SUBJECT_REG_EXP = "SUBJECT";
+    public static final String IUN_MATCH = "IUN";
+    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED;
+    public static final int SIZE = 10;
+    public static final String START_DATE = "2014-04-30T00:00:00.000Z";
+    public static final String END_DATE = "2024-04-30T00:00:00.000Z";
+    public static final String GROUP = "GROUP";
+    public static final String NEXT_PAGES_KEY = "NEXT_PAGES_KEY";
+
+    public NotificationSearchResponse getNotificationReceivedPNMock() {
         NotificationSearchResponse notificationSearchResponse = new NotificationSearchResponse();
         List<NotificationSearchRow> notificationSearchRows = new ArrayList<>();
         NotificationSearchRow notificationSearchRowOne = new NotificationSearchRow();

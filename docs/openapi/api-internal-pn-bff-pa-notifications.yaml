@@ -33,23 +33,23 @@ paths:
       description: |-
         Questa operazione permette di ricercare le notifiche inviate.
       tags:
-      - NotificationSent
-      operationId: searchSentNotificationsV1                                # NO EXTERNAL
+        - NotificationSent
+      operationId: searchSentNotificationsV1
 #      security:                                    # ONLY EXTERNAL
-#      - bearerAuth: [ ]                            # ONLY EXTERNAL
+#       - bearerAuth: [ ]                           # ONLY EXTERNAL
       parameters:
-      - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStartDate'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchEndDate'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchRecipientId'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStatus'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSubject'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffSearchIun'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchPageSize'
-      - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
       responses:
         '200':
           description: OK
@@ -69,15 +69,15 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
   '/bff/v1/notifications/sent/{iun}':
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 1'
+      summary: 'Mittente: lettura dettagli notifica'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
         - NotificationSent
-      operationId: getSentNotificationV1                                      # NO EXTERNAL
-#      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+      operationId: getSentNotificationV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

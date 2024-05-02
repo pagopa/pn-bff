@@ -51,9 +51,9 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID
+                NotificationReceivedMock.MANDATE_ID
         );
 
         StepVerifier.create(result)
@@ -76,9 +76,9 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID
+                NotificationReceivedMock.MANDATE_ID
         );
 
         StepVerifier.create(result)
@@ -109,16 +109,16 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID,
-                UserMock.SENDER_ID,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)
@@ -148,16 +148,16 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.MANDATE_ID,
-                UserMock.SENDER_ID,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SUBJECT_REG_EXP,
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.MANDATE_ID,
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SUBJECT_REG_EXP,
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)
@@ -167,7 +167,7 @@ class NotificationDetailRecipientServiceTest {
     }
 
     @Test
-    void searchReceivedDelegatedNotifications(){
+    void searchReceivedDelegatedNotifications() {
         when(pnDeliveryClientRecipient.searchReceivedDelegatedNotification(
                 Mockito.any(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -188,16 +188,16 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.SENDER_ID,
-                UserMock.RECIPIENT_ID,
-                UserMock.GROUP,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)
@@ -206,7 +206,7 @@ class NotificationDetailRecipientServiceTest {
     }
 
     @Test
-    void searchReceivedDelegatedNotificationsError(){
+    void searchReceivedDelegatedNotificationsError() {
         when(pnDeliveryClientRecipient.searchReceivedDelegatedNotification(
                 Mockito.any(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -227,16 +227,16 @@ class NotificationDetailRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.IUN_MATCH,
+                NotificationReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
-                UserMock.SENDER_ID,
-                UserMock.RECIPIENT_ID,
-                UserMock.GROUP,
-                UserMock.STATUS,
-                OffsetDateTime.parse(UserMock.START_DATE),
-                OffsetDateTime.parse(UserMock.END_DATE),
-                UserMock.SIZE,
-                UserMock.NEXT_PAGES_KEY
+                NotificationReceivedMock.SENDER_ID,
+                NotificationReceivedMock.RECIPIENT_ID,
+                NotificationReceivedMock.GROUP,
+                NotificationReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
+                NotificationReceivedMock.SIZE,
+                NotificationReceivedMock.NEXT_PAGES_KEY
         );
 
         StepVerifier.create(result)
