@@ -11,10 +11,10 @@ components:
     BffNotificationSearchMandateId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
 
-    BffPathDocumentType:
+    BffQueryDocumentType:
       description: Tipo documento
       name: documentType
-      in: path
+      in: query
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
@@ -42,10 +42,10 @@ components:
             pattern: ^[ -~]*$
             maxLength: 1024
 
-    BffQueryLegalFactType:
+    BffQueryLegalFactCategory:
       description: >-
         Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a disposizione dei suoi utenti.
-      name: legalFactType
+      name: legalFactCategory
       in: query
       required: false
       schema:
@@ -57,6 +57,6 @@ components:
     BffDocumentType:
       type: string
       enum:
-        - attachment
-        - legal-fact
-        - aar
+        - ATTACHMENT
+        - LEGAL_FACT
+        - AAR

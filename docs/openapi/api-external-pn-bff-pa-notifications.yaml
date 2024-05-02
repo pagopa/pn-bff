@@ -60,7 +60,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  '/bff/v1/notifications/sent/{iun}/documents/{documentType}':
+  '/bff/v1/notifications/sent/{iun}/documents':
     get:
       summary: |-
         Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
@@ -71,9 +71,9 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentType'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryLegalFactType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryLegalFactCategory'
       responses:
         '200':
           description: OK

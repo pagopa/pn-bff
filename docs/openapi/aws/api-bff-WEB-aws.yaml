@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Ca9QArX4H2Tjkz3Avm+ZG0UfluRH+l1jtUzr0IbtZXM=
+  version: l6Np9uklW2GyQ3v4nt/7f7LagzKb1pzAOuCn8J17p9U=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -75,7 +75,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/notifications/sent/{iun}/documents/{documentType}:
+  /v1/notifications/sent/{iun}/documents:
     get:
       summary: >-
         Questa operazione permette di scaricare qualsiasi documento legato alla
@@ -87,9 +87,9 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/BffPathDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentType'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryLegalFactType'
+        - $ref: '#/components/parameters/BffQueryLegalFactCategory'
       responses:
         '200':
           description: OK
@@ -117,7 +117,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents/{documentType}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -130,23 +130,19 @@ paths:
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
           integration.request.path.iun: method.request.path.iun
-          integration.request.path.documentType: method.request.path.documentType
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: >-
-        Options for /v1/notifications/sent/{iun}/documents/{documentType} API
-        CORS
+      operationId: Options for /v1/notifications/sent/{iun}/documents API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents/{documentType}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
           integration.request.path.iun: method.request.path.iun
-          integration.request.path.documentType: method.request.path.documentType
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -987,10 +983,10 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
-    BffPathDocumentType:
+    BffQueryDocumentType:
       description: Tipo documento
       name: documentType
-      in: path
+      in: query
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
@@ -1014,11 +1010,11 @@ components:
             type: string
             pattern: ^[ -~]*$
             maxLength: 1024
-    BffQueryLegalFactType:
+    BffQueryLegalFactCategory:
       description: >-
         Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
         disposizione dei suoi utenti.
-      name: legalFactType
+      name: legalFactCategory
       in: query
       required: false
       schema:
@@ -2900,9 +2896,9 @@ components:
     BffDocumentType:
       type: string
       enum:
-        - attachment
-        - legal-fact
-        - aar
+        - ATTACHMENT
+        - LEGAL_FACT
+        - AAR
     LegalFactCategory:
       title: Tipi di atti opponibili a terzi
       description: >-

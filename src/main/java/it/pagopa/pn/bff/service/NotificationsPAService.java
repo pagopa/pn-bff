@@ -67,10 +67,12 @@ public class NotificationsPAService {
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
      * @param iun               Notification IUN
+     * @param documentId        the document id (safestorage key if aar or legalfact, the index in the array if attachment)
+     * @param documentType      the document type (aar, attachment or legal fact)
+     * @param legalFactCategory the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
-     * @return the detail of the notification with a specific IUN
+     * @return the requested document
      */
-
     public Mono<BffDocumentDownloadMetadataResponse> getSentNotificationDocument(String xPagopaPnUid,
                                                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                                                  String xPagopaPnCxId, String iun,

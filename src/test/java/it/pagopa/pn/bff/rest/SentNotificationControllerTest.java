@@ -1,9 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.NotificationsPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 class SentNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
@@ -100,6 +102,290 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentAAR() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAarId("aar-id");
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapDocumentDownloadResponse(notificationDownloadDocumentMock.getDocumentMock());
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.AAR)
+                                .queryParam("aarId", documentId.getAarId())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.AAR,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentAARError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAarId("aar-id");
+
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.AAR)
+                                .queryParam("aarId", documentId.getAarId())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.AAR,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentLegalFact() {
+        DocumentId documentId = new DocumentId();
+        documentId.setLegalFactId("legal-fact-id");
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapLegalFactDownloadResponse(notificationDownloadDocumentMock.getLegalFactMock());
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
+                                .queryParam("legalFactId", documentId.getLegalFactId())
+                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                LegalFactCategory.ANALOG_DELIVERY,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentLegalFactError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setLegalFactId("legal-fact-id");
+
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
+                                .queryParam("legalFactId", documentId.getLegalFactId())
+                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                LegalFactCategory.ANALOG_DELIVERY,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentAttachment() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAttachmentIdx(0);
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(notificationDownloadDocumentMock.getPaAttachmentMock());
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
+                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.ATTACHMENT,
+                null,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationDocumentAttachmentError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAttachmentIdx(0);
+
+        Mockito.when(notificationsPAService.getSentNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
+                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).getSentNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.ATTACHMENT,
+                null,
                 UserMock.PN_CX_GROUPS
         );
     }
