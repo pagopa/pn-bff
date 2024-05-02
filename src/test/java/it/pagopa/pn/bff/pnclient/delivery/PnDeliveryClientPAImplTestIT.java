@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
+import java.time.OffsetDateTime;
+
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -31,8 +35,10 @@ class PnDeliveryClientPAImplTestIT {
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
     private final Integer docIdx = 0;
+    private final String notificationsListPath = "/delivery/notifications/sent";
     private final String notificationDetailPath = "/delivery/v2.3/notifications/sent/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
+    private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
@@ -53,6 +59,56 @@ class PnDeliveryClientPAImplTestIT {
     @AfterEach
     public void resetMockServerClient() {
         mockServerClient.reset();
+    }
+
+    @Test
+    void searchSentNotifications() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String response = objectMapper.writeValueAsString(notificationsSentMock.getNotificationSentPNMock());
+        mockServerClient.when(request().withMethod("GET").withPath(notificationsListPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.searchSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                OffsetDateTime.parse(NotificationsSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationsSentMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                NotificationsSentMock.RECIPIENT_ID,
+                NotificationStatus.ACCEPTED,
+                NotificationsSentMock.SUBJECT_REG_EXP,
+                NotificationsSentMock.IUN_MATCH,
+                NotificationsSentMock.SIZE,
+                NotificationsSentMock.NEXT_PAGES_KEY
+        )).expectNext(notificationsSentMock.getNotificationSentPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchSentNotificationsError() {
+        mockServerClient.when(request().withMethod("GET").withPath(notificationsListPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.searchSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                OffsetDateTime.parse(NotificationsSentMock.START_DATE),
+                OffsetDateTime.parse(NotificationsSentMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                NotificationsSentMock.RECIPIENT_ID,
+                NotificationStatus.ACCEPTED,
+                NotificationsSentMock.SUBJECT_REG_EXP,
+                NotificationsSentMock.IUN_MATCH,
+                NotificationsSentMock.SIZE,
+                NotificationsSentMock.NEXT_PAGES_KEY
+        )).expectError().verify();
     }
 
     @Test

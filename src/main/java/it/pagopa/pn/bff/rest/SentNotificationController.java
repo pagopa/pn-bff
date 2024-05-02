@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @CustomLog
@@ -22,6 +23,50 @@ public class SentNotificationController implements NotificationSentApi {
 
     public SentNotificationController(NotificationsPAService notificationsPAService) {
         this.notificationsPAService = notificationsPAService;
+    }
+
+    /**
+     * GET bff/v1/notifications/sent: Search sent notifications
+     * Search the notifications sent by a Public Administration
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param startDate         Start date
+     * @param endDate           End date
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param recipientId       Recipient id
+     * @param status            Notification status
+     * @param subjectRegExp     Regular expression for the subject
+     * @param iunMatch          IUN match
+     * @param size              Page size
+     * @param nextPagesKey      Next page key
+     * @param exchange
+     * @return the list of notifications sent by a Public Administration
+     */
+    @Override
+    public Mono<ResponseEntity<BffNotificationsResponse>> searchSentNotificationsV1(String xPagopaPnUid,
+                                                                                    CxTypeAuthFleet xPagopaPnCxType,
+                                                                                    String xPagopaPnCxId,
+                                                                                    OffsetDateTime startDate,
+                                                                                    OffsetDateTime endDate,
+                                                                                    List<String> xPagopaPnCxGroups,
+                                                                                    String recipientId,
+                                                                                    NotificationStatus status,
+                                                                                    String subjectRegExp,
+                                                                                    String iunMatch,
+                                                                                    Integer size,
+                                                                                    String nextPagesKey,
+                                                                                    final ServerWebExchange exchange) {
+        log.logStartingProcess("searchSentNotificationsV1");
+
+        Mono<BffNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
+                subjectRegExp, startDate, endDate, size, nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        log.logEndingProcess("searchSentNotificationsV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
     /**
@@ -44,6 +89,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                              List<String> xPagopaPnCxGroups,
                                                                              final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationV1");
+
         Mono<BffFullNotificationV1> serviceResponse = notificationsPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);

@@ -35,7 +35,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testCurrentStatus() {
+    void getCurrentStatus() {
         PnStatusResponse statusResponse = downtimeLogsMock.getStatusMockOK();
 
         when(pnDowntimeLogsClient.getCurrentStatus(
@@ -47,7 +47,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testGetTosContentError() {
+    void getCurrentStatusError() {
         when(pnDowntimeLogsClient.getCurrentStatus(
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -58,7 +58,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testGetStatusHistory() {
+    void getStatusHistory() {
         PnDowntimeHistoryResponse downtimeHistoryResponse = downtimeLogsMock.getDowntimeHistoryMock();
 
         when(pnDowntimeLogsClient.getStatusHistory(
@@ -75,7 +75,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testGetStatusHistoryError() {
+    void getStatusHistoryError() {
         when(pnDowntimeLogsClient.getStatusHistory(
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
@@ -91,7 +91,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testGetLegalFact() {
+    void getLegalFact() {
         LegalFactDownloadMetadataResponse legalFactDownloadMetadataResponse = downtimeLogsMock.getLegalFactMetadataMock();
 
         when(pnDowntimeLogsClient.getLegalFact(
@@ -104,7 +104,7 @@ public class DowntimeLogsServiceTest {
     }
 
     @Test
-    void testGetLegalFactError() {
+    void getLegalFactError() {
         when(pnDowntimeLogsClient.getLegalFact(
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));

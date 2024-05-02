@@ -37,7 +37,7 @@ public interface NotificationDownloadDocumentMapper {
      * @param document the NotificationAttachmentDownloadMetadataResponse to map
      * @return the mapped BffDocumentDownloadMetadataResponse
      */
-    BffDocumentDownloadMetadataResponse mapSentAttachmentDownloadResponse(it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationAttachmentDownloadMetadataResponse document);
+    BffDocumentDownloadMetadataResponse mapSentAttachmentDownloadResponse(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse document);
 
     /**
      * Maps a NotificationAttachmentDownloadMetadataResponse to a BffDocumentDownloadMetadataResponse

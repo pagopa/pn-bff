@@ -3,6 +3,9 @@ info:
 components:
   schemas:
 
+    BffNotificationsResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
+
     BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend

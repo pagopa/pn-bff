@@ -6,11 +6,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationParamsMapper;
+import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +33,108 @@ public class NotificationsRecipientService {
 
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
+
+    /**
+     * Search received notifications for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iunMatch          Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @param senderId          Sender id
+     * @param status            Notification status
+     * @param startDate         Start date
+     * @param endDate           End date
+     * @param subjectRegExp     Regular expression for the subject
+     * @param size              Number of notifications to retrieve
+     * @param nextPagesKey      Key to retrieve the next page
+     * @return the list of notifications
+     */
+    public Mono<BffNotificationsResponse> searchReceivedNotifications(String xPagopaPnUid,
+                                                                      CxTypeAuthFleet xPagopaPnCxType,
+                                                                      String xPagopaPnCxId,
+                                                                      String iunMatch,
+                                                                      List<String> xPagopaPnCxGroups,
+                                                                      String mandateId,
+                                                                      String senderId,
+                                                                      NotificationStatus status,
+                                                                      OffsetDateTime startDate,
+                                                                      OffsetDateTime endDate,
+                                                                      String subjectRegExp,
+                                                                      Integer size,
+                                                                      String nextPagesKey) {
+        log.info("searchReceivedNotifications");
+        Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedNotifications(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iunMatch,
+                xPagopaPnCxGroups,
+                mandateId,
+                senderId,
+                NotificationStatusMapper.notificationStatusMapper.convertDeliveryRecipientNotificationStatus(status),
+                startDate,
+                endDate,
+                subjectRegExp,
+                size,
+                nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        return notifications.map(NotificationsReceivedMapper.modelMapper::toBffNotificationsResponse);
+    }
+
+    /**
+     * Search received delegated notifications for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iunMatch          Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param senderId          Sender id
+     * @param recipientId       Recipient id
+     * @param group             Group
+     * @param status            Notification status
+     * @param startDate         Start date
+     * @param endDate           End date
+     * @param size              Number of notifications to retrieve
+     * @param nextPagesKey      Key to retrieve the next page
+     * @return the list of notifications
+     */
+    public Mono<BffNotificationsResponse> searchReceivedDelegatedNotifications(String xPagopaPnUid,
+                                                                               CxTypeAuthFleet xPagopaPnCxType,
+                                                                               String xPagopaPnCxId,
+                                                                               String iunMatch,
+                                                                               List<String> xPagopaPnCxGroups,
+                                                                               String senderId,
+                                                                               String recipientId,
+                                                                               String group,
+                                                                               NotificationStatus status,
+                                                                               OffsetDateTime startDate,
+                                                                               OffsetDateTime endDate,
+                                                                               Integer size,
+                                                                               String nextPagesKey) {
+        log.info("searchReceivedDelegatedNotifications");
+        Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedDelegatedNotifications(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iunMatch,
+                xPagopaPnCxGroups,
+                senderId,
+                recipientId,
+                group,
+                NotificationStatusMapper.notificationStatusMapper.convertDeliveryRecipientNotificationStatus(status),
+                startDate,
+                endDate,
+                size,
+                nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+
+        return notifications.map(NotificationsReceivedMapper.modelMapper::toBffNotificationsResponse);
+    }
 
     /**
      * Get the detail of a notification. This is for a recipient user.

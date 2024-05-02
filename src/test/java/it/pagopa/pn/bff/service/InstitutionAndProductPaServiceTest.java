@@ -47,7 +47,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionsTest() {
+    void getInstitutions() {
         List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
@@ -69,7 +69,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionsTestError() {
+    void getInstitutionsError() {
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -84,7 +84,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionProductTest() {
+    void getInstitutionProduct() {
         List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
@@ -105,7 +105,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionProductTestError() {
+    void getInstitutionProductError() {
         when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 

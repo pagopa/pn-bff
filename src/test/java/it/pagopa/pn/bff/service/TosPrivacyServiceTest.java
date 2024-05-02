@@ -36,7 +36,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void testGetTosContent() {
+    void getTosContent() {
         Consent tosConsent = consentsMock.getTosConsentResponseMock();
         Consent privacyConsent = consentsMock.getPrivacyConsentResponseMock();
 
@@ -59,7 +59,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void testGetTosContentError() {
+    void getTosContentError() {
         when(pnUserAttributesClient.getTosConsent(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class)
@@ -80,7 +80,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOrDeclineTosPrivacyTest() {
+    void acceptOrDeclineTosPrivacy() {
         BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock();
 
         when(pnUserAttributesClient.acceptConsent(
@@ -101,7 +101,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOnlyTosTest() {
+    void acceptOnlyTos() {
         BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock().privacy(null);
 
         when(pnUserAttributesClient.acceptConsent(
@@ -123,7 +123,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOrDeclineTosPrivacyEmptyBodyErrorTest() {
+    void acceptOrDeclineTosPrivacyEmptyBodyError() {
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,

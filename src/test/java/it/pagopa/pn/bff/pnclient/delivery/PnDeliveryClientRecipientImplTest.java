@@ -3,8 +3,10 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -25,12 +28,153 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnDeliveryClientRecipientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnDeliveryClientRecipientImplTest {
+    private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     private PnDeliveryClientRecipientImpl pnDeliveryClientRecipientImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
     private RecipientReadApi recipientReadApi;
+
+    @Test
+    void searchReceivedNotifications() {
+        when(recipientReadApi.searchReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationsReceivedMock.getNotificationReceivedPNMock()));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.searchReceivedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.MANDATE_ID,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SUBJECT_REG_EXP,
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        )).expectNext(notificationsReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchReceivedNotificationsError() {
+        when(recipientReadApi.searchReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.searchReceivedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.MANDATE_ID,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SUBJECT_REG_EXP,
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        )).expectError(PnBffException.class).verify();
+    }
+
+    @Test
+    void searchReceivedDelegatedNotifications() {
+        when(recipientReadApi.searchReceivedDelegatedNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationsReceivedMock.getNotificationReceivedPNMock()));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.searchReceivedDelegatedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.RECIPIENT_ID,
+                NotificationsReceivedMock.GROUP,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        )).expectNext(notificationsReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
+    }
+
+    @Test
+    void searchReceivedDelegatedNotificationsError() {
+        when(recipientReadApi.searchReceivedDelegatedNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NotificationStatus.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.searchReceivedDelegatedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.RECIPIENT_ID,
+                NotificationsReceivedMock.GROUP,
+                NotificationStatus.ACCEPTED,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        )).expectError(PnBffException.class).verify();
+    }
 
     @Test
     void getReceivedNotificationV23() throws RestClientException {
@@ -47,7 +191,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                "IUN",
+                NotificationsReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
         )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
@@ -68,7 +212,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                "IUN",
+                NotificationsReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
         )).expectError(PnBffException.class).verify();

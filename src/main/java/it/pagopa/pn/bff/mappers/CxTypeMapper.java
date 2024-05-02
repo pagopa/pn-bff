@@ -11,7 +11,9 @@ public interface CxTypeMapper {
 
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertDeliveryRecipientCXType(CxTypeAuthFleet cxType);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.CxTypeAuthFleet convertDeliveryPACXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet convertDeliveryB2bPACXType(CxTypeAuthFleet cxType);
+
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet convertDeliveryWebPACXType(CxTypeAuthFleet cxType);
 
     it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet convertApiKeysPACXType(CxTypeAuthFleet cxType);
 

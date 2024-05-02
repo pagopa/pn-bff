@@ -32,7 +32,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void testTokenExchange() {
+    void tokenExchange() {
         BffTokenExchangeResponse tokenExchangeResponse = authFleetMock.getTokenExchangeResponse();
 
         when(pnAuthFleetClient.postTokenExchange(
@@ -49,7 +49,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void testTokenExchangeError() {
+    void tokenExchangeError() {
         when(pnAuthFleetClient.postTokenExchange(
                 Mockito.anyString(),
                 Mockito.any(BffTokenExchangeBody.class)

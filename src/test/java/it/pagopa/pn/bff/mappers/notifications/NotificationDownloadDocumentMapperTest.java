@@ -45,7 +45,7 @@ class NotificationDownloadDocumentMapperTest {
 
     @Test
     void testSentDocumentNotificationAttachmentDownloadMetadataResponseMapper() {
-        it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationAttachmentDownloadMetadataResponse attachmentMock = notificationDownloadDocumentMock.getPaAttachmentMock();
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse attachmentMock = notificationDownloadDocumentMock.getPaAttachmentMock();
 
         BffDocumentDownloadMetadataResponse bffDocumentDownloadMetadataResponse = NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(attachmentMock);
         assertNotNull(bffDocumentDownloadMetadataResponse);

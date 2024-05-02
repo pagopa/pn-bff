@@ -27,10 +27,52 @@ tags:
       di notifica inviate e delle notifiche accettate.
 
 paths:
+  '/bff/v1/notifications/sent':
+    get:
+      summary: 'Mittente: ricerca notifiche inviate'
+      description: |-
+        Questa operazione permette di ricercare le notifiche inviate.
+      tags:
+        - NotificationSent
+      operationId: searchSentNotificationsV1
+#      security:                                    # ONLY EXTERNAL
+#       - bearerAuth: [ ]                           # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/sent/{iun}':
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 1'
+      summary: 'Mittente: lettura dettagli notifica'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:

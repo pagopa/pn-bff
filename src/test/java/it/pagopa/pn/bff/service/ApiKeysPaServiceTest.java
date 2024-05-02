@@ -45,7 +45,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testGetApiKeys() {
+    void getApiKeys() {
         when(pnApikeyManagerClientPA.getApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -81,7 +81,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testGetApiKeysError() {
+    void getApiKeysError() {
         when(pnApikeyManagerClientPA.getApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -118,7 +118,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testNewApiKey() {
+    void newApiKey() {
         BffRequestNewApiKey bffRequestNewApiKey = new BffRequestNewApiKey();
         bffRequestNewApiKey.setName("mock-api-key-name");
         List<String> groups = new ArrayList<>();
@@ -148,7 +148,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testNewApiKeysError() {
+    void newApiKeysError() {
         BffRequestNewApiKey bffRequestNewApiKey = new BffRequestNewApiKey();
         bffRequestNewApiKey.setName("mock-api-key-name");
         List<String> groups = new ArrayList<>();
@@ -179,7 +179,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testDeleteApiKey() {
+    void deleteApiKey() {
         when(pnApikeyManagerClientPA.deleteApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -202,7 +202,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testDeleteApiKeyError() {
+    void deleteApiKeyError() {
         when(pnApikeyManagerClientPA.deleteApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -226,7 +226,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testChangeStatusApiKey() {
+    void changeStatusApiKey() {
         BffRequestApiKeyStatus bffRequestApiKeyStatus = new BffRequestApiKeyStatus();
         bffRequestApiKeyStatus.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
 
@@ -254,7 +254,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testChangeStatusApiKeyError() {
+    void changeStatusApiKeyError() {
         BffRequestApiKeyStatus bffRequestApiKeyStatus = new BffRequestApiKeyStatus();
         bffRequestApiKeyStatus.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
 

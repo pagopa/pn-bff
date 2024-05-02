@@ -25,8 +25,8 @@ public class NotificationDownloadDocumentMock {
         return legalFact;
     }
 
-    public it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationAttachmentDownloadMetadataResponse getPaAttachmentMock() {
-        it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationAttachmentDownloadMetadataResponse attachment = new it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa.model.NotificationAttachmentDownloadMetadataResponse();
+    public it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse getPaAttachmentMock() {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse attachment = new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse();
         attachment.setContentLength(999);
         attachment.setFilename("Attachment");
         attachment.setUrl("https://attachment-fake-url.com");
