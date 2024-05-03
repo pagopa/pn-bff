@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +15,7 @@ import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
@@ -74,7 +74,7 @@ public class PnDowntimeLogsClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnDowntimeLogsClient.getCurrentStatus())
-                .expectError(PnBffException.class).verify();
+                .expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -112,7 +112,7 @@ public class PnDowntimeLogsClientImplTestIT {
                         "0",
                         "10"
                 ))
-                .expectError(PnBffException.class).verify();
+                .expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -140,6 +140,6 @@ public class PnDowntimeLogsClientImplTestIT {
         StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
                         LEGAL_FACT_ID
                 ))
-                .expectError(PnBffException.class).verify();
+                .expectError(WebClientResponseException.class).verify();
     }
 }

@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
@@ -9,6 +10,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,12 +29,14 @@ import static org.mockito.Mockito.when;
 class TosPrivacyServiceTest {
     private static TosPrivacyService tosPrivacyService;
     private static PnUserAttributesClientImpl pnUserAttributesClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     ConsentsMock consentsMock = new ConsentsMock();
 
     @BeforeAll
     public static void setup() {
         pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
-        tosPrivacyService = new TosPrivacyService(pnUserAttributesClient);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        tosPrivacyService = new TosPrivacyService(pnUserAttributesClient, pnBffExceptionUtility);
     }
 
     @Test

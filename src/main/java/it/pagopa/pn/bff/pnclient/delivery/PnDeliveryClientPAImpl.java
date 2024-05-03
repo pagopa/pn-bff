@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV23;
@@ -12,7 +11,6 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -46,7 +44,7 @@ public class PnDeliveryClientPAImpl {
                 iunMatch,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<FullSentNotificationV23> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -60,7 +58,7 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<NotificationAttachmentDownloadMetadataResponse> getSentNotificationDocument(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -75,6 +73,6 @@ public class PnDeliveryClientPAImpl {
                 iun,
                 docIdx,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 }

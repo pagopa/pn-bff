@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.userattributes;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
@@ -57,7 +56,7 @@ class PnUserAttributesClientImplTest {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -87,7 +86,7 @@ class PnUserAttributesClientImplTest {
         StepVerifier.create(pnUserAttributesClient.getTosConsent(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -125,6 +124,6 @@ class PnUserAttributesClientImplTest {
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
                 "1"
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

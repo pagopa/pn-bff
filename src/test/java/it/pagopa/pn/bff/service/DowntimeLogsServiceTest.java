@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
@@ -9,6 +10,7 @@ import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import it.pagopa.pn.bff.pnclient.downtimelogs.PnDowntimeLogsClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,13 +27,15 @@ public class DowntimeLogsServiceTest {
 
     private static DowntimeLogsService downtimeLogsService;
     private static PnDowntimeLogsClientImpl pnDowntimeLogsClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
 
     @BeforeAll
     public static void setup() {
         pnDowntimeLogsClient = mock(PnDowntimeLogsClientImpl.class);
-        downtimeLogsService = new DowntimeLogsService(pnDowntimeLogsClient);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        downtimeLogsService = new DowntimeLogsService(pnDowntimeLogsClient, pnBffExceptionUtility);
     }
 
     @Test

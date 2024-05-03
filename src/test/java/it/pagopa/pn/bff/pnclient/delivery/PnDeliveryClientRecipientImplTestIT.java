@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
@@ -21,6 +20,7 @@ import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
@@ -112,7 +112,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -164,7 +164,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -202,7 +202,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 iun,
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test

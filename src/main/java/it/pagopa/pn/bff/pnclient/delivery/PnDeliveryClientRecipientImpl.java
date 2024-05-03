@@ -1,13 +1,11 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -42,7 +40,7 @@ public class PnDeliveryClientRecipientImpl {
                 iunMatch,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<NotificationSearchResponse> searchReceivedDelegatedNotifications(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -65,7 +63,7 @@ public class PnDeliveryClientRecipientImpl {
                 status,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<FullReceivedNotificationV23> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -80,7 +78,7 @@ public class PnDeliveryClientRecipientImpl {
                 iun,
                 xPagopaPnCxGroups,
                 mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedNotificationDocument(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -96,6 +94,6 @@ public class PnDeliveryClientRecipientImpl {
                 docIdx,
                 xPagopaPnCxGroups,
                 mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 }

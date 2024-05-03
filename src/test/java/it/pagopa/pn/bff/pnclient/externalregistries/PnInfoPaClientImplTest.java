@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.externalregistries;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
@@ -65,7 +64,7 @@ class PnInfoPaClientImplTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -105,7 +104,7 @@ class PnInfoPaClientImplTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -139,6 +138,6 @@ class PnInfoPaClientImplTest {
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 PaGroupStatus.ACTIVE
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

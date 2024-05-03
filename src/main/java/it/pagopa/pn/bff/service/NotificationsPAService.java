@@ -12,6 +12,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_DOCUMENTIDNOTFOUND;
-import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_LEGALFACTTYPENOTFOUND;
+import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class NotificationsPAService {
 
     private final PnDeliveryClientPAImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Search the notifications sent by a Public Administration
@@ -77,7 +79,7 @@ public class NotificationsPAService {
                 iun,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return notifications.map(NotificationsSentMapper.modelMapper::toBffNotificationsResponse);
     }
@@ -104,7 +106,7 @@ public class NotificationsPAService {
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return notificationDetail.map(NotificationDetailMapper.modelMapper::mapSentNotificationDetail);
     }
@@ -133,10 +135,10 @@ public class NotificationsPAService {
         log.info("Get notification {} for iun {}", documentType, iun);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
-            if (documentId.getAttachmentIdx() == null) {
+            if (documentId.getAttachmentIdx() == null) { // attachment case
                 return Mono.error(new PnBffException(
-                        "Document id not found",
-                        "The document id is missed",
+                        "Attachment idx not found",
+                        "The attachment idx is missed",
                         HttpStatus.BAD_REQUEST.value(),
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
@@ -148,13 +150,13 @@ public class NotificationsPAService {
                     iun,
                     documentId.getAttachmentIdx(),
                     xPagopaPnCxGroups
-            ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return attachment.map(NotificationDownloadDocumentMapper.modelMapper::mapSentAttachmentDownloadResponse);
-        } else if (documentType == BffDocumentType.AAR) {
+        } else if (documentType == BffDocumentType.AAR) { // AAR case
             if (documentId.getAarId() == null) {
                 return Mono.error(new PnBffException(
-                        "Document id not found",
-                        "The document id is missed",
+                        "AAR id not found",
+                        "The AAR id is missed",
                         HttpStatus.BAD_REQUEST.value(),
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
@@ -168,13 +170,13 @@ public class NotificationsPAService {
                     documentId.getAarId(),
                     xPagopaPnCxGroups,
                     null
-            ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return document.map(NotificationDownloadDocumentMapper.modelMapper::mapDocumentDownloadResponse);
-        } else {
+        } else { // legal fact case
             if (documentId.getLegalFactId() == null) {
                 return Mono.error(new PnBffException(
-                        "Document id not found",
-                        "The document id is missed",
+                        "Legal fact id not found",
+                        "The legal fact id is missed",
                         HttpStatus.BAD_REQUEST.value(),
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
@@ -184,10 +186,9 @@ public class NotificationsPAService {
                         "Legal fact category not found",
                         "The legal fact category is missed",
                         HttpStatus.BAD_REQUEST.value(),
-                        ERROR_CODE_BFF_LEGALFACTTYPENOTFOUND
+                        ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND
                 ));
             }
-            // others legal fact case
             Mono<LegalFactDownloadMetadataResponse> legalFact = pnDeliveryPushClient.getLegalFact(
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType),
@@ -197,7 +198,8 @@ public class NotificationsPAService {
                     documentId.getLegalFactId(),
                     xPagopaPnCxGroups,
                     null
-            ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
             return legalFact.map(NotificationDownloadDocumentMapper.modelMapper::mapLegalFactDownloadResponse);
         }
 

@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
@@ -9,7 +8,6 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -78,7 +76,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 subjectRegExp,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("searchReceivedNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -135,7 +133,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 endDate,
                 size,
                 nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("searchReceivedDelegatedNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -166,7 +164,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
 
         Mono<BffFullNotificationV1> serviceResponse = notificationsRecipientService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups, mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
 
         log.logEndingProcess("getReceivedNotificationV1");
@@ -199,10 +197,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                        LegalFactCategory legalFactCategory,
                                                                                                        final ServerWebExchange exchange) {
         log.logStartingProcess("getReceivedNotificationDocumentV1");
+        
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentId, documentType,
                 legalFactCategory, xPagopaPnCxGroups, mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("getReceivedNotificationDocumentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
@@ -101,7 +100,7 @@ class PnDeliveryClientPAImplTest {
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
                 NotificationsSentMock.NEXT_PAGES_KEY
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -139,7 +138,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_ID,
                 NotificationsSentMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -181,6 +180,6 @@ class PnDeliveryClientPAImplTest {
                 "IUN",
                 0,
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

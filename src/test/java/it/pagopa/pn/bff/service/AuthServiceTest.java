@@ -1,10 +1,12 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.bff.mocks.AuthFleetMock;
 import it.pagopa.pn.bff.pnclient.auth.PnAuthFleetClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,13 +24,15 @@ public class AuthServiceTest {
     @Autowired
     private static AuthService authService;
     private static PnAuthFleetClientImpl pnAuthFleetClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     private final AuthFleetMock authFleetMock = new AuthFleetMock();
 
     @BeforeAll
     public static void setup() {
         pnAuthFleetClient = mock(PnAuthFleetClientImpl.class);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        authService = new AuthService(pnAuthFleetClient);
+        authService = new AuthService(pnAuthFleetClient, pnBffExceptionUtility);
     }
 
     @Test

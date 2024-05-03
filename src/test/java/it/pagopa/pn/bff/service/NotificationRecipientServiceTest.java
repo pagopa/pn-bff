@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
@@ -15,6 +16,7 @@ import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +36,7 @@ class NotificationRecipientServiceTest {
     private static NotificationsRecipientService notificationsRecipientService;
     private static PnDeliveryClientRecipientImpl pnDeliveryClientRecipient;
     private static PnDeliveryPushClientImpl pnDeliveryPushClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
@@ -42,7 +45,8 @@ class NotificationRecipientServiceTest {
     public static void setup() {
         pnDeliveryClientRecipient = mock(PnDeliveryClientRecipientImpl.class);
         pnDeliveryPushClient = mock(PnDeliveryPushClientImpl.class);
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility);
     }
 
     @Test
@@ -341,7 +345,7 @@ class NotificationRecipientServiceTest {
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The AAR id is missed")
                 )
                 .verify();
     }
@@ -433,7 +437,7 @@ class NotificationRecipientServiceTest {
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The legal fact id is missed")
                 )
                 .verify();
     }
@@ -549,7 +553,7 @@ class NotificationRecipientServiceTest {
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("The document id is missed")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The attachment idx is missed")
                 )
                 .verify();
     }

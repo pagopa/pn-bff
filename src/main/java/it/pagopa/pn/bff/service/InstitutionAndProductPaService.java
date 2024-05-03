@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
@@ -9,6 +8,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ import java.util.List;
 public class InstitutionAndProductPaService {
     private final PnInfoPaClientImpl pnInfoPaClient;
     private final PnBffConfigs pnBffConfigs;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Get a paginated list of the institutions that are accessible by the current user
@@ -38,7 +39,7 @@ public class InstitutionAndProductPaService {
         return pnInfoPaClient
                 .getInstitutions(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
     /**
@@ -55,6 +56,6 @@ public class InstitutionAndProductPaService {
         return pnInfoPaClient
                 .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 }

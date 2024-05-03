@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
@@ -8,7 +7,6 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -63,7 +61,7 @@ public class SentNotificationController implements NotificationSentApi {
         Mono<BffNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
                 subjectRegExp, startDate, endDate, size, nextPagesKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("searchSentNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -92,7 +90,7 @@ public class SentNotificationController implements NotificationSentApi {
 
         Mono<BffFullNotificationV1> serviceResponse = notificationsPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("getSentNotificationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -123,10 +121,11 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                                    LegalFactCategory legalFactCategory,
                                                                                                    final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationDocumentV1");
+        
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsPAService.getSentNotificationDocument(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentId, documentType,
                 legalFactCategory, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
         log.logEndingProcess("getSentNotificationDocumentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

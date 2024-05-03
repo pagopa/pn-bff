@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.deliverypush;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.*;
@@ -8,7 +7,6 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -40,7 +38,7 @@ public class PnDeliveryPushClientImpl {
                 documentId,
                 xPagopaPnCxGroups,
                 mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<LegalFactDownloadMetadataResponse> getLegalFact(String xPagopaPnUid,
@@ -62,6 +60,6 @@ public class PnDeliveryPushClientImpl {
                 legalFactId,
                 xPagopaPnCxGroups,
                 mandateId
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 }

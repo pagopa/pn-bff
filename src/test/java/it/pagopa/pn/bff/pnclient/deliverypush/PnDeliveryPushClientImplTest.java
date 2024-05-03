@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.deliverypush;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
@@ -82,7 +81,7 @@ class PnDeliveryPushClientImplTest {
                 "DOCUMENT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -132,6 +131,6 @@ class PnDeliveryPushClientImplTest {
                 "LEGAL_FACT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

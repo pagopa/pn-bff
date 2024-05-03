@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
@@ -103,7 +102,7 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -173,7 +172,7 @@ class PnDeliveryClientRecipientImplTest {
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -215,7 +214,7 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
                 "MANDATE_ID"
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -261,6 +260,6 @@ class PnDeliveryClientRecipientImplTest {
                 0,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }
