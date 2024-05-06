@@ -2,9 +2,7 @@ package it.pagopa.pn.bff.pnclient.userattributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
 import it.pagopa.pn.bff.mocks.AddressesMock;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -30,6 +28,7 @@ class PnUserAttributesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";
+    private final String addressPath = "/address-book/v1/digital-address";
     private final ConsentsMock consentsMock = new ConsentsMock();
     private final AddressesMock addressesMock = new AddressesMock();
     private final CxTypeAuthFleet CX_TYPE = CxTypeAuthFleet.PF;
@@ -149,7 +148,7 @@ class PnUserAttributesClientImplTestIT {
     void getAddressesByRecipient() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(addressesMock.getUserAddressesResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath("/address-book/v1/digital-address"))
+        mockServerClient.when(request().withMethod("GET").withPath(addressPath))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -166,12 +165,94 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void getAddressesByRecipientError() {
-        mockServerClient.when(request().withMethod("GET").withPath("/address-book/v1/digital-address"))
+        mockServerClient.when(request().withMethod("GET").withPath(addressPath))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.getUserAddresses(
                 UserMock.PN_UID,
                 CX_TYPE,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void createOrUpdateCourtesyAddress() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
+        String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/SENDER_ID/EMAIL").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                CourtesyChannelType.EMAIL,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void createOrUpdateCourtesyAddressError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/SENDER_ID/EMAIL").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                CourtesyChannelType.EMAIL,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void createOrUpdateLegalAddress() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
+        String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/SENDER_ID/PEC").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                LegalChannelType.PEC,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void createOrUpdateLegalAddressError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/SENDER_ID/PEC").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                LegalChannelType.PEC,
+                addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
         )).expectError().verify();

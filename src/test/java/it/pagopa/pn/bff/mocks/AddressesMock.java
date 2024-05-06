@@ -48,10 +48,28 @@ public class AddressesMock {
         return userAddresses;
     }
 
-    public BffAddressVerification getAddressVerificationMock() {
+    public BffAddressVerification getBffAddressVerificationMock() {
         return new BffAddressVerification()
-                .value("test")
-                .verificationCode("123456")
+                .value("test@test.com")
+                .verificationCode("12345")
                 .requestId("1234567890");
     }
+
+    public AddressVerification getAddressVerificationBodyMock() {
+        return new AddressVerification()
+                .value("test@test.com")
+                .verificationCode("12345")
+                .requestId("123456789");
+    }
+
+    public AddressVerificationResponse addressVerificationCourtesyResponseMock() {
+        return new AddressVerificationResponse()
+                .result(AddressVerificationResponse.ResultEnum.CODE_VERIFICATION_REQUIRED);
+    }
+
+    public AddressVerificationResponse addressVerificationLegalResponseMock() {
+        return new AddressVerificationResponse()
+                .result(AddressVerificationResponse.ResultEnum.PEC_VALIDATION_REQUIRED);
+    }
+
 }

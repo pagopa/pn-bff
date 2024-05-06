@@ -50,6 +50,19 @@ public class AddressesService {
         );
     }
 
+    /**
+     * Create or update an address
+     *
+     * @param xPagopaPnCxId       User Identifier
+     * @param xPagopaPnCxType     Public Administration Type
+     * @param xPagopaPnCxRole     Public Administration Role
+     * @param addressType         Address Type (LEGAL or COURTESY)
+     * @param senderId            Sender Identifier
+     * @param channelType         Channel Type (EMAIL, SMS, PEC or APPIO)
+     * @param addressVerification Body of the request containing the address to be created or updated and the verification code
+     * @param xPagopaPnCxGroups   Public Administration Group id List
+     * @return the address created or updated
+     */
     public Mono<BffAddressVerificationResponse> createOrUpdateAddress(String xPagopaPnCxId,
                                                                       CxTypeAuthFleet xPagopaPnCxType,
                                                                       String xPagopaPnCxRole,

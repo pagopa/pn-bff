@@ -22,6 +22,16 @@ public class AddressesController implements AddressesApi {
         this.addressesService = addressesService;
     }
 
+    /**
+     * GET /bff/v1/addresses: Get the addresses of the user
+     *
+     * @param xPagopaPnCxId     User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxRole   Public Administration Role
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange          ServerWebExchange
+     * @return the list of the addresses or error
+     */
     @Override
     public Mono<ResponseEntity<Flux<BffUserAddress>>> getAddressesV1(String xPagopaPnCxId,
                                                                      CxTypeAuthFleet xPagopaPnCxType,
@@ -42,6 +52,20 @@ public class AddressesController implements AddressesApi {
                 .map(contact -> ResponseEntity.ok(Flux.fromIterable(contact)));
     }
 
+    /**
+     * POST /bff/v1/addresses: Create or update an address
+     *
+     * @param xPagopaPnCxId       User Identifier
+     * @param xPagopaPnCxType     Public Administration Type
+     * @param xPagopaPnCxRole     Public Administration Role
+     * @param addressType         Address Type (LEGAL or COURTESY)
+     * @param senderId            Sender Identifier
+     * @param channelType         Channel Type (EMAIL, SMS, PEC or APPIO)
+     * @param addressVerification Body of the request containing the address to be created or updated and the verification code
+     * @param xPagopaPnCxGroups   Public Administration Group id List
+     * @param exchange            ServerWebExchange
+     * @return the address created or updated or error
+     */
     @Override
     public Mono<ResponseEntity<BffAddressVerificationResponse>> createOrUpdateAddressV1(String xPagopaPnCxId,
                                                                                         CxTypeAuthFleet xPagopaPnCxType,

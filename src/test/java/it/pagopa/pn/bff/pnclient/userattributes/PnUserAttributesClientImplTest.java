@@ -1,11 +1,10 @@
 package it.pagopa.pn.bff.pnclient.userattributes;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
 import it.pagopa.pn.bff.mocks.AddressesMock;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -34,6 +33,10 @@ class PnUserAttributesClientImplTest {
     private ConsentsApi consentsApi;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi")
     private AllApi allAddressesApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi")
+    private CourtesyApi courtesyApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi")
+    private LegalApi legalApi;
 
     @Test
     void getTosConsent() throws RestClientException {
@@ -164,6 +167,98 @@ class PnUserAttributesClientImplTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void createOrUpdateCourtesyAddress() {
+        when(courtesyApi.postRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(addressesMock.addressVerificationCourtesyResponseMock()));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                CourtesyChannelType.EMAIL,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void createOrUpdateCourtesyAddressError() {
+        when(courtesyApi.postRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                CourtesyChannelType.EMAIL,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void createOrUpdateLegalAddress() {
+        when(legalApi.postRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(addressesMock.addressVerificationCourtesyResponseMock()));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                LegalChannelType.PEC,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void createOrUpdateLegalAddressError() {
+        when(legalApi.postRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                LegalChannelType.PEC,
+                addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

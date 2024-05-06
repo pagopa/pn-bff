@@ -13,7 +13,7 @@ public class AddressVerificationMapperTest {
 
     @Test
     void testAddressVerificationMapper() {
-        BffAddressVerification addressVerification = addressesMock.getAddressVerificationMock();
+        BffAddressVerification addressVerification = addressesMock.getBffAddressVerificationMock();
         AddressVerification mappedAddressVerification = AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(addressVerification);
 
         assertNotNull(mappedAddressVerification);
