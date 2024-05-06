@@ -201,4 +201,100 @@ public class AddressesServiceTest {
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void deleteCourtesyAddress() {
+        when(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(CourtesyChannelType.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(addressesService.deleteDigitalAddress(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_ROLE,
+                        BffAddressType.COURTESY,
+                        UserMock.SENDER_ID,
+                        BffChannelType.EMAIL,
+                        UserMock.PN_CX_GROUPS
+                ))
+                .verifyComplete();
+    }
+
+    @Test
+    void deleteCourtesyAddressError() {
+        when(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(CourtesyChannelType.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(addressesService.deleteDigitalAddress(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_ROLE,
+                        BffAddressType.COURTESY,
+                        UserMock.SENDER_ID,
+                        BffChannelType.EMAIL,
+                        UserMock.PN_CX_GROUPS
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void deleteLegalAddress() {
+        when(pnUserAttributesClient.deleteRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(LegalChannelType.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(addressesService.deleteDigitalAddress(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_ROLE,
+                        BffAddressType.LEGAL,
+                        UserMock.SENDER_ID,
+                        BffChannelType.PEC,
+                        UserMock.PN_CX_GROUPS
+                ))
+                .verifyComplete();
+    }
+
+    @Test
+    void deleteLegalAddressError() {
+        when(pnUserAttributesClient.deleteRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(LegalChannelType.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(addressesService.deleteDigitalAddress(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_ROLE,
+                        BffAddressType.LEGAL,
+                        UserMock.SENDER_ID,
+                        BffChannelType.PEC,
+                        UserMock.PN_CX_GROUPS
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
 }

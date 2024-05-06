@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
@@ -17,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -65,10 +65,10 @@ public class AddressesControllerTest {
                 .isEqualTo(response);
 
         Mockito.verify(addressesService).getUserAddresses(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.anyList(),
-                Mockito.anyString()
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         );
     }
 
@@ -79,7 +79,7 @@ public class AddressesControllerTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyList(),
                 Mockito.anyString()
-        )).thenReturn(Flux.error(new WebClientResponseException(500, "Error", null, null, null)));
+        )).thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -91,13 +91,13 @@ public class AddressesControllerTest {
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .exchange()
                 .expectStatus()
-                .is5xxServerError();
+                .isNotFound();
 
         Mockito.verify(addressesService).getUserAddresses(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.anyList(),
-                Mockito.anyString()
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         );
     }
 
@@ -121,7 +121,7 @@ public class AddressesControllerTest {
 
         webTestClient
                 .post()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_ADDRESS_PATH).build(
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_DELETE_ADDRESS_PATH).build(
                         "COURTESY", "default", "EMAIL"
                 ))
                 .accept(MediaType.APPLICATION_JSON)
@@ -161,11 +161,11 @@ public class AddressesControllerTest {
                 Mockito.any(BffChannelType.class),
                 Mockito.any(),
                 Mockito.anyList()
-        )).thenReturn(Mono.error(new WebClientResponseException(500, "Error", null, null, null)));
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .post()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_ADDRESS_PATH).build(
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_DELETE_ADDRESS_PATH).build(
                         "COURTESY", "default", "EMAIL"
                 ))
                 .accept(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ public class AddressesControllerTest {
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
-                .is5xxServerError();
+                .isNotFound();
 
         Mockito.verify(addressesService).createOrUpdateAddress(
                 eq(UserMock.PN_CX_ID),
@@ -187,6 +187,78 @@ public class AddressesControllerTest {
                 eq(BffChannelType.EMAIL),
                 argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void deleteDigitalAddress() {
+        Mockito.when(addressesService.deleteDigitalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(BffAddressType.class),
+                Mockito.anyString(),
+                Mockito.any(BffChannelType.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.empty());
+
+        webTestClient
+                .delete()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_DELETE_ADDRESS_PATH).build(
+                        "COURTESY", "default", "EMAIL"
+                ))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        Mockito.verify(addressesService).deleteDigitalAddress(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ROLE,
+                BffAddressType.COURTESY,
+                UserMock.SENDER_ID,
+                BffChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void deleteDigitalAddressError() {
+        Mockito.when(addressesService.deleteDigitalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(BffAddressType.class),
+                Mockito.anyString(),
+                Mockito.any(BffChannelType.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient
+                .delete()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_DELETE_ADDRESS_PATH).build(
+                        "COURTESY", "default", "EMAIL"
+                ))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(addressesService).deleteDigitalAddress(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ROLE,
+                BffAddressType.COURTESY,
+                UserMock.SENDER_ID,
+                BffChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS
         );
     }
 }

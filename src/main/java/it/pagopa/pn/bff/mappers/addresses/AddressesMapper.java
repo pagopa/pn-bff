@@ -44,16 +44,16 @@ public interface AddressesMapper {
     /**
      * Map LegalAndUnverifiedDigitalAddress to BffUserAddress
      *
-     * @param legalAddress LegalAndUnverifiedDigitalAddress
-     * @return BffUserAddress
+     * @param legalAddress LegalAndUnverifiedDigitalAddress to map
+     * @return the mapped BffUserAddress
      */
     BffUserAddress mapLegalAddress(LegalAndUnverifiedDigitalAddress legalAddress);
 
     /**
      * Map CourtesyDigitalAddress to BffUserAddress
      *
-     * @param courtesyAddress CourtesyDigitalAddress
-     * @return BffUserAddress
+     * @param courtesyAddress CourtesyDigitalAddress to map
+     * @return the mapped BffUserAddress
      */
     BffUserAddress mapCourtesyAddress(CourtesyDigitalAddress courtesyAddress);
 }

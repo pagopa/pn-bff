@@ -34,13 +34,8 @@ paths:
       tags:
         - Addresses
       operationId: getAddressesV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '200':
           description: OK
@@ -57,10 +52,6 @@ paths:
 
   /bff/v1/addresses/{addressType}/{senderId}/{channelType}:
     parameters:
-      - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
       - name: addressType
         in: path
         description: Address type
@@ -81,8 +72,8 @@ paths:
       tags:
         - Addresses
       operationId: createOrUpdateAddressV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         required: true
         content:
@@ -122,8 +113,8 @@ paths:
       tags:
           - Addresses
       operationId: deleteAddressV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '204':
           description: OK

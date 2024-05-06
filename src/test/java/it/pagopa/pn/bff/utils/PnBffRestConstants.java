@@ -23,7 +23,7 @@ public class PnBffRestConstants {
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String TOKEN_EXCHANGE_PATH = BFF_PATH + VERSION_1 + "/token-exchange";
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
-    public static final String CREATE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
+    public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
 
     private PnBffRestConstants() {
     }

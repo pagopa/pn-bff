@@ -261,4 +261,88 @@ class PnUserAttributesClientImplTest {
                 UserMock.PN_CX_ROLE
         )).expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void deleteCourtesyAddress() {
+        when(courtesyApi.deleteRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                CourtesyChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).verifyComplete();
+    }
+
+    @Test
+    void deleteCourtesyAddressError() {
+        when(courtesyApi.deleteRecipientCourtesyAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                CourtesyChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void deleteLegalAddress() {
+        when(legalApi.deleteRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                LegalChannelType.PEC,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).verifyComplete();
+    }
+
+    @Test
+    void deleteLegalAddressError() {
+        when(legalApi.deleteRecipientLegalAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                LegalChannelType.PEC,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
+    }
 }

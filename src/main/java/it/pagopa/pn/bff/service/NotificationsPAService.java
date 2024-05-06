@@ -118,24 +118,26 @@ public class NotificationsPAService {
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
      * @param iun               Notification IUN
-     * @param documentId        the document id (safestorage key if aar or legalfact, the index in the array if attachment)
      * @param documentType      the document type (aar, attachment or legal fact)
-     * @param legalFactCategory the legal fact category (required only if the documentType is legal fact)
+     * @param documentIdx       the document index if attachment
+     * @param documentId        the document id if aar or legal fact
+     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the requested document
      */
     public Mono<BffDocumentDownloadMetadataResponse> getSentNotificationDocument(String xPagopaPnUid,
                                                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                                                  String xPagopaPnCxId, String iun,
-                                                                                 DocumentId documentId,
                                                                                  BffDocumentType documentType,
-                                                                                 LegalFactCategory legalFactCategory,
+                                                                                 Integer documentIdx,
+                                                                                 String documentId,
+                                                                                 LegalFactCategory documentCategory,
                                                                                  List<String> xPagopaPnCxGroups
     ) {
         log.info("Get notification {} for iun {}", documentType, iun);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
-            if (documentId.getAttachmentIdx() == null) { // attachment case
+            if (documentIdx == null) { // attachment case
                 return Mono.error(new PnBffException(
                         "Attachment idx not found",
                         "The attachment idx is missed",
@@ -148,12 +150,12 @@ public class NotificationsPAService {
                     CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     iun,
-                    documentId.getAttachmentIdx(),
+                    documentIdx,
                     xPagopaPnCxGroups
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return attachment.map(NotificationDownloadDocumentMapper.modelMapper::mapSentAttachmentDownloadResponse);
         } else if (documentType == BffDocumentType.AAR) { // AAR case
-            if (documentId.getAarId() == null) {
+            if (documentId == null) {
                 return Mono.error(new PnBffException(
                         "AAR id not found",
                         "The AAR id is missed",
@@ -167,13 +169,13 @@ public class NotificationsPAService {
                     xPagopaPnCxId,
                     iun,
                     DocumentCategory.AAR,
-                    documentId.getAarId(),
+                    documentId,
                     xPagopaPnCxGroups,
                     null
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return document.map(NotificationDownloadDocumentMapper.modelMapper::mapDocumentDownloadResponse);
         } else { // legal fact case
-            if (documentId.getLegalFactId() == null) {
+            if (documentId == null) {
                 return Mono.error(new PnBffException(
                         "Legal fact id not found",
                         "The legal fact id is missed",
@@ -181,7 +183,7 @@ public class NotificationsPAService {
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
             }
-            if (legalFactCategory == null) {
+            if (documentCategory == null) {
                 return Mono.error(new PnBffException(
                         "Legal fact category not found",
                         "The legal fact category is missed",
@@ -194,8 +196,8 @@ public class NotificationsPAService {
                     CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     iun,
-                    NotificationParamsMapper.modelMapper.mapLegalFactCategory(legalFactCategory),
-                    documentId.getLegalFactId(),
+                    NotificationParamsMapper.modelMapper.mapLegalFactCategory(documentCategory),
+                    documentId,
                     xPagopaPnCxGroups,
                     null
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);

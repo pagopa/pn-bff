@@ -72,4 +72,24 @@ public class PnUserAttributesClientImpl {
                 addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole
         );
     }
+
+    public Mono<Void> deleteRecipientCourtesyAddress(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                                     String senderId, CourtesyChannelType channelType,
+                                                     List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "deleteRecipientCourtesyAddress");
+
+        return courtesyApi.deleteRecipientCourtesyAddress(xPagopaPnCxId, xPagopaPnCxType, senderId, channelType,
+                xPagopaPnCxGroups, xPagopaPnCxRole
+        );
+    }
+
+    public Mono<Void> deleteRecipientLegalAddress(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                                  String senderId, LegalChannelType channelType,
+                                                  List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "deleteRecipientLegalAddress");
+
+        return legalApi.deleteRecipientLegalAddress(xPagopaPnCxId, xPagopaPnCxType, senderId, channelType,
+                xPagopaPnCxGroups, xPagopaPnCxRole
+        );
+    }
 }

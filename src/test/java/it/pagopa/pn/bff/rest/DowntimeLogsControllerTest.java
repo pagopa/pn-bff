@@ -58,7 +58,7 @@ public class DowntimeLogsControllerTest {
     @Test
     void getCurrentStatusError() {
         Mockito.when(downtimeLogsService.getCurrentStatus())
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -109,7 +109,7 @@ public class DowntimeLogsControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString())
                 )
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -153,7 +153,7 @@ public class DowntimeLogsControllerTest {
     @Test
     void getLegalFactError() {
         Mockito.when(downtimeLogsService.getLegalFact(Mockito.anyString()))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()

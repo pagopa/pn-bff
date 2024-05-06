@@ -181,7 +181,7 @@ class PnUserAttributesClientImplTestIT {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
-        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/SENDER_ID/EMAIL").withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/default/EMAIL").withBody(request))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -203,7 +203,7 @@ class PnUserAttributesClientImplTestIT {
     void createOrUpdateCourtesyAddressError() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
-        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/SENDER_ID/EMAIL").withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/default/EMAIL").withBody(request))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
@@ -222,7 +222,7 @@ class PnUserAttributesClientImplTestIT {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
-        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/SENDER_ID/PEC").withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/default/PEC").withBody(request))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -244,7 +244,7 @@ class PnUserAttributesClientImplTestIT {
     void createOrUpdateLegalAddressError() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
-        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/SENDER_ID/PEC").withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/default/PEC").withBody(request))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
@@ -253,6 +253,74 @@ class PnUserAttributesClientImplTestIT {
                 UserMock.SENDER_ID,
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void deleteCourtesyAddress() {
+        mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/courtesy/default/EMAIL"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("")
+                );
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                CourtesyChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void deleteCourtesyAddressError() {
+        mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/courtesy/default/EMAIL"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                CourtesyChannelType.EMAIL,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void deleteLegalAddress() {
+        mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/legal/default/PEC"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("")
+                );
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                LegalChannelType.PEC,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void deleteLegalAddressError() {
+        mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/legal/default/PEC"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
+                UserMock.PN_UID,
+                CX_TYPE,
+                UserMock.SENDER_ID,
+                LegalChannelType.PEC,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
         )).expectError().verify();

@@ -101,7 +101,7 @@ class ApiKeysPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyBoolean()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -197,7 +197,7 @@ class ApiKeysPaControllerTest {
                         Mockito.any(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.post()
@@ -269,7 +269,7 @@ class ApiKeysPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.delete()
@@ -349,7 +349,7 @@ class ApiKeysPaControllerTest {
                         Mockito.any(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.put()

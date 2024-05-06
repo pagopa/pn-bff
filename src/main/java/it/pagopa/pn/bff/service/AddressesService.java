@@ -98,4 +98,42 @@ public class AddressesService {
                     .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         }
     }
+
+    /**
+     * Delete an address
+     *
+     * @param xPagopaPnCxId     Receiver id
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxRole   Role
+     * @param addressType       Address Type (LEGAL or COURTESY)
+     * @param senderId          Sender Identifier
+     * @param channelType       Channel Type (EMAIL, SMS, PEC or APPIO)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return no content or error
+     */
+    public Mono<Void> deleteDigitalAddress(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                           String xPagopaPnCxRole, BffAddressType addressType, String senderId, BffChannelType channelType,
+                                           List<String> xPagopaPnCxGroups) {
+        log.info("Delete Digital Address");
+
+        if (addressType.getValue().equals(BffAddressType.COURTESY.getValue())) {
+            return pnUserAttributesClient.deleteRecipientCourtesyAddress(
+                    xPagopaPnCxId,
+                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                    senderId,
+                    ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(channelType),
+                    xPagopaPnCxGroups,
+                    xPagopaPnCxRole
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+        } else {
+            return pnUserAttributesClient.deleteRecipientLegalAddress(
+                    xPagopaPnCxId,
+                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                    senderId,
+                    ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
+                    xPagopaPnCxGroups,
+                    xPagopaPnCxRole
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+        }
+    }
 }

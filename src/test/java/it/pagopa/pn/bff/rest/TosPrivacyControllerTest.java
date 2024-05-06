@@ -69,7 +69,7 @@ class TosPrivacyControllerTest {
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class)))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -123,7 +123,7 @@ class TosPrivacyControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.any()))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         BffTosPrivacyBody request = BffTosPrivacyBody.builder()
                 .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))

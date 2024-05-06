@@ -93,4 +93,39 @@ public class AddressesController implements AddressesApi {
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
+
+    /**
+     * DELETE /bff/v1/addresses: Delete an address
+     *
+     * @param xPagopaPnCxId     User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxRole   Public Administration Role
+     * @param addressType       Address Type (LEGAL or COURTESY)
+     * @param senderId          Sender Identifier
+     * @param channelType       Channel Type (EMAIL, SMS, PEC or APPIO)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange          ServerWebExchange
+     * @return no content or error
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> deleteAddressV1(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                                      String xPagopaPnCxRole, BffAddressType addressType,
+                                                      String senderId, BffChannelType channelType,
+                                                      List<String> xPagopaPnCxGroups, final ServerWebExchange exchange) {
+        log.logStartingProcess("deleteAddressV1");
+
+        Mono<Void> serviceResponse = addressesService.deleteDigitalAddress(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnCxRole,
+                addressType,
+                senderId,
+                channelType,
+                xPagopaPnCxGroups
+        );
+
+        log.logEndingProcess("deleteAddressV1");
+
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }

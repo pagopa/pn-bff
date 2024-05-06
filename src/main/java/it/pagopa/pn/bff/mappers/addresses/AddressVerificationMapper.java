@@ -11,7 +11,19 @@ import org.mapstruct.factory.Mappers;
 public interface AddressVerificationMapper {
     AddressVerificationMapper addressVerificationMapper = Mappers.getMapper(AddressVerificationMapper.class);
 
+    /**
+     * Map BffAddressVerification to AddressVerification
+     *
+     * @param addressVerification BffAddressVerification to map
+     * @return the mapped AddressVerification
+     */
     AddressVerification mapAddressVerification(BffAddressVerification addressVerification);
 
+    /**
+     * Map AddressVerificationResponse to BffAddressVerificationResponse
+     *
+     * @param addressVerificationResponse AddressVerificationResponse to map
+     * @return the mapped BffAddressVerificationResponse
+     */
     BffAddressVerificationResponse mapAddressVerificationResponse(AddressVerificationResponse addressVerificationResponse);
 }

@@ -2,7 +2,11 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 7+UwOdMY0J447gUV+i6df4LlaaphVkHyxZJ6DRoDQq8=
+<<<<<<< HEAD
+  version: wjtRKQ+Do6gIRC0/QBzhPreuWK5PE3WFypvzs+8b/nY=
+=======
+  version: JnxnZPZAT9RAlpcxjUJkGiqSkV/EPKZb/sZMsj20L6Y=
+>>>>>>> 76eba07 (fix(pn-10888):  fixed problems during aws open api generation (#44))
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -155,8 +159,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/BffQueryDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryLegalFactCategory'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -435,8 +440,9 @@ paths:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/queryMandateId'
         - $ref: '#/components/parameters/BffQueryDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryLegalFactCategory'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -1251,6 +1257,201 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/addresses:
+    get:
+      summary: Recapiti
+      description: Restituisce i recapiti dell'utente
+      tags:
+        - Addresses
+      operationId: getAddressesV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffUserAddresses'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/addresses API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/addresses/{addressType}/{senderId}/{channelType}:
+    parameters:
+      - name: addressType
+        in: path
+        description: Address type
+        required: true
+        schema:
+          $ref: '#/components/schemas/BffAddressType'
+      - $ref: '#/components/parameters/senderId'
+      - in: path
+        name: channelType
+        description: Communication Channel type
+        required: true
+        schema:
+          $ref: '#/components/schemas/BffChannelType'
+    post:
+      summary: Creazione/Aggiornamento Recapito
+      description: Creazione o aggiornamento di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: createOrUpdateAddressV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressVerification'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressVerificationResponse'
+          description: |
+            Nell'oggetto c'è la motivazione di quanto richiesto per procedere
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: >
+            This error is caused by one of this events: * Verification code
+            failure: error.detail equals to
+            PN_USERATTRIBUTES_INVALIDVERIFICATIONCODE * Verification code max
+            attempt reached: error.detail equals to
+            PN_USERATTRIBUTES_RETRYLIMITVERIFICATIONCODE * Verification code
+            expired/notfound: error.detail equals to
+            PN_USERATTRIBUTES_EXPIREDVERIFICATIONCODE
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    delete:
+      summary: Eliminazione Recapito
+      description: Eliminazione di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: deleteAddressV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Digital Address not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: >-
+        Options for /v1/addresses/{addressType}/{senderId}/{channelType} API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -1336,31 +1537,27 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
+    BffQueryDocumentIdx:
+      description: Indice del documento
+      name: documentIdx
+      in: query
+      required: false
+      schema:
+        type: number
     BffQueryDocumentId:
-      description: Identificativo o indice del documento
+      description: Identificativo del documento
       name: documentId
       in: query
-      required: true
-      style: form
-      explode: true
+      required: false
       schema:
-        type: object
-        properties:
-          aarId:
-            type: string
-            pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
-            maxLength: 512
-          attachmentIdx:
-            type: number
-          legalFactId:
-            type: string
-            pattern: ^[ -~]*$
-            maxLength: 1024
-    BffQueryLegalFactCategory:
+        type: string
+        pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
+        maxLength: 1024
+    BffQueryDocumentCategory:
       description: >-
         Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
         disposizione dei suoi utenti.
-      name: legalFactCategory
+      name: documentCategory
       in: query
       required: false
       schema:
@@ -1430,6 +1627,16 @@ components:
       description: Size della pagina di risultati a cui il client è interessato
       schema:
         type: string
+    senderId:
+      in: path
+      name: senderId
+      description: sender Id or 'default' for general addresses not associated to a sender
+      example: default
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        pattern: ^[ -~ ]*$
   schemas:
     NotificationStatus:
       type: string
@@ -3839,6 +4046,89 @@ components:
           type: string
           pattern: ^[ -~]*$
           maxLength: 64
+    BffChannelType:
+      type: string
+      enum:
+        - EMAIL
+        - SMS
+        - PEC
+        - APPIO
+    BffUserAddress:
+      type: object
+      required:
+        - addressType
+        - recipientId
+        - senderId
+        - channelType
+        - value
+      properties:
+        addressType:
+          type: string
+        recipientId:
+          type: string
+        senderId:
+          type: string
+          description: senderId or 'default'
+        senderName:
+          type: string
+          description: name of the sender
+        channelType:
+          $ref: '#/components/schemas/BffChannelType'
+        value:
+          type: string
+        requestId:
+          type: string
+        pecValid:
+          type: boolean
+        codeValid:
+          type: boolean
+    BffUserAddresses:
+      type: array
+      items:
+        $ref: '#/components/schemas/BffUserAddress'
+    BffAddressType:
+      type: string
+      enum:
+        - legal
+        - courtesy
+    VerificationCode:
+      type: string
+      description: Verification Code
+      minLength: 5
+      maxLength: 5
+      pattern: ^\d{5}$
+      example: '12345'
+    AddressVerification:
+      type: object
+      description: richiede value oppure requestId di un indirizzo in corso di validazione
+      properties:
+        value:
+          type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          maxLength: 254
+          pattern: >-
+            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO))$
+        requestId:
+          type: string
+          maxLength: 64
+          pattern: ^[ -~ ]*$
+        verificationCode:
+          $ref: '#/components/schemas/VerificationCode'
+    AddressVerificationResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: >
+            Uno dei seguenti valori - CODE_VERIFICATION_REQUIRED: indica che è
+            richiesto il codice di verifica - PEC_VALIDATION_REQUIRED: indica
+            che il codice di verifica inserito è valido, ma che non è ancora
+            arrivata la conferma PEC (solo per la PEC)
+          enum:
+            - CODE_VERIFICATION_REQUIRED
+            - PEC_VALIDATION_REQUIRED
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -3873,6 +4163,8 @@ tags:
       dei servizi
   - name: TokenExchange
     description: Invocazioni per la token exchange
+  - name: Addresses
+    description: Gestione dei recapiti
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

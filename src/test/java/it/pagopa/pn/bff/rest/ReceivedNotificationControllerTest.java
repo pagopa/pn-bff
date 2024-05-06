@@ -118,7 +118,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyInt(),
                         Mockito.anyString()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -239,7 +239,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyInt(),
                         Mockito.anyString()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -331,7 +331,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.any()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -360,17 +360,15 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentAAR() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
-
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapDocumentDownloadResponse(notificationDownloadDocumentMock.getDocumentMock());
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
@@ -382,7 +380,7 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.AAR)
-                                .queryParam("aarId", documentId.getAarId())
+                                .queryParam("documentId", "aar-id")
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -400,8 +398,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS,
                 null
@@ -410,21 +409,19 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentAARError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
-
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -432,7 +429,7 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.AAR)
-                                .queryParam("aarId", documentId.getAarId())
+                                .queryParam("documentId", "aar-id")
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -448,8 +445,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS,
                 null
@@ -458,17 +456,15 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentLegalFact() {
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapLegalFactDownloadResponse(notificationDownloadDocumentMock.getLegalFactMock());
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
@@ -480,8 +476,8 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.LEGAL_FACT)
-                                .queryParam("legalFactId", documentId.getLegalFactId())
-                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .queryParam("documentId", "legal-fact-id")
+                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -499,8 +495,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
                 null
@@ -509,21 +506,19 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentLegalFactError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -531,8 +526,8 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.LEGAL_FACT)
-                                .queryParam("legalFactId", documentId.getLegalFactId())
-                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .queryParam("documentId", "legal-fact-id")
+                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -548,8 +543,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
                 null
@@ -558,17 +554,15 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentAttachment() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
-
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapReceivedAttachmentDownloadResponse(notificationDownloadDocumentMock.getRecipientAttachmentMock());
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
@@ -580,7 +574,7 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.ATTACHMENT)
-                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .queryParam("documentIdx", 0)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -598,8 +592,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS,
                 null
@@ -608,21 +603,19 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationDocumentAttachmentError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
-
         Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -630,7 +623,7 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.ATTACHMENT)
-                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .queryParam("documentIdx", 0)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -646,8 +639,9 @@ class ReceivedNotificationControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS,
                 null
