@@ -2,8 +2,10 @@ package it.pagopa.pn.bff.config;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
@@ -121,5 +123,25 @@ public class MsClientConfig extends CommonBaseClient {
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient.buildWebClientBuilder()));
         apiClient.setBasePath(cfg.getDowntimeLogsBaseUrl());
         return new DowntimeApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    DocumentsWebApi documentsWebApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+        return new DocumentsWebApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    LegalFactsApi legalFactsApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+        return new LegalFactsApi(apiClient);
     }
 }

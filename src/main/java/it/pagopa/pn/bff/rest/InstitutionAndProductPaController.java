@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.InstitutionAndProductApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
@@ -9,7 +8,6 @@ import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import lombok.CustomLog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,9 +37,10 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     @Override
     public Mono<ResponseEntity<Flux<BffInstitution>>> getInstitutionsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionsV1");
+
         Flux<BffInstitution> bffInstitutions = institutionAndProductPaService
-                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
+
         log.logEndingProcess("getInstitutionsV1");
         return bffInstitutions
                 .collectList()
@@ -61,9 +60,10 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     @Override
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionProducts");
+
         Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
+
         log.logEndingProcess("getInstitutionProducts");
         return bffInstitutionProducts
                 .collectList()

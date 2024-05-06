@@ -23,7 +23,7 @@ public class InstitutionMapperTest {
     private PnBffConfigs pnBffConfigs;
 
     @Test
-    void testBffInstitutionMapper() {
+    void testInstitutionMapper() {
         InstitutionResourcePN institutionResourcePN = institutionAndProductMock.getInstitutionResourcePNMock().get(0);
 
         institutionResourcePN.setRootParent(new RootParentResourcePN());

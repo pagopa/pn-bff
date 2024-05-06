@@ -42,14 +42,14 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStartDate'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchEndDate'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchRecipientId'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchStatus'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchSubject'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffSearchIun'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchPageSize'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
       responses:
         '200':
           description: OK
@@ -85,7 +85,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -101,6 +101,50 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/{iun}/documents':
+    get:
+      summary: |-
+        Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationDocumentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryLegalFactCategory'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
           content:
             application/problem+json:
               schema:

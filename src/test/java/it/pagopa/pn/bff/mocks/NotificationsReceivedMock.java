@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotificationReceivedMock {
+public class NotificationsReceivedMock {
 
     public static final String RECIPIENT_ID = "RECIPIENT_ID";
     public static final String SENDER_ID = "SENDER_ID";

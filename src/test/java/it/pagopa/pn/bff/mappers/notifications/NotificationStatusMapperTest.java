@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers.notification;
+package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ public class NotificationStatusMapperTest {
     }
 
     @Test
-    void testConvertDeliveryRecipientNotificationStatus(){
+    void testConvertDeliveryRecipientNotificationStatus() {
         NotificationStatus notificationStatus = NotificationStatus.ACCEPTED;
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus actualConvertDeliveryRecipientNotificationStatusResult = NotificationStatusMapper.notificationStatusMapper.convertDeliveryRecipientNotificationStatus(notificationStatus);
         assertNotNull(actualConvertDeliveryRecipientNotificationStatusResult);

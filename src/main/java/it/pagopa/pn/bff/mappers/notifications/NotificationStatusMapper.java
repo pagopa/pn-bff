@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers.notification;
+package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
 import org.mapstruct.Mapper;

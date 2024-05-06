@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
@@ -8,6 +7,7 @@ import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
 import it.pagopa.pn.bff.mappers.addresses.ChannelTypeMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class AddressesService {
     private final PnUserAttributesClientImpl pnUserAttributesClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Get user addresses
@@ -42,7 +43,7 @@ public class AddressesService {
                         xPagopaPnCxGroups,
                         xPagopaPnCxRole
                 )
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return serviceRes.flatMapMany(userAddresses ->
                 Flux.fromIterable(AddressesMapper.addressesMapper.mapUserAddresses(userAddresses))
@@ -70,7 +71,7 @@ public class AddressesService {
                             xPagopaPnCxGroups,
                             xPagopaPnCxRole
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
-                    .onErrorMap(WebClientResponseException.class, PnBffException::wrapException));
+                    .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         } else {
             return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateLegalAddress(
                             xPagopaPnCxId,
@@ -81,7 +82,7 @@ public class AddressesService {
                             xPagopaPnCxGroups,
                             xPagopaPnCxRole
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
-                    .onErrorMap(WebClientResponseException.class, PnBffException::wrapException));
+                    .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         }
     }
 }

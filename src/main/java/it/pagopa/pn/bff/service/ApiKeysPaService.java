@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ResponseNewApiKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
@@ -12,6 +11,7 @@ import it.pagopa.pn.bff.mappers.apikeys.RequestNewApiKeyMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ import java.util.List;
 public class ApiKeysPaService {
     private final PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
     private final PnInfoPaClientImpl pnInfoPaClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Get a paginated list of the api keys that belong to a Public Administration and are accessible by the current user
@@ -56,7 +57,7 @@ public class ApiKeysPaService {
                 lastKey,
                 lastUpdate,
                 showVirtualKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // list of groups linked to the pa
         Mono<List<PaGroup>> paGroups = pnInfoPaClient.getGroups(
@@ -65,7 +66,7 @@ public class ApiKeysPaService {
                         xPagopaPnCxGroups,
                         null
                 )
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                 .collectList();
 
         return Mono.zip(apiKeysResponse, paGroups).map(res -> ApiKeysMapper.modelMapper.mapApiKeysResponse(res.getT1(), res.getT2()));
@@ -92,7 +93,7 @@ public class ApiKeysPaService {
                     xPagopaPnCxId,
                     RequestNewApiKeyMapper.modelMapper.mapRequestNewApiKey(request),
                     xPagopaPnCxGroups
-            ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
             return responseNewApiKey.map(ResponseNewApiKeyMapper.modelMapper::mapResponseNewApiKey);
         });
@@ -118,7 +119,7 @@ public class ApiKeysPaService {
                 xPagopaPnCxId,
                 id,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
     /**
@@ -144,7 +145,7 @@ public class ApiKeysPaService {
                         id,
                         RequestApiKeyStatusMapper.modelMapper.mapRequestApiKeyStatus(request),
                         xPagopaPnCxGroups
-                ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException)
+                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         );
     }
 }
