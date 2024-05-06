@@ -226,17 +226,15 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentAAR() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
-
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapDocumentDownloadResponse(notificationDownloadDocumentMock.getDocumentMock());
         Mockito.when(notificationsPAService.getSentNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -247,7 +245,7 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.AAR)
-                                .queryParam("aarId", documentId.getAarId())
+                                .queryParam("documentId", "aar-id")
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -265,8 +263,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -274,16 +273,15 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentAARError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
 
         Mockito.when(notificationsPAService.getSentNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -295,7 +293,7 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.AAR)
-                                .queryParam("aarId", documentId.getAarId())
+                                .queryParam("documentId", "aar-id")
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -311,8 +309,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -320,17 +319,15 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentLegalFact() {
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapLegalFactDownloadResponse(notificationDownloadDocumentMock.getLegalFactMock());
         Mockito.when(notificationsPAService.getSentNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -341,8 +338,8 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.LEGAL_FACT)
-                                .queryParam("legalFactId", documentId.getLegalFactId())
-                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .queryParam("documentId", "legal-fact-id")
+                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -360,8 +357,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
@@ -369,16 +367,14 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentLegalFactError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         Mockito.when(notificationsPAService.getSentNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -390,8 +386,8 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.LEGAL_FACT)
-                                .queryParam("legalFactId", documentId.getLegalFactId())
-                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .queryParam("documentId", "legal-fact-id")
+                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -407,8 +403,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
@@ -416,8 +413,6 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentAttachment() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
 
         BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(notificationDownloadDocumentMock.getPaAttachmentMock());
         Mockito.when(notificationsPAService.getSentNotificationDocument(
@@ -425,8 +420,9 @@ class SentNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -437,7 +433,7 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.ATTACHMENT)
-                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .queryParam("documentIdx", 0)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -455,8 +451,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -464,16 +461,14 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotificationDocumentAttachmentError() {
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
-
         Mockito.when(notificationsPAService.getSentNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(DocumentId.class),
                         Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(Integer.class),
+                        Mockito.nullable(String.class),
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
@@ -485,7 +480,7 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentType", BffDocumentType.ATTACHMENT)
-                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .queryParam("documentIdx", 0)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -501,8 +496,9 @@ class SentNotificationControllerTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 IUN,
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );

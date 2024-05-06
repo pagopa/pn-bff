@@ -179,9 +179,10 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
      * @param iun               Notification IUN
-     * @param documentId        the document id (safestorage key if aar or legalfact, the index in the array if attachment)
      * @param documentType      the document type (aar, attachment or legal fact)
-     * @param legalFactCategory the legal fact category (required only if the documentType is legal fact)
+     * @param documentIdx       the document index if attachment
+     * @param documentId        the document id if aar or legal fact
+     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the requested document
      */
@@ -191,16 +192,17 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                        String xPagopaPnCxId,
                                                                                                        String iun,
                                                                                                        BffDocumentType documentType,
-                                                                                                       DocumentId documentId,
                                                                                                        List<String> xPagopaPnCxGroups,
                                                                                                        UUID mandateId,
-                                                                                                       LegalFactCategory legalFactCategory,
+                                                                                                       Integer documentIdx,
+                                                                                                       String documentId,
+                                                                                                       LegalFactCategory documentCategory,
                                                                                                        final ServerWebExchange exchange) {
         log.logStartingProcess("getReceivedNotificationDocumentV1");
-        
+
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentId, documentType,
-                legalFactCategory, xPagopaPnCxGroups, mandateId
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
+                documentCategory, xPagopaPnCxGroups, mandateId
         );
 
         log.logEndingProcess("getReceivedNotificationDocumentV1");
