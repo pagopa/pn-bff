@@ -1,23 +1,23 @@
-package it.pagopa.pn.bff.mappers.notification;
+package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
-import it.pagopa.pn.bff.mocks.NotificationReceivedMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NotificationReceivedMapperTest {
-    private final NotificationReceivedMock notificationReceivedMock = new NotificationReceivedMock();
+public class NotificationsReceivedMapperTest {
+    private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
 
     @Test
     void testNotificationReceivedMapper() {
-        NotificationSearchResponse notificationSearchResponse = notificationReceivedMock.getNotificationReceivedPNMock();
+        NotificationSearchResponse notificationSearchResponse = notificationsReceivedMock.getNotificationReceivedPNMock();
 
-        BffNotificationsResponse bffNotificationsResponse = NotificationReceivedMapper.modelMapper.toBffNotificationsResponse(notificationSearchResponse);
+        BffNotificationsResponse bffNotificationsResponse = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationSearchResponse);
         assertNotNull(bffNotificationsResponse);
 
-        for(int i = 0; i < bffNotificationsResponse.getResultsPage().size(); i++) {
+        for (int i = 0; i < bffNotificationsResponse.getResultsPage().size(); i++) {
             assertEquals(bffNotificationsResponse.getResultsPage().get(i).getIun(), notificationSearchResponse.getResultsPage().get(i).getIun());
             assertEquals(bffNotificationsResponse.getResultsPage().get(i).getPaProtocolNumber(), notificationSearchResponse.getResultsPage().get(i).getPaProtocolNumber());
             assertEquals(bffNotificationsResponse.getResultsPage().get(i).getSender(), notificationSearchResponse.getResultsPage().get(i).getSender());
@@ -32,7 +32,7 @@ public class NotificationReceivedMapperTest {
         assertEquals(bffNotificationsResponse.getMoreResult(), notificationSearchResponse.getMoreResult());
         assertEquals(bffNotificationsResponse.getNextPagesKey(), notificationSearchResponse.getNextPagesKey());
 
-        BffNotificationsResponse bffNotificationsResponseV1Null = NotificationReceivedMapper.modelMapper.toBffNotificationsResponse(null);
+        BffNotificationsResponse bffNotificationsResponseV1Null = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(null);
         assertNull(bffNotificationsResponseV1Null);
     }
 

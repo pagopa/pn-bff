@@ -1,15 +1,15 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
-import it.pagopa.pn.bff.mappers.notification.NotificationReceivedMapper;
-import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
+import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
-import it.pagopa.pn.bff.mocks.NotificationReceivedMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.service.NotificationDetailRecipientService;
+import it.pagopa.pn.bff.service.NotificationsRecipientService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -20,28 +20,271 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Slf4j
 @WebFluxTest(ReceivedNotificationController.class)
 class ReceivedNotificationControllerTest {
     private static final String IUN = "HEUJ-UEPA-HGXT-202401-N-1";
+    private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
-    private final NotificationReceivedMock notificationReceivedMock = new NotificationReceivedMock();
+    private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
-    private NotificationDetailRecipientService notificationDetailRecipientService;
+    private NotificationsRecipientService notificationsRecipientService;
     @SpyBean
     private ReceivedNotificationController receivedNotificationController;
 
     @Test
+    void searchReceivedNotifications() {
+        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        Mockito.when(notificationsRecipientService.searchReceivedNotifications(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(NotificationStatus.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_RECEIVED_PATH)
+                                .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
+                                .queryParam("mandateId", NotificationsReceivedMock.MANDATE_ID)
+                                .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
+                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationsReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationsReceivedMock.END_DATE)
+                                .queryParam("subjectRegExp", NotificationsReceivedMock.SUBJECT_REG_EXP)
+                                .queryParam("size", NotificationsReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffNotificationsResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).searchReceivedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.MANDATE_ID,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SUBJECT_REG_EXP,
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
+    void searchReceivedNotificationsError() {
+        Mockito.when(notificationsRecipientService.searchReceivedNotifications(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(NotificationStatus.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_RECEIVED_PATH)
+                                .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
+                                .queryParam("mandateId", NotificationsReceivedMock.MANDATE_ID)
+                                .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
+                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationsReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationsReceivedMock.END_DATE)
+                                .queryParam("subjectRegExp", NotificationsReceivedMock.SUBJECT_REG_EXP)
+                                .queryParam("size", NotificationsReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).searchReceivedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.MANDATE_ID,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SUBJECT_REG_EXP,
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
+    void searchReceivedDelegatedNotifications() {
+        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        Mockito.when(notificationsRecipientService.searchReceivedDelegatedNotifications(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(NotificationStatus.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.anyInt(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_RECEIVED_DELEGATED_PATH)
+                                .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
+                                .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
+                                .queryParam("recipientId", NotificationsReceivedMock.RECIPIENT_ID)
+                                .queryParam("group", NotificationsReceivedMock.GROUP)
+                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationsReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationsReceivedMock.END_DATE)
+                                .queryParam("size", NotificationsReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffNotificationsResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).searchReceivedDelegatedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.RECIPIENT_ID,
+                NotificationsReceivedMock.GROUP,
+                NotificationsReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
+    void searchReceivedDelegatedNotificationsError() {
+        Mockito.when(notificationsRecipientService.searchReceivedDelegatedNotifications(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(NotificationStatus.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.any(OffsetDateTime.class),
+                        Mockito.anyInt(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_RECEIVED_DELEGATED_PATH)
+                                .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
+                                .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
+                                .queryParam("recipientId", NotificationsReceivedMock.RECIPIENT_ID)
+                                .queryParam("group", NotificationsReceivedMock.GROUP)
+                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
+                                .queryParam("startDate", NotificationsReceivedMock.START_DATE)
+                                .queryParam("endDate", NotificationsReceivedMock.END_DATE)
+                                .queryParam("size", NotificationsReceivedMock.SIZE)
+                                .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).searchReceivedDelegatedNotifications(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.IUN_MATCH,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SENDER_ID,
+                NotificationsReceivedMock.RECIPIENT_ID,
+                NotificationsReceivedMock.GROUP,
+                NotificationsReceivedMock.STATUS,
+                OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
+                OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
+                NotificationsReceivedMock.SIZE,
+                NotificationsReceivedMock.NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
     void getReceivedNotification() {
         BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
-        Mockito.when(notificationDetailRecipientService.getNotificationDetail(
+        Mockito.when(notificationsRecipientService.getNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -68,7 +311,7 @@ class ReceivedNotificationControllerTest {
                 .expectBody(BffFullNotificationV1.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
+        Mockito.verify(notificationsRecipientService).getNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
@@ -80,7 +323,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotificationError() {
-        Mockito.when(notificationDetailRecipientService.getNotificationDetail(
+        Mockito.when(notificationsRecipientService.getNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -88,7 +331,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.any()
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
 
 
         webTestClient.get()
@@ -105,7 +348,7 @@ class ReceivedNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationDetailRecipientService).getNotificationDetail(
+        Mockito.verify(notificationsRecipientService).getNotificationDetail(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
@@ -116,39 +359,31 @@ class ReceivedNotificationControllerTest {
     }
 
     @Test
-    void searchReceivedNotifications() {
-        BffNotificationsResponse response = NotificationReceivedMapper.modelMapper.toBffNotificationsResponse(notificationReceivedMock.getNotificationReceivedPNMock());
-        Mockito.when(notificationDetailRecipientService.searchReceivedNotification(
+    void getReceivedNotificationDocumentAAR() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAarId("aar-id");
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapDocumentDownloadResponse(notificationDownloadDocumentMock.getDocumentMock());
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyString(),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
+                        Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.just(response));
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_SEARCH_PATH)
-                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
-                                .queryParam("mandateId", NotificationReceivedMock.MANDATE_ID)
-                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
-                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
-                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
-                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
-                                .queryParam("subjectRegExp", NotificationReceivedMock.SUBJECT_REG_EXP)
-                                .queryParam("size", NotificationReceivedMock.SIZE)
-                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
-                                .build())
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.AAR)
+                                .queryParam("aarId", documentId.getAarId())
+                                .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -157,59 +392,48 @@ class ReceivedNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponse.class)
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationDetailRecipientService).searchReceivedNotification(
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationReceivedMock.IUN_MATCH,
+                IUN,
+                documentId,
+                BffDocumentType.AAR,
+                null,
                 UserMock.PN_CX_GROUPS,
-                NotificationReceivedMock.MANDATE_ID,
-                NotificationReceivedMock.SENDER_ID,
-                NotificationReceivedMock.STATUS,
-                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
-                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
-                NotificationReceivedMock.SUBJECT_REG_EXP,
-                NotificationReceivedMock.SIZE,
-                NotificationReceivedMock.NEXT_PAGES_KEY
+                null
         );
     }
 
     @Test
-    void searchReceivedNotificationsError() {
-        Mockito.when(notificationDetailRecipientService.searchReceivedNotification(
+    void getReceivedNotificationDocumentAARError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAarId("aar-id");
+
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyString(),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
+                        Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_SEARCH_PATH)
-                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
-                                .queryParam("mandateId", NotificationReceivedMock.MANDATE_ID)
-                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
-                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
-                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
-                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
-                                .queryParam("subjectRegExp", NotificationReceivedMock.SUBJECT_REG_EXP)
-                                .queryParam("size", NotificationReceivedMock.SIZE)
-                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
-                                .build())
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.AAR)
+                                .queryParam("aarId", documentId.getAarId())
+                                .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -219,57 +443,46 @@ class ReceivedNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationDetailRecipientService).searchReceivedNotification(
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationReceivedMock.IUN_MATCH,
+                IUN,
+                documentId,
+                BffDocumentType.AAR,
+                null,
                 UserMock.PN_CX_GROUPS,
-                NotificationReceivedMock.MANDATE_ID,
-                NotificationReceivedMock.SENDER_ID,
-                NotificationReceivedMock.STATUS,
-                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
-                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
-                NotificationReceivedMock.SUBJECT_REG_EXP,
-                NotificationReceivedMock.SIZE,
-                NotificationReceivedMock.NEXT_PAGES_KEY
+                null
         );
     }
 
     @Test
-    void searchReceivedDelegatedNotifications() {
-        BffNotificationsResponse response = NotificationReceivedMapper.modelMapper.toBffNotificationsResponse(notificationReceivedMock.getNotificationReceivedPNMock());
-        Mockito.when(notificationDetailRecipientService.searchReceivedDelegatedNotification(
+    void getReceivedNotificationDocumentLegalFact() {
+        DocumentId documentId = new DocumentId();
+        documentId.setLegalFactId("legal-fact-id");
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapLegalFactDownloadResponse(notificationDownloadDocumentMock.getLegalFactMock());
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
+                        Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.just(response));
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DELEGATED_PATH)
-                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
-                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
-                                .queryParam("recipientId", NotificationReceivedMock.RECIPIENT_ID)
-                                .queryParam("group", NotificationReceivedMock.GROUP)
-                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
-                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
-                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
-                                .queryParam("size", NotificationReceivedMock.SIZE)
-                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
-                                .build())
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
+                                .queryParam("legalFactId", documentId.getLegalFactId())
+                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -278,59 +491,49 @@ class ReceivedNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponse.class)
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationDetailRecipientService).searchReceivedDelegatedNotification(
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationReceivedMock.IUN_MATCH,
+                IUN,
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
-                NotificationReceivedMock.SENDER_ID,
-                NotificationReceivedMock.RECIPIENT_ID,
-                NotificationReceivedMock.GROUP,
-                NotificationReceivedMock.STATUS,
-                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
-                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
-                NotificationReceivedMock.SIZE,
-                NotificationReceivedMock.NEXT_PAGES_KEY
+                null
         );
     }
 
     @Test
-    void searchReceivedDelegatedNotificationsError() {
-        Mockito.when(notificationDetailRecipientService.searchReceivedDelegatedNotification(
+    void getReceivedNotificationDocumentLegalFactError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setLegalFactId("legal-fact-id");
+
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.anyString(),
-                        Mockito.any(NotificationStatus.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.any(OffsetDateTime.class),
-                        Mockito.anyInt(),
-                        Mockito.anyString()
+                        Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DELEGATED_PATH)
-                                .queryParam("iunMatch", NotificationReceivedMock.IUN_MATCH)
-                                .queryParam("senderId", NotificationReceivedMock.SENDER_ID)
-                                .queryParam("recipientId", NotificationReceivedMock.RECIPIENT_ID)
-                                .queryParam("group", NotificationReceivedMock.GROUP)
-                                .queryParam("status", NotificationReceivedMock.STATUS.getValue())
-                                .queryParam("startDate", NotificationReceivedMock.START_DATE)
-                                .queryParam("endDate", NotificationReceivedMock.END_DATE)
-                                .queryParam("size", NotificationReceivedMock.SIZE)
-                                .queryParam("nextPagesKey", NotificationReceivedMock.NEXT_PAGES_KEY)
-                                .build())
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
+                                .queryParam("legalFactId", documentId.getLegalFactId())
+                                .queryParam("legalFactCategory", LegalFactCategory.ANALOG_DELIVERY)
+                                .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -340,20 +543,114 @@ class ReceivedNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationDetailRecipientService).searchReceivedDelegatedNotification(
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationReceivedMock.IUN_MATCH,
+                IUN,
+                documentId,
+                BffDocumentType.LEGAL_FACT,
+                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
-                NotificationReceivedMock.SENDER_ID,
-                NotificationReceivedMock.RECIPIENT_ID,
-                NotificationReceivedMock.GROUP,
-                NotificationReceivedMock.STATUS,
-                OffsetDateTime.parse(NotificationReceivedMock.START_DATE),
-                OffsetDateTime.parse(NotificationReceivedMock.END_DATE),
-                NotificationReceivedMock.SIZE,
-                NotificationReceivedMock.NEXT_PAGES_KEY
+                null
+        );
+    }
+
+    @Test
+    void getReceivedNotificationDocumentAttachment() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAttachmentIdx(0);
+
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapReceivedAttachmentDownloadResponse(notificationDownloadDocumentMock.getRecipientAttachmentMock());
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList(),
+                        Mockito.nullable(UUID.class)
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
+                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.ATTACHMENT,
+                null,
+                UserMock.PN_CX_GROUPS,
+                null
+        );
+    }
+
+    @Test
+    void getReceivedNotificationDocumentAttachmentError() {
+        DocumentId documentId = new DocumentId();
+        documentId.setAttachmentIdx(0);
+
+        Mockito.when(notificationsRecipientService.getReceivedNotificationDocument(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(DocumentId.class),
+                        Mockito.any(BffDocumentType.class),
+                        Mockito.nullable(LegalFactCategory.class),
+                        Mockito.anyList(),
+                        Mockito.nullable(UUID.class)
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
+                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
+                                .queryParam("attachmentIdx", documentId.getAttachmentIdx())
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).getReceivedNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                IUN,
+                documentId,
+                BffDocumentType.ATTACHMENT,
+                null,
+                UserMock.PN_CX_GROUPS,
+                null
         );
     }
 }

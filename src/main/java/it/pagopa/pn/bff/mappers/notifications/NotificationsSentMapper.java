@@ -1,6 +1,6 @@
-package it.pagopa.pn.bff.mappers.notification;
+package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -10,8 +10,8 @@ import org.mapstruct.factory.Mappers;
  * to the BffNotificationsResponse
  */
 @Mapper
-public interface NotificationReceivedMapper {
-    NotificationReceivedMapper modelMapper = Mappers.getMapper(NotificationReceivedMapper.class);
+public interface NotificationsSentMapper {
+    NotificationsSentMapper modelMapper = Mappers.getMapper(NotificationsSentMapper.class);
 
     /**
      * Maps a NotificationSearchResponse to a BffNotificationsResponse
@@ -20,4 +20,5 @@ public interface NotificationReceivedMapper {
      * @return the mapped BffNotificationsResponse
      */
     BffNotificationsResponse toBffNotificationsResponse(NotificationSearchResponse notificationSearchResponse);
+
 }

@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.Notific
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notificationdetail.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
 import org.apache.commons.lang3.ArrayUtils;

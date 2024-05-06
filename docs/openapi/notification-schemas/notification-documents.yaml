@@ -2,35 +2,27 @@ info:
   version: v1.0
 components:
   schemas:
-    BffNotificationDetailDocument:
-      description: >-
-        Documento della notifica.
-      allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/01f91fb6390338e566c3fcc538ff575be0364df9/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
-        - type: object
-          properties:
-            title:
-              type: string
-              minLength: 1
-              maxLength: 512
-              pattern: ^.*$
-            requiresAck:
-              type: string
-            docIdx:
-              type: string
-              maxLength: 3
-              pattern: ^\d+$
-            documentId:
-              type: string
-            documentType:
-              type: string
-            recIndex:
-              type: integer
 
-    BffNotificationDetailOtherDocument:
+    BffDocumentDownloadMetadataResponse:
       type: object
+      required:
+        - filename
+        - contentLength
       properties:
-        documentId:
+        filename:
           type: string
-        documentType:
+        contentLength:
+          type: number
+          format: decimal32
+          description: dimensione, in byte, del contenuto.
+        url:
           type: string
+          description: >-
+            URL pre-autorizzato a cui effettuare una richiesta GET per ottenere il 
+            contenuto del documento. Presente solo se il documento è pronto per il download.
+        retryAfter:
+          type: number
+          format: decimal32
+          description: >-
+            Stima del numero di secondi da aspettare prima che il contenuto del 
+            documento sia scaricabile.

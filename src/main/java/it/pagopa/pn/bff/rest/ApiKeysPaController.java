@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
@@ -9,7 +8,6 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -53,7 +51,7 @@ public class ApiKeysPaController implements ApiKeysApi {
 
         Mono<BffApiKeysResponse> serviceResponse = apiKeysPaService.getApiKeys(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, limit, lastKey, lastUpdate, showVirtualKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
 
         log.logEndingProcess("getApiKeysV1");
@@ -82,7 +80,7 @@ public class ApiKeysPaController implements ApiKeysApi {
 
         Mono<BffResponseNewApiKey> serviceResponse = apiKeysPaService.newApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffRequestNewApiKey, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
 
         log.logEndingProcess("newApiKeyV1");
@@ -112,7 +110,7 @@ public class ApiKeysPaController implements ApiKeysApi {
 
         Mono<Void> serviceResponse = apiKeysPaService.deleteApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
 
         log.logEndingProcess("deleteApiKeyV1");
@@ -144,7 +142,7 @@ public class ApiKeysPaController implements ApiKeysApi {
 
         Mono<Void> serviceResponse = apiKeysPaService.changeStatusApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, bffRequestApiKeyStatus, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
 
         log.logEndingProcess("changeStatusApiKeyV1");
