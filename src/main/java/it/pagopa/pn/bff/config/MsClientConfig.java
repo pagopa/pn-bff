@@ -8,6 +8,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -89,6 +91,26 @@ public class MsClientConfig extends CommonBaseClient {
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
         apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
         return new AllApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    CourtesyApi courtesyApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new CourtesyApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    LegalApi legalApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new LegalApi(apiClient);
     }
 
     @Bean

@@ -44,3 +44,15 @@ components:
         - SMS
         - PEC
         - APPIO
+
+    BffAddressType:
+      type: string
+      enum:
+        - legal
+        - courtesy
+
+    BffAddressVerification:
+      $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
+
+    BffAddressVerificationResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerificationResponse'

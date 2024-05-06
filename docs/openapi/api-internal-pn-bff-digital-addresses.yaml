@@ -34,8 +34,8 @@ paths:
       tags:
         - Addresses
       operationId: getAddressesV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
@@ -50,6 +50,67 @@ paths:
                 $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffUserAddresses'
         '400':
           description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  /bff/v1/addresses/{addressType}/{senderId}/{channelType}:
+    post:
+      summary: Creazione/Aggiornamento Recapito
+      description: >-
+        Creazione o aggiornamento di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: createOrUpdateAddressV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerification'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerificationResponse'
+          description: >
+            Nell'oggetto c'è la motivazione di quanto richiesto per procedere
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '422':
+          description: >
+            This error is caused by one of this events:
+            * Verification code failure: error.detail equals to PN_USERATTRIBUTES_INVALIDVERIFICATIONCODE
+            * Verification code max attempt reached: error.detail equals to PN_USERATTRIBUTES_RETRYLIMITVERIFICATIONCODE
+            * Verification code expired/notfound: error.detail equals to PN_USERATTRIBUTES_EXPIREDVERIFICATIONCODE
           content:
             application/problem+json:
               schema:

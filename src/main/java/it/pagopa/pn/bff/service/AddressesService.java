@@ -2,10 +2,11 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUserAddress;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
+import it.pagopa.pn.bff.mappers.addresses.ChannelTypeMapper;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +47,41 @@ public class AddressesService {
         return serviceRes.flatMapMany(userAddresses ->
                 Flux.fromIterable(AddressesMapper.addressesMapper.mapUserAddresses(userAddresses))
         );
+    }
+
+    public Mono<BffAddressVerificationResponse> createOrUpdateAddress(String xPagopaPnCxId,
+                                                                      CxTypeAuthFleet xPagopaPnCxType,
+                                                                      String xPagopaPnCxRole,
+                                                                      BffAddressType addressType,
+                                                                      String senderId,
+                                                                      BffChannelType channelType,
+                                                                      Mono<BffAddressVerification> addressVerification,
+                                                                      List<String> xPagopaPnCxGroups) {
+
+        log.info("Create or Update Address");
+
+        if (addressType.getValue().equals(BffAddressType.COURTESY.getValue())) {
+            return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateCourtesyAddress(
+                            xPagopaPnCxId,
+                            CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                            senderId,
+                            ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(channelType),
+                            AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(verification),
+                            xPagopaPnCxGroups,
+                            xPagopaPnCxRole
+                    ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
+                    .onErrorMap(WebClientResponseException.class, PnBffException::wrapException));
+        } else {
+            return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateLegalAddress(
+                            xPagopaPnCxId,
+                            CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                            senderId,
+                            ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
+                            AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(verification),
+                            xPagopaPnCxGroups,
+                            xPagopaPnCxRole
+                    ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
+                    .onErrorMap(WebClientResponseException.class, PnBffException::wrapException));
+        }
     }
 }
