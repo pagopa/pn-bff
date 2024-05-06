@@ -64,33 +64,29 @@ components:
       schema:
         $ref: '#/components/schemas/BffDocumentType'
 
+    BffQueryDocumentIdx:
+      description: Indice del documento
+      name: documentIdx
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+
     BffQueryDocumentId:
-      description: Identificativo o indice del documento
+      description: Identificativo del documento
       name: documentId
       in: query
-      required: true
-      # serialize this object as ?key1=value1&key2=value2
-      style: form
-      explode: true
+      required: false
       schema:
-        type: object
-        properties:
-          aarId:
-            type: string
-            pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
-            maxLength: 512
-          attachmentIdx:
-            type: integer
-            format: int32
-          legalFactId:
-            type: string
-            pattern: ^[ -~]*$
-            maxLength: 1024
+        type: string
+        pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
+        maxLength: 1024
 
-    BffQueryLegalFactCategory:
+    BffQueryDocumentCategory:
       description: >-
         Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a disposizione dei suoi utenti.
-      name: legalFactCategory
+      name: documentCategory
       in: query
       required: false
       schema:

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 7+UwOdMY0J447gUV+i6df4LlaaphVkHyxZJ6DRoDQq8=
+  version: JnxnZPZAT9RAlpcxjUJkGiqSkV/EPKZb/sZMsj20L6Y=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -155,8 +155,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/BffQueryDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryLegalFactCategory'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -435,8 +436,9 @@ paths:
         - $ref: '#/components/parameters/pathIun'
         - $ref: '#/components/parameters/queryMandateId'
         - $ref: '#/components/parameters/BffQueryDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryLegalFactCategory'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -1336,31 +1338,27 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
+    BffQueryDocumentIdx:
+      description: Indice del documento
+      name: documentIdx
+      in: query
+      required: false
+      schema:
+        type: number
     BffQueryDocumentId:
-      description: Identificativo o indice del documento
+      description: Identificativo del documento
       name: documentId
       in: query
-      required: true
-      style: form
-      explode: true
+      required: false
       schema:
-        type: object
-        properties:
-          aarId:
-            type: string
-            pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
-            maxLength: 512
-          attachmentIdx:
-            type: number
-          legalFactId:
-            type: string
-            pattern: ^[ -~]*$
-            maxLength: 1024
-    BffQueryLegalFactCategory:
+        type: string
+        pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
+        maxLength: 1024
+    BffQueryDocumentCategory:
       description: >-
         Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
         disposizione dei suoi utenti.
-      name: legalFactCategory
+      name: documentCategory
       in: query
       required: false
       schema:

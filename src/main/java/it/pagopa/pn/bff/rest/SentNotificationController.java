@@ -104,9 +104,10 @@ public class SentNotificationController implements NotificationSentApi {
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
      * @param iun               Notification IUN
-     * @param documentId        the document id (safestorage key if aar or legalfact, the index in the array if attachment)
      * @param documentType      the document type (aar, attachment or legal fact)
-     * @param legalFactCategory the legal fact category (required only if the documentType is legal fact)
+     * @param documentIdx       the document index if attachment
+     * @param documentId        the document id if aar or legal fact
+     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the requested document
      */
@@ -116,15 +117,16 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                                    String xPagopaPnCxId,
                                                                                                    String iun,
                                                                                                    BffDocumentType documentType,
-                                                                                                   DocumentId documentId,
                                                                                                    List<String> xPagopaPnCxGroups,
-                                                                                                   LegalFactCategory legalFactCategory,
+                                                                                                   Integer documentIdx,
+                                                                                                   String documentId,
+                                                                                                   LegalFactCategory documentCategory,
                                                                                                    final ServerWebExchange exchange) {
         log.logStartingProcess("getSentNotificationDocumentV1");
-        
+
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsPAService.getSentNotificationDocument(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentId, documentType,
-                legalFactCategory, xPagopaPnCxGroups
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
+                documentCategory, xPagopaPnCxGroups
         );
 
         log.logEndingProcess("getSentNotificationDocumentV1");

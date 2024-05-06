@@ -5,7 +5,10 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
@@ -183,16 +186,15 @@ class NotificationPaServiceTest {
                 Mockito.nullable(UUID.class)
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getDocumentMock()));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -215,16 +217,14 @@ class NotificationPaServiceTest {
                 Mockito.nullable(UUID.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setAarId("aar-id");
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                "aar-id",
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -237,15 +237,15 @@ class NotificationPaServiceTest {
 
     @Test
     void getNotificationDocumentAARNoDocumentId() {
-        DocumentId documentId = new DocumentId();
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.AAR,
+                null,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -272,16 +272,14 @@ class NotificationPaServiceTest {
                 Mockito.nullable(UUID.class)
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getLegalFactMock()));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
@@ -304,16 +302,14 @@ class NotificationPaServiceTest {
                 Mockito.nullable(UUID.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
@@ -326,15 +322,15 @@ class NotificationPaServiceTest {
 
     @Test
     void getNotificationDocumentLegalFactNoDocumentId() {
-        DocumentId documentId = new DocumentId();
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                null,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
@@ -350,16 +346,15 @@ class NotificationPaServiceTest {
 
     @Test
     void getNotificationDocumentLegalFactNoLegalFactCategory() {
-        DocumentId documentId = new DocumentId();
-        documentId.setLegalFactId("legal-fact-id");
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.LEGAL_FACT,
+                null,
+                "legal-fact-id",
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -384,16 +379,14 @@ class NotificationPaServiceTest {
                 Mockito.anyList()
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getPaAttachmentMock()));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -414,16 +407,14 @@ class NotificationPaServiceTest {
                 Mockito.anyList()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        DocumentId documentId = new DocumentId();
-        documentId.setAttachmentIdx(0);
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                0,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -436,15 +427,14 @@ class NotificationPaServiceTest {
 
     @Test
     void getNotificationDocumentAttachmentNoDocumentId() {
-        DocumentId documentId = new DocumentId();
-
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                documentId,
                 BffDocumentType.ATTACHMENT,
+                null,
+                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
