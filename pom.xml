@@ -530,7 +530,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-web-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -595,7 +595,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-EXTERNAL-REGISTRIES-->
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES SELFCARE-->
                     <execution>
                         <phase>generate-resources</phase>
                         <id>generate-client-pn-external-registries-selfcare</id>
@@ -619,6 +619,44 @@
                                 </apiPackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-selfcare.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES PAYMENT INFO-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-external-registries-payment-info</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/fce619e3c14a8e57fe8139fb281fa7e04ccc11ea/docs/openapi/pn-payment-info-internal-v1.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

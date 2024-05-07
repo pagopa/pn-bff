@@ -187,3 +187,38 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/{iun}/payments-info':
+    post:
+      summary: Retrieve payment information given a list of payments identifiers
+      tags:
+        - NotificationReceived
+      operationId: getPaymentsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoRequests'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
