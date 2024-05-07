@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -72,7 +73,7 @@ class InstitutionAndProductPaControllerTest {
     @Test
     void getInstitutionsV1Error() {
         Mockito
-                .doThrow(new PnBffException("Err", "Err", "Err", 404, "Err", null))
+                .doThrow(new PnBffException("Error Message", "Error Description", HttpStatus.NOT_FOUND.value(), "Error Code"))
                 .when(institutionAndProductPaService).getInstitutions(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -120,7 +121,7 @@ class InstitutionAndProductPaControllerTest {
     @Test
     void getInstitutionProductErrorV1Error() {
         Mockito
-                .doThrow(new PnBffException("Err", "Err", "Err", 404, "Err", null))
+                .doThrow(new PnBffException("Error Message", "Error Description", HttpStatus.NOT_FOUND.value(), "Error Code"))
                 .when(institutionAndProductPaService).getInstitutionProducts(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),

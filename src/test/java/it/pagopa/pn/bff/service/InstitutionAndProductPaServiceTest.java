@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
@@ -10,6 +11,7 @@ import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -35,6 +37,7 @@ import static org.mockito.Mockito.when;
 class InstitutionAndProductPaServiceTest {
 
     private static PnInfoPaClientImpl pnInfoPaClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired
     private PnBffConfigs pnBffConfigs;
@@ -43,11 +46,12 @@ class InstitutionAndProductPaServiceTest {
     @BeforeAll
     public void setup() {
         pnInfoPaClient = mock(PnInfoPaClientImpl.class);
-        institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs, pnBffExceptionUtility);
     }
 
     @Test
-    void getInstitutionsTest() {
+    void getInstitutions() {
         List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
@@ -69,7 +73,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionsTestError() {
+    void getInstitutionsError() {
         when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -84,7 +88,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionProductTest() {
+    void getInstitutionProduct() {
         List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
@@ -105,7 +109,7 @@ class InstitutionAndProductPaServiceTest {
     }
 
     @Test
-    void getInstitutionProductTestError() {
+    void getInstitutionProductError() {
         when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 

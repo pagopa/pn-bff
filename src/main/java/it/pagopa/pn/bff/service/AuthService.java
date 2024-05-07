@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse;
 import it.pagopa.pn.bff.pnclient.auth.PnAuthFleetClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 public class AuthService {
 
     private final PnAuthFleetClientImpl pnAuthFleetClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     public Mono<BffTokenExchangeResponse> tokenExchange(
             String origin,
@@ -25,6 +26,6 @@ public class AuthService {
 
         return tokenExchangeBody
                 .flatMap(body -> pnAuthFleetClient.postTokenExchange(origin, body))
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 }
