@@ -1,0 +1,63 @@
+package it.pagopa.pn.bff.mocks;
+
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.Detail;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentStatus;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class PaymentsMock {
+
+    private final Random random = new Random();
+
+    private PaymentInfoRequest getPaymentInfoRequestMock(int index) {
+        PaymentInfoRequest paymentInfoRequest = new PaymentInfoRequest();
+        paymentInfoRequest.setCreditorTaxId("77777777777");
+        paymentInfoRequest.setNoticeCode("33333333333333333" + index);
+        return paymentInfoRequest;
+    }
+
+    private PaymentInfoV21 getPaymentInfoResponseMock(int index, PaymentStatus status, Detail detail, String errorCode) {
+        PaymentInfoV21 paymentInfoResponse = new PaymentInfoV21();
+        paymentInfoResponse.setCreditorTaxId("77777777777");
+        paymentInfoResponse.setNoticeCode("33333333333333333" + index);
+        paymentInfoResponse.setAmount(random.nextInt(1000));
+        paymentInfoResponse.setDetail(detail);
+        paymentInfoResponse.setDetailV2(errorCode);
+        paymentInfoResponse.setCausaleVersamento("TARI rata " + index);
+        paymentInfoResponse.setStatus(status);
+        paymentInfoResponse.setUrl("https://api.uat.platform.pagopa.it/checkout/auth/payments/v2");
+        paymentInfoResponse.setDueDate(LocalDate.ofEpochDay(ThreadLocalRandom
+                .current().nextInt(-365, 365)).toString()
+        );
+        paymentInfoResponse.setErrorCode(errorCode);
+        return paymentInfoResponse;
+    }
+
+    public List<PaymentInfoRequest> getPaymentsInfoRequestMock() {
+        List<PaymentInfoRequest> paymentsInfoRequest = new ArrayList<>();
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(0));
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(1));
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(2));
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(3));
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(4));
+        paymentsInfoRequest.add(getPaymentInfoRequestMock(5));
+        return paymentsInfoRequest;
+    }
+
+    public List<PaymentInfoV21> getPaymentsInfoResponseMock() {
+        List<PaymentInfoV21> paymentsInfoResponse = new ArrayList<>();
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(0, PaymentStatus.SUCCEEDED, null, null));
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(1, PaymentStatus.REQUIRED, null, null));
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(2, PaymentStatus.FAILURE, Detail.PAYMENT_CANCELED, "PAYMENT_CANCELED"));
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(3, PaymentStatus.FAILURE, Detail.GENERIC_ERROR, "GENERIC_ERROR"));
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(4, PaymentStatus.FAILURE, Detail.PAYMENT_EXPIRED, "PAYMENT_EXPIRED"));
+        paymentsInfoResponse.add(getPaymentInfoResponseMock(5, PaymentStatus.REQUIRED, null, null));
+        return paymentsInfoResponse;
+    }
+}
