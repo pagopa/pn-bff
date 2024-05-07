@@ -224,6 +224,35 @@ Parameters:
     Type: String
     Description: 'AuthFleet base URL'
 
+  # Lambdas
+
+  # OpenApi Bucket params
+  LambdasBucketName:
+    Type: String
+    Default: ''
+    Description: 'Name of the bucket where the lambda files are copied during deploy'
+
+  BucketBasePath:
+    Type: String
+    Default: ''
+    Description: 'Base path of the lambda in the s3 bucket'
+
+  SenderDashboardDataIndexerLambdaName:
+    Type: String
+    Default: SenderDashboardDataIndexer
+
+  SenderDashboardDataIndexerAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000 
+
+  DataLakeEventBusName:
+    Type: String
+    Default: pn-DataLakeEventBus
+
+  DataLakeIndexesBucket:
+    Type: String
+
 Resources:
 
   # PN-bff microservice
@@ -305,3 +334,92 @@ Resources:
         CloudwatchLogKinesisStreamArn: !Ref LogsKinesisSourceStreamArn
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
+
+  # Lambda SenderDashboardDataIndexer
+  SenderDashboardDataIndexer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            const response = {
+                statusCode: 200,
+                body: JSON.stringify('Hello from Lambda!')
+            };
+            return response;
+          };
+      Timeout: 900
+
+  SenderDashboardDataIndexerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}LambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessDataLakeIndexesBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::${DataLakeIndexesBucket}/*"
+
+  SenderDashboardDataIndexerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt DataLakeEventRule.Arn
+
+  SenderDashboardDataIndexerDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref SenderDashboardDataIndexerAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}
+      TreatMissingData: notBreaching
+
+  DataLakeEventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: !Ref DataLakeEventBusName
+
+  DataLakeEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: !Ref DataLakeEventBusName
+      EventPattern:
+        source:
+          - pn.datalake.events
+      Targets:
+        - Id: TargetFunction
+          Arn: !GetAtt SenderDashboardDataIndexer.Arn

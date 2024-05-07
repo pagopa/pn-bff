@@ -32,6 +32,20 @@ Parameters:
     Type: Number
     Default: 14
 
+  # SenderDashboardDataIndexer resources params
+
+  SenderDashboardDataIndexerLambdaName:
+    Type: String
+    Default: SenderDashboardDataIndexer
+
+  DataLakeIndexesBucketName:
+    Type: String
+    Default: 'sender-dashboard-data-indexes'
+
+  DataLakeIndexesBucketVersionExpiresAfterDays:
+    Type: Number
+    Default: 730
+
 
 Resources:
 
@@ -46,7 +60,38 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
 
+  # Lambda SenderDashboardDataIndexer
+  SenderDashboardDataIndexerLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/log-group.yaml"
+      Parameters:
+        LogGroupName: !Sub "${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}"
+        LogGroupRetention: !Ref LogRetention
+        LogGroupPrefix: '/aws/lambda'
+
+  DataLakeIndexesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${ProjectName}-bff-${DataLakeIndexesBucketName}"
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldVersions
+            Status: Enabled
+            Prefix: ''
+            NoncurrentVersionExpiration:
+              NoncurrentDays: !Ref DataLakeIndexesBucketVersionExpiresAfterDays
+
 Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
+  DataIndexerLogGroup:
+    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+  # Bucket exports
+  DataLakeIndexesBucket:
+    Value: !GetAtt DataLakeIndexesBucket.Arn
