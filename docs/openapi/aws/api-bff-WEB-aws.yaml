@@ -2,11 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-<<<<<<< HEAD
-  version: wjtRKQ+Do6gIRC0/QBzhPreuWK5PE3WFypvzs+8b/nY=
-=======
-  version: JnxnZPZAT9RAlpcxjUJkGiqSkV/EPKZb/sZMsj20L6Y=
->>>>>>> 76eba07 (fix(pn-10888):  fixed problems during aws open api generation (#44))
+  version: FXIf37DtyEawslYiOAjhZDDybundkb+C8rSwZNDGQ7U=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
