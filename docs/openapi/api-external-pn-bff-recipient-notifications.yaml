@@ -202,7 +202,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoRequests'
+              $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoRequest'
       responses:
         '200':
           description: OK

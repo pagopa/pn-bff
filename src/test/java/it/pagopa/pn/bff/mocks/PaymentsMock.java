@@ -22,6 +22,13 @@ public class PaymentsMock {
         return paymentInfoRequest;
     }
 
+    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest getBffPaymentInfoRequestMock(int index) {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest paymentInfoRequest = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest();
+        paymentInfoRequest.setCreditorTaxId("77777777777");
+        paymentInfoRequest.setNoticeCode("33333333333333333" + index);
+        return paymentInfoRequest;
+    }
+
     private PaymentInfoV21 getPaymentInfoResponseMock(int index, PaymentStatus status, Detail detail, String errorCode) {
         PaymentInfoV21 paymentInfoResponse = new PaymentInfoV21();
         paymentInfoResponse.setCreditorTaxId("77777777777");
@@ -47,6 +54,17 @@ public class PaymentsMock {
         paymentsInfoRequest.add(getPaymentInfoRequestMock(3));
         paymentsInfoRequest.add(getPaymentInfoRequestMock(4));
         paymentsInfoRequest.add(getPaymentInfoRequestMock(5));
+        return paymentsInfoRequest;
+    }
+
+    public List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest> getBffPaymentsInfoRequestMock() {
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest> paymentsInfoRequest = new ArrayList<>();
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(0));
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(1));
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(2));
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(3));
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(4));
+        paymentsInfoRequest.add(getBffPaymentInfoRequestMock(5));
         return paymentsInfoRequest;
     }
 

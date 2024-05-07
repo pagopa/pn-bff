@@ -7,17 +7,21 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentD
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
+import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -34,6 +38,7 @@ public class NotificationsRecipientService {
 
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
+    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
@@ -262,5 +267,24 @@ public class NotificationsRecipientService {
             return legalFact.map(NotificationDownloadDocumentMapper.modelMapper::mapLegalFactDownloadResponse);
         }
 
+    }
+
+    /**
+     * Get the notification payments info. This is for a recipient user.
+     *
+     * @param iun                Notification IUN
+     * @param paymentInfoRequest List of payments for which getting the additional info
+     * @return the detailed list of payments
+     */
+    public Flux<BffPaymentInfoItem> getNotificationPaymentsInfo(String iun, Flux<PaymentInfoRequest> paymentInfoRequest) {
+        log.info("Get notification payments info for iun {}", iun);
+
+        return paymentInfoRequest.collectList().flatMapMany(request -> {
+            Flux<PaymentInfoV21> paymentsInfo = pnExternalRegistriesClient.getPaymentsInfo(
+                    PaymentsInfoMapper.modelMapper.mapPaymentInfoRequest(request)
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+            return paymentsInfo.map(PaymentsInfoMapper.modelMapper::mapPaymentInfoResponse);
+        });
     }
 }

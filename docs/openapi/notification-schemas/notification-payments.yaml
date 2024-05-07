@@ -3,7 +3,7 @@ info:
 components:
   schemas:
 
-    BffPaymentInfoRequests:
+    BffPaymentInfoRequest:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/fce619e3c14a8e57fe8139fb281fa7e04ccc11ea/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentInfoRequests'
 
     BffPaymentInfoResponse:
