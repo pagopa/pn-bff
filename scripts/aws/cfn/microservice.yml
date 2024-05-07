@@ -340,7 +340,7 @@ Resources:
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}
+      FunctionName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}
       Runtime: nodejs18.x
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
@@ -358,7 +358,7 @@ Resources:
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}LambdaRole
+      RoleName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}LambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -380,7 +380,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Resource:
-                  - !Sub "arn:aws:s3:::${DataLakeIndexesBucket}/*"
+                  - !Sub "${DataLakeIndexesBucket}/*"
 
   SenderDashboardDataIndexerInvokePermission:
     Type: AWS::Lambda::Permission
@@ -393,7 +393,7 @@ Resources:
   SenderDashboardDataIndexerDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}DurationAlarm
+      AlarmName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}DurationAlarm
       AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
       MetricName: Duration
       Namespace: AWS/Lambda
