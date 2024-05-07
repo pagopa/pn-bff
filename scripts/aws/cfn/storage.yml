@@ -32,19 +32,25 @@ Parameters:
     Type: Number
     Default: 14
 
-  # SenderDashboardDataIndexer resources params
-
-  SenderDashboardDataIndexerLambdaName:
+  # DataIndexer resources params
+  DataIndexerLambdaName:
     Type: String
     Default: SenderDashboardDataIndexer
 
-  DataLakeIndexesBucketName:
+  IndexesBucketName:
     Type: String
-    Default: 'sender-dashboard-data-indexes'
+    Default: sender-dashboard-data
+    Description: PN bucket of index files.
 
-  DataLakeIndexesBucketVersionExpiresAfterDays:
+  IndexesBucketRegion:
+    Type: String
+    Default: eu-south-1
+    Description: PN bucket region of index files.
+
+  IndexesBucketVersionExpiresAfterDays:
     Type: Number
     Default: 730
+    Description: Indexes expiration days.
 
 
 Resources:
@@ -66,25 +72,25 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Properties:
-      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/log-group.yaml"
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
       Parameters:
-        LogGroupName: !Sub "${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}"
+        LogGroupName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
         LogGroupRetention: !Ref LogRetention
-        LogGroupPrefix: '/aws/lambda'
+        LogGroupPrefix: /aws/lambda
 
-  DataLakeIndexesBucket:
+  IndexesBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${ProjectName}-bff-${DataLakeIndexesBucketName}"
+      BucketName: !Sub ${ProjectName}-bff-${IndexesBucketName}
       VersioningConfiguration:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
           - Id: DeleteOldVersions
             Status: Enabled
-            Prefix: ''
+            Prefix: indexes/
             NoncurrentVersionExpiration:
-              NoncurrentDays: !Ref DataLakeIndexesBucketVersionExpiresAfterDays
+              NoncurrentDays: !Ref IndexesBucketVersionExpiresAfterDays
 
 Outputs:
   # Log group exports
@@ -92,6 +98,13 @@ Outputs:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
   DataIndexerLogGroup:
     Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+  # Lambda exports
+  DataIndexerLambdaName:
+    Value: !Ref DataIndexerLambdaName
   # Bucket exports
-  DataLakeIndexesBucket:
-    Value: !GetAtt DataLakeIndexesBucket.Arn
+  IndexesBucketArn:
+    Value: !GetAtt IndexesBucket.Arn
+  IndexesBucketName:
+    Value: !Ref IndexesBucketName
+  IndexesBucketRegion:
+    Value: !Ref IndexesBucketRegion

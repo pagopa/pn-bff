@@ -5,6 +5,16 @@
     "MountEfs": "false",
     "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
     "SelfCareSendProdId": "prod-pn-dev",
-    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it"
+    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it",
+
+    "DlBucketName": "pn-bff-sender-dashboard-data",
+    "DlBucketRegion": "eu-south-1",
+    "DlAssumeRoleArn": "test",
+    "DlOverviewObjectKey": "send/dashboard_mittenti/json/export-notifications_overview.json",
+    "DlFocusObjectKey": "send/dashboard_mittenti/json/export-digital_notifications_focus.json",
+    "PnBucketName": "pn-sender-dashboard-data",
+    "PnBucketRegion": "eu-south-1",
+    "PnOverviewIndexObjectKey": "indexes/notifications_overview_index.json",
+    "PnFocusIndexObjectKey": "indexes/digital_notifications_focus.json"
   }
 }

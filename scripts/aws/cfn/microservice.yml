@@ -225,8 +225,6 @@ Parameters:
     Description: 'AuthFleet base URL'
 
   # Lambdas
-
-  # OpenApi Bucket params
   LambdasBucketName:
     Type: String
     Default: ''
@@ -237,21 +235,66 @@ Parameters:
     Default: ''
     Description: 'Base path of the lambda in the s3 bucket'
 
-  SenderDashboardDataIndexerLambdaName:
+  DataIndexerLambdaName:
     Type: String
-    Default: SenderDashboardDataIndexer
+    Description: Name of the DataIndexer Lambda.
+
+  IndexesBucketArn:
+    Type: String
+    Description: PN bucket Arn of indexes files.
+
+  IndexesBucketName:
+    Type: String
+    Description: PN bucket of index files.
+
+  IndexesBucketRegion:
+    Type: String
+    Description: PN bucket region of index files.
 
   SenderDashboardDataIndexerAlarmThreshold:
     Type: Number
     # 8 minutes
-    Default: 480000 
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
 
   DataLakeEventBusName:
     Type: String
-    Default: pn-DataLakeEventBus
+    Default: DataLakeEventBus
+    Description: Data-lake custom EventBus
 
-  DataLakeIndexesBucket:
+  EnvironmentType:
     Type: String
+    Description: Environment type.
+
+  # Env
+  DlBucketName:
+    Type: String
+    Description: Name of data-lake bucket.
+
+  DlBucketRegion:
+    Type: String
+    Default: eu-central-1
+    Description: Default region for data-lake bucket.
+
+  DlAssumeRoleArn:
+    Type: String
+    Description: ARN of the role Lambda will assume.
+
+  DlOverviewObjectKey:
+    Type: String
+    Description: S3 object key for overview file.
+
+  DlFocusObjectKey:
+    Type: String
+    Description: S3 object key for focus focus.
+
+  PnOverviewIndexObjectKey:
+    Type: String
+    Description: S3 index object key for overview file.
+
+  PnFocusIndexObjectKey:
+    Type: String
+    Description: S3 index object key for focus file.
 
 Resources:
 
@@ -340,7 +383,7 @@ Resources:
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}
+      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
       Runtime: nodejs18.x
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
@@ -354,11 +397,22 @@ Resources:
             return response;
           };
       Timeout: 900
+      Environment:
+        Variables:
+          DL_BUCKET_NAME: !Ref DlBucketName
+          DL_BUCKET_REGION: !Ref DlBucketRegion
+          DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
+          DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
+          DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
+          PN_BUCKET_NAME: !Ref IndexesBucketName
+          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_OVERVIEW_INDEX_OBJECT_KEY: !Ref PnOverviewIndexObjectKey
+          PN_FOCUS_INDEX_OBJECT_KEY: !Ref PnFocusIndexObjectKey
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}LambdaRole
+      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -371,7 +425,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: AccessDataLakeIndexesBucket
+        - PolicyName: AccessIndexesBucket
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -380,7 +434,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Resource:
-                  - !Sub "${DataLakeIndexesBucket}/*"
+                  - !Sub ${IndexesBucketArn}/*
 
   SenderDashboardDataIndexerInvokePermission:
     Type: AWS::Lambda::Permission
@@ -393,7 +447,7 @@ Resources:
   SenderDashboardDataIndexerDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}DurationAlarm
+      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
       AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
       MetricName: Duration
       Namespace: AWS/Lambda
@@ -406,13 +460,13 @@ Resources:
         - !Ref AlarmSNSTopicArn
       Dimensions:
         - Name: FunctionName
-          Value: !Sub ${ProjectName}-bff-${SenderDashboardDataIndexerLambdaName}
+          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
       TreatMissingData: notBreaching
 
   DataLakeEventBus:
     Type: AWS::Events::EventBus
     Properties:
-      Name: !Ref DataLakeEventBusName
+      Name: !Sub ${ProjectName}-bff-${DataLakeEventBusName}
 
   DataLakeEventRule:
     Type: AWS::Events::Rule
