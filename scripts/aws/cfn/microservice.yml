@@ -341,7 +341,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub ${ProjectName}-bff-{SenderDashboardDataIndexerLambdaName}
-      Runtime: nodejs20.x
+      Runtime: nodejs18.x
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
       Code:
