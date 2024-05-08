@@ -32,21 +32,7 @@ Parameters:
     Type: Number
     Default: 14
 
-  # DataIndexer resources params
-  DataIndexerLambdaName:
-    Type: String
-    Default: SenderDashboardDataIndexer
-
-  IndexesBucketName:
-    Type: String
-    Default: sender-dashboard-data
-    Description: PN bucket of index files.
-
-  IndexesBucketRegion:
-    Type: String
-    Default: eu-south-1
-    Description: PN bucket region of index files.
-
+  # DataIndexer params
   IndexesBucketVersionExpiresAfterDays:
     Type: Number
     Default: 730
@@ -66,7 +52,7 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
 
-  # Lambda SenderDashboardDataIndexer
+  # Lambda DataIndexer
   SenderDashboardDataIndexerLogGroup:
     Type: AWS::CloudFormation::Stack
     UpdateReplacePolicy: Retain
@@ -74,14 +60,14 @@ Resources:
     Properties:
       TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
       Parameters:
-        LogGroupName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
   IndexesBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${ProjectName}-bff-${IndexesBucketName}
+      BucketName: !Sub ${ProjectName}-bff-sender-dashboard-data-${AWS::Region}-${AWS::AccountId}
       VersioningConfiguration:
         Status: Enabled
       LifecycleConfiguration:
@@ -100,11 +86,11 @@ Outputs:
     Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Lambda exports
   DataIndexerLambdaName:
-    Value: !Ref DataIndexerLambdaName
+    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Bucket exports
   IndexesBucketArn:
     Value: !GetAtt IndexesBucket.Arn
   IndexesBucketName:
-    Value: !Ref IndexesBucketName
+    Value: !Ref IndexesBucket
   IndexesBucketRegion:
-    Value: !Ref IndexesBucketRegion
+    Value: !Ref AWS::Region
