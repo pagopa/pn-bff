@@ -37,9 +37,12 @@ class PnDeliveryClientRecipientImplTestIT {
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
     private final Integer docIdx = 0;
+    private final String attachmentName = "PAGOPA";
     private final String notificationListPath = "/delivery/notifications/received";
     private final String notificationDetailPath = "/delivery/v2.3/notifications/received/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
+
+    private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
@@ -240,6 +243,46 @@ class PnDeliveryClientRecipientImplTestIT {
                 docIdx,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
+        )).expectError().verify();
+    }
+
+    @Test
+    void getReceivedNotificationPayment() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getRecipientAttachmentMock());
+        mockServerClient.when(request().withMethod("GET").withPath(paymentDownloadPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                iun,
+                attachmentName,
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
+    }
+
+    @Test
+    void getReceivedNotificationPaymentError() {
+        mockServerClient.when(request().withMethod("GET").withPath(paymentDownloadPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                iun,
+                attachmentName,
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
         )).expectError().verify();
     }
 }

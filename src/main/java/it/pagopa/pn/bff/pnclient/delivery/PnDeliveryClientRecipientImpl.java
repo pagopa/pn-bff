@@ -96,4 +96,22 @@ public class PnDeliveryClientRecipientImpl {
                 mandateId
         );
     }
+
+    public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                               String xPagopaPnCxId, String iun, String attachmentName,
+                                                                                               List<String> xPagopaPnCxGroups, UUID mandateId,
+                                                                                               Integer attachmentIdx) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationAttachment");
+
+        return recipientReadApi.getReceivedNotificationAttachment(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                attachmentName,
+                xPagopaPnCxGroups,
+                mandateId,
+                attachmentIdx
+        );
+    }
 }

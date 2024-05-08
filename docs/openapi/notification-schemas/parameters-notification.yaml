@@ -56,10 +56,10 @@ components:
     BffQueryMandateId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-web-recipient.yaml#/components/parameters/queryMandateId'
 
-    BffQueryDocumentType:
+    BffPathDocumentType:
       description: Tipo documento
       name: documentType
-      in: query
+      in: path
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
@@ -91,6 +91,16 @@ components:
       required: false
       schema:
         $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/2dfae74710df04b0b4ca855112af536b3e2c7fd1/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
+
+    ############################################################################################
+    ###                     PARAMETRI DOWLOAD PAGAMENTI NOTIFICA                             ###
+    ############################################################################################
+    BffPathRecipientIdx:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/pathRecipientIdx'
+    BffPathAttachmentName:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/pathAttachmentName'
+    BffQueryAttachmentIdx:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/attachmentIdx'
 
   schemas:
     # this is needed because the openapi generator doesn't work well if we put the content of this schema

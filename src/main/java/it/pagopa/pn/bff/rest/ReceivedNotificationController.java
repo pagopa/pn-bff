@@ -172,7 +172,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
     }
 
     /**
-     * GET bff/v1/notifications/received/{iun}/documents: Notification document
+     * GET bff/v1/notifications/received/{iun}/documents/{documentType}: Notification document
      * Download the document linked to a notification
      *
      * @param xPagopaPnUid      User Identifier
@@ -206,6 +206,36 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
         );
 
         log.logEndingProcess("getReceivedNotificationDocumentV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * GET /bff/v1/notifications/received/{iun}/payments/{attachmentName}: Notification payment
+     * Get the payment for a notification. This is for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the payment for the notification with a specific IUN
+     */
+    @Override
+    public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getReceivedNotificationPaymentV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                                      String xPagopaPnCxId, String iun,
+                                                                                                      String attachmentName, List<String> xPagopaPnCxGroups,
+                                                                                                      UUID mandateId, Integer attachmentIdx,
+                                                                                                      final ServerWebExchange exchange) {
+        log.logStartingProcess("getReceivedNotificationPaymentV1");
+
+        Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationPayment(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, attachmentName, xPagopaPnCxGroups, mandateId, attachmentIdx
+        );
+
+        log.logEndingProcess("getReceivedNotificationPaymentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

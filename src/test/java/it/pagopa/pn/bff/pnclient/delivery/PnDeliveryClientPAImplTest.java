@@ -182,4 +182,54 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void getSentNotificationPayment() throws RestClientException {
+        when(senderReadB2BApi.getSentNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getPaAttachmentMock()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getSentNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
+        )).expectNext(notificationDownloadDocumentMock.getPaAttachmentMock()).verifyComplete();
+    }
+
+    @Test
+    void getSentNotificationPaymentError() {
+        when(senderReadB2BApi.getSentNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getSentNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
+        )).expectError(WebClientResponseException.class).verify();
+    }
 }
