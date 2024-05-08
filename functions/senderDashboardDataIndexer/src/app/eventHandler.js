@@ -25,15 +25,20 @@ const pnBucketRegion = getPnBucketRegion();
 const pnOverviewIndexObjectKey = getPnOverviewIndexObjectKey();
 const pnFocusIndexObjectKey = getPnFocusIndexObjectKey();
 
-const dlCredentials = getAssumeRoleCredentials(
-  dlAssumeRoleArn,
-  'AssumeRoleSEND'
-);
-const dlS3Client = new S3Client({
-  region: dlBucketRegion,
-  credentials: dlCredentials,
-});
 const pnS3Client = new S3Client({ region: pnBucketRegion });
+
+const dlCredentials =
+  dlAssumeRoleArn !== 'test'
+    ? getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND')
+    : undefined;
+
+const dlS3Client =
+  dlBucketName !== 'test'
+    ? new S3Client({
+        region: dlBucketRegion,
+        credentials: dlCredentials,
+      })
+    : undefined;
 
 export const handleEvent = async () => {
   const overviewIndex = await createIndexObject(
