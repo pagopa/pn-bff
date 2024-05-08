@@ -21,6 +21,8 @@ public class PnBffRestConstants {
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String TOKEN_EXCHANGE_PATH = BFF_PATH + VERSION_1 + "/token-exchange";
+    public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
+    public static final String PAYMENTS_CART_PATH = BFF_PATH + VERSION_1 + "/payments/cart";
 
     private PnBffRestConstants() {
     }

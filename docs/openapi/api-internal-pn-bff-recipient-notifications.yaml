@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Notifiche Destinatari
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-recipient
+  x-api-id: api-internal-pn-bff-recipient-notifications
   x-summary: 'API di pn-bff esposte al Web ai destinatari per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
@@ -193,41 +193,6 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '500':
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-
-  '/bff/v1/notifications/received/{iun}/payments-info':
-    post:
-      summary: Retrieve payment information given a list of payments identifiers
-      tags:
-        - NotificationReceived
-      operationId: getPaymentsV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './notification-schemas/notification-payments.yaml#/components/schemas/BffPaymentInfoResponse'
-        '400':
-          description: Invalid input
           content:
             application/problem+json:
               schema:

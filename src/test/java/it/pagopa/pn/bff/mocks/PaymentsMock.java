@@ -1,9 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.Detail;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoRequest;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaymentRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -77,5 +75,37 @@ public class PaymentsMock {
         paymentsInfoResponse.add(getPaymentInfoResponseMock(4, PaymentStatus.FAILURE, Detail.PAYMENT_EXPIRED, "PAYMENT_EXPIRED"));
         paymentsInfoResponse.add(getPaymentInfoResponseMock(5, PaymentStatus.REQUIRED, null, null));
         return paymentsInfoResponse;
+    }
+
+    public PaymentRequest getPaymentRequestMock() {
+        PaymentRequest paymentRequest = new PaymentRequest();
+        PaymentNotice paymentNotice = new PaymentNotice();
+        paymentNotice.setAmount(999);
+        paymentNotice.setNoticeNumber("333333333333333333");
+        paymentNotice.setFiscalCode("77777777777");
+        paymentNotice.setDescription("Description of the payment");
+        paymentNotice.setCompanyName("The name of the company");
+        paymentRequest.setPaymentNotice(paymentNotice);
+        paymentRequest.setReturnUrl("https://return-url.com");
+        return paymentRequest;
+    }
+
+    public BffPaymentRequest getBffPaymentRequestMock() {
+        BffPaymentRequest paymentRequest = new BffPaymentRequest();
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentNotice paymentNotice = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentNotice();
+        paymentNotice.setAmount(999);
+        paymentNotice.setNoticeNumber("333333333333333333");
+        paymentNotice.setFiscalCode("77777777777");
+        paymentNotice.setDescription("Description of the payment");
+        paymentNotice.setCompanyName("The name of the company");
+        paymentRequest.setPaymentNotice(paymentNotice);
+        paymentRequest.setReturnUrl("https://return-url.com");
+        return paymentRequest;
+    }
+
+    public PaymentResponse getPaymentResponseMock() {
+        PaymentResponse paymentResponse = new PaymentResponse();
+        paymentResponse.setCheckoutUrl("https://checkout-url.com");
+        return paymentResponse;
     }
 }

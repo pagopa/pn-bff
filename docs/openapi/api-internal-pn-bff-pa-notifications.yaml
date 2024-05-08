@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Notifiche Mittenti
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-pa
+  x-api-id: api-internal-pn-bff-pa-notifications
   x-summary: 'API di pn-bff esposte al Web ai mittenti per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:

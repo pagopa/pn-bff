@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
@@ -35,6 +37,7 @@ class PnExternalRegistriesClientImplTestIT {
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
     private final String pathGroups = "/ext-registry/pa/v1/groups";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
+    private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
     private final UserMock userMock = new UserMock();
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
@@ -171,6 +174,8 @@ class PnExternalRegistriesClientImplTestIT {
                 );
 
         StepVerifier.create(pnExternalRegistriesClient.getPaymentsInfo(
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
                 paymentsMock.getPaymentsInfoRequestMock()
         )).expectNextSequence(paymentsInfoResponse).verifyComplete();
     }
@@ -185,7 +190,43 @@ class PnExternalRegistriesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnExternalRegistriesClient.getPaymentsInfo(
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
                 paymentsMock.getPaymentsInfoRequestMock()
+        )).expectError().verify();
+    }
+
+    @Test
+    void paymentsCart() throws JsonProcessingException {
+        PaymentRequest paymentRequest = paymentsMock.getPaymentRequestMock();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(paymentRequest);
+        PaymentResponse paymentResponse = paymentsMock.getPaymentResponseMock();
+        String response = objectMapper.writeValueAsString(paymentResponse);
+
+        mockServerClient.when(request().withMethod("POST").withPath(pathCheckoutCart).withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.paymentsCart(
+                paymentRequest
+        )).expectNext(paymentResponse).verifyComplete();
+    }
+
+    @Test
+    void paymentsCartError() throws JsonProcessingException {
+        PaymentRequest paymentRequest = paymentsMock.getPaymentRequestMock();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(paymentRequest);
+
+        mockServerClient.when(request().withMethod("POST").withPath(pathCheckoutCart).withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient.paymentsCart(
+                paymentRequest
         )).expectError().verify();
     }
 }

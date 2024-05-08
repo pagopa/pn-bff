@@ -3,13 +3,18 @@ package it.pagopa.pn.bff.pnclient.externalregistries;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -45,9 +50,23 @@ public class PnExternalRegistriesClientImpl {
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxId, xPagopaPnCxGroups, null);
     }
 
-    public Flux<PaymentInfoV21> getPaymentsInfo(List<PaymentInfoRequest> paymentInfoRequest) {
+    public Flux<PaymentInfoV21> getPaymentsInfo(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<PaymentInfoRequest> paymentInfoRequest) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPaymentInfoV21");
+        // verify the required parameter 'xPagopaPnCxType' is set
+        if (xPagopaPnCxType == null) {
+            throw new WebClientResponseException("Missing the required parameter 'xPagopaPnCxType' when calling searchReceivedNotification", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
+        }
+        // verify the required parameter 'xPagopaPnCxId' is set
+        if (xPagopaPnCxId == null) {
+            throw new WebClientResponseException("Missing the required parameter 'xPagopaPnCxId' when calling searchReceivedNotification", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), null, null, null);
+        }
         return paymentInfoApi
                 .getPaymentInfoV21(paymentInfoRequest);
+    }
+
+    public Mono<PaymentResponse> paymentsCart(PaymentRequest paymentRequest) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "checkoutCart");
+        return paymentInfoApi
+                .checkoutCart(paymentRequest);
     }
 }

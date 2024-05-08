@@ -6,27 +6,28 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
-import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
-import it.pagopa.pn.bff.mocks.*;
+import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
+import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,20 +39,17 @@ class NotificationRecipientServiceTest {
     private static NotificationsRecipientService notificationsRecipientService;
     private static PnDeliveryClientRecipientImpl pnDeliveryClientRecipient;
     private static PnDeliveryPushClientImpl pnDeliveryPushClient;
-    private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
-    private final PaymentsMock paymentsMock = new PaymentsMock();
 
     @BeforeAll
     public static void setup() {
         pnDeliveryClientRecipient = mock(PnDeliveryClientRecipientImpl.class);
         pnDeliveryPushClient = mock(PnDeliveryPushClientImpl.class);
-        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnExternalRegistriesClient, pnBffExceptionUtility);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility);
     }
 
     @Test
@@ -543,43 +541,6 @@ class NotificationRecipientServiceTest {
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
                         && ((PnBffException) throwable).getProblem().getDetail().equals("The attachment idx is missed")
                 )
-                .verify();
-    }
-
-    @Test
-    void getNotificationPaymentsInfo() {
-        List<PaymentInfoV21> response = paymentsMock.getPaymentsInfoResponseMock();
-
-        when(pnExternalRegistriesClient.getPaymentsInfo(
-                Mockito.anyList()
-        )).thenReturn(Flux.fromIterable(response));
-
-        Flux<BffPaymentInfoItem> result = notificationsRecipientService.getNotificationPaymentsInfo(
-                "IUN",
-                Flux.fromIterable(paymentsMock.getBffPaymentsInfoRequestMock())
-        );
-
-        StepVerifier.create(result)
-                .expectNextSequence(response.stream()
-                        .map(PaymentsInfoMapper.modelMapper::mapPaymentInfoResponse).toList()
-                )
-                .verifyComplete();
-    }
-
-    @Test
-    void getNotificationPaymentsInfoError() {
-        when(pnExternalRegistriesClient.getPaymentsInfo(
-                Mockito.anyList()
-        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
-
-        Flux<BffPaymentInfoItem> result = notificationsRecipientService.getNotificationPaymentsInfo(
-                "IUN",
-                Flux.fromIterable(paymentsMock.getBffPaymentsInfoRequestMock())
-        );
-
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof PnBffException
-                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
 }

@@ -2,6 +2,8 @@ package it.pagopa.pn.bff.pnclient.externalregistries;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
@@ -17,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
@@ -157,6 +160,8 @@ class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.fromIterable(paymentsInfoResponse));
 
         StepVerifier.create(pnExternalRegistriesClient.getPaymentsInfo(
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
                 paymentsMock.getPaymentsInfoRequestMock()
         )).expectNextSequence(paymentsInfoResponse).verifyComplete();
     }
@@ -168,7 +173,34 @@ class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnExternalRegistriesClient.getPaymentsInfo(
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
                 paymentsMock.getPaymentsInfoRequestMock()
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void paymentsCart() {
+        PaymentRequest paymentRequest = paymentsMock.getPaymentRequestMock();
+        PaymentResponse paymentResponse = paymentsMock.getPaymentResponseMock();
+
+        when(paymentInfoApi.checkoutCart(
+                Mockito.any(PaymentRequest.class)
+        )).thenReturn(Mono.just(paymentResponse));
+
+        StepVerifier.create(pnExternalRegistriesClient.paymentsCart(
+                paymentRequest
+        )).expectNext(paymentResponse).verifyComplete();
+    }
+
+    @Test
+    void paymentsCartError() {
+        when(paymentInfoApi.checkoutCart(
+                Mockito.any(PaymentRequest.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.paymentsCart(
+                paymentsMock.getPaymentRequestMock()
         )).expectError(WebClientResponseException.class).verify();
     }
 }
