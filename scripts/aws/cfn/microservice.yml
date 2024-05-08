@@ -239,6 +239,18 @@ Parameters:
     Type: String
     Description: Name of the DataIndexer Lambda.
 
+  DataIndexerLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the DataIndexer Lambda.
+
+  DataIndexerLambdaRuntime:
+    Type: String
+    Default: nodejs18.x
+    Description: Runtime of the DataIndexer Lambda.
+
   IndexesBucketArn:
     Type: String
     Description: PN bucket Arn of indexes files.
@@ -257,23 +269,13 @@ Parameters:
     Default: 480000
     Description: Threshold in minutes of DataIndexer Lambda.
 
-  DataLakeEventBusName:
-    Type: String
-    Default: DataLakeEventBus
-    Description: Data-lake custom EventBus
-
-  EnvironmentType:
-    Type: String
-    Description: Environment type.
-
-  # Env
+  # DataIndexer Env
   DlBucketName:
     Type: String
     Description: Name of data-lake bucket.
 
   DlBucketRegion:
     Type: String
-    Default: eu-central-1
     Description: Default region for data-lake bucket.
 
   DlAssumeRoleArn:
@@ -379,24 +381,19 @@ Resources:
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
 
-  # Lambda SenderDashboardDataIndexer
+  # DataIndexer Lambda
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
-      Runtime: nodejs18.x
+      FunctionName: !Ref DataIndexerLambdaName
+      Runtime: !Ref DataIndexerLambdaRuntime
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
       Code:
-        ZipFile: |
-          exports.handler = async (event) => {
-            const response = {
-                statusCode: 200,
-                body: JSON.stringify('Hello from Lambda!')
-            };
-            return response;
-          };
+        S3Bucket: !Ref LambdasBucketName
+        S3Key: !Sub "${BucketBasePath}/senderDashboardDataIndexer.zip"
       Timeout: 900
+      MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
         Variables:
           DL_BUCKET_NAME: !Ref DlBucketName
@@ -432,6 +429,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:GetObject
+                  - s3:GetObjectVersion
                   - s3:PutObject
                 Resource:
                   - !Sub ${IndexesBucketArn}/*
@@ -466,12 +464,12 @@ Resources:
   DataLakeEventBus:
     Type: AWS::Events::EventBus
     Properties:
-      Name: !Sub ${ProjectName}-bff-${DataLakeEventBusName}
+      Name: !Sub ${ProjectName}-bff-DataLakeEventBus
 
   DataLakeEventRule:
     Type: AWS::Events::Rule
     Properties:
-      EventBusName: !Ref DataLakeEventBusName
+      EventBusName: !Ref DataLakeEventBus
       EventPattern:
         source:
           - pn.datalake.events
