@@ -38,7 +38,7 @@ describe('indexer tests', function () {
     expect(index.objectVersionId).to.be.equal('testVersionId');
     expect(index.lastDate).to.be.equal('2024-04-17');
     expect(index.objectSizeByte).to.be.equal(1142348);
-    expect(Object.keys(index.sendersId).length).to.be.equal(15);
+    expect(Object.keys(index.sendersId).length).to.be.equal(14);
 
     s3Mock.reset();
   });
