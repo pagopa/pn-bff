@@ -1,10 +1,18 @@
 package it.pagopa.pn.bff.utils.helpers;
 
+import org.mockito.ArgumentMatcher;
 import reactor.core.publisher.Mono;
 
-public class MonoComparator {
+public class MonoMatcher<T> implements ArgumentMatcher<T> {
 
-    public static <TC, FC> boolean compare(TC argumentToCompare, FC argumentForComparison) {
+    private T argumentForComparison;
+
+    public MonoMatcher(T argumentForComparison) {
+        this.argumentForComparison = argumentForComparison;
+    }
+
+    @Override
+    public boolean matches(T argumentToCompare) {
         if (argumentToCompare == null || argumentForComparison == null) {
             return false;
         }

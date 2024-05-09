@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Notifiche Destinatari
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-recipient
+  x-api-id: api-internal-pn-bff-recipient-notifications
   x-summary: 'API di pn-bff esposte al Web ai destinatari per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
@@ -146,7 +146,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  '/bff/v1/notifications/received/{iun}/documents':
+  '/bff/v1/notifications/received/{iun}/documents/{documentType}':
     get:
       summary: |-
         Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
@@ -157,8 +157,8 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentType'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentIdx'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentCategory'
@@ -183,6 +183,45 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/{iun}/payments/{attachmentName}':
+    get:
+      summary: Download allegato per pagamento
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationPaymentV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathAttachmentName'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryAttachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
           content:
             application/problem+json:
               schema:
