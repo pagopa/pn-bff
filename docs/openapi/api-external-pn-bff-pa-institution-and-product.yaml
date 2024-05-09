@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Institutions and Products
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-institution-and-product
+  x-api-id: api-internal-pn-bff-pa-institution-and-product
   x-summary: 'API di pn-bff esposte al Web per i mittenti'
   version: '1.0.0'
   contact:

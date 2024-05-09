@@ -262,4 +262,54 @@ class PnDeliveryClientRecipientImplTest {
                 UUID.randomUUID()
         )).expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void getSentNotificationPayment() throws RestClientException {
+        when(recipientReadApi.getReceivedNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
+    }
+
+    @Test
+    void getSentNotificationPaymentError() {
+        when(recipientReadApi.getReceivedNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        )).expectError(WebClientResponseException.class).verify();
+    }
 }

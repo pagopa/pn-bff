@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Downtime logs
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-pa-apikeys
+  x-api-id: api-internal-pn-bff-downtime-logs
   x-summary: 'API di pn-bff esposte al Web per la visualizzazione dello stato dei servizi di Piattaforma Notifiche'
   version: '1.0.0'
   contact:

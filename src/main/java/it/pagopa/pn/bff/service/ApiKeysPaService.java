@@ -10,7 +10,7 @@ import it.pagopa.pn.bff.mappers.apikeys.RequestApiKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.apikeys.RequestNewApiKeyMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 public class ApiKeysPaService {
     private final PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
-    private final PnInfoPaClientImpl pnInfoPaClient;
+    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
@@ -60,7 +60,7 @@ public class ApiKeysPaService {
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // list of groups linked to the pa
-        Mono<List<PaGroup>> paGroups = pnInfoPaClient.getGroups(
+        Mono<List<PaGroup>> paGroups = pnExternalRegistriesClient.getGroups(
                         xPagopaPnUid,
                         xPagopaPnCxId,
                         xPagopaPnCxGroups,
