@@ -550,7 +550,7 @@ class SentNotificationControllerTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList()
-        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.put()
                 .uri(uriBuilder ->

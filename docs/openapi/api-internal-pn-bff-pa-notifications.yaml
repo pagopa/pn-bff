@@ -151,13 +151,13 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
   
-  '/bff/v1/notifications/cancel/{iun}':
+  '/bff/v1/notifications/{iun}/cancel':
     put:
       summary: 'Mittente: annullamento notifica'
       description: |-
         Questa operazione permette di annullare una notifica inviata.
       tags:
-      - NotificationCancellation
+      - NotificationSent
       operationId: notificationCancellationV1
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL

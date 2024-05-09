@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class SentNotificationController implements NotificationSentApi, NotificationCancellationApi {
+public class SentNotificationController implements NotificationSentApi {
 
     private final NotificationsPAService notificationsPAService;
 
@@ -135,7 +134,7 @@ public class SentNotificationController implements NotificationSentApi, Notifica
     }
 
     /**
-     * PUT bff/v1/notifications/cancel/{iun}: Notification cancellation
+     * PUT bff/v1/notifications/{iun}/cancel: Notification cancellation
      * Cancel a notification
      *
      * @param xPagopaPnUid      User Identifier
