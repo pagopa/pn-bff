@@ -69,7 +69,7 @@ public class AddressesService {
                                                                       BffAddressType addressType,
                                                                       String senderId,
                                                                       BffChannelType channelType,
-                                                                      Mono<BffAddressVerification> addressVerification,
+                                                                      Mono<BffAddressVerificationRequest> addressVerification,
                                                                       List<String> xPagopaPnCxGroups) {
 
         log.info("Create or Update Address");
@@ -80,23 +80,24 @@ public class AddressesService {
                             CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                             senderId,
                             ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(channelType),
-                            AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(verification),
-                            xPagopaPnCxGroups,
-                            xPagopaPnCxRole
-                    ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
-                    .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
-        } else {
-            return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateLegalAddress(
-                            xPagopaPnCxId,
-                            CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
-                            senderId,
-                            ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
-                            AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(verification),
+                            AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                             xPagopaPnCxGroups,
                             xPagopaPnCxRole
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                     .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         }
+
+        return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateLegalAddress(
+                        xPagopaPnCxId,
+                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                        senderId,
+                        ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
+                        AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
+                        xPagopaPnCxGroups,
+                        xPagopaPnCxRole
+                ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
+
     }
 
     /**
@@ -125,15 +126,16 @@ public class AddressesService {
                     xPagopaPnCxGroups,
                     xPagopaPnCxRole
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-        } else {
-            return pnUserAttributesClient.deleteRecipientLegalAddress(
-                    xPagopaPnCxId,
-                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
-                    senderId,
-                    ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
-                    xPagopaPnCxGroups,
-                    xPagopaPnCxRole
-            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
         }
+
+        return pnUserAttributesClient.deleteRecipientLegalAddress(
+                xPagopaPnCxId,
+                CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                senderId,
+                ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
     }
 }

@@ -2,11 +2,15 @@ package it.pagopa.pn.bff.mappers.addresses;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerification;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerificationResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerification;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the BffAddressVerificationRequest to the AddressVerification
+ * and the AddressVerificationResponse to the BffAddressVerificationResponse
+ */
 @Mapper
 public interface AddressVerificationMapper {
     AddressVerificationMapper addressVerificationMapper = Mappers.getMapper(AddressVerificationMapper.class);
@@ -14,10 +18,10 @@ public interface AddressVerificationMapper {
     /**
      * Map BffAddressVerification to AddressVerification
      *
-     * @param addressVerification BffAddressVerification to map
+     * @param addressVerification BffAddressVerificationRequest to map
      * @return the mapped AddressVerification
      */
-    AddressVerification mapAddressVerification(BffAddressVerification addressVerification);
+    AddressVerification mapAddressVerificationRequest(BffAddressVerificationRequest addressVerification);
 
     /**
      * Map AddressVerificationResponse to BffAddressVerificationResponse

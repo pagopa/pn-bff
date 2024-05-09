@@ -8,6 +8,9 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the BffChannelType to the microservice ChannelType
+ */
 @Mapper
 public interface ChannelTypeMapper {
     ChannelTypeMapper channelTypeMapper = Mappers.getMapper(ChannelTypeMapper.class);

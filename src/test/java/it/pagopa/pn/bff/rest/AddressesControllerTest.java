@@ -103,7 +103,7 @@ public class AddressesControllerTest {
 
     @Test
     void createOrUpdateUserAddress() {
-        BffAddressVerification request = addressesMock.getBffAddressVerificationMock();
+        BffAddressVerificationRequest request = addressesMock.getBffAddressVerificationMock();
         BffAddressVerificationResponse response = AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationResponse(
                 addressesMock.addressVerificationCourtesyResponseMock()
         );
@@ -141,7 +141,7 @@ public class AddressesControllerTest {
                 eq(CxTypeAuthFleet.PF),
                 eq(UserMock.PN_CX_ROLE),
                 eq(BffAddressType.COURTESY),
-                eq(UserMock.SENDER_ID),
+                eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
                 argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
@@ -150,7 +150,7 @@ public class AddressesControllerTest {
 
     @Test
     void createOrUpdateUserAddressError() {
-        BffAddressVerification request = addressesMock.getBffAddressVerificationMock();
+        BffAddressVerificationRequest request = addressesMock.getBffAddressVerificationMock();
 
         Mockito.when(addressesService.createOrUpdateAddress(
                 Mockito.anyString(),
@@ -183,7 +183,7 @@ public class AddressesControllerTest {
                 eq(CxTypeAuthFleet.PF),
                 eq(UserMock.PN_CX_ROLE),
                 eq(BffAddressType.COURTESY),
-                eq(UserMock.SENDER_ID),
+                eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
                 argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
                 eq(UserMock.PN_CX_GROUPS)
@@ -220,7 +220,7 @@ public class AddressesControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ROLE,
                 BffAddressType.COURTESY,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 BffChannelType.EMAIL,
                 UserMock.PN_CX_GROUPS
         );
@@ -256,7 +256,7 @@ public class AddressesControllerTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ROLE,
                 BffAddressType.COURTESY,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 BffChannelType.EMAIL,
                 UserMock.PN_CX_GROUPS
         );

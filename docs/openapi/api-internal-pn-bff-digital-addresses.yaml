@@ -56,24 +56,6 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
   /bff/v1/addresses/{addressType}/{senderId}/{channelType}:
-    parameters:
-      - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
-      - name: addressType
-        in: path
-        description: Address type
-        required: true
-        schema:
-          $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
-      - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
-      - in: path
-        name: channelType
-        description: Communication Channel type
-        required: true
-        schema:
-          $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
     post:
       summary: Creazione/Aggiornamento Recapito
       description: >-
@@ -83,12 +65,30 @@ paths:
       operationId: createOrUpdateAddressV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
+        - $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/parameters/BffSenderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerification'
+              $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerificationRequest'
       responses:
         '200':
           content:
@@ -124,6 +124,24 @@ paths:
       operationId: deleteAddressV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
+        - $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/parameters/BffSenderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
       responses:
         '204':
           description: OK

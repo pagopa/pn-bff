@@ -73,7 +73,7 @@ public class AddressesController implements AddressesApi {
                                                                                         BffAddressType addressType,
                                                                                         String senderId,
                                                                                         BffChannelType channelType,
-                                                                                        Mono<BffAddressVerification> addressVerification,
+                                                                                        Mono<BffAddressVerificationRequest> addressVerification,
                                                                                         List<String> xPagopaPnCxGroups,
                                                                                         final ServerWebExchange exchange) {
         log.logStartingProcess("createOrUpdateAddressV1");

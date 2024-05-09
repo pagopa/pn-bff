@@ -191,7 +191,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -209,7 +209,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -232,7 +232,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -250,7 +250,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -261,16 +261,12 @@ class PnUserAttributesClientImplTestIT {
     @Test
     void deleteCourtesyAddress() {
         mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/courtesy/default/EMAIL"))
-                .respond(response()
-                        .withStatusCode(200)
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("")
-                );
+                .respond(response().withStatusCode(200));
 
         StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 CourtesyChannelType.EMAIL,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
@@ -285,7 +281,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.deleteRecipientCourtesyAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 CourtesyChannelType.EMAIL,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
@@ -295,16 +291,12 @@ class PnUserAttributesClientImplTestIT {
     @Test
     void deleteLegalAddress() {
         mockServerClient.when(request().withMethod("DELETE").withPath(addressPath + "/legal/default/PEC"))
-                .respond(response()
-                        .withStatusCode(200)
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("")
-                );
+                .respond(response().withStatusCode(200));
 
         StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 LegalChannelType.PEC,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
@@ -319,7 +311,7 @@ class PnUserAttributesClientImplTestIT {
         StepVerifier.create(pnUserAttributesClient.deleteRecipientLegalAddress(
                 UserMock.PN_UID,
                 CX_TYPE,
-                UserMock.SENDER_ID,
+                AddressesMock.SENDER_ID,
                 LegalChannelType.PEC,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE

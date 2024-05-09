@@ -109,7 +109,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
                         UserMock.PN_CX_GROUPS
@@ -135,7 +135,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
                         UserMock.PN_CX_GROUPS
@@ -166,7 +166,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
                         UserMock.PN_CX_GROUPS
@@ -192,7 +192,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
                         UserMock.PN_CX_GROUPS
@@ -218,7 +218,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         UserMock.PN_CX_GROUPS
                 ))
@@ -241,7 +241,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         UserMock.PN_CX_GROUPS
                 ))
@@ -266,7 +266,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         UserMock.PN_CX_GROUPS
                 ))
@@ -289,7 +289,7 @@ public class AddressesServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
-                        UserMock.SENDER_ID,
+                        AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         UserMock.PN_CX_GROUPS
                 ))

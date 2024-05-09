@@ -1,12 +1,13 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerification;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddressesMock {
+    public static final String SENDER_ID = "default";
 
     public UserAddresses getUserAddressesResponseMock() {
         UserAddresses userAddresses = new UserAddresses();
@@ -48,8 +49,8 @@ public class AddressesMock {
         return userAddresses;
     }
 
-    public BffAddressVerification getBffAddressVerificationMock() {
-        return new BffAddressVerification()
+    public BffAddressVerificationRequest getBffAddressVerificationMock() {
+        return new BffAddressVerificationRequest()
                 .value("test@test.com")
                 .verificationCode("12345")
                 .requestId("1234567890");

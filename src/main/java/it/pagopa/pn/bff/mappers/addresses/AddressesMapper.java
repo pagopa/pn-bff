@@ -10,6 +10,11 @@ import org.mapstruct.factory.Mappers;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mapstruct mapper interface, used to map the UserAddresses (including
+ * LegalAndUnverifiedDigitalAddress and CourtesyDigitalAddress) to
+ * the BffUserAddress
+ */
 @Mapper
 public interface AddressesMapper {
     AddressesMapper addressesMapper = Mappers.getMapper(AddressesMapper.class);

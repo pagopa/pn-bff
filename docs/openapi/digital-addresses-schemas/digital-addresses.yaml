@@ -1,6 +1,9 @@
 info:
   version: v1.0
 components:
+  parameters:
+    BffSenderId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
   schemas:
     BffUserAddresses:
       type: array
@@ -30,8 +33,6 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
-        requestId:
-          type: string
         pecValid:
           type: boolean
         codeValid:
@@ -51,7 +52,7 @@ components:
         - legal
         - courtesy
 
-    BffAddressVerification:
+    BffAddressVerificationRequest:
       $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
 
     BffAddressVerificationResponse:

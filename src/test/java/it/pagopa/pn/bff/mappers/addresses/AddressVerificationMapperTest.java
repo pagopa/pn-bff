@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.addresses;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerification;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerification;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
 import it.pagopa.pn.bff.mocks.AddressesMock;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,10 @@ public class AddressVerificationMapperTest {
 
     @Test
     void testAddressVerificationMapper() {
-        BffAddressVerification addressVerification = addressesMock.getBffAddressVerificationMock();
-        AddressVerification mappedAddressVerification = AddressVerificationMapper.addressVerificationMapper.mapAddressVerification(addressVerification);
+        BffAddressVerificationRequest addressVerification = addressesMock.getBffAddressVerificationMock();
+        AddressVerification mappedAddressVerification = AddressVerificationMapper
+                .addressVerificationMapper
+                .mapAddressVerificationRequest(addressVerification);
 
         assertNotNull(mappedAddressVerification);
         assertEquals(addressVerification.getValue(), mappedAddressVerification.getValue());
