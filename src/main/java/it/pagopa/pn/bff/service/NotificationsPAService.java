@@ -108,7 +108,7 @@ public class NotificationsPAService {
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapSentNotificationDetail);
+        return notificationDetail.map(NotificationSentDetailMapper.modelMapper::mapSentNotificationDetail);
     }
 
     /**

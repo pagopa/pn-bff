@@ -163,7 +163,7 @@ public class NotificationsRecipientService {
                 mandateId
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapReceivedNotificationDetail);
+        return notificationDetail.map(NotificationReceivedDetailMapper.modelMapper::mapReceivedNotificationDetail);
     }
 
     /**

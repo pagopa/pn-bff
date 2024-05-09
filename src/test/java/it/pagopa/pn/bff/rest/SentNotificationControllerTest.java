@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -153,7 +153,7 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotification() {
-        BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
+        BffFullNotificationV1 response = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
         Mockito.when(notificationsPAService.getSentNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),

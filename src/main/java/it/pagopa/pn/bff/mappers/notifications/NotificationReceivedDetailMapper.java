@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationDetailTimeline;
@@ -11,14 +10,14 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the FullReceivedNotificationV23 and FullSentNotificationV23
+ * Mapstruct mapper interface, used to map the FullReceivedNotificationV23
  * to the BffFullNotificationV1
  */
-@Mapper(uses = {RecipientNotificationTimelineMapper.class, SenderNotificationTimelineMapper.class})
-public interface NotificationDetailMapper {
+@Mapper(uses = {RecipientNotificationTimelineMapper.class})
+public interface NotificationReceivedDetailMapper {
 
     // Instance of the mapper
-    NotificationDetailMapper modelMapper = Mappers.getMapper(NotificationDetailMapper.class);
+    NotificationReceivedDetailMapper modelMapper = Mappers.getMapper(NotificationReceivedDetailMapper.class);
 
     /**
      * Maps a FullReceivedNotificationV23 to a BffFullNotificationV1
@@ -29,16 +28,15 @@ public interface NotificationDetailMapper {
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV23 notification);
 
     /**
-     * Maps a FullSentNotificationV23 to a BffFullNotificationV1
-     *
-     * @param notification the FullSentNotificationV23 to map
-     * @return the mapped BffFullNotificationV1
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#cleanRelatedTimelineElements(BffFullNotificationV1)
      */
-    BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV23 notification);
-
+    @AfterMapping
+    default void cleanRelatedTimelineElements(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.cleanRelatedTimelineElements(bffFullNotificationV1);
+    }
 
     /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#populateOtherDocuments(BffFullNotificationV1)
+     * @see NotificationDetailUtility#populateOtherDocuments(BffFullNotificationV1)
      */
     @AfterMapping
     default void populateOtherDocuments(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
@@ -46,7 +44,7 @@ public interface NotificationDetailMapper {
     }
 
     /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#checkRADDInTimeline(BffFullNotificationV1)
+     * @see NotificationDetailUtility#checkRADDInTimeline(BffFullNotificationV1)
      */
     @AfterMapping
     default void checkRADDInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
@@ -54,7 +52,7 @@ public interface NotificationDetailMapper {
     }
 
     /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertCancelledStatusInTimeline(BffFullNotificationV1)
+     * @see NotificationDetailUtility#insertCancelledStatusInTimeline(BffFullNotificationV1)
      */
     @AfterMapping
     default void insertCancelledStatusInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
@@ -78,7 +76,7 @@ public interface NotificationDetailMapper {
     }
 
     /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#populateMacroSteps(BffFullNotificationV1)
+     * @see NotificationDetailUtility#populateMacroSteps(BffFullNotificationV1)
      */
     @AfterMapping
     default void populateMacroStep(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {

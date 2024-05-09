@@ -10,8 +10,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetad
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -231,7 +231,7 @@ class NotificationRecipientServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
+                .expectNext(NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
                 .verifyComplete();
     }
 
