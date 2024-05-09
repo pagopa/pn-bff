@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
 import lombok.CustomLog;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -44,7 +45,7 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
         log.logEndingProcess("getInstitutionsV1");
         return bffInstitutions
                 .collectList()
-                .map(institution -> ResponseEntity.ok(Flux.fromIterable(institution)));
+                .map(institution -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(institution)));
     }
 
     /**
@@ -67,6 +68,6 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
         log.logEndingProcess("getInstitutionProducts");
         return bffInstitutionProducts
                 .collectList()
-                .map(institutionProduct -> ResponseEntity.ok(Flux.fromIterable(institutionProduct)));
+                .map(institutionProduct -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(institutionProduct)));
     }
 }

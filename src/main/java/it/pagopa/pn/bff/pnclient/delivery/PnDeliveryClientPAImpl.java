@@ -75,4 +75,22 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxGroups
         );
     }
+
+    public Mono<NotificationAttachmentDownloadMetadataResponse> getSentNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                           String xPagopaPnCxId, String iun, Integer recipientIdx,
+                                                                                           String attachmentName, List<String> xPagopaPnCxGroups,
+                                                                                           Integer attachmentIdx) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationAttachment");
+
+        return senderReadB2BApi.getSentNotificationAttachment(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                recipientIdx,
+                attachmentName,
+                xPagopaPnCxGroups,
+                attachmentIdx
+        );
+    }
 }

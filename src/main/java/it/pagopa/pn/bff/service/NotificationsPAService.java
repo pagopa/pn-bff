@@ -113,7 +113,7 @@ public class NotificationsPAService {
     }
 
     /**
-     * Download the document linked to a notification
+     * Download the document linked to a notification. This is for a Public Administration user
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
@@ -205,6 +205,39 @@ public class NotificationsPAService {
 
             return legalFact.map(NotificationDownloadDocumentMapper.modelMapper::mapLegalFactDownloadResponse);
         }
+    }
+
+    /**
+     * Get the payment for a notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param recipientIdx      Index of the recipient for which download the payment
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @return the payment for the notification with a specific IUN
+     */
+    public Mono<BffDocumentDownloadMetadataResponse> getSentNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                String xPagopaPnCxId, String iun, Integer recipientIdx,
+                                                                                String attachmentName, List<String> xPagopaPnCxGroups,
+                                                                                Integer attachmentIdx
+    ) {
+        log.info("Get notification payment {} number {} for iun {} and recipient {}", attachmentName, attachmentIdx, iun, recipientIdx);
+        Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getSentNotificationPayment(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                recipientIdx,
+                attachmentName,
+                xPagopaPnCxGroups,
+                attachmentIdx
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return notificationDetail.map(NotificationDownloadDocumentMapper.modelMapper::mapSentAttachmentDownloadResponse);
     }
 
     /**
