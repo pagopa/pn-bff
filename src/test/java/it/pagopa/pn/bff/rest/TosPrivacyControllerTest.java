@@ -9,7 +9,7 @@ import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -113,7 +113,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 
@@ -143,7 +143,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 }

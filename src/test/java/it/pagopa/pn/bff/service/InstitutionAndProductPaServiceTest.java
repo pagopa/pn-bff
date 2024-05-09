@@ -10,7 +10,7 @@ import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 @TestPropertySource(locations = "classpath:application-test.properties")
 class InstitutionAndProductPaServiceTest {
 
-    private static PnInfoPaClientImpl pnInfoPaClient;
+    private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
     @Autowired
@@ -45,9 +45,9 @@ class InstitutionAndProductPaServiceTest {
 
     @BeforeAll
     public void setup() {
-        pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        institutionAndProductPaService = new InstitutionAndProductPaService(pnInfoPaClient, pnBffConfigs, pnBffExceptionUtility);
+        institutionAndProductPaService = new InstitutionAndProductPaService(pnExternalRegistriesClient, pnBffConfigs, pnBffExceptionUtility);
     }
 
     @Test
@@ -57,7 +57,7 @@ class InstitutionAndProductPaServiceTest {
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
 
-        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyList()))
+        when(pnExternalRegistriesClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
         Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
@@ -74,7 +74,7 @@ class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionsError() {
-        when(pnInfoPaClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
+        when(pnExternalRegistriesClient.getInstitutions(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
@@ -93,7 +93,7 @@ class InstitutionAndProductPaServiceTest {
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
-        when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
+        when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
@@ -110,7 +110,7 @@ class InstitutionAndProductPaServiceTest {
 
     @Test
     void getInstitutionProductError() {
-        when(pnInfoPaClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
+        when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier

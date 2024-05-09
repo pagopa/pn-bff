@@ -13,15 +13,19 @@ public class PnBffRestConstants {
     public static final String NOTIFICATIONS_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received";
     public static final String NOTIFICATIONS_RECEIVED_DELEGATED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/delegated";
     public static final String NOTIFICATION_RECEIVED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/{iun}";
-    public static final String NOTIFICATION_RECEIVED_DOCUMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/documents";
+    public static final String NOTIFICATION_RECEIVED_DOCUMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/documents/{documentType}";
+    public static final String NOTIFICATION_RECEIVED_PAYMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/payments/{attachmentName}";
     public static final String NOTIFICATIONS_SENT_PATH = BFF_PATH + VERSION_1 + "/notifications/sent";
     public static final String NOTIFICATION_SENT_PATH = NOTIFICATIONS_SENT_PATH + "/{iun}";
-    public static final String NOTIFICATION_SENT_DOCUMENT_PATH = NOTIFICATION_SENT_PATH + "/documents";
+    public static final String NOTIFICATION_SENT_DOCUMENT_PATH = NOTIFICATION_SENT_PATH + "/documents/{documentType}";
+    public static final String NOTIFICATION_SENT_PAYMENT_PATH = NOTIFICATION_SENT_PATH + "/payments/{recipientIdx}/{attachmentName}";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String TOKEN_EXCHANGE_PATH = BFF_PATH + VERSION_1 + "/token-exchange";
+    public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
+    public static final String PAYMENTS_CART_PATH = BFF_PATH + VERSION_1 + "/payments/cart";
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
     public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
 

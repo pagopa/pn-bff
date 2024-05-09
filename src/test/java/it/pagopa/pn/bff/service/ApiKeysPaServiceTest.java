@@ -14,7 +14,7 @@ import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class ApiKeysPaServiceTest {
 
     private static ApiKeysPaService apiKeysPaService;
     private static PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
-    private static PnInfoPaClientImpl pnInfoPaClient;
+    private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
     private final UserMock userMock = new UserMock();
@@ -42,10 +42,10 @@ class ApiKeysPaServiceTest {
     @BeforeAll
     public static void setup() {
         pnApikeyManagerClientPA = mock(PnApikeyManagerClientPAImpl.class);
-        pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnInfoPaClient, pnBffExceptionUtility);
+        apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnExternalRegistriesClient, pnBffExceptionUtility);
     }
 
     @Test
@@ -61,7 +61,7 @@ class ApiKeysPaServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.just(apiKeysMock.getApiKeysMock()));
 
-        when(pnInfoPaClient.getGroups(
+        when(pnExternalRegistriesClient.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -97,7 +97,7 @@ class ApiKeysPaServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        when(pnInfoPaClient.getGroups(
+        when(pnExternalRegistriesClient.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),

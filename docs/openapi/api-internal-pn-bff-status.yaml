@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Health check
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-health-check
+  x-api-id: api-internal-pn-bff-status
   x-summary: "API di pn-bff per la verifica dello stato dell' applicazione"
   version: '1.0.0'
   contact:

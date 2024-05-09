@@ -543,4 +543,63 @@ class NotificationRecipientServiceTest {
                 )
                 .verify();
     }
+
+    @Test
+    void getNotificationPayment() {
+        when(pnDeliveryClientRecipient.getReceivedNotificationPayment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsRecipientService.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        );
+
+        StepVerifier.create(result)
+                .expectNext(NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(notificationDownloadDocumentMock.getPaAttachmentMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getNotificationPaymentError() {
+        when(pnDeliveryClientRecipient.getReceivedNotificationPayment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsRecipientService.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
 }
