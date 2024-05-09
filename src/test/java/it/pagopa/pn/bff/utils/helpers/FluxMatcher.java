@@ -2,11 +2,12 @@ package it.pagopa.pn.bff.utils.helpers;
 
 import org.mockito.ArgumentMatcher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class FluxMatcher<T> implements ArgumentMatcher<T> {
 
-    int count = 0;
     private T argumentForComparison;
+    private Flux<?> cachedArgumentToCompare = null;
 
     public FluxMatcher(T argumentForComparison) {
         this.argumentForComparison = argumentForComparison;
@@ -21,45 +22,21 @@ public class FluxMatcher<T> implements ArgumentMatcher<T> {
             return false;
         }
 
-        System.out.println("-------Count " + count);
-        System.out.println("argumentToCompare");
-        ((Flux<?>) argumentToCompare).subscribe(System.out::println);
-        System.out.println("argumentForComparison");
-        ((Flux<?>) argumentForComparison).subscribe(System.out::println);
-
-        /*
-        Mono<Boolean> result = ((Flux<?>) argumentToCompare)
-                .zipWith((Flux<?>) argumentForComparison)
-                .map((args) -> args.getT1().equals(args.getT2()))
-                .reduce(true, (res1, res2) -> res1.equals(true) && res2.equals(true));
-        return Boolean.TRUE.equals(result.block());
-        */
-        count++;
-        return true;
-    }
-
-    /*
-    public static <TC, FC> boolean compare(TC argumentToCompare, FC argumentForComparison) {
-        if (argumentToCompare == null || argumentForComparison == null) {
-            return false;
-        }
-        if (!(argumentToCompare instanceof Flux) || !(argumentForComparison instanceof Flux)) {
-            return false;
+        if (cachedArgumentToCompare == null) {
+            // the matcher is called twice to test that the code is idempotent
+            // the first time, everything goes ok but the second time the argumentToCompare is completed
+            // and every action on it causes an error
+            // (the block() at the end, close and complete the Flux)
+            // so we cache the last result emitted by the Flux, and we rerun the check
+            cachedArgumentToCompare = ((Flux<?>) argumentToCompare).cache();
         }
 
-        System.out.println("-------Count " + count);
-        System.out.println("argumentToCompare");
-        ((Flux<?>) argumentToCompare).subscribe(System.out::println);
-        System.out.println("argumentForComparison");
-        ((Flux<?>) argumentForComparison).subscribe(System.out::println);
-
-        Mono<Boolean> result = ((Flux<?>) argumentToCompare)
+        Mono<Boolean> result = cachedArgumentToCompare
                 .zipWith((Flux<?>) argumentForComparison)
                 .map((args) -> args.getT1().equals(args.getT2()))
-                .reduce(true, (res1, res2) -> res1.equals(true) && res2.equals(true));
+                .reduce(true, (res1, res2) -> res1.equals(true) && res2.equals(true))
+                .cache();
+
         return Boolean.TRUE.equals(result.block());
-        count++;
-        return true;
     }
-    */
 }

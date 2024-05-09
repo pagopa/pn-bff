@@ -56,9 +56,9 @@ class PaymentsControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.PAYMENTS_INFO_PATH)
                                 .build())
-                .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
@@ -91,9 +91,9 @@ class PaymentsControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.PAYMENTS_INFO_PATH)
                                 .build())
-                .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()

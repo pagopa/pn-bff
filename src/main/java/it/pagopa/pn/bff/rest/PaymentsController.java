@@ -32,8 +32,8 @@ public class PaymentsController implements PaymentsApi {
      * @return the detailed list of payments
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffPaymentInfoItem>>> getPaymentsInfoV1(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Flux<PaymentInfoRequest> paymentInfoRequest,
-                                                                            final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffPaymentInfoItem>>> getPaymentsInfoV1(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId,
+                                                                            Flux<PaymentInfoRequest> paymentInfoRequest, final ServerWebExchange exchange) {
         log.logStartingProcess("getPaymentsInfoV1");
 
 
