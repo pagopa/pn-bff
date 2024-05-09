@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class SentNotificationController implements NotificationSentApi {
+public class SentNotificationController implements NotificationSentApi, NotificationCancellationApi {
 
     private final NotificationsPAService notificationsPAService;
 
@@ -130,6 +131,30 @@ public class SentNotificationController implements NotificationSentApi {
         );
 
         log.logEndingProcess("getSentNotificationDocumentV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * PUT bff/v1/notifications/cancel/{iun}: Notification cancellation
+     * Cancel a notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return the status of the operation
+     */
+    @Override
+    public Mono<ResponseEntity<BffRequestStatus>> notificationCancellationV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+        log.logStartingProcess("notificationCancellationV1");
+
+        Mono<BffRequestStatus> serviceResponse = notificationsPAService.notificationCancellation(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
+        );
+
+        log.logEndingProcess("notificationCancellationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

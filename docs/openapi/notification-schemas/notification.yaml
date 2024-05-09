@@ -162,3 +162,42 @@ components:
 
     BffNotificationDetailTimelineDetails:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/97e92c13dd34b1690c3193836dd1d6e51aafb30f/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementDetailsV23'
+    
+    BffRequestStatus:
+      description: Response to cancellation async call
+      type: object
+      properties:
+        status:
+          description: >
+            Cancellation request status:
+              - OK
+          type: string
+        details:
+          type: array
+          maxItems: 9999
+          items:
+            $ref: '#/components/schemas/BffStatusDetail'
+      required:
+      - status
+    
+    BffStatusDetail:
+      description: Detail of response to cancellation async call
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          description: Internal code of the error or warning, in human-readable format
+          example: NOTIFICATION_CANCELLATION_ACCEPTED, NOTIFICATION_ALREADY_CANCELLED
+          type: string
+        level:
+          description: |
+            informational level of status detail: INFO,WARN, ERR
+            ERR (error) by default
+          example: INFO
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: Parameter not valid
+          type: string
+      
