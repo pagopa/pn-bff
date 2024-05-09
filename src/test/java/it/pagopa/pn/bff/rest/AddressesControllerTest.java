@@ -8,7 +8,7 @@ import it.pagopa.pn.bff.mocks.AddressesMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.AddressesService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -143,7 +143,7 @@ public class AddressesControllerTest {
                 eq(BffAddressType.COURTESY),
                 eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -185,7 +185,7 @@ public class AddressesControllerTest {
                 eq(BffAddressType.COURTESY),
                 eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
