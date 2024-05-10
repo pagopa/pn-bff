@@ -162,4 +162,28 @@ public class SentNotificationController implements NotificationSentApi {
         log.logEndingProcess("getSentNotificationPaymentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
+
+    /**
+     * PUT bff/v1/notifications/sent/{iun}/cancel: Notification cancellation
+     * Cancel a notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return the status of the operation
+     */
+    @Override
+    public Mono<ResponseEntity<BffRequestStatus>> notificationCancellationV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+        log.logStartingProcess("notificationCancellationV1");
+
+        Mono<BffRequestStatus> serviceResponse = notificationsPAService.notificationCancellation(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
+        );
+
+        log.logEndingProcess("notificationCancellationV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }

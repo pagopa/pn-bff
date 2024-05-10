@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.pnclient.deliverypush;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class PnDeliveryPushClientImpl {
     private final DocumentsWebApi documentsWebApi;
     private final LegalFactsApi legalFactsApi;
+    private final NotificationCancellationApi notificationCancellationApi;
 
     public Mono<DocumentDownloadMetadataResponse> getDocumentsWeb(String xPagopaPnUid,
                                                                   CxTypeAuthFleet xPagopaPnCxType,
@@ -61,5 +63,21 @@ public class PnDeliveryPushClientImpl {
                 xPagopaPnCxGroups,
                 mandateId
         );
+    }
+
+    public Mono<RequestStatus> notificationCancellation(String xPagopaPnUid,
+                                                        CxTypeAuthFleet xPagopaPnCxType,
+                                                        String xPagopaPnCxId,
+                                                        String iun,
+                                                        List<String> xPagopaPnCxGroups
+    ) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY_PUSH, "notificationCancellation");
+
+        return notificationCancellationApi.notificationCancellation(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                xPagopaPnCxGroups);
     }
 }
