@@ -165,6 +165,3 @@ components:
     
     BffRequestStatus:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/712398812afa832d50772e7ec587b088f5c5e33e/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
-    
-    BffStatusDetail:
-        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/712398812afa832d50772e7ec587b088f5c5e33e/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/StatusDetail'

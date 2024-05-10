@@ -112,7 +112,7 @@ class SentNotificationControllerTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyInt(),
                 Mockito.anyString()
-        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -199,7 +199,7 @@ class SentNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -285,7 +285,7 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -376,7 +376,7 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -468,7 +468,7 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -584,8 +584,9 @@ class SentNotificationControllerTest {
                 0
         );
     }
+
     @Test
-    void notificationCancellation(){
+    void notificationCancellation() {
         BffRequestStatus response = NotificationCancellationMapper.modelMapper.mapNotificationCancellation(notificationsSentMock.notificationCancellationPNMock());
         Mockito.when(notificationsPAService.notificationCancellation(
                 Mockito.anyString(),
@@ -621,7 +622,7 @@ class SentNotificationControllerTest {
     }
 
     @Test
-    void notificationCancellationError(){
+    void notificationCancellationError() {
         Mockito.when(notificationsPAService.notificationCancellation(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

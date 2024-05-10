@@ -200,16 +200,16 @@ paths:
       description: |-
         Questa operazione permette di annullare una notifica inviata.
       tags:
-      - NotificationSent
+        - NotificationSent
       operationId: notificationCancellationV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-      - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-      - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
       responses:
         '202':
           description: Accepted - Richiesta annullamento presa in carico

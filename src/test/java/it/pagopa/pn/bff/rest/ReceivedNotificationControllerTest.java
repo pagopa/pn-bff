@@ -118,7 +118,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyInt(),
                         Mockito.anyString()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -239,7 +239,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyInt(),
                         Mockito.anyString()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -331,7 +331,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.any()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -420,7 +420,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -515,7 +515,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -610,7 +610,7 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
