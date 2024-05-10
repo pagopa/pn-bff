@@ -4,12 +4,16 @@ import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -96,6 +100,36 @@ public class MsClientConfig extends CommonBaseClient {
 
     @Bean
     @Primary
+    AllApi allAddressApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new AllApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    CourtesyApi courtesyApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new CourtesyApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    LegalApi legalApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getUserAttributesBaseUrl());
+        return new LegalApi(apiClient);
+    }
+
+    @Bean
+    @Primary
     DowntimeApi downtimeLogsApi(PnBffConfigs cfg) {
         it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient apiClient =
                 new it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.ApiClient(
@@ -122,5 +156,15 @@ public class MsClientConfig extends CommonBaseClient {
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient.buildWebClientBuilder()));
         apiClient.setBasePath(cfg.getDeliveryBaseUrl());
         return new LegalFactsApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    NotificationCancellationApi notificationCancellationApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+        return new NotificationCancellationApi(apiClient);
     }
 }

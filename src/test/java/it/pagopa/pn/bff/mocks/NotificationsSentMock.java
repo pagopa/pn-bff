@@ -1,5 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.StatusDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
@@ -49,5 +51,16 @@ public class NotificationsSentMock {
         notificationSearchResponse.setResultsPage(notificationSearchRows);
         notificationSearchResponse.setMoreResult(false);
         return notificationSearchResponse;
+    }
+
+    public RequestStatus notificationCancellationPNMock() {
+        RequestStatus requestStatus = new RequestStatus();
+        StatusDetail statusDetail = new StatusDetail();
+        statusDetail.setCode("NOTIFICATION_CANCELLATION_ACCEPTED");
+        statusDetail.setLevel("INFO");
+        statusDetail.setDetail("Notification cancellation accepted");
+        requestStatus.setStatus("OK");
+        requestStatus.setDetails(new ArrayList<>(List.of(statusDetail)));
+        return requestStatus;
     }
 }
