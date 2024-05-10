@@ -206,6 +206,25 @@ public class NotificationDetailUtility {
     }
 
     /**
+     * Remove those relatedTimelineElements that aren't in the timeline array
+     *
+     * @param bffFullNotificationV1 the notification to clean
+     */
+    public static void cleanRelatedTimelineElements(BffFullNotificationV1 bffFullNotificationV1) {
+        for (BffNotificationStatusHistory notificationStatusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
+            List<String> cleanedRelatedTimelineElements = new ArrayList<>();
+            for (String relatedTimelineElement : notificationStatusHistory.getRelatedTimelineElements()) {
+                bffFullNotificationV1.getTimeline()
+                        .stream()
+                        .filter(elem -> elem.getElementId().equals(relatedTimelineElement))
+                        .findFirst()
+                        .ifPresent(timelineElem -> cleanedRelatedTimelineElements.add(relatedTimelineElement));
+            }
+            notificationStatusHistory.setRelatedTimelineElements(cleanedRelatedTimelineElements);
+        }
+    }
+
+    /**
      * Move the AAR documents from the timeline to a separate key in the notification model
      *
      * @param bffFullNotificationV1 the notification to populate

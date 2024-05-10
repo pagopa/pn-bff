@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import org.springframework.beans.BeanUtils;
 
 import java.time.OffsetDateTime;
@@ -570,7 +570,7 @@ public class NotificationDetailPaMock {
     public BffFullNotificationV1 notificationToFERADD() {
         FullSentNotificationV23 notificationDTORadd = getNotificationMultiRecipientMock();
         notificationDTORadd.setTimeline(getTimelineRADDMock());
-        return NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd);
+        return NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd);
     }
 
     public TimelineElementV23 getTimelineElem(TimelineElementCategoryV23 category, TimelineElementDetailsV23 details) {

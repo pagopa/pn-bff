@@ -7,8 +7,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFact
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationCancellationMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -143,7 +143,7 @@ class NotificationPaServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock()))
+                .expectNext(NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock()))
                 .verifyComplete();
     }
 
