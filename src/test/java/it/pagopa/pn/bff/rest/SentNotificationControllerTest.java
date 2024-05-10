@@ -599,7 +599,7 @@ class SentNotificationControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_CANCEL_PATH)
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_CANCEL_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -634,7 +634,7 @@ class SentNotificationControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.NOTIFICATION_CANCEL_PATH)
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_CANCEL_PATH)
                                 .build(IUN))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)

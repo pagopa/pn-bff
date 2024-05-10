@@ -6,7 +6,6 @@ public class PnBffRestConstants {
     public static final String UID_HEADER = "x-pagopa-pn-uid";
     public static final String CX_TYPE_HEADER = "x-pagopa-pn-cx-type";
     public static final String CX_GROUPS_HEADER = "x-pagopa-pn-cx-groups";
-    public static final String SOURCECHANNEL_HEADER = "x-pagopa-pn-src-ch";
     public static final String CX_ROLE_HEADER = "x-pagopa-pn-cx-role";
     private static final String BFF_PATH = "/bff";
     private static final String VERSION_1 = "/v1";
@@ -18,8 +17,8 @@ public class PnBffRestConstants {
     public static final String NOTIFICATIONS_SENT_PATH = BFF_PATH + VERSION_1 + "/notifications/sent";
     public static final String NOTIFICATION_SENT_PATH = NOTIFICATIONS_SENT_PATH + "/{iun}";
     public static final String NOTIFICATION_SENT_DOCUMENT_PATH = NOTIFICATION_SENT_PATH + "/documents/{documentType}";
-    public static final String NOTIFICATION_CANCEL_PATH = BFF_PATH + VERSION_1 + "/notifications/{iun}/cancel";
     public static final String NOTIFICATION_SENT_PAYMENT_PATH = NOTIFICATION_SENT_PATH + "/payments/{recipientIdx}/{attachmentName}";
+    public static final String NOTIFICATION_SENT_CANCEL_PATH = NOTIFICATION_SENT_PATH + "/cancel";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";

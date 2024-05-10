@@ -194,7 +194,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
   
-  '/bff/v1/notifications/{iun}/cancel':
+  '/bff/v1/notifications/sent/{iun}/cancel':
     put:
       summary: 'Mittente: annullamento notifica'
       description: |-

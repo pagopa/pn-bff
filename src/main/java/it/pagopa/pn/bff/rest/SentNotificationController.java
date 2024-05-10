@@ -164,7 +164,7 @@ public class SentNotificationController implements NotificationSentApi {
     }
 
     /**
-     * PUT bff/v1/notifications/{iun}/cancel: Notification cancellation
+     * PUT bff/v1/notifications/sent/{iun}/cancel: Notification cancellation
      * Cancel a notification
      *
      * @param xPagopaPnUid      User Identifier

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: KAbkDELoZyyFK3iqx0nj2yasPqyXclNv9hxz4p5scjg=
+  version: RYz5JI7li0FRXr5EuqI7NVIMWmjxHsJm9FPTI18+jGs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -296,7 +296,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/notifications/{iun}/cancel:
+  /v1/notifications/sent/{iun}/cancel:
     put:
       summary: 'Mittente: annullamento notifica'
       description: Questa operazione permette di annullare una notifica inviata.
@@ -334,7 +334,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/{iun}/cancel
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/cancel
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -352,10 +352,10 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/notifications/{iun}/cancel API CORS
+      operationId: Options for /v1/notifications/sent/{iun}/cancel API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/{iun}/cancel
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/cancel
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
