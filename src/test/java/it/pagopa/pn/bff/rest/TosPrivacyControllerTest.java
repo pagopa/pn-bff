@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -33,8 +32,6 @@ class TosPrivacyControllerTest {
     ConsentsMock consentsMock = new ConsentsMock();
     @MockBean
     private TosPrivacyService tosPrivacyService;
-    @SpyBean
-    private TosPrivacyController tosPrivacyController;
 
     @Test
     void getTosPrivacy() {

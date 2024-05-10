@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Deleghe
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-recipient-mandate
+  x-summary: 'API di pn-bff esposte al Web per la gestione delle deleghe'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Mandate
+    description: >-
+      Invocazioni utilizzate per la gestione delle deleghe.
+
+paths:
+  '/bff/v1/mandate/count-by-delegate':
+    get:
+      summary: >-
+        Ritorna il numero totale di deleghe in base al filtro stato (se specificato).
+        Se non è presente nessun filtro, sono ritornate tutte le deleghe attive e pending
+      tags:
+        - Mandate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      operationId: countMandatesByDelegateV1
+      parameters:
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQueryStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffMandatesCount'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate':
+    post:
+      summary: Create a new mandate, returns the just created mandate if successful
+      tags:
+        - Mandate
+      operationId: createMandateV1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffNewMandateRequest'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

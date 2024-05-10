@@ -1,0 +1,49 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    BffQueryStatus:
+      description: Stato della delega
+      name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - pending
+          - active
+          - revoked
+          - rejected
+          - expired
+
+  schemas:
+
+    BffMandatesCount:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateCountsDto'
+
+    BffNewMandateRequest:
+      type: object
+      properties:
+        delegate:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UserDto'
+        visibilityIds:
+          type: array
+          description: Available always, not required on mandate creation.
+          nullable: true
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml#/components/schemas/GroupDto'

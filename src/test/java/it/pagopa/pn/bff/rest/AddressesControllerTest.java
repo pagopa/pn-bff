@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(controllers = AddressesController.class)
-public class AddressesControllerTest {
+class AddressesControllerTest {
     private final UserMock userMock = new UserMock();
     private final AddressesMock addressesMock = new AddressesMock();
 
@@ -36,8 +35,6 @@ public class AddressesControllerTest {
     WebTestClient webTestClient;
     @MockBean
     AddressesService addressesService;
-    @SpyBean
-    AddressesController addressesController;
 
     @Test
     void getUserAddresses() {

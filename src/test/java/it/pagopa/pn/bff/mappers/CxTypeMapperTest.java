@@ -63,4 +63,12 @@ class CxTypeMapperTest {
         assertNotNull(actualConvertDeliveryPush);
         assertEquals(actualConvertDeliveryPush.getValue(), cxTypeAuthFleet.getValue());
     }
+
+    @Test
+    void testConvertMandate() {
+        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PF;
+        it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet actualConvertMandate = CxTypeMapper.cxTypeMapper.convertMandateCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertMandate);
+        assertEquals(actualConvertMandate.getValue(), cxTypeAuthFleet.getValue());
+    }
 }
