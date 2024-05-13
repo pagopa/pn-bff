@@ -184,6 +184,6 @@ public class SentNotificationController implements NotificationSentApi {
         );
 
         log.logEndingProcess("notificationCancellationV1");
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
     }
 }

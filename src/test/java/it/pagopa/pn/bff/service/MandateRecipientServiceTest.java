@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
@@ -116,6 +117,53 @@ public class MandateRecipientServiceTest {
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         Mono.just(mandateMock.getBffNewMandateRequestMock())
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void acceptMandate() {
+        when(pnMandateClientRecipient.acceptMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(AcceptRequestDto.class)
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(mandateRecipientService.acceptMandate(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        "MANDATE_ID",
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_CX_ROLE,
+                        Mono.just(mandateMock.getBffAcceptRequestMock())
+                ))
+                .expectNext()
+                .verifyComplete();
+    }
+
+    @Test
+    void acceptMandateError() {
+        when(pnMandateClientRecipient.acceptMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(AcceptRequestDto.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(mandateRecipientService.acceptMandate(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        "MANDATE_ID",
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_CX_ROLE,
+                        Mono.just(mandateMock.getBffAcceptRequestMock())
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)

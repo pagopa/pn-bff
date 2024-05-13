@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
 
 import java.time.OffsetDateTime;
@@ -30,7 +31,6 @@ public class MandateMock {
     public MandateDto getNewMandateRequestMock() {
         MandateDto newMandateRequest = new MandateDto();
         OffsetDateTime today = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.DAYS);
-        newMandateRequest.setDatefrom(today.format(fmt));
         OffsetDateTime tomorrow = today.plusDays(1);
         newMandateRequest.setDateto(tomorrow.format(fmt));
         UserDto delegate = new UserDto();
@@ -93,5 +93,25 @@ public class MandateMock {
         newMandateResponse.setGroups(groups);
         newMandateResponse.setStatus(MandateDto.StatusEnum.PENDING);
         return newMandateResponse;
+    }
+
+    public AcceptRequestDto getAcceptRequestMock() {
+        AcceptRequestDto acceptRequest = new AcceptRequestDto();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        acceptRequest.setGroups(groups);
+        acceptRequest.setVerificationCode("12345");
+        return acceptRequest;
+    }
+
+    public BffAcceptRequest getBffAcceptRequestMock() {
+        BffAcceptRequest acceptRequest = new BffAcceptRequest();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        acceptRequest.setGroups(groups);
+        acceptRequest.setVerificationCode("12345");
+        return acceptRequest;
     }
 }

@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.mandate.AcceptMandateMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.NewMandateMapper;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
@@ -64,6 +66,30 @@ public class MandateRecipientService {
         log.info("createMandate");
         return newMandateRequest.flatMap(req -> pnMandateClientRecipient
                 .createMandate(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, NewMandateMapper.modelMapper.mapRequest(req))
+                .then()
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
+    }
+
+    /**
+     * Accept a mandate.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate that has created the mandate request
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param acceptRequest     The request containing the verification code
+     * @return
+     */
+    public Mono<Void> acceptMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole,
+                                    Mono<BffAcceptRequest> acceptRequest) {
+        log.info("acceptMandate");
+        return acceptRequest.flatMap(req -> pnMandateClientRecipient
+                .acceptMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, AcceptMandateMapper.modelMapper.mapRequest(req))
                 .then()
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
     }

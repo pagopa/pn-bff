@@ -29,6 +29,7 @@ class PnMandateClientRecipientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathMandate = "/mandate/api/v1";
+    private final String mandateId = "MANDATE_ID";
     private final MandateMock mandateMock = new MandateMock();
     @Autowired
     private PnMandateClientRecipientImpl pnMandateClient;
@@ -124,6 +125,42 @@ class PnMandateClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
                 mandateMock.getNewMandateRequestMock()
+        )).expectError().verify();
+    }
+
+    @Test
+    void acceptMandate() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(mandateMock.getAcceptRequestMock());
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/accept").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                );
+
+        StepVerifier.create(pnMandateClient.acceptMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getAcceptRequestMock()
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void acceptMandateError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(mandateMock.getAcceptRequestMock());
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/accept").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.acceptMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getAcceptRequestMock()
         )).expectError().verify();
     }
 }

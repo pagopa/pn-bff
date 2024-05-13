@@ -605,7 +605,7 @@ class SentNotificationControllerTest {
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isAccepted()
                 .expectBody(BffRequestStatus.class)
                 .isEqualTo(response);
 

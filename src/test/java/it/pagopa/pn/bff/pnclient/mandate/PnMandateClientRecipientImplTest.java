@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.pnclient.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
 import it.pagopa.pn.bff.mocks.MandateMock;
@@ -104,6 +105,48 @@ class PnMandateClientRecipientImplTest {
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
                 mandateMock.getNewMandateRequestMock()
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void acceptMandate() {
+        when(mandateApi.acceptMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(AcceptRequestDto.class)
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnMandateClient.acceptMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getAcceptRequestMock()
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void acceptMandateError() {
+        when(mandateApi.acceptMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(AcceptRequestDto.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnMandateClient.acceptMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getAcceptRequestMock()
         )).expectError(WebClientResponseException.class).verify();
     }
 }

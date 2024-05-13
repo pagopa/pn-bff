@@ -104,7 +104,7 @@ class TosPrivacyControllerTest {
                 .body(Mono.just(request), BffTosPrivacyBody.class)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isNoContent()
                 .expectBody(Void.class);
 
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(

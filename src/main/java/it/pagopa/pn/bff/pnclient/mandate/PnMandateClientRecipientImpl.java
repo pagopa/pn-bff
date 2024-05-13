@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.pnclient.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateCountsDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
@@ -47,6 +48,24 @@ public class PnMandateClientRecipientImpl {
                 xPagopaPnCxGroups,
                 xPagopaPnCxRole,
                 mandateDto
+        );
+    }
+
+    public Mono<Void> acceptMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole,
+                                    AcceptRequestDto acceptRequestDto) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "acceptMandate");
+
+        return mandateApi.acceptMandate(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                mandateId,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                acceptRequestDto
         );
     }
 }
