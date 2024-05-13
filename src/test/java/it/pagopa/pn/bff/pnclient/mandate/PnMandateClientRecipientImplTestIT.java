@@ -163,4 +163,100 @@ class PnMandateClientRecipientImplTestIT {
                 mandateMock.getAcceptRequestMock()
         )).expectError().verify();
     }
+
+    @Test
+    void updateMandate() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(mandateMock.getUpdateRequestMock());
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/update").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                );
+
+        StepVerifier.create(pnMandateClient.updateMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getUpdateRequestMock()
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void updateMandateError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(mandateMock.getUpdateRequestMock());
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/update").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.updateMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getUpdateRequestMock()
+        )).expectError().verify();
+    }
+
+    @Test
+    void rejectMandate() {
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/reject"))
+                .respond(response()
+                        .withStatusCode(200)
+                );
+
+        StepVerifier.create(pnMandateClient.rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void rejectMandateError() {
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/reject"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void revokeMandate() {
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/revoke"))
+                .respond(response()
+                        .withStatusCode(200)
+                );
+
+        StepVerifier.create(pnMandateClient.revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void revokeMandateError() {
+        mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/revoke"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
 }

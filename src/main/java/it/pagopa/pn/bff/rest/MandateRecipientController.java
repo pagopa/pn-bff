@@ -1,10 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.MandateApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.MandateRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -95,10 +92,10 @@ public class MandateRecipientController implements MandateApi {
      *
      * @param xPagopaPnCxId     User id
      * @param xPagopaPnCxType   User Type
-     * @param mandateId         The id of the mandate that has created the mandate request
+     * @param mandateId         The id of the mandate created
      * @param xPagopaPnCxGroups User Group id List
      * @param xPagopaPnCxRole   User role
-     * @param acceptRequest     The request containing the verification code
+     * @param acceptRequest     The request containing the groups
      * @param exchange
      * @return
      */
@@ -119,6 +116,104 @@ public class MandateRecipientController implements MandateApi {
 
 
         log.logEndingProcess("acceptMandateV1");
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
+    /**
+     * PATCH bff/v1/mandate/{mandateId}/update: Update mandate
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param updateRequest     The request containing the groups
+     * @param exchange
+     * @return
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> updateMandateV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String mandateId,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            Mono<BffUpdateRequest> updateRequest,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("updateMandateV1");
+
+        Mono<Void> serviceResponse = mandateRecipientService.updateMandate(
+                xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, updateRequest
+        );
+
+
+        log.logEndingProcess("updateMandateV1");
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
+    /**
+     * PATCH bff/v1/mandate/{mandateId}/reject: Reject mandate
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param exchange
+     * @return
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> rejectMandateV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String mandateId,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("rejectMandateV1");
+
+        Mono<Void> serviceResponse = mandateRecipientService.rejectMandate(
+                xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole
+        );
+
+
+        log.logEndingProcess("rejectMandateV1");
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
+    /**
+     * PATCH bff/v1/mandate/{mandateId}/revoke: Revoke mandate
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param exchange
+     * @return
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> revokeMandateV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String mandateId,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("revokeMandateV1");
+
+        Mono<Void> serviceResponse = mandateRecipientService.revokeMandate(
+                xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole
+        );
+
+
+        log.logEndingProcess("revokeMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));

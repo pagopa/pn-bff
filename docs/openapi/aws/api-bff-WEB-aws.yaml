@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ilSzQEY16GQ0zqA7jj6qUyX68cwGC1qxM8URsvLlVpY=
+  version: kD8aXLphbJLIUlrxH5gj2ruyZqpOEYrOjhqTEIFtBxs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1944,14 +1944,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - name: mandateId
-          in: path
-          required: true
-          schema:
-            type: string
-            maxLength: 36
-            pattern: >-
-              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        - $ref: '#/components/parameters/BffPathMandateId'
       requestBody:
         content:
           application/json:
@@ -1990,6 +1983,164 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/update:
+    patch:
+      summary: Update a mandate
+      tags:
+        - Mandate
+      operationId: updateMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/update API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/reject:
+    patch:
+      summary: Reject a mandate
+      tags:
+        - Mandate
+      operationId: rejectMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/reject API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/revoke:
+    patch:
+      summary: Revoke a mandate
+      tags:
+        - Mandate
+      operationId: revokeMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/revoke
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/revoke API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/revoke
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -2221,6 +2372,15 @@ components:
           - revoked
           - rejected
           - expired
+    BffPathMandateId:
+      name: mandateId
+      in: path
+      required: true
+      schema:
+        type: string
+        maxLength: 36
+        pattern: >-
+          ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
   schemas:
     NotificationStatus:
       type: string
@@ -5016,6 +5176,16 @@ components:
           items:
             type: string
             maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 39
             pattern: ^[ -~ ]*$
   responses: {}
   securitySchemes:

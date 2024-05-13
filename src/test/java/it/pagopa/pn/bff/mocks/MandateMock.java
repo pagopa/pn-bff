@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUpdateRequest;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -113,5 +114,23 @@ public class MandateMock {
         acceptRequest.setGroups(groups);
         acceptRequest.setVerificationCode("12345");
         return acceptRequest;
+    }
+
+    public UpdateRequestDto getUpdateRequestMock() {
+        UpdateRequestDto updateRequestDto = new UpdateRequestDto();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        updateRequestDto.setGroups(groups);
+        return updateRequestDto;
+    }
+
+    public BffUpdateRequest getBffUpdateRequestMock() {
+        BffUpdateRequest updateRequest = new BffUpdateRequest();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        updateRequest.setGroups(groups);
+        return updateRequest;
     }
 }

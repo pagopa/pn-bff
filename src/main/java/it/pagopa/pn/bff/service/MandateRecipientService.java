@@ -1,13 +1,11 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.mandate.AcceptMandateMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.NewMandateMapper;
+import it.pagopa.pn.bff.mappers.mandate.UpdateMandateMapper;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -75,10 +73,10 @@ public class MandateRecipientService {
      *
      * @param xPagopaPnCxId     User id
      * @param xPagopaPnCxType   User Type
-     * @param mandateId         The id of the mandate that has created the mandate request
+     * @param mandateId         The id of the mandate created
      * @param xPagopaPnCxGroups User Group id List
      * @param xPagopaPnCxRole   User role
-     * @param acceptRequest     The request containing the verification code
+     * @param acceptRequest     The request containing the verification code and the groups
      * @return
      */
     public Mono<Void> acceptMandate(String xPagopaPnCxId,
@@ -92,6 +90,74 @@ public class MandateRecipientService {
                 .acceptMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, AcceptMandateMapper.modelMapper.mapRequest(req))
                 .then()
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
+    }
+
+    /**
+     * Update a mandate.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param updateRequest     The request containing the groups
+     * @return
+     */
+    public Mono<Void> updateMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole,
+                                    Mono<BffUpdateRequest> updateRequest) {
+        log.info("updateMandate");
+        return updateRequest.flatMap(req -> pnMandateClientRecipient
+                .updateMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, UpdateMandateMapper.modelMapper.mapRequest(req))
+                .then()
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
+    }
+
+    /**
+     * Reject a mandate.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @return
+     */
+    public Mono<Void> rejectMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole) {
+        log.info("rejectMandate");
+        return pnMandateClientRecipient
+                .rejectMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole)
+                .then()
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
+
+    /**
+     * Revoke a mandate.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param mandateId         The id of the mandate created
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @return
+     */
+    public Mono<Void> revokeMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole) {
+        log.info("revokeMandate");
+        return pnMandateClientRecipient
+                .revokeMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole)
+                .then()
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
 }

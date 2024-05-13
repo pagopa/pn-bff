@@ -1,10 +1,7 @@
 package it.pagopa.pn.bff.pnclient.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
-import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateCountsDto;
-import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +63,56 @@ public class PnMandateClientRecipientImpl {
                 xPagopaPnCxGroups,
                 xPagopaPnCxRole,
                 acceptRequestDto
+        );
+    }
+
+    public Mono<Void> updateMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole,
+                                    UpdateRequestDto updateRequestDto) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "updateMandate");
+
+        return mandateApi.updateMandate(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                mandateId,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                updateRequestDto
+        );
+    }
+
+    public Mono<Void> rejectMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "rejectMandate");
+
+        return mandateApi.rejectMandate(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                mandateId,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        );
+    }
+
+    public Mono<Void> revokeMandate(String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    String mandateId,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "revokeMandate");
+
+        return mandateApi.revokeMandate(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                mandateId,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
         );
     }
 }

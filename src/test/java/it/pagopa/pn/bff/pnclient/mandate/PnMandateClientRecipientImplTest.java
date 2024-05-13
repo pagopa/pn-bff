@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.UpdateRequestDto;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
@@ -147,6 +148,124 @@ class PnMandateClientRecipientImplTest {
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
                 mandateMock.getAcceptRequestMock()
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void updateMandate() {
+        when(mandateApi.updateMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(UpdateRequestDto.class)
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnMandateClient.updateMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getUpdateRequestMock()
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void updateMandateError() {
+        when(mandateApi.updateMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.any(UpdateRequestDto.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnMandateClient.updateMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getUpdateRequestMock()
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void rejectMandate() {
+        when(mandateApi.rejectMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnMandateClient.rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void rejectMandateError() {
+        when(mandateApi.rejectMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnMandateClient.rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void revokeMandate() {
+        when(mandateApi.revokeMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnMandateClient.revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void revokeMandateError() {
+        when(mandateApi.revokeMandate(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnMandateClient.revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                "MANDATE_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         )).expectError(WebClientResponseException.class).verify();
     }
 }

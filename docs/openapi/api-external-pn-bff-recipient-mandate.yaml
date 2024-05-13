@@ -84,18 +84,77 @@ paths:
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
-        - name: mandateId
-          in: path
-          required: true
-          schema:
-            type: string
-            maxLength: 36
-            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       requestBody:
         content:
           application/json:
             schema:
               $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffAcceptRequest'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate/{mandateId}/update':
+    patch:
+      summary: Update a mandate
+      tags:
+        - Mandate
+      operationId: updateMandateV1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffUpdateRequest'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate/{mandateId}/reject':
+    patch:
+      summary: Reject a mandate
+      tags:
+        - Mandate
+      operationId: rejectMandateV1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate/{mandateId}/revoke':
+    patch:
+      summary: Revoke a mandate
+      tags:
+        - Mandate
+      operationId: revokeMandateV1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       responses:
         '204':
           description: No Content

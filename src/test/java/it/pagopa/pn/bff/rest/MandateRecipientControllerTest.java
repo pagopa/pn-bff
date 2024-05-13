@@ -1,10 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -270,6 +267,225 @@ class MandateRecipientControllerTest {
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE),
                 argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void updateMandate() {
+        BffUpdateRequest request = mandateMock.getBffUpdateRequestMock();
+        Mockito.when(mandateRecipientService.updateMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/update")
+                                .build(mandateId))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody(Void.class);
+
+        Mockito.verify(mandateRecipientService).updateMandate(
+                eq(UserMock.PN_CX_ID),
+                eq(CxTypeAuthFleet.PF),
+                eq(mandateId),
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE),
+                argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void updateMandateError() {
+        BffUpdateRequest request = mandateMock.getBffUpdateRequestMock();
+        Mockito.when(mandateRecipientService.updateMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/update")
+                                .build(mandateId))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).updateMandate(
+                eq(UserMock.PN_CX_ID),
+                eq(CxTypeAuthFleet.PF),
+                eq(mandateId),
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE),
+                argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void rejectMandate() {
+        Mockito.when(mandateRecipientService.rejectMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/reject")
+                                .build(mandateId))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody(Void.class);
+
+        Mockito.verify(mandateRecipientService).rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        );
+    }
+
+    @Test
+    void rejectMandateError() {
+        Mockito.when(mandateRecipientService.rejectMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/reject")
+                                .build(mandateId))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).rejectMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        );
+    }
+
+    @Test
+    void revokeMandate() {
+        Mockito.when(mandateRecipientService.revokeMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/revoke")
+                                .build(mandateId))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody(Void.class);
+
+        Mockito.verify(mandateRecipientService).revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        );
+    }
+
+    @Test
+    void revokeMandateError() {
+        Mockito.when(mandateRecipientService.revokeMandate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.patch()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/{mandateId}/revoke")
+                                .build(mandateId))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).revokeMandate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                mandateId,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         );
     }
 }
