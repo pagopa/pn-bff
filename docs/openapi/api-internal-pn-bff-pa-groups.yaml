@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Groups
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-groups
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Groups
+    description: Invocazioni per sapere i gruppi disponibili di un ente
+
+paths:
+  '/bff/v1/groups':
+    get:
+      summary: Get groups
+      description: |-
+        This operation retrieves the groups from Self Care.
+      operationId: getGroupsV1
+#      security:                                      # ONLY EXTERNAL
+#      - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+      - Groups
+      parameters: # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'                          # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'                         # NO EXTERNAL
+      - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'                     # NO EXTERNAL
+      - name: statusFilter
+        description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/BffPaGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPaGroupList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+                
+components:
+  schemas:
+    BffPaGroupStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
+    BffPaGroupList:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupList'
