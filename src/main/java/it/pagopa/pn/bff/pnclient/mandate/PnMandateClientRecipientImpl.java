@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.mandate;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateCountsDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,24 @@ public class PnMandateClientRecipientImpl {
                 xPagopaPnCxGroups,
                 xPagopaPnCxRole,
                 status
+        );
+    }
+
+    public Mono<MandateDto> createMandate(String xPagopaPnUid,
+                                          String xPagopaPnCxId,
+                                          CxTypeAuthFleet xPagopaPnCxType,
+                                          List<String> xPagopaPnCxGroups,
+                                          String xPagopaPnCxRole,
+                                          MandateDto mandateDto) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "createMandate");
+
+        return mandateApi.createMandate(
+                xPagopaPnUid,
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                mandateDto
         );
     }
 }

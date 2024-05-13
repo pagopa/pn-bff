@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.MandateApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.MandateRecipientService;
 import lombok.CustomLog;
@@ -39,8 +40,8 @@ public class MandateRecipientController implements MandateApi {
     public Mono<ResponseEntity<BffMandatesCount>> countMandatesByDelegateV1(
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
-            String xPagopaPnCxRole,
             List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
             String status,
             final ServerWebExchange exchange) {
         log.logStartingProcess("countMandatesByDelegateV1");
@@ -51,6 +52,38 @@ public class MandateRecipientController implements MandateApi {
 
 
         log.logEndingProcess("countMandatesByDelegateV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * POST bff/v1/mandate: Create mandate
+     *
+     * @param xPagopaPnUid      User id
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param newMandateRequest New mandate request
+     * @param exchange
+     * @return
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> createMandateV1(
+            String xPagopaPnUid,
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            Mono<BffNewMandateRequest> newMandateRequest,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("createMandateV1");
+
+        Mono<Void> serviceResponse = mandateRecipientService.createMandate(
+                xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, newMandateRequest
+        );
+
+
+        log.logEndingProcess("createMandateV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

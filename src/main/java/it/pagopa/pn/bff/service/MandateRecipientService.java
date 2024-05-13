@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandatesCount;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
+import it.pagopa.pn.bff.mappers.mandate.NewMandateMapper;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,30 @@ public class MandateRecipientService {
                 .countMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, status)
                 .map(MandateCountMapper.modelMapper::mapCount)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
+
+    /**
+     * Create a new mandate.
+     *
+     * @param xPagopaPnUid      User id
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param newMandateRequest New mandate request
+     * @return
+     */
+    public Mono<Void> createMandate(String xPagopaPnUid,
+                                    String xPagopaPnCxId,
+                                    CxTypeAuthFleet xPagopaPnCxType,
+                                    List<String> xPagopaPnCxGroups,
+                                    String xPagopaPnCxRole,
+                                    Mono<BffNewMandateRequest> newMandateRequest) {
+        log.info("createMandate");
+        return newMandateRequest.flatMap(req -> pnMandateClientRecipient
+                .createMandate(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, NewMandateMapper.modelMapper.mapRequest(req))
+                .then()
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
     }
 
 }

@@ -2,6 +2,8 @@ package it.pagopa.pn.bff.pnclient.mandate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -79,6 +81,49 @@ class PnMandateClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
                 "STATUS"
+        )).expectError().verify();
+    }
+
+    @Test
+    void createMandate() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String request = objectMapper.writeValueAsString(mandateMock.getNewMandateRequestMock());
+        String response = objectMapper.writeValueAsString(mandateMock.getNewMandateResponseMock());
+        mockServerClient.when(request().withMethod("POST").withPath(pathMandate + "/mandate").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnMandateClient.createMandate(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getNewMandateRequestMock()
+        )).expectNext(mandateMock.getNewMandateResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void createMandateError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
+        String request = objectMapper.writeValueAsString(mandateMock.getNewMandateRequestMock());
+        mockServerClient.when(request().withMethod("POST").withPath(pathMandate + "/mandate").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.createMandate(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                mandateMock.getNewMandateRequestMock()
         )).expectError().verify();
     }
 }
