@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.Notific
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
@@ -108,11 +109,11 @@ public class NotificationsPAService {
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapSentNotificationDetail);
+        return notificationDetail.map(NotificationSentDetailMapper.modelMapper::mapSentNotificationDetail);
     }
 
     /**
-     * Download the document linked to a notification
+     * Download the document linked to a notification. This is for a Public Administration user
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
@@ -204,6 +205,60 @@ public class NotificationsPAService {
 
             return legalFact.map(NotificationDownloadDocumentMapper.modelMapper::mapLegalFactDownloadResponse);
         }
+    }
 
+    /**
+     * Get the payment for a notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param recipientIdx      Index of the recipient for which download the payment
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @return the payment for the notification with a specific IUN
+     */
+    public Mono<BffDocumentDownloadMetadataResponse> getSentNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                String xPagopaPnCxId, String iun, Integer recipientIdx,
+                                                                                String attachmentName, List<String> xPagopaPnCxGroups,
+                                                                                Integer attachmentIdx
+    ) {
+        log.info("Get notification payment {} number {} for iun {} and recipient {}", attachmentName, attachmentIdx, iun, recipientIdx);
+        Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getSentNotificationPayment(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                recipientIdx,
+                attachmentName,
+                xPagopaPnCxGroups,
+                attachmentIdx
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return notificationDetail.map(NotificationDownloadDocumentMapper.modelMapper::mapSentAttachmentDownloadResponse);
+    }
+
+    /**
+     * Cancel a notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the status of the notification cancellation
+     */
+    public Mono<BffRequestStatus> notificationCancellation(String xPagopaPnUid,
+                                                           CxTypeAuthFleet xPagopaPnCxType,
+                                                           String xPagopaPnCxId,
+                                                           String iun,
+                                                           List<String> xPagopaPnCxGroups) {
+        log.info("notificationCancellation");
+        Mono<RequestStatus> bffRequestStatus = pnDeliveryPushClient.notificationCancellation(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType), xPagopaPnCxId, iun, xPagopaPnCxGroups
+                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return bffRequestStatus.map(NotificationCancellationMapper.modelMapper::mapNotificationCancellation);
     }
 }

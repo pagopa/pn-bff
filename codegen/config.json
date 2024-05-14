@@ -9,7 +9,9 @@
         "api-internal-pn-bff-pa-institution-and-product.yaml",
         "api-internal-pn-bff-tos-privacy.yaml",
         "api-internal-pn-bff-downtime-logs.yaml",
-        "api-internal-pn-bff-auth.yaml"
+        "api-internal-pn-bff-auth.yaml",
+        "api-internal-pn-bff-payments.yaml",
+        "api-internal-pn-bff-digital-addresses.yaml"
       ],
       "servicePath": "bff"
     }

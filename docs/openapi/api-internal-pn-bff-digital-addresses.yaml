@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Addresses
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-digital-addresses
+  x-summary: "API di pn-bff esposte al Web per la gestione dei recapiti"
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Addresses
+    description: >-
+      Gestione dei recapiti
+
+paths:
+  '/bff/v1/addresses':
+    get:
+      summary: Recapiti
+      description: >-
+        Restituisce i recapiti dell'utente
+      tags:
+        - Addresses
+      operationId: getAddressesV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffUserAddresses'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  /bff/v1/addresses/{addressType}/{senderId}/{channelType}:
+    post:
+      summary: Creazione/Aggiornamento Recapito
+      description: >-
+        Creazione o aggiornamento di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: createOrUpdateAddressV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
+        - $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/parameters/BffSenderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerificationRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressVerificationResponse'
+          description: >
+            Nell'oggetto c'è la motivazione di quanto richiesto per procedere
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '422':
+          description: >
+            This error is caused by one of this events:
+            * Verification code failure: error.detail equals to PN_USERATTRIBUTES_INVALIDVERIFICATIONCODE
+            * Verification code max attempt reached: error.detail equals to PN_USERATTRIBUTES_RETRYLIMITVERIFICATIONCODE
+            * Verification code expired/notfound: error.detail equals to PN_USERATTRIBUTES_EXPIREDVERIFICATIONCODE
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+    delete:
+      summary: Eliminazione Recapito
+      description: >-
+          Eliminazione di un recapito legale o di cortesia
+      tags:
+          - Addresses
+      operationId: deleteAddressV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffAddressType'
+        - $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/parameters/BffSenderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: './digital-addresses-schemas/digital-addresses.yaml#/components/schemas/BffChannelType'
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Digital Address not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

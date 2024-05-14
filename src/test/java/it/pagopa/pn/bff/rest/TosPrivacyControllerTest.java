@@ -9,7 +9,7 @@ import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -69,7 +69,7 @@ class TosPrivacyControllerTest {
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class)))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -113,7 +113,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 
@@ -123,7 +123,7 @@ class TosPrivacyControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.any()))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         BffTosPrivacyBody request = BffTosPrivacyBody.builder()
                 .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
@@ -143,7 +143,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 }

@@ -2,10 +2,12 @@ package it.pagopa.pn.bff.pnclient.deliverypush;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,12 +29,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class PnDeliveryPushClientImplTest {
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     @Autowired
     private PnDeliveryPushClientImpl pnDeliveryPushClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi")
     private DocumentsWebApi documentsWebApi;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi")
     private LegalFactsApi legalFactsApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi")
+    private NotificationCancellationApi notificationCancellationApi;
 
     @Test
     void getDocumentsWeb() throws RestClientException {
@@ -131,6 +136,44 @@ class PnDeliveryPushClientImplTest {
                 "LEGAL_FACT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void notificationCancellation(){
+        when(notificationCancellationApi.notificationCancellation(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(notificationsSentMock.notificationCancellationPNMock()));
+
+        StepVerifier.create(pnDeliveryPushClient.notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationsSentMock.notificationCancellationPNMock()).verifyComplete();
+    }
+
+    @Test
+    void notificationCancellationError(){
+        when(notificationCancellationApi.notificationCancellation(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryPushClient.notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                "IUN",
+                UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
 }

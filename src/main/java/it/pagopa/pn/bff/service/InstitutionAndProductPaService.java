@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class InstitutionAndProductPaService {
-    private final PnInfoPaClientImpl pnInfoPaClient;
+    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffConfigs pnBffConfigs;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
@@ -36,7 +36,7 @@ public class InstitutionAndProductPaService {
      */
     public Flux<BffInstitution> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.info("getInstitutions");
-        return pnInfoPaClient
+        return pnExternalRegistriesClient
                 .getInstitutions(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
@@ -53,7 +53,7 @@ public class InstitutionAndProductPaService {
      */
     public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.info("getInstitutionProducts");
-        return pnInfoPaClient
+        return pnExternalRegistriesClient
                 .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);

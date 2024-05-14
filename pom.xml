@@ -363,6 +363,48 @@
                         </configuration>
                     </execution>
 
+                    <!-- OPEN API PN-BFF DIGITAL ADDRESSES-->
+                    <execution>
+                        <id>api-internal-pn-bff-digital-addresses</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-digital-addresses.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
                     <!-- OPEN API PN-BFF DOWNTIME LOGS-->
                     <execution>
                         <id>api-internal-pn-bff-downtime-logs</id>
@@ -414,6 +456,48 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-auth.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-BFF PAYMENTS-->
+                    <execution>
+                        <id>api-internal-pn-bff-payments</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-payments.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
@@ -530,7 +614,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/api-internal-web-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -595,7 +679,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-EXTERNAL-REGISTRIES-->
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES SELFCARE-->
                     <execution>
                         <phase>generate-resources</phase>
                         <id>generate-client-pn-external-registries-selfcare</id>
@@ -633,6 +717,44 @@
                         </configuration>
                     </execution>
 
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES PAYMENT INFO-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-external-registries-payment-info</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/fce619e3c14a8e57fe8139fb281fa7e04ccc11ea/docs/openapi/pn-payment-info-internal-v1.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
                     <!-- OPEN API PN-USER-ATTRIBUTES-->
                     <execution>
                         <phase>generate-resources</phase>
@@ -643,6 +765,42 @@
                         <configuration>
                             <inputSpec>
                                 https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.user-attributes.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.user-attributes.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-user-attributes-address-book</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-address-book-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

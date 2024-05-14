@@ -2,8 +2,9 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationCancellationMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -111,7 +112,7 @@ class SentNotificationControllerTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyInt(),
                 Mockito.anyString()
-        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
                 .uri(uriBuilder ->
@@ -153,7 +154,7 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotification() {
-        BffFullNotificationV1 response = NotificationDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
+        BffFullNotificationV1 response = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
         Mockito.when(notificationsPAService.getSentNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -198,7 +199,7 @@ class SentNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -244,9 +245,8 @@ class SentNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.AAR)
                                 .queryParam("documentId", "aar-id")
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.AAR))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -285,16 +285,15 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.AAR)
                                 .queryParam("documentId", "aar-id")
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.AAR))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -337,10 +336,9 @@ class SentNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
                                 .queryParam("documentId", "legal-fact-id")
                                 .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -378,17 +376,16 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.LEGAL_FACT)
                                 .queryParam("documentId", "legal-fact-id")
                                 .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -432,9 +429,8 @@ class SentNotificationControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
                                 .queryParam("documentIdx", 0)
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.ATTACHMENT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -472,16 +468,15 @@ class SentNotificationControllerTest {
                         Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
-                                .queryParam("documentType", BffDocumentType.ATTACHMENT)
                                 .queryParam("documentIdx", 0)
-                                .build(IUN))
+                                .build(IUN, BffDocumentType.ATTACHMENT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -504,4 +499,158 @@ class SentNotificationControllerTest {
         );
     }
 
+    @Test
+    void getSentNotificationPayment() {
+        BffDocumentDownloadMetadataResponse response = NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(notificationDownloadDocumentMock.getPaAttachmentMock());
+        Mockito.when(notificationsPAService.getSentNotificationPayment(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PAYMENT_PATH)
+                                .queryParam("attachmentIdx", 0)
+                                .build(IUN, 0, "PAGOPA"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).getSentNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
+        );
+    }
+
+    @Test
+    void getSentNotificationPaymentError() {
+        Mockito.when(notificationsPAService.getSentNotificationPayment(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PAYMENT_PATH)
+                                .queryParam("attachmentIdx", 0)
+                                .build(IUN, 0, "PAGOPA"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).getSentNotificationPayment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
+        );
+    }
+
+    @Test
+    void notificationCancellation() {
+        BffRequestStatus response = NotificationCancellationMapper.modelMapper.mapNotificationCancellation(notificationsSentMock.notificationCancellationPNMock());
+        Mockito.when(notificationsPAService.notificationCancellation(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_CANCEL_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffRequestStatus.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void notificationCancellationError() {
+        Mockito.when(notificationsPAService.notificationCancellation(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_CANCEL_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
 }

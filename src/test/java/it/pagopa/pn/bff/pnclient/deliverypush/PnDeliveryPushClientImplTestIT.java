@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAut
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
+import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -35,7 +36,9 @@ class PnDeliveryPushClientImplTestIT {
     private final String legalFactId = "LEGAL_FACT_ID";
     private final String documentPath = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
     private final String legalFactPath = "/delivery-push/" + iun + "/legal-facts/" + legalFactCategory + "/" + legalFactId;
+    private final String cancellationPath = "/delivery-push/v2.0/notifications/cancel/" + iun;
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     @Autowired
     private PnDeliveryPushClientImpl pnDeliveryPushClient;
 
@@ -133,6 +136,40 @@ class PnDeliveryPushClientImplTestIT {
                 legalFactId,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
+        )).expectError().verify();
+    }
+
+    @Test
+    void notificationCancellation() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(notificationsSentMock.notificationCancellationPNMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(cancellationPath))
+                .respond(response()
+                        .withStatusCode(202)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryPushClient.notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                iun,
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationsSentMock.notificationCancellationPNMock()).verifyComplete();
+    }
+
+    @Test
+    void notificationCancellationError() {
+        mockServerClient.when(request().withMethod("PUT").withPath(cancellationPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryPushClient.notificationCancellation(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                iun,
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 }

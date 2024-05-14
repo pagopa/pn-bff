@@ -10,8 +10,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetad
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -231,7 +231,7 @@ class NotificationRecipientServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
+                .expectNext(NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
                 .verifyComplete();
     }
 
@@ -541,6 +541,65 @@ class NotificationRecipientServiceTest {
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
                         && ((PnBffException) throwable).getProblem().getDetail().equals("The attachment idx is missed")
                 )
+                .verify();
+    }
+
+    @Test
+    void getNotificationPayment() {
+        when(pnDeliveryClientRecipient.getReceivedNotificationPayment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsRecipientService.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        );
+
+        StepVerifier.create(result)
+                .expectNext(NotificationDownloadDocumentMapper.modelMapper.mapSentAttachmentDownloadResponse(notificationDownloadDocumentMock.getPaAttachmentMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getNotificationPaymentError() {
+        when(pnDeliveryClientRecipient.getReceivedNotificationPayment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(UUID.class),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffDocumentDownloadMetadataResponse> result = notificationsRecipientService.getReceivedNotificationPayment(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                "IUN",
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                UUID.randomUUID(),
+                0
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
 }

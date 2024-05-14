@@ -163,11 +163,11 @@ public class NotificationsRecipientService {
                 mandateId
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notificationDetail.map(NotificationDetailMapper.modelMapper::mapReceivedNotificationDetail);
+        return notificationDetail.map(NotificationReceivedDetailMapper.modelMapper::mapReceivedNotificationDetail);
     }
 
     /**
-     * Download the document linked to a notification
+     * Download the document linked to a notification. This is for a recipient user.
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
@@ -178,6 +178,7 @@ public class NotificationsRecipientService {
      * @param documentId        the document id if aar or legal fact
      * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
      * @return the requested document
      */
     public Mono<BffDocumentDownloadMetadataResponse> getReceivedNotificationDocument(String xPagopaPnUid,
@@ -261,6 +262,38 @@ public class NotificationsRecipientService {
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return legalFact.map(NotificationDownloadDocumentMapper.modelMapper::mapLegalFactDownloadResponse);
         }
+    }
 
+    /**
+     * Get the payment for a notification. This is for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the payment for the notification with a specific IUN
+     */
+    public Mono<BffDocumentDownloadMetadataResponse> getReceivedNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                                    String xPagopaPnCxId, String iun, String attachmentName,
+                                                                                    List<String> xPagopaPnCxGroups, UUID mandateId,
+                                                                                    Integer attachmentIdx
+    ) {
+        log.info("Get notification payment {} number {} for iun {}", attachmentName, attachmentIdx, iun);
+        Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getReceivedNotificationPayment(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                attachmentName,
+                xPagopaPnCxGroups,
+                mandateId,
+                attachmentIdx
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return notificationDetail.map(NotificationDownloadDocumentMapper.modelMapper::mapReceivedAttachmentDownloadResponse);
     }
 }
