@@ -91,7 +91,8 @@ public class AddressesController implements AddressesApi {
 
         log.logEndingProcess("createOrUpdateAddressV1");
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
     /**
@@ -126,6 +127,7 @@ public class AddressesController implements AddressesApi {
 
         log.logEndingProcess("deleteAddressV1");
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 }

@@ -146,6 +146,48 @@ class AddressesControllerTest {
     }
 
     @Test
+    void createOrUpdateUserSuccess() {
+        BffAddressVerificationRequest request = addressesMock.getBffAddressVerificationMock();
+
+        Mockito.when(addressesService.createOrUpdateAddress(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(BffAddressType.class),
+                Mockito.anyString(),
+                Mockito.any(BffChannelType.class),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.empty());
+
+        webTestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.CREATE_DELETE_ADDRESS_PATH).build(
+                        "COURTESY", "default", "EMAIL"
+                ))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        Mockito.verify(addressesService).createOrUpdateAddress(
+                eq(UserMock.PN_CX_ID),
+                eq(CxTypeAuthFleet.PF),
+                eq(UserMock.PN_CX_ROLE),
+                eq(BffAddressType.COURTESY),
+                eq(AddressesMock.SENDER_ID),
+                eq(BffChannelType.EMAIL),
+                argThat(new MonoMatcher<>(Mono.just(request))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
     void createOrUpdateUserAddressError() {
         BffAddressVerificationRequest request = addressesMock.getBffAddressVerificationMock();
 
@@ -210,7 +252,7 @@ class AddressesControllerTest {
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isNoContent();
 
         Mockito.verify(addressesService).deleteDigitalAddress(
                 UserMock.PN_CX_ID,
