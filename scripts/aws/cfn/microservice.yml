@@ -248,7 +248,7 @@ Parameters:
 
   DataIndexerLambdaRuntime:
     Type: String
-    Default: nodejs18.x
+    Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
   IndexesBucketArn:
@@ -268,6 +268,11 @@ Parameters:
     # 8 minutes
     Default: 480000
     Description: Threshold in minutes of DataIndexer Lambda.
+
+  SenderDashboardDataIndexerCron:
+    Type: String
+    Default: 'cron(0 16 * * ? *)'
+    Description: Cron to schedule the Lambda.
 
   # DataIndexer Env
   DlBucketName:
@@ -434,14 +439,7 @@ Resources:
                 Resource:
                   - !Sub ${IndexesBucketArn}/*
 
-  SenderDashboardDataIndexerInvokePermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
-      Principal: events.amazonaws.com
-      SourceArn: !GetAtt DataLakeEventRule.Arn
-
+  # Fires the alarm when a duration threshold is reached
   SenderDashboardDataIndexerDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
@@ -461,18 +459,22 @@ Resources:
           Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
       TreatMissingData: notBreaching
 
-  DataLakeEventBus:
-    Type: AWS::Events::EventBus
-    Properties:
-      Name: !Sub ${ProjectName}-bff-DataLakeEventBus
-
-  DataLakeEventRule:
+  # EventBridge Rule to trigger the Lambda
+  SenderDashboardDataIndexerTrigger:
     Type: AWS::Events::Rule
     Properties:
-      EventBusName: !Ref DataLakeEventBus
-      EventPattern:
-        source:
-          - pn.datalake.events
+      Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
+      ScheduleExpression: !Ref SenderDashboardDataIndexerCron
+      State: ENABLED
       Targets:
         - Id: TargetFunction
           Arn: !GetAtt SenderDashboardDataIndexer.Arn
+
+  # Adding permissions to allow EventBridge to invoke the data indexer Lambda
+  SenderDashboardDataIndexerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn

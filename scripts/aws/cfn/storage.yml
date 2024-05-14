@@ -35,7 +35,7 @@ Parameters:
   # DataIndexer params
   IndexesBucketVersionExpiresAfterDays:
     Type: Number
-    Default: 730
+    Default: 365
     Description: Indexes expiration days.
 
 
