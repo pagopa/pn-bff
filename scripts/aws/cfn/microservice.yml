@@ -225,83 +225,83 @@ Parameters:
     Description: 'AuthFleet base URL'
 
   # Lambdas
-  LambdasBucketName:
-    Type: String
-    Default: ''
-    Description: 'Name of the bucket where the lambda files are copied during deploy'
+  # LambdasBucketName:
+  #   Type: String
+  #   Default: ''
+  #   Description: 'Name of the bucket where the lambda files are copied during deploy'
 
-  BucketBasePath:
-    Type: String
-    Default: ''
-    Description: 'Base path of the lambda in the s3 bucket'
+  # BucketBasePath:
+  #   Type: String
+  #   Default: ''
+  #   Description: 'Base path of the lambda in the s3 bucket'
 
-  DataIndexerLambdaName:
-    Type: String
-    Description: Name of the DataIndexer Lambda.
+  # DataIndexerLambdaName:
+  #   Type: String
+  #   Description: Name of the DataIndexer Lambda.
 
-  DataIndexerLambdaMemory:
-    Type: Number
-    Default: 4096
-    MinValue: 512
-    MaxValue: 10240
-    Description: Memory of the DataIndexer Lambda.
+  # DataIndexerLambdaMemory:
+  #   Type: Number
+  #   Default: 4096
+  #   MinValue: 512
+  #   MaxValue: 10240
+  #   Description: Memory of the DataIndexer Lambda.
 
-  DataIndexerLambdaRuntime:
-    Type: String
-    Default: nodejs20.x
-    Description: Runtime of the DataIndexer Lambda.
+  # DataIndexerLambdaRuntime:
+  #   Type: String
+  #   Default: nodejs20.x
+  #   Description: Runtime of the DataIndexer Lambda.
 
-  IndexesBucketArn:
-    Type: String
-    Description: PN bucket Arn of indexes files.
+  # IndexesBucketArn:
+  #   Type: String
+  #   Description: PN bucket Arn of indexes files.
 
-  IndexesBucketName:
-    Type: String
-    Description: PN bucket of index files.
+  # IndexesBucketName:
+  #   Type: String
+  #   Description: PN bucket of index files.
 
-  IndexesBucketRegion:
-    Type: String
-    Description: PN bucket region of index files.
+  # IndexesBucketRegion:
+  #   Type: String
+  #   Description: PN bucket region of index files.
 
-  SenderDashboardDataIndexerAlarmThreshold:
-    Type: Number
-    # 8 minutes
-    Default: 480000
-    Description: Threshold in minutes of DataIndexer Lambda.
+  # SenderDashboardDataIndexerAlarmThreshold:
+  #   Type: Number
+  #   # 8 minutes
+  #   Default: 480000
+  #   Description: Threshold in minutes of DataIndexer Lambda.
 
-  SenderDashboardDataIndexerCron:
-    Type: String
-    Default: 'cron(0 16 * * ? *)'
-    Description: Cron to schedule the Lambda.
+  # SenderDashboardDataIndexerCron:
+  #   Type: String
+  #   Default: 'cron(0 16 * * ? *)'
+  #   Description: Cron to schedule the Lambda.
 
-  # DataIndexer Env
-  DlBucketName:
-    Type: String
-    Description: Name of data-lake bucket.
+  # # DataIndexer Env
+  # DlBucketName:
+  #   Type: String
+  #   Description: Name of data-lake bucket.
 
-  DlBucketRegion:
-    Type: String
-    Description: Default region for data-lake bucket.
+  # DlBucketRegion:
+  #   Type: String
+  #   Description: Default region for data-lake bucket.
 
-  DlAssumeRoleArn:
-    Type: String
-    Description: ARN of the role Lambda will assume.
+  # DlAssumeRoleArn:
+  #   Type: String
+  #   Description: ARN of the role Lambda will assume.
 
-  DlOverviewObjectKey:
-    Type: String
-    Description: S3 object key for overview file.
+  # DlOverviewObjectKey:
+  #   Type: String
+  #   Description: S3 object key for overview file.
 
-  DlFocusObjectKey:
-    Type: String
-    Description: S3 object key for focus focus.
+  # DlFocusObjectKey:
+  #   Type: String
+  #   Description: S3 object key for focus focus.
 
-  PnOverviewIndexObjectKey:
-    Type: String
-    Description: S3 index object key for overview file.
+  # PnOverviewIndexObjectKey:
+  #   Type: String
+  #   Description: S3 index object key for overview file.
 
-  PnFocusIndexObjectKey:
-    Type: String
-    Description: S3 index object key for focus file.
+  # PnFocusIndexObjectKey:
+  #   Type: String
+  #   Description: S3 index object key for focus file.
 
 Resources:
 
