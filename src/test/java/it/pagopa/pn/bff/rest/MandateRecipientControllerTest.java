@@ -3,6 +3,8 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
+import it.pagopa.pn.bff.mappers.mandate.MandatesByDelegateMapper;
+import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.MandateRecipientService;
@@ -16,7 +18,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -486,6 +491,173 @@ class MandateRecipientControllerTest {
                 mandateId,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
+        );
+    }
+
+    @Test
+    void getMandatesByDelegate() {
+        List<BffMandate> response = mandateMock.getMandatesByDelegateMock()
+                .stream()
+                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .toList();
+        Mockito.when(mandateRecipientService.getMandatesByDelegate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Flux.fromIterable(response));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .queryParam("status", "pending")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(BffMandate.class)
+                .isEqualTo(response);
+
+        Mockito.verify(mandateRecipientService).getMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "pending"
+        );
+    }
+
+    @Test
+    void getMandatesByDelegateError() {
+        Mockito.when(mandateRecipientService.getMandatesByDelegate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .queryParam("status", "pending")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).getMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "pending"
+        );
+    }
+
+    @Test
+    void searchMandatesByDelegate() {
+        BffSearchMandateRequest request = mandateMock.getBffSearchMandatesByDelegateRequestMock();
+        BffSearchMandateResponse response = SearchMandateByDelegateMapper.modelMapper.mapResponse(mandateMock.getSearchMandatesByDelegateResponseMock());
+        Mockito.when(mandateRecipientService.searchMandatesByDelegate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyInt(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.just(response));
+
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .queryParam("size", "10")
+                                .queryParam("nextPageKey", "NEXT_PAGE")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffSearchMandateResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(mandateRecipientService).searchMandatesByDelegate(
+                eq(UserMock.PN_CX_ID),
+                eq(CxTypeAuthFleet.PF),
+                eq(10),
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE),
+                eq("NEXT_PAGE"),
+                argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void searchMandatesByDelegateError() {
+        BffSearchMandateRequest request = mandateMock.getBffSearchMandatesByDelegateRequestMock();
+        Mockito.when(mandateRecipientService.searchMandatesByDelegate(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyInt(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .queryParam("size", "10")
+                                .queryParam("nextPageKey", "NEXT_PAGE")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).searchMandatesByDelegate(
+                eq(UserMock.PN_CX_ID),
+                eq(CxTypeAuthFleet.PF),
+                eq(10),
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE),
+                eq("NEXT_PAGE"),
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 }

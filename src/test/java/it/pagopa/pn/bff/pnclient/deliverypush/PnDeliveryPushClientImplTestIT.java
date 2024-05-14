@@ -29,6 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnDeliveryPushClientImplTestIT {
+    private final static ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
@@ -61,7 +62,6 @@ class PnDeliveryPushClientImplTestIT {
 
     @Test
     void getDocumentsWeb() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getDocumentMock());
         mockServerClient.when(request().withMethod("GET").withPath(documentPath))
                 .respond(response()
@@ -101,7 +101,6 @@ class PnDeliveryPushClientImplTestIT {
 
     @Test
     void getLegalFact() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getLegalFactMock());
         mockServerClient.when(request().withMethod("GET").withPath(legalFactPath))
                 .respond(response()
@@ -141,7 +140,6 @@ class PnDeliveryPushClientImplTestIT {
 
     @Test
     void notificationCancellation() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationsSentMock.notificationCancellationPNMock());
         mockServerClient.when(request().withMethod("PUT").withPath(cancellationPath))
                 .respond(response()

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -217,5 +218,75 @@ public class MandateRecipientController implements MandateApi {
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
+    /**
+     * GET bff/v1/mandate/delegate: Get mandates
+     * Return filtered mandates based on required status if filter's specified.
+     * If no filter is present, returns all pending and active mandates
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param status            Mandate status
+     * @param exchange
+     * @return list of mandates
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<BffMandate>>> getMandatesByDelegateV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            String status,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("getMandatesByDelegateV1");
+
+        Flux<BffMandate> serviceResponse = mandateRecipientService.getMandatesByDelegate(
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, status
+        );
+
+
+        log.logEndingProcess("getMandatesByDelegateV1");
+        return serviceResponse
+                .collectList()
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
+    }
+
+    /**
+     * POST bff/v1/mandate/delegate: Search mandates
+     * Return filtered mandates based on status, groups and delegators (taxId)
+     *
+     * @param xPagopaPnCxId        User id
+     * @param xPagopaPnCxType      User Type
+     * @param size                 Page size
+     * @param xPagopaPnCxGroups    User Group id List
+     * @param xPagopaPnCxRole      User role
+     * @param nextPageKey          The key of the page
+     * @param searchMandateRequest the request containing the filters
+     * @param exchange
+     * @return list of mandates
+     */
+    @Override
+    public Mono<ResponseEntity<BffSearchMandateResponse>> searchMandatesByDelegateV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            Integer size,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            String nextPageKey,
+            Mono<BffSearchMandateRequest> searchMandateRequest,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("searchMandatesByDelegateV1");
+
+        Mono<BffSearchMandateResponse> serviceResponse = mandateRecipientService.searchMandatesByDelegate(
+                xPagopaPnCxId, xPagopaPnCxType, size, xPagopaPnCxGroups, xPagopaPnCxRole, nextPageKey, searchMandateRequest
+        );
+
+
+        log.logEndingProcess("searchMandatesByDelegateV1");
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

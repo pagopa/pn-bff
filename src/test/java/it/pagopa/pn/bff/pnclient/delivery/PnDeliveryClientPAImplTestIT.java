@@ -31,6 +31,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnDeliveryClientPAImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
@@ -51,6 +52,8 @@ class PnDeliveryClientPAImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -66,9 +69,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void searchSentNotifications() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationsSentMock.getNotificationSentPNMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationsListPath))
                 .respond(response()
@@ -116,9 +116,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotification() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailPaMock.getNotificationMultiRecipientMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationDetailPath))
                 .respond(response()
@@ -152,7 +149,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationDocument() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getPaAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(documentDownloadPath))
                 .respond(response()
@@ -188,7 +184,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationPayment() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getPaAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(paymentDownloadPath))
                 .respond(response()

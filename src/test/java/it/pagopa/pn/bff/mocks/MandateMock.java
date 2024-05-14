@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUpdateRequest;
 
 import java.time.OffsetDateTime;
@@ -29,18 +30,22 @@ public class MandateMock {
         return organization;
     }
 
+    private UserDto getUserMock(String firstName, String lastName, String fiscalCode) {
+        UserDto user = new UserDto();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPerson(true);
+        user.setDisplayName(user.getFirstName() + " " + user.getLastName());
+        user.setFiscalCode(fiscalCode);
+        return user;
+    }
+
     public MandateDto getNewMandateRequestMock() {
         MandateDto newMandateRequest = new MandateDto();
         OffsetDateTime today = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime tomorrow = today.plusDays(1);
         newMandateRequest.setDateto(tomorrow.format(fmt));
-        UserDto delegate = new UserDto();
-        delegate.setFirstName("Mario");
-        delegate.setLastName("Rossi");
-        delegate.setPerson(true);
-        delegate.setDisplayName(delegate.getFirstName() + " " + delegate.getLastName());
-        delegate.setFiscalCode("RSSMRA80A01H501U");
-        newMandateRequest.setDelegate(delegate);
+        newMandateRequest.setDelegate(getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"));
         List<OrganizationIdDto> visibilityIds = new ArrayList<>();
         visibilityIds.add(getOrganizationMock(1));
         visibilityIds.add(getOrganizationMock(2));
@@ -57,18 +62,22 @@ public class MandateMock {
         return organization;
     }
 
+    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto getBffUserMock(String firstName, String lastName, String fiscalCode) {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto user = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPerson(true);
+        user.setDisplayName(user.getFirstName() + " " + user.getLastName());
+        user.setFiscalCode(fiscalCode);
+        return user;
+    }
+
     public BffNewMandateRequest getBffNewMandateRequestMock() {
         BffNewMandateRequest newMandateRequest = new BffNewMandateRequest();
         OffsetDateTime today = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime tomorrow = today.plusDays(1);
         newMandateRequest.setDateto(tomorrow.format(fmt));
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto delegate = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto();
-        delegate.setFirstName("Mario");
-        delegate.setLastName("Rossi");
-        delegate.setPerson(true);
-        delegate.setDisplayName(delegate.getFirstName() + " " + delegate.getLastName());
-        delegate.setFiscalCode("RSSMRA80A01H501U");
-        newMandateRequest.setDelegate(delegate);
+        newMandateRequest.setDelegate(getBffUserMock("Mario", "Rossi", "RSSMRA80A01H501U"));
         List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.OrganizationIdDto> visibilityIds = new ArrayList<>();
         visibilityIds.add(getBffOrganizationMock(1));
         visibilityIds.add(getBffOrganizationMock(2));
@@ -132,5 +141,71 @@ public class MandateMock {
         groups.add("group-2");
         updateRequest.setGroups(groups);
         return updateRequest;
+    }
+
+    private MandateDto getMandateByDelegateMock(int index, MandateDto.StatusEnum status, UserDto delegate) {
+        OffsetDateTime today = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.DAYS);
+        OffsetDateTime tomorrow = today.plusDays(1);
+        MandateDto mandate = new MandateDto();
+        mandate.setMandateId(String.valueOf(index));
+        mandate.setStatus(status);
+        mandate.setVerificationCode("12345");
+        mandate.setDatefrom(today.format(fmt));
+        mandate.setDateto(tomorrow.format(fmt));
+        List<OrganizationIdDto> visibilityIds = new ArrayList<>();
+        visibilityIds.add(getOrganizationMock(index));
+        visibilityIds.add(getOrganizationMock(index + 1));
+        mandate.setVisibilityIds(visibilityIds);
+        mandate.setDelegate(delegate);
+        return mandate;
+    }
+
+    public List<MandateDto> getMandatesByDelegateMock() {
+        List<MandateDto> mandates = new ArrayList<>();
+        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U")));
+        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C")));
+        return mandates;
+    }
+
+    public SearchMandateRequestDto getSearchMandatesByDelegateRequestMock() {
+        SearchMandateRequestDto searchRequest = new SearchMandateRequestDto();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        searchRequest.setGroups(groups);
+        List<String> status = new ArrayList<>();
+        status.add("pending");
+        status.add("active");
+        searchRequest.setStatus(status);
+        searchRequest.setTaxId("RSSMRA80A01H501U");
+        return searchRequest;
+    }
+
+    public BffSearchMandateRequest getBffSearchMandatesByDelegateRequestMock() {
+        BffSearchMandateRequest searchRequest = new BffSearchMandateRequest();
+        List<String> groups = new ArrayList<>();
+        groups.add("group-1");
+        groups.add("group-2");
+        searchRequest.setGroups(groups);
+        List<String> status = new ArrayList<>();
+        status.add("pending");
+        status.add("active");
+        searchRequest.setStatus(status);
+        searchRequest.setTaxId("RSSMRA80A01H501U");
+        return searchRequest;
+    }
+
+    public SearchMandateResponseDto getSearchMandatesByDelegateResponseMock() {
+        SearchMandateResponseDto searchResponse = new SearchMandateResponseDto();
+        searchResponse.setMoreResult(false);
+        List<String> nextPagesKey = new ArrayList<>();
+        nextPagesKey.add("page-1");
+        nextPagesKey.add("page-2");
+        searchResponse.setNextPagesKey(nextPagesKey);
+        List<MandateDto> mandates = new ArrayList<>();
+        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U")));
+        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C")));
+        searchResponse.setResultsPage(mandates);
+        return searchResponse;
     }
 }

@@ -26,6 +26,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnMandateClientRecipientImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathMandate = "/mandate/api/v1";
@@ -38,6 +39,8 @@ class PnMandateClientRecipientImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -53,7 +56,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void countMandatesByDelegate() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(mandateMock.getCountMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathMandate + "/count-by-delegate"))
                 .respond(response()
@@ -87,9 +89,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void createMandate() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String request = objectMapper.writeValueAsString(mandateMock.getNewMandateRequestMock());
         String response = objectMapper.writeValueAsString(mandateMock.getNewMandateResponseMock());
         mockServerClient.when(request().withMethod("POST").withPath(pathMandate + "/mandate").withBody(request))
@@ -111,9 +110,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void createMandateError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String request = objectMapper.writeValueAsString(mandateMock.getNewMandateRequestMock());
         mockServerClient.when(request().withMethod("POST").withPath(pathMandate + "/mandate").withBody(request))
                 .respond(response().withStatusCode(404));
@@ -130,7 +126,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void acceptMandate() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(mandateMock.getAcceptRequestMock());
         mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/accept").withBody(request))
                 .respond(response()
@@ -149,7 +144,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void acceptMandateError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(mandateMock.getAcceptRequestMock());
         mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/accept").withBody(request))
                 .respond(response().withStatusCode(404));
@@ -166,7 +160,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void updateMandate() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(mandateMock.getUpdateRequestMock());
         mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/update").withBody(request))
                 .respond(response()
@@ -185,7 +178,6 @@ class PnMandateClientRecipientImplTestIT {
 
     @Test
     void updateMandateError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(mandateMock.getUpdateRequestMock());
         mockServerClient.when(request().withMethod("PATCH").withPath(pathMandate + "/mandate/" + mandateId + "/update").withBody(request))
                 .respond(response().withStatusCode(404));
@@ -257,6 +249,94 @@ class PnMandateClientRecipientImplTestIT {
                 mandateId,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
+
+    @Test
+    void getMandatesByDelegate() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(mandateMock.getMandatesByDelegateMock());
+        mockServerClient.when(request().withMethod("GET")
+                        .withPath(pathMandate + "/mandates-by-delegate")
+                        .withQueryStringParameter("status", "pending"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "pending"
+        )).expectNextSequence(mandateMock.getMandatesByDelegateMock()).verifyComplete();
+    }
+
+    @Test
+    void getMandatesByDelegateError() {
+        mockServerClient.when(request().withMethod("GET")
+                        .withPath(pathMandate + "/mandates-by-delegate")
+                        .withQueryStringParameter("status", "pending"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "pending"
+        )).expectError().verify();
+    }
+
+    @Test
+    void searchMandatesByDelegate() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(mandateMock.getSearchMandatesByDelegateRequestMock());
+        String response = objectMapper.writeValueAsString(mandateMock.getSearchMandatesByDelegateResponseMock());
+        mockServerClient.when(request().withMethod("POST")
+                        .withPath(pathMandate + "/mandates-by-delegate")
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPageKey", "NEXT_PAGE")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(request)
+                )
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnMandateClient.searchMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                10,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "NEXT_PAGE",
+                mandateMock.getSearchMandatesByDelegateRequestMock()
+        )).expectNext(mandateMock.getSearchMandatesByDelegateResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void searchMandatesByDelegateError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(mandateMock.getSearchMandatesByDelegateRequestMock());
+        mockServerClient.when(request().withMethod("POST")
+                        .withPath(pathMandate + "/mandates-by-delegate")
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPageKey", "NEXT_PAGE")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(request)
+                )
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.searchMandatesByDelegate(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                10,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                "NEXT_PAGE",
+                mandateMock.getSearchMandatesByDelegateRequestMock()
         )).expectError().verify();
     }
 }

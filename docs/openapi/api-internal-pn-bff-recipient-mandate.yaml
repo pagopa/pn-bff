@@ -190,3 +190,67 @@ paths:
             application/json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate/delegates':
+    get:
+      summary: >-
+        Ritorna la lista delle deleghe a carico in base al filtro per stato (se specificato).
+        Se non è presente nessun filtro, sono ritornate tutte le deleghe attive e pending
+      tags:
+        - Mandate
+      operationId: getMandatesByDelegateV1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQueryStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffMandate'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+    post:
+      summary: Ritorna la lista delle deleghe a carico in base ai filtri per stato, gruppo/i e delegante (taxId)
+      tags:
+        - Mandate
+      operationId: searchMandatesByDelegateV1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQuerySize'
+        - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQueryNextPageKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffSearchMandateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffSearchMandateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

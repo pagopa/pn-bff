@@ -6,6 +6,7 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -113,6 +114,42 @@ public class PnMandateClientRecipientImpl {
                 mandateId,
                 xPagopaPnCxGroups,
                 xPagopaPnCxRole
+        );
+    }
+
+    public Flux<MandateDto> getMandatesByDelegate(String xPagopaPnCxId,
+                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                  List<String> xPagopaPnCxGroups,
+                                                  String xPagopaPnCxRole,
+                                                  String status) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "listMandatesByDelegate1");
+
+        return mandateApi.listMandatesByDelegate1(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                status
+        );
+    }
+
+    public Mono<SearchMandateResponseDto> searchMandatesByDelegate(String xPagopaPnCxId,
+                                                                   CxTypeAuthFleet xPagopaPnCxType,
+                                                                   Integer size,
+                                                                   List<String> xPagopaPnCxGroups,
+                                                                   String xPagopaPnCxRole,
+                                                                   String nextPageKey,
+                                                                   SearchMandateRequestDto searchMandateRequestDto) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "searchMandatesByDelegate");
+
+        return mandateApi.searchMandatesByDelegate(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                size,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                nextPageKey,
+                searchMandateRequestDto
         );
     }
 }
