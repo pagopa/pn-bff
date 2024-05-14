@@ -1,4 +1,4 @@
-import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
+const { STSClient, AssumeRoleCommand } = require('@aws-sdk/client-sts');
 
 /**
  * Gets temporary security credentials by assuming IAM role.
@@ -6,7 +6,7 @@ import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
  * @return {Promise<Object>} Temporary security credentials: Access Key ID,
  * Secret Access Key and Session Token
  */
-export const getAssumeRoleCredentials = async (
+const getAssumeRoleCredentials = async (
   roleArn,
   roleSessionName,
   region = 'eu-south-1'
@@ -24,3 +24,5 @@ export const getAssumeRoleCredentials = async (
     sessionToken: Credentials.SessionToken,
   };
 };
+
+module.exports = { getAssumeRoleCredentials };

@@ -1,11 +1,11 @@
-import { getAssumeRoleCredentials } from '../app/sts.js';
-import { expect } from 'chai';
-import { mockClient } from 'aws-sdk-client-mock';
+const { getAssumeRoleCredentials } = require('../app/sts.js');
+const { expect } = require('chai');
+const { mockClient } = require('aws-sdk-client-mock');
 
-import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
+const { STSClient, AssumeRoleCommand } = require('@aws-sdk/client-sts');
 
 describe('sts tests', function () {
-  it('getAssumeRoleCredentials', async () => {
+  it('should getAssumeRoleCredentials', async () => {
     // Given
     const mockCredentials = {
       accessKeyId: 'test0',
@@ -24,7 +24,7 @@ describe('sts tests', function () {
     // When
     const credentials = await getAssumeRoleCredentials(
       'testRole',
-      'testSession',
+      'testSession'
     );
 
     // Then

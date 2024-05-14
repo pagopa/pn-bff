@@ -20,27 +20,37 @@ const getEnvironmentVariable = (env, defaultValue = undefined) => {
   return value;
 };
 
-export const getDlBucketName = () => getEnvironmentVariable('DL_BUCKET_NAME');
+const getDlBucketName = () => getEnvironmentVariable('DL_BUCKET_NAME');
 
-export const getDlBucketRegion = () =>
+const getDlBucketRegion = () =>
   getEnvironmentVariable('DL_BUCKET_REGION', DL_BUCKET_REGION_DEFAULT);
 
-export const getDlAssumeRoleArn = () =>
-  getEnvironmentVariable('DL_ASSUME_ROLE_ARN');
+const getDlAssumeRoleArn = () => getEnvironmentVariable('DL_ASSUME_ROLE_ARN');
 
-export const getDlOverviewObjectKey = () =>
+const getDlOverviewObjectKey = () =>
   getEnvironmentVariable('DL_OVERVIEW_OBJECT_KEY');
 
-export const getDlFocusObjectKey = () =>
-  getEnvironmentVariable('DL_FOCUS_OBJECT_KEY');
+const getDlFocusObjectKey = () => getEnvironmentVariable('DL_FOCUS_OBJECT_KEY');
 
-export const getPnBucketName = () => getEnvironmentVariable('PN_BUCKET_NAME');
+const getPnBucketName = () => getEnvironmentVariable('PN_BUCKET_NAME');
 
-export const getPnBucketRegion = () =>
+const getPnBucketRegion = () =>
   getEnvironmentVariable('PN_BUCKET_REGION', PN_BUCKET_REGION_DEFAULT);
 
-export const getPnOverviewIndexObjectKey = () =>
+const getPnOverviewIndexObjectKey = () =>
   getEnvironmentVariable('PN_OVERVIEW_INDEX_OBJECT_KEY');
 
-export const getPnFocusIndexObjectKey = () =>
+const getPnFocusIndexObjectKey = () =>
   getEnvironmentVariable('PN_FOCUS_INDEX_OBJECT_KEY');
+
+module.exports = {
+  getDlBucketName,
+  getDlBucketRegion,
+  getDlAssumeRoleArn,
+  getDlOverviewObjectKey,
+  getDlFocusObjectKey,
+  getPnBucketName,
+  getPnBucketRegion,
+  getPnOverviewIndexObjectKey,
+  getPnFocusIndexObjectKey,
+};

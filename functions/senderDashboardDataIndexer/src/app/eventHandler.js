@@ -1,8 +1,8 @@
-import { S3Client } from '@aws-sdk/client-s3';
-import { getAssumeRoleCredentials } from './sts.js';
-import { writeObject } from './s3.js';
-import { createIndexObject } from './indexer.js';
-import {
+const { S3Client } = require('@aws-sdk/client-s3');
+const { getAssumeRoleCredentials } = require('./sts.js');
+const { writeObject } = require('./s3.js');
+const { createIndexObject } = require('./indexer.js');
+const {
   getDlBucketName,
   getDlBucketRegion,
   getDlAssumeRoleArn,
@@ -12,7 +12,7 @@ import {
   getPnBucketRegion,
   getPnOverviewIndexObjectKey,
   getPnFocusIndexObjectKey,
-} from './config.js';
+} = require('./config.js');
 
 const dlBucketName = getDlBucketName();
 const dlBucketRegion = getDlBucketRegion();
@@ -40,7 +40,7 @@ const dlS3Client =
       })
     : undefined;
 
-export const handleEvent = async () => {
+const handleEvent = async () => {
   const overviewIndex = await createIndexObject(
     dlS3Client,
     dlBucketName,
@@ -68,6 +68,8 @@ export const handleEvent = async () => {
 
   return {
     statusCode: 200,
-    body: 'Ok',
+    body: 'OK',
   };
 };
+
+module.exports = { handleEvent };

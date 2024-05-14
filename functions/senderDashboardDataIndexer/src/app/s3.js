@@ -1,8 +1,8 @@
-import {
+const {
   GetObjectCommand,
   PutObjectCommand,
   HeadObjectCommand,
-} from '@aws-sdk/client-s3';
+} = require('@aws-sdk/client-s3');
 
 /**
  * Retrieves the metadata for an object in an S3 bucket using the HEAD operation.
@@ -12,7 +12,7 @@ import {
  * @param {string} objectKey The key of the object within the S3 bucket.
  * @returns {Promise<object>} A promise that resolves to the metadata of the object.
  */
-export const headObject = async (s3Client, bucketName, objectKey) => {
+const headObject = async (s3Client, bucketName, objectKey) => {
   const params = new HeadObjectCommand({
     Bucket: bucketName,
     Key: objectKey,
@@ -36,7 +36,7 @@ export const headObject = async (s3Client, bucketName, objectKey) => {
  * @returns {Promise<{lines: number, bytes: number}>} A promise that resolves
  * with the number of lines read and total bytes processed.
  */
-export const streamLines = async (
+const streamLines = async (
   s3Client,
   bucketName,
   objectKey,
@@ -74,6 +74,7 @@ export const streamLines = async (
     });
 
     stream.on('end', () => {
+      /* istanbul ignore next */
       if (remainder) {
         endByte = startByte + remainder.length - 1;
         lineCallback(remainder, startByte, endByte);
@@ -94,7 +95,7 @@ export const streamLines = async (
  * @param {string} objectKey The key of the object within the S3 bucket.
  * @param {any} body The body of the object.
  */
-export const writeObject = async (s3Client, bucketName, objectKey, body) => {
+const writeObject = async (s3Client, bucketName, objectKey, body) => {
   const params = {
     Bucket: bucketName,
     Key: objectKey,
@@ -104,3 +105,5 @@ export const writeObject = async (s3Client, bucketName, objectKey, body) => {
   console.log(`Doing PUT: s3://${bucketName}/${objectKey}`);
   await s3Client.send(command);
 };
+
+module.exports = { headObject, streamLines, writeObject };

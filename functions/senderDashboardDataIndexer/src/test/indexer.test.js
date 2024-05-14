@@ -1,17 +1,17 @@
-import { createIndexObject } from '../app/indexer.js';
-import { expect } from 'chai';
-import { sdkStreamMixin } from '@smithy/util-stream';
-import { mockClient } from 'aws-sdk-client-mock';
-import fs from 'node:fs';
+const { createIndexObject } = require('../app/indexer.js');
+const { expect } = require('chai');
+const { sdkStreamMixin } = require('@smithy/util-stream');
+const { mockClient } = require('aws-sdk-client-mock');
+const fs = require('node:fs');
 
-import {
+const {
   S3Client,
   GetObjectCommand,
   HeadObjectCommand,
-} from '@aws-sdk/client-s3';
+} = require('@aws-sdk/client-s3');
 
 describe('indexer tests', function () {
-  it('createIndexObject', async () => {
+  it('should createIndexObject', async () => {
     // Given
     const s3Mock = mockClient(S3Client);
     const stream = fs.createReadStream('./src/test/data/overview.json');

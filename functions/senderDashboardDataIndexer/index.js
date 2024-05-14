@@ -1,3 +1,3 @@
-import { handleEvent } from './src/app/eventHandler.js';
+const { handleEvent } =  require('./src/app/eventHandler.js');
 
 export const handler = handleEvent;

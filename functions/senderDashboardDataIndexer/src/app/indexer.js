@@ -1,5 +1,5 @@
-import { streamLines, headObject } from './s3.js';
-import { performance } from 'perf_hooks';
+const { streamLines, headObject } = require('./s3.js');
+const { performance } = require('perf_hooks');
 
 /**
  * Creates an index object containing the bytes range for each sender sender_id.
@@ -12,7 +12,7 @@ import { performance } from 'perf_hooks';
  * @returns {Promise<Object>} A promise that resolves to an object containing
  * metadata about the process and sender details.
  */
-export const createIndexObject = async (
+const createIndexObject = async (
   s3Client,
   bucketName,
   objectKey,
@@ -84,3 +84,5 @@ export const createIndexObject = async (
     sendersId: senders,
   };
 };
+
+module.exports = { createIndexObject };
