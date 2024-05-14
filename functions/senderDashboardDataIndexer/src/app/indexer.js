@@ -18,6 +18,11 @@ const createIndexObject = async (
   objectKey,
   objectVersionId
 ) => {
+  console.log(
+    `Indexing: s3://${bucketName}/${objectKey}${
+      objectVersionId ? `?versionId=${objectVersionId}` : ''
+    }`
+  );
   const start = performance.now();
   const genTimestamp = new Date().toISOString();
 
@@ -62,6 +67,7 @@ const createIndexObject = async (
         currentNumRows++;
         currentSenderId = jsonObject.sender_id;
       } catch (e) {
+        /* istanbul ignore next */
         if (!(e instanceof SyntaxError)) {
           console.error(e);
           console.error(obj);

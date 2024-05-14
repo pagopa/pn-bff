@@ -49,7 +49,11 @@ const streamLines = async (
     ...(versionId && { VersionId: versionId }), // Add VersionId if provided
   };
 
-  console.log(`Doing GET: s3://${bucketName}/${objectKey}`);
+  console.log(
+    `Doing GET: s3://${bucketName}/${objectKey}${
+      versionId ? `?versionId=${versionId}` : ''
+    }`
+  );
   const data = await s3Client.send(new GetObjectCommand(params));
   const stream = data.Body;
 
