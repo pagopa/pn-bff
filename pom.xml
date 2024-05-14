@@ -237,59 +237,14 @@
 
                     <!-- OPEN API PN-BFF INSTITUTION AND PRODUCT -->
                     <execution>
-                        <id>pn-internal-bff-institution-and-product</id>
+                        <id>pn-internal-bff-pa-info</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-institution-and-product.yaml
-                            </inputSpec>
-                            <generatorName>spring</generatorName>
-                            <library>spring-boot</library>
-                            <modelNameSuffix/>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
-                            <configOptions>
-                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
-                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
-                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
-                                <dateLibrary>java8</dateLibrary>
-                                <delegatePattern>true</delegatePattern>
-                                <interfaceOnly>true</interfaceOnly>
-                                <annotationLibrary>none</annotationLibrary>
-                                <documentationProvider>source</documentationProvider>
-                                <openApiNullable>false</openApiNullable>
-                                <reactive>true</reactive>
-                                <skipDefaultInterface>false</skipDefaultInterface>
-                                <useTags>true</useTags>
-                                <additionalModelTypeAnnotations>
-                                    @lombok.Builder(toBuilder = true);
-                                    @lombok.NoArgsConstructor;
-                                    @lombok.AllArgsConstructor
-                                </additionalModelTypeAnnotations>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-
-                    <!-- OPEN API PN-BFF GROUPS -->
-                    <execution>
-                        <id>pn-internal-bff-groups</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-groups.yaml
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-info.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>

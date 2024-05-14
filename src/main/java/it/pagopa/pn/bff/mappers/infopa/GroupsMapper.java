@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers.groups;
+package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaGroup;
 import org.mapstruct.Mapper;

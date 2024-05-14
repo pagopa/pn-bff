@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers.groups;
+package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
 import it.pagopa.pn.bff.mocks.UserMock;

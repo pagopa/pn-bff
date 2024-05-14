@@ -1,10 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.InstitutionAndProductApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.service.InfoPaService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +15,12 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class InstitutionAndProductPaController implements InstitutionAndProductApi {
+public class InfoPaController implements InfoPaApi {
 
-    private final InstitutionAndProductPaService institutionAndProductPaService;
+    private final InfoPaService infoPaService;
 
-    public InstitutionAndProductPaController(InstitutionAndProductPaService institutionAndProductPaService) {
-        this.institutionAndProductPaService = institutionAndProductPaService;
+    public InfoPaController(InfoPaService infoPaService) {
+        this.infoPaService = infoPaService;
     }
 
     /**
@@ -39,7 +37,7 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     public Mono<ResponseEntity<Flux<BffInstitution>>> getInstitutionsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionsV1");
 
-        Flux<BffInstitution> bffInstitutions = institutionAndProductPaService
+        Flux<BffInstitution> bffInstitutions = infoPaService
                 .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
 
         log.logEndingProcess("getInstitutionsV1");
@@ -62,12 +60,33 @@ public class InstitutionAndProductPaController implements InstitutionAndProductA
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("getInstitutionProducts");
 
-        Flux<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductPaService
+        Flux<BffInstitutionProduct> bffInstitutionProducts = infoPaService
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
 
         log.logEndingProcess("getInstitutionProducts");
         return bffInstitutionProducts
                 .collectList()
                 .map(institutionProduct -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(institutionProduct)));
+    }
+
+    /**
+     * GET /v1/groups
+     * Get the list of groups for the user
+     *
+     * @param xPagopaPnUid  (required)
+     * @param xPagopaPnCxId  (required)
+     * @param xPagopaPnCxGroups  (required)
+     * @param statusFilter  (optional)
+     * @param exchange
+     * @return the list of groups
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<PaGroup>>> getGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus statusFilter, ServerWebExchange exchange) {
+        log.logStartingProcess("getGroupsV1");
+
+        Flux<PaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, statusFilter);
+
+        log.logEndingProcess("getGroupsV1");
+        return Mono.just(ResponseEntity.ok(serviceResponse));
     }
 }

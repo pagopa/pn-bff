@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
-import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaGroup;
+import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
+import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
 import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
@@ -34,20 +37,22 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-class InstitutionAndProductPaServiceTest {
+class InfoPaServiceTest {
 
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final UserMock userMock = new UserMock();
+
     @Autowired
     private PnBffConfigs pnBffConfigs;
-    private InstitutionAndProductPaService institutionAndProductPaService;
+    private InfoPaService infoPaService;
 
     @BeforeAll
     public void setup() {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        institutionAndProductPaService = new InstitutionAndProductPaService(pnExternalRegistriesClient, pnBffConfigs, pnBffExceptionUtility);
+        infoPaService = new InfoPaService(pnExternalRegistriesClient, pnBffConfigs, pnBffExceptionUtility);
     }
 
     @Test
@@ -60,7 +65,7 @@ class InstitutionAndProductPaServiceTest {
         when(pnExternalRegistriesClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
 
-        Flux<BffInstitution> result = institutionAndProductPaService.getInstitutions(
+        Flux<BffInstitution> result = infoPaService.getInstitutions(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -78,7 +83,7 @@ class InstitutionAndProductPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutions(
+                .create(infoPaService.getInstitutions(
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
@@ -96,7 +101,7 @@ class InstitutionAndProductPaServiceTest {
         when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
 
-        Flux<BffInstitutionProduct> result = institutionAndProductPaService.getInstitutionProducts(
+        Flux<BffInstitutionProduct> result = infoPaService.getInstitutionProducts(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
@@ -114,11 +119,59 @@ class InstitutionAndProductPaServiceTest {
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier
-                .create(institutionAndProductPaService.getInstitutionProducts(UserMock.PN_UID,
+                .create(infoPaService.getInstitutionProducts(UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
                         UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void getGroups(){
+        List<PaGroup> groups = userMock.getPaGroupsMock()
+                .stream()
+                .map(GroupsMapper.modelMapper::mapGroups)
+                .toList();
+
+        when(pnExternalRegistriesClient.getGroups(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.nullable(PaGroupStatus.class)
+        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+
+        Flux<PaGroup> result = infoPaService.getGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                null
+        );
+
+        StepVerifier.create(result.collectList())
+                .expectNext(groups)
+                .verifyComplete();
+    }
+
+    @Test
+    void getGroupsError(){
+        when(pnExternalRegistriesClient.getGroups(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.nullable(PaGroupStatus.class)
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Flux<PaGroup> result = infoPaService.getGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
 }
