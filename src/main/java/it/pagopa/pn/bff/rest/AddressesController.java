@@ -35,8 +35,8 @@ public class AddressesController implements AddressesApi {
     @Override
     public Mono<ResponseEntity<Flux<BffUserAddress>>> getAddressesV1(String xPagopaPnCxId,
                                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                                     String xPagopaPnCxRole,
                                                                      List<String> xPagopaPnCxGroups,
+                                                                     String xPagopaPnCxRole,
                                                                      final ServerWebExchange exchange
     ) {
         log.logStartingProcess("getUserAddressesV1");
@@ -69,12 +69,12 @@ public class AddressesController implements AddressesApi {
     @Override
     public Mono<ResponseEntity<BffAddressVerificationResponse>> createOrUpdateAddressV1(String xPagopaPnCxId,
                                                                                         CxTypeAuthFleet xPagopaPnCxType,
-                                                                                        String xPagopaPnCxRole,
                                                                                         BffAddressType addressType,
                                                                                         String senderId,
                                                                                         BffChannelType channelType,
                                                                                         Mono<BffAddressVerificationRequest> addressVerification,
                                                                                         List<String> xPagopaPnCxGroups,
+                                                                                        String xPagopaPnCxRole,
                                                                                         final ServerWebExchange exchange) {
         log.logStartingProcess("createOrUpdateAddressV1");
 
@@ -91,7 +91,8 @@ public class AddressesController implements AddressesApi {
 
         log.logEndingProcess("createOrUpdateAddressV1");
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
     /**
@@ -109,9 +110,9 @@ public class AddressesController implements AddressesApi {
      */
     @Override
     public Mono<ResponseEntity<Void>> deleteAddressV1(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
-                                                      String xPagopaPnCxRole, BffAddressType addressType,
-                                                      String senderId, BffChannelType channelType,
-                                                      List<String> xPagopaPnCxGroups, final ServerWebExchange exchange) {
+                                                      BffAddressType addressType, String senderId,
+                                                      BffChannelType channelType, List<String> xPagopaPnCxGroups,
+                                                      String xPagopaPnCxRole, final ServerWebExchange exchange) {
         log.logStartingProcess("deleteAddressV1");
 
         Mono<Void> serviceResponse = addressesService.deleteDigitalAddress(
@@ -126,6 +127,7 @@ public class AddressesController implements AddressesApi {
 
         log.logEndingProcess("deleteAddressV1");
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 }
