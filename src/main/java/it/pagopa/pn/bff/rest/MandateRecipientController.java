@@ -23,7 +23,7 @@ public class MandateRecipientController implements MandateApi {
     }
 
     /**
-     * GET bff/v1/mandate/count-by-delegate: Mandates count
+     * GET bff/v1/mandate/delegates/count: Mandates count
      * Get total mandates based on required status if filter's specified.
      * If no filter is present, returns total of all pending and active mandates
      *
@@ -284,9 +284,38 @@ public class MandateRecipientController implements MandateApi {
                 xPagopaPnCxId, xPagopaPnCxType, size, xPagopaPnCxGroups, xPagopaPnCxRole, nextPageKey, searchMandateRequest
         );
 
-
         log.logEndingProcess("searchMandatesByDelegateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * GET bff/v1/mandate/delegators: Get created mandates.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @param exchange
+     * @return list of mandates
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<BffMandate>>> getMandatesByDelegatorV1(
+            String xPagopaPnCxId,
+            CxTypeAuthFleet xPagopaPnCxType,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnCxRole,
+            final ServerWebExchange exchange) {
+        log.logStartingProcess("getMandatesByDelegatorV1");
+
+        Flux<BffMandate> serviceResponse = mandateRecipientService.getMandatesByDelegator(
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole
+        );
+
+
+        log.logEndingProcess("getMandatesByDelegatorV1");
+        return serviceResponse
+                .collectList()
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
     }
 }

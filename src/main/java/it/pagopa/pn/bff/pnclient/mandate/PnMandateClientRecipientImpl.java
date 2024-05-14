@@ -152,4 +152,18 @@ public class PnMandateClientRecipientImpl {
                 searchMandateRequestDto
         );
     }
+
+    public Flux<MandateDto> getMandatesByDelegator(String xPagopaPnCxId,
+                                                   CxTypeAuthFleet xPagopaPnCxType,
+                                                   List<String> xPagopaPnCxGroups,
+                                                   String xPagopaPnCxRole) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "listMandatesByDelegator1");
+
+        return mandateApi.listMandatesByDelegator1(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        );
+    }
 }

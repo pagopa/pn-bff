@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MandateMock {
 
@@ -143,7 +144,7 @@ public class MandateMock {
         return updateRequest;
     }
 
-    private MandateDto getMandateByDelegateMock(int index, MandateDto.StatusEnum status, UserDto delegate) {
+    private MandateDto getMandateMock(int index, MandateDto.StatusEnum status, UserDto user, String userType) {
         OffsetDateTime today = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime tomorrow = today.plusDays(1);
         MandateDto mandate = new MandateDto();
@@ -156,14 +157,18 @@ public class MandateMock {
         visibilityIds.add(getOrganizationMock(index));
         visibilityIds.add(getOrganizationMock(index + 1));
         mandate.setVisibilityIds(visibilityIds);
-        mandate.setDelegate(delegate);
+        if (Objects.equals(userType, "delegate")) {
+            mandate.setDelegate(user);
+        } else {
+            mandate.setDelegator(user);
+        }
         return mandate;
     }
 
     public List<MandateDto> getMandatesByDelegateMock() {
         List<MandateDto> mandates = new ArrayList<>();
-        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U")));
-        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C")));
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegate"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegate"));
         return mandates;
     }
 
@@ -203,9 +208,16 @@ public class MandateMock {
         nextPagesKey.add("page-2");
         searchResponse.setNextPagesKey(nextPagesKey);
         List<MandateDto> mandates = new ArrayList<>();
-        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U")));
-        mandates.add(getMandateByDelegateMock(1, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C")));
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegate"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegate"));
         searchResponse.setResultsPage(mandates);
         return searchResponse;
+    }
+
+    public List<MandateDto> getMandatesByDelegatorMock() {
+        List<MandateDto> mandates = new ArrayList<>();
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Sara", "Bianchi", "BNCSRA96L53H501D"), "delegator"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Maria", "Verdi", "VRDMRA07P69H501I"), "delegator"));
+        return mandates;
     }
 }

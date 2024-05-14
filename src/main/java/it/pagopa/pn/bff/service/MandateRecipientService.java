@@ -167,7 +167,7 @@ public class MandateRecipientService {
      * @param xPagopaPnCxGroups User Group id List
      * @param xPagopaPnCxRole   User role
      * @param status            Mandate status
-     * @return
+     * @return mandates list
      */
     public Flux<BffMandate> getMandatesByDelegate(String xPagopaPnCxId,
                                                   CxTypeAuthFleet xPagopaPnCxType,
@@ -191,7 +191,7 @@ public class MandateRecipientService {
      * @param xPagopaPnCxRole      User role
      * @param nextPageKey          The key of the page
      * @param searchMandateRequest the request containing the filters
-     * @return
+     * @return mandates list
      */
     public Mono<BffSearchMandateResponse> searchMandatesByDelegate(String xPagopaPnCxId,
                                                                    CxTypeAuthFleet xPagopaPnCxType,
@@ -207,6 +207,26 @@ public class MandateRecipientService {
                         .map(SearchMandateByDelegateMapper.modelMapper::mapResponse)
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         );
+    }
+
+    /**
+     * Return all the mandates created.
+     *
+     * @param xPagopaPnCxId     User id
+     * @param xPagopaPnCxType   User Type
+     * @param xPagopaPnCxGroups User Group id List
+     * @param xPagopaPnCxRole   User role
+     * @return mandates list
+     */
+    public Flux<BffMandate> getMandatesByDelegator(String xPagopaPnCxId,
+                                                   CxTypeAuthFleet xPagopaPnCxType,
+                                                   List<String> xPagopaPnCxGroups,
+                                                   String xPagopaPnCxRole) {
+        log.info("getMandatesByDelegator");
+        return pnMandateClientRecipient
+                .getMandatesByDelegator(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole)
+                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
 }

@@ -52,7 +52,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/count-by-delegate")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates/count")
                                 .queryParam("status", "pending")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/count-by-delegate")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates/count")
                                 .queryParam("status", "pending")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -658,6 +658,76 @@ class MandateRecipientControllerTest {
                 eq(UserMock.PN_CX_ROLE),
                 eq("NEXT_PAGE"),
                 argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void getMandatesByDelegator() {
+        List<BffMandate> response = mandateMock.getMandatesByDelegatorMock()
+                .stream()
+                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .toList();
+        Mockito.when(mandateRecipientService.getMandatesByDelegator(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Flux.fromIterable(response));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegators")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(BffMandate.class)
+                .isEqualTo(response);
+
+        Mockito.verify(mandateRecipientService).getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        );
+    }
+
+    @Test
+    void getMandatesByDelegatorError() {
+        Mockito.when(mandateRecipientService.getMandatesByDelegator(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegators")
+                                .build())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(mandateRecipientService).getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         );
     }
 }

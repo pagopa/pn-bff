@@ -406,4 +406,47 @@ public class MandateRecipientServiceTest {
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void getMandatesByDelegator() {
+        List<BffMandate> response = mandateMock.getMandatesByDelegatorMock()
+                .stream()
+                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .toList();
+        when(pnMandateClientRecipient.getMandatesByDelegator(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Flux.fromIterable(mandateMock.getMandatesByDelegatorMock()));
+
+        StepVerifier.create(mandateRecipientService.getMandatesByDelegator(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_CX_ROLE
+                ))
+                .expectNextSequence(response)
+                .verifyComplete();
+    }
+
+    @Test
+    void getMandatesByDelegatorError() {
+        when(pnMandateClientRecipient.getMandatesByDelegator(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(mandateRecipientService.getMandatesByDelegator(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_CX_ROLE
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
 }

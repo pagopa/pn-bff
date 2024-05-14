@@ -350,4 +350,38 @@ class PnMandateClientRecipientImplTest {
                 mandateMock.getSearchMandatesByDelegateRequestMock()
         )).expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void getMandatesByDelegator() {
+        when(mandateApi.listMandatesByDelegator1(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Flux.fromIterable(mandateMock.getMandatesByDelegatorMock()));
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNextSequence(mandateMock.getMandatesByDelegatorMock()).verifyComplete();
+    }
+
+    @Test
+    void getMandatesByDelegatorError() {
+        when(mandateApi.listMandatesByDelegator1(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyList(),
+                Mockito.anyString()
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError(WebClientResponseException.class).verify();
+    }
 }

@@ -339,4 +339,37 @@ class PnMandateClientRecipientImplTestIT {
                 mandateMock.getSearchMandatesByDelegateRequestMock()
         )).expectError().verify();
     }
+
+    @Test
+    void getMandatesByDelegator() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(mandateMock.getMandatesByDelegatorMock());
+        mockServerClient.when(request().withMethod("GET")
+                        .withPath(pathMandate + "/mandates-by-delegator"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNextSequence(mandateMock.getMandatesByDelegatorMock()).verifyComplete();
+    }
+
+    @Test
+    void getMandatesByDelegatorError() {
+        mockServerClient.when(request().withMethod("GET")
+                        .withPath(pathMandate + "/mandates-by-delegator"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnMandateClient.getMandatesByDelegator(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectError().verify();
+    }
 }

@@ -26,7 +26,7 @@ tags:
       Invocazioni utilizzate per la gestione delle deleghe.
 
 paths:
-  '/bff/v1/mandate/count-by-delegate':
+  '/bff/v1/mandate/delegates/count':
     get:
       summary: >-
         Ritorna il numero totale di deleghe in base al filtro stato (se specificato).
@@ -248,6 +248,35 @@ paths:
             application/json:
               schema:
                 $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffSearchMandateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/mandate/delegators':
+    get:
+      summary: Ritorna tutte le deleghe create
+      tags:
+        - Mandate
+      operationId: getMandatesByDelegatorV1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './mandate-schemas/mandate.yaml#/components/schemas/BffMandate'
         '400':
           description: Bad Request
           content:
