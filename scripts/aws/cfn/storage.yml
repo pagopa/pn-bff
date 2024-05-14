@@ -60,7 +60,7 @@ Resources:
     Properties:
       TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
       Parameters:
-        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer2
+        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
@@ -82,11 +82,11 @@ Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
-  # DataIndexerLogGroup:
-  #   Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+  DataIndexerLogGroup:
+    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Lambda exports
   DataIndexerLambdaName:
-    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+    Value: SenderDashboardDataIndexer
   # Bucket exports
   IndexesBucketArn:
     Value: !GetAtt IndexesBucket.Arn
