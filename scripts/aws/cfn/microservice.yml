@@ -225,83 +225,83 @@ Parameters:
     Description: 'AuthFleet base URL'
 
   # Lambdas
-  # LambdasBucketName:
-  #   Type: String
-  #   Default: ''
-  #   Description: 'Name of the bucket where the lambda files are copied during deploy'
+  LambdasBucketName:
+    Type: String
+    Default: ''
+    Description: 'Name of the bucket where the lambda files are copied during deploy'
 
-  # BucketBasePath:
-  #   Type: String
-  #   Default: ''
-  #   Description: 'Base path of the lambda in the s3 bucket'
+  BucketBasePath:
+    Type: String
+    Default: ''
+    Description: 'Base path of the lambda in the s3 bucket'
 
-  # DataIndexerLambdaName:
-  #   Type: String
-  #   Description: Name of the DataIndexer Lambda.
+  DataIndexerLambdaName:
+    Type: String
+    Description: Name of the DataIndexer Lambda.
 
-  # DataIndexerLambdaMemory:
-  #   Type: Number
-  #   Default: 4096
-  #   MinValue: 512
-  #   MaxValue: 10240
-  #   Description: Memory of the DataIndexer Lambda.
+  DataIndexerLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the DataIndexer Lambda.
 
-  # DataIndexerLambdaRuntime:
-  #   Type: String
-  #   Default: nodejs20.x
-  #   Description: Runtime of the DataIndexer Lambda.
+  DataIndexerLambdaRuntime:
+    Type: String
+    Default: nodejs20.x
+    Description: Runtime of the DataIndexer Lambda.
 
-  # IndexesBucketArn:
-  #   Type: String
-  #   Description: PN bucket Arn of indexes files.
+  IndexesBucketArn:
+    Type: String
+    Description: PN bucket Arn of indexes files.
 
-  # IndexesBucketName:
-  #   Type: String
-  #   Description: PN bucket of index files.
+  IndexesBucketName:
+    Type: String
+    Description: PN bucket of index files.
 
-  # IndexesBucketRegion:
-  #   Type: String
-  #   Description: PN bucket region of index files.
+  IndexesBucketRegion:
+    Type: String
+    Description: PN bucket region of index files.
 
-  # SenderDashboardDataIndexerAlarmThreshold:
-  #   Type: Number
-  #   # 8 minutes
-  #   Default: 480000
-  #   Description: Threshold in minutes of DataIndexer Lambda.
+  SenderDashboardDataIndexerAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
 
-  # SenderDashboardDataIndexerCron:
-  #   Type: String
-  #   Default: 'cron(0 16 * * ? *)'
-  #   Description: Cron to schedule the Lambda.
+  SenderDashboardDataIndexerCron:
+    Type: String
+    Default: 'cron(0 16 * * ? *)'
+    Description: Cron to schedule the Lambda.
 
-  # # DataIndexer Env
-  # DlBucketName:
-  #   Type: String
-  #   Description: Name of data-lake bucket.
+  # DataIndexer Env
+  DlBucketName:
+    Type: String
+    Description: Name of data-lake bucket.
 
-  # DlBucketRegion:
-  #   Type: String
-  #   Description: Default region for data-lake bucket.
+  DlBucketRegion:
+    Type: String
+    Description: Default region for data-lake bucket.
 
-  # DlAssumeRoleArn:
-  #   Type: String
-  #   Description: ARN of the role Lambda will assume.
+  DlAssumeRoleArn:
+    Type: String
+    Description: ARN of the role Lambda will assume.
 
-  # DlOverviewObjectKey:
-  #   Type: String
-  #   Description: S3 object key for overview file.
+  DlOverviewObjectKey:
+    Type: String
+    Description: S3 object key for overview file.
 
-  # DlFocusObjectKey:
-  #   Type: String
-  #   Description: S3 object key for focus focus.
+  DlFocusObjectKey:
+    Type: String
+    Description: S3 object key for focus focus.
 
-  # PnOverviewIndexObjectKey:
-  #   Type: String
-  #   Description: S3 index object key for overview file.
+  PnOverviewIndexObjectKey:
+    Type: String
+    Description: S3 index object key for overview file.
 
-  # PnFocusIndexObjectKey:
-  #   Type: String
-  #   Description: S3 index object key for focus file.
+  PnFocusIndexObjectKey:
+    Type: String
+    Description: S3 index object key for focus file.
 
 Resources:
 
@@ -387,94 +387,94 @@ Resources:
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
 
   # DataIndexer Lambda
-  # SenderDashboardDataIndexer:
-  #   Type: AWS::Lambda::Function
-  #   Properties:
-  #     FunctionName: !Ref DataIndexerLambdaName
-  #     Runtime: !Ref DataIndexerLambdaRuntime
-  #     Handler: index.handler
-  #     Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
-  #     Code:
-  #       S3Bucket: !Ref LambdasBucketName
-  #       S3Key: !Sub "${BucketBasePath}/senderDashboardDataIndexer.zip"
-  #     Timeout: 900
-  #     MemorySize: !Ref DataIndexerLambdaMemory
-  #     Environment:
-  #       Variables:
-  #         DL_BUCKET_NAME: !Ref DlBucketName
-  #         DL_BUCKET_REGION: !Ref DlBucketRegion
-  #         DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
-  #         DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
-  #         DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
-  #         PN_BUCKET_NAME: !Ref IndexesBucketName
-  #         PN_BUCKET_REGION: !Ref IndexesBucketRegion
-  #         PN_OVERVIEW_INDEX_OBJECT_KEY: !Ref PnOverviewIndexObjectKey
-  #         PN_FOCUS_INDEX_OBJECT_KEY: !Ref PnFocusIndexObjectKey
+  SenderDashboardDataIndexer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref DataIndexerLambdaName
+      Runtime: !Ref DataIndexerLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdasBucketName
+        S3Key: !Sub "${BucketBasePath}/senderDashboardDataIndexer.zip"
+      Timeout: 900
+      MemorySize: !Ref DataIndexerLambdaMemory
+      Environment:
+        Variables:
+          DL_BUCKET_NAME: !Ref DlBucketName
+          DL_BUCKET_REGION: !Ref DlBucketRegion
+          DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
+          DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
+          DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
+          PN_BUCKET_NAME: !Ref IndexesBucketName
+          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_OVERVIEW_INDEX_OBJECT_KEY: !Ref PnOverviewIndexObjectKey
+          PN_FOCUS_INDEX_OBJECT_KEY: !Ref PnFocusIndexObjectKey
 
-  # SenderDashboardDataIndexerExecutionRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service:
-  #               - lambda.amazonaws.com
-  #           Action:
-  #             - sts:AssumeRole
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-  #     Policies:
-  #       - PolicyName: AccessIndexesBucket
-  #         PolicyDocument:
-  #           Version: '2012-10-17'
-  #           Statement:
-  #             - Effect: Allow
-  #               Action:
-  #                 - s3:GetObject
-  #                 - s3:GetObjectVersion
-  #                 - s3:PutObject
-  #               Resource:
-  #                 - !Sub ${IndexesBucketArn}/*
+  SenderDashboardDataIndexerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessIndexesBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${IndexesBucketArn}/*
 
-  # # Fires the alarm when a duration threshold is reached
-  # SenderDashboardDataIndexerDurationAlarm:
-  #   Type: AWS::CloudWatch::Alarm
-  #   Properties:
-  #     AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
-  #     AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
-  #     MetricName: Duration
-  #     Namespace: AWS/Lambda
-  #     Statistic: Maximum
-  #     Period: 300
-  #     EvaluationPeriods: 1
-  #     Threshold: !Ref SenderDashboardDataIndexerAlarmThreshold
-  #     ComparisonOperator: GreaterThanOrEqualToThreshold
-  #     AlarmActions:
-  #       - !Ref AlarmSNSTopicArn
-  #     Dimensions:
-  #       - Name: FunctionName
-  #         Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
-  #     TreatMissingData: notBreaching
+  # Fires the alarm when a duration threshold is reached
+  SenderDashboardDataIndexerDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref SenderDashboardDataIndexerAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      TreatMissingData: notBreaching
 
-  # # EventBridge Rule to trigger the Lambda
-  # SenderDashboardDataIndexerTrigger:
-  #   Type: AWS::Events::Rule
-  #   Properties:
-  #     Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
-  #     ScheduleExpression: !Ref SenderDashboardDataIndexerCron
-  #     State: ENABLED
-  #     Targets:
-  #       - Id: TargetFunction
-  #         Arn: !GetAtt SenderDashboardDataIndexer.Arn
+  # EventBridge Rule to trigger the Lambda
+  SenderDashboardDataIndexerTrigger:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
+      ScheduleExpression: !Ref SenderDashboardDataIndexerCron
+      State: ENABLED
+      Targets:
+        - Id: TargetFunction
+          Arn: !GetAtt SenderDashboardDataIndexer.Arn
 
-  # # Adding permissions to allow EventBridge to invoke the data indexer Lambda
-  # SenderDashboardDataIndexerInvokePermission:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
-  #     Action: lambda:InvokeFunction
-  #     Principal: events.amazonaws.com
-  #     SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
+  # Adding permissions to allow EventBridge to invoke the data indexer Lambda
+  SenderDashboardDataIndexerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
