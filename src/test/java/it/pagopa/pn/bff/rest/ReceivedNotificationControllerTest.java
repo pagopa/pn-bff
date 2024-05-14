@@ -727,4 +727,77 @@ class ReceivedNotificationControllerTest {
                 0
         );
     }
+
+//    @Test
+//    void checkAarQrCode(){
+//        BffResponseCheckAarMandateDto response = NotificationsReceivedMapper.modelMapper.toBffResponseCheckAarMandateDto(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock());
+//        Mockito.when(notificationsRecipientService.checkAarQrCode(
+//                Mockito.anyString(),
+//                Mockito.any(CxTypeAuthFleet.class),
+//                Mockito.anyString(),
+//                Mockito.any(),
+//                Mockito.anyList()
+//        )).thenReturn(Mono.just(response).cast(BffResponseCheckAarMandateDto.class)); // E questa riga
+//
+//        webTestClient.post()
+//                .uri(uriBuilder ->
+//                        uriBuilder
+//                                .path(PnBffRestConstants.NOTIFICATION_AAR_QR_CODE_PATH)
+//                                .build())
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+//                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+//                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+//                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+//                .bodyValue(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock())
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody(BffResponseCheckAarMandateDto.class)
+//                .isEqualTo(response);
+//
+//        Mockito.verify(notificationsRecipientService).checkAarQrCode(
+//                UserMock.PN_UID,
+//                CxTypeAuthFleet.PF,
+//                UserMock.PN_CX_ID,
+//                Mockito.any(),
+//                UserMock.PN_CX_GROUPS
+//        );
+//    }
+//
+//    @Test
+//    void checkAarQrCodeError(){
+//        Mockito.when(notificationsRecipientService.checkAarQrCode(
+//                Mockito.anyString(),
+//                Mockito.any(CxTypeAuthFleet.class),
+//                Mockito.anyString(),
+//                Mockito.any(),
+//                Mockito.anyList()
+//        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "BAD_REQUEST")));
+//
+//        webTestClient.post()
+//                .uri(uriBuilder ->
+//                        uriBuilder
+//                                .path(PnBffRestConstants.NOTIFICATION_AAR_QR_CODE_PATH)
+//                                .build())
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+//                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+//                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+//                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+//                .bodyValue(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock())
+//                .exchange()
+//                .expectStatus()
+//                .isNotFound();
+//
+//        Mockito.verify(notificationsRecipientService).checkAarQrCode(
+//                UserMock.PN_UID,
+//                CxTypeAuthFleet.PF,
+//                UserMock.PN_CX_ID,
+//                Mono.just(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+//                UserMock.PN_CX_GROUPS
+//        );
+//    }
 }

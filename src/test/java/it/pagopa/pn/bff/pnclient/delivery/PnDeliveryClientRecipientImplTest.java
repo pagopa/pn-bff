@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
@@ -310,6 +311,44 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID(),
                 0
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void checkAarQrCode() {
+        when(recipientReadApi.checkAarQrCode(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()).verifyComplete();
+    }
+
+    @Test
+    void checkAarQrCodeError() {
+        when(recipientReadApi.checkAarQrCode(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
 }

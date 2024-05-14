@@ -3,6 +3,8 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestCheckAarMandateDto;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -51,5 +53,16 @@ public class NotificationsReceivedMock {
         notificationSearchResponse.setResultsPage(notificationSearchRows);
         notificationSearchResponse.setMoreResult(false);
         return notificationSearchResponse;
+    }
+    public ResponseCheckAarMandateDto getResponseCheckAarMandateDtoPNMock(){
+        ResponseCheckAarMandateDto responseCheckAarMandateDto = new ResponseCheckAarMandateDto();
+        responseCheckAarMandateDto.setMandateId("MANDATE_ID");
+        responseCheckAarMandateDto.setIun("IUN");
+        return responseCheckAarMandateDto;
+    }
+    public BffRequestCheckAarMandateDto getRequestCheckAarMandateDtoPNMock(){
+        BffRequestCheckAarMandateDto bffRequestCheckAarMandateDto = new BffRequestCheckAarMandateDto();
+        bffRequestCheckAarMandateDto.setAarQrCodeValue("qrCodeValue");
+        return bffRequestCheckAarMandateDto;
     }
 }
