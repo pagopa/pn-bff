@@ -1,17 +1,21 @@
-import { streamLines, writeObject } from '../app/s3.js';
-import { expect } from 'chai';
-import { sdkStreamMixin } from '@smithy/util-stream';
-import { mockClient } from 'aws-sdk-client-mock';
-import fs from 'node:fs';
-
-import {
+const { streamLines, writeObject, headObject } = require('../app/s3.js');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const { sdkStreamMixin } = require('@smithy/util-stream');
+const { mockClient } = require('aws-sdk-client-mock');
+const fs = require('node:fs');
+const {
   S3Client,
   GetObjectCommand,
   PutObjectCommand,
-} from '@aws-sdk/client-s3';
+  HeadObjectCommand,
+} = require('@aws-sdk/client-s3');
+
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe('s3 tests', function () {
-  it('streamLines', async () => {
+  it('should streamLines', async () => {
     // Given
     const s3Mock = mockClient(S3Client);
     const stream = fs.createReadStream('./src/test/data/overview.json');
@@ -41,7 +45,23 @@ describe('s3 tests', function () {
     s3Mock.reset();
   });
 
-  it('writeObject', async () => {
+  it('should handle stream error in streamLines', async () => {
+    const s3Mock = mockClient(S3Client);
+    const errorStream = new require('stream').Readable();
+    errorStream._read = () => {
+      errorStream.emit('error', new Error('Stream error'));
+    };
+
+    s3Mock.on(GetObjectCommand).resolves({ Body: errorStream });
+
+    const s3 = new S3Client({});
+    await expect(
+      streamLines(s3, 'test', 'test', () => {})
+    ).to.eventually.be.rejectedWith('Stream error');
+    s3Mock.reset();
+  });
+
+  it('should writeObject', async () => {
     // Given
     const s3Mock = mockClient(S3Client);
     s3Mock.on(PutObjectCommand).resolves({});
@@ -50,6 +70,22 @@ describe('s3 tests', function () {
 
     // When - Then
     await writeObject(s3, 'test', 'test', 'test');
+
+    s3Mock.reset();
+  });
+
+  it('should headObject', async () => {
+    // Given
+    const s3Mock = mockClient(S3Client);
+    s3Mock.on(HeadObjectCommand).resolves({ VersionId: 'test' });
+
+    const s3 = new S3Client({});
+
+    // When
+    const metadata = await headObject(s3, 'test', 'test');
+
+    // Then
+    expect(metadata.VersionId).to.be.equal('test');
 
     s3Mock.reset();
   });
