@@ -53,16 +53,16 @@ Resources:
         LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
 
   # Lambda DataIndexer
-  SenderDashboardDataIndexerLogGroup:
-    Type: AWS::CloudFormation::Stack
-    UpdateReplacePolicy: Delete
-    DeletionPolicy: Delete
-    Properties:
-      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
-      Parameters:
-        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
-        LogGroupRetention: !Ref LogRetention
-        LogGroupPrefix: /aws/lambda
+  # SenderDashboardDataIndexerLogGroup:
+  #   Type: AWS::CloudFormation::Stack
+  #   UpdateReplacePolicy: Delete
+  #   DeletionPolicy: Delete
+  #   Properties:
+  #     TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
+  #     Parameters:
+  #       LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
+  #       LogGroupRetention: !Ref LogRetention
+  #       LogGroupPrefix: /aws/lambda
 
   IndexesBucket:
     Type: AWS::S3::Bucket
@@ -82,11 +82,11 @@ Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
-  DataIndexerLogGroup:
-    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
-  # Lambda exports
-  DataIndexerLambdaName:
-    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+  # DataIndexerLogGroup:
+  #   Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+  # # Lambda exports
+  # DataIndexerLambdaName:
+  #   Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Bucket exports
   IndexesBucketArn:
     Value: !GetAtt IndexesBucket.Arn
