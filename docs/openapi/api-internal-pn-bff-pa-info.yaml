@@ -46,7 +46,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/info-pa.yaml#/components/schemas/BffInstitutionList'
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionList'
         '400':
           description: Bad request
           content:
@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/info-pa.yaml#/components/schemas/BffInstitutionProductList'
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionProductList'
         '400':
           description: Bad request
           content:
