@@ -237,14 +237,14 @@
 
                     <!-- OPEN API PN-BFF INSTITUTION AND PRODUCT -->
                     <execution>
-                        <id>pn-internal-bff-institution-and-product</id>
+                        <id>pn-internal-bff-pa-info</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-institution-and-product.yaml
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-info.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
