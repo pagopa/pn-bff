@@ -32,6 +32,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnExternalRegistriesClientImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
@@ -62,7 +63,6 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutions() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(paInfoMock.getInstitutionResourcePNMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions))
                 .respond(response()
@@ -94,7 +94,6 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutionProducts() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(paInfoMock.getProductResourcePNMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
                 .respond(response()
@@ -126,7 +125,6 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getGroups() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(paInfoMock.getPaGroupsMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathGroups))
                 .respond(response()
@@ -161,7 +159,6 @@ class PnExternalRegistriesClientImplTestIT {
     void getPaymentsInfo() throws JsonProcessingException {
         List<PaymentInfoRequest> paymentsInfoRequest = paymentsMock.getPaymentsInfoRequestMock();
         List<PaymentInfoV21> paymentsInfoResponse = paymentsMock.getPaymentsInfoResponseMock();
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(paymentsInfoRequest);
         String response = objectMapper.writeValueAsString(paymentsInfoResponse);
 
@@ -182,7 +179,6 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void getPaymentsInfoError() throws JsonProcessingException {
         List<PaymentInfoRequest> paymentsInfoRequest = paymentsMock.getPaymentsInfoRequestMock();
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(paymentsInfoRequest);
 
         mockServerClient.when(request().withMethod("POST").withPath(pathPaymentInfo).withBody(request))
@@ -198,7 +194,6 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void paymentsCart() throws JsonProcessingException {
         PaymentRequest paymentRequest = paymentsMock.getPaymentRequestMock();
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(paymentRequest);
         PaymentResponse paymentResponse = paymentsMock.getPaymentResponseMock();
         String response = objectMapper.writeValueAsString(paymentResponse);
@@ -218,7 +213,6 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void paymentsCartError() throws JsonProcessingException {
         PaymentRequest paymentRequest = paymentsMock.getPaymentRequestMock();
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(paymentRequest);
 
         mockServerClient.when(request().withMethod("POST").withPath(pathCheckoutCart).withBody(request))

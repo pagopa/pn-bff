@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -25,15 +24,13 @@ import java.time.OffsetDateTime;
 
 @Slf4j
 @WebFluxTest(DowntimeLogsController.class)
-public class DowntimeLogsControllerTest {
+class DowntimeLogsControllerTest {
     private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     @Autowired
     WebTestClient webTestClient;
     DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
     @MockBean
     private DowntimeLogsService downtimeLogsService;
-    @SpyBean
-    private DowntimeLogsController downtimeLogsController;
 
     @Test
     void getCurrentStatus() {

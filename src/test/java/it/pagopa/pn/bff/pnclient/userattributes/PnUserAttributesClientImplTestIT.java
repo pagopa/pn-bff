@@ -25,6 +25,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnUserAttributesClientImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";
@@ -54,7 +55,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void getTosConsent() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(consentsMock.getTosConsentResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response()
@@ -82,7 +82,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void getPrivacyConsent() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(consentsMock.getPrivacyConsentResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
                 .respond(response()
@@ -110,7 +109,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void acceptTosConsent() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
         mockServerClient.when(request().withMethod("PUT").withPath(path + "/TOS").withBody(request))
                 .respond(response()
@@ -130,7 +128,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void acceptTosConsentError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
         mockServerClient.when(request().withMethod("PUT").withPath(path + "/TOS").withBody(request))
                 .respond(response().withStatusCode(404));
@@ -146,7 +143,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void getAddressesByRecipient() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(addressesMock.getUserAddressesResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(addressPath))
                 .respond(response()
@@ -178,7 +174,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void createOrUpdateCourtesyAddress() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
         mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/default/EMAIL").withBody(request))
@@ -201,7 +196,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void createOrUpdateCourtesyAddressError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/courtesy/default/EMAIL").withBody(request))
                 .respond(response().withStatusCode(404));
@@ -219,7 +213,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void createOrUpdateLegalAddress() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         String response = objectMapper.writeValueAsString(addressesMock.addressVerificationCourtesyResponseMock());
         mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/default/PEC").withBody(request))
@@ -242,7 +235,6 @@ class PnUserAttributesClientImplTestIT {
 
     @Test
     void createOrUpdateLegalAddressError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(addressesMock.getAddressVerificationBodyMock());
         mockServerClient.when(request().withMethod("POST").withPath(addressPath + "/legal/default/PEC").withBody(request))
                 .respond(response().withStatusCode(404));

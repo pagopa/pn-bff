@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -36,8 +35,6 @@ class SentNotificationControllerTest {
     WebTestClient webTestClient;
     @MockBean
     private NotificationsPAService notificationsPAService;
-    @SpyBean
-    private SentNotificationController sentNotificationController;
 
     @Test
     void searchSentNotifications() {
@@ -608,7 +605,7 @@ class SentNotificationControllerTest {
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isAccepted()
                 .expectBody(BffRequestStatus.class)
                 .isEqualTo(response);
 

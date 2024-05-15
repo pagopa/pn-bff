@@ -29,6 +29,7 @@ public class PnBffRestConstants {
     public static final String PAYMENTS_CART_PATH = BFF_PATH + VERSION_1 + "/payments/cart";
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
     public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
+    public static final String MANDATE_PATH = BFF_PATH + VERSION_1 + "/mandate";
 
     private PnBffRestConstants() {
     }
