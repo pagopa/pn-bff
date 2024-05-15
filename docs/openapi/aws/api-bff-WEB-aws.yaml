@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: /D86RLuA7wz47qgA9Y8eigsJOT21nhhSGIbOiqrh6sA=
+  version: 1ydKjT9jbuFaqn2IMcZZZxijrssTiej3FtuNicnCppY=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1130,7 +1130,7 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InfoPa
-        - name: statusFilter
+        - name: status
           description: Se valorizzato indica di tornare solo i gruppi nello stato passato
           in: query
           required: false
