@@ -46,7 +46,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionList'
+                $ref: './institution-and-product-schemas/info-pa.yaml#/components/schemas/BffInstitutionList'
         '400':
           description: Bad request
           content:
@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionProductList'
+                $ref: './institution-and-product-schemas/info-pa.yaml#/components/schemas/BffInstitutionProductList'
         '400':
           description: Bad request
           content:
@@ -114,14 +114,14 @@ paths:
         in: query
         required: false
         schema:
-          $ref: '#/components/schemas/BffPaGroupStatus'
+          $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupStatus'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPaGroupList'
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupList'
         '400':
           description: Invalid input
           content:
@@ -134,10 +134,3 @@ paths:
             application/problem+json:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
-
-components:
-  schemas:
-    BffPaGroupStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
-    BffPaGroupList:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupList'
