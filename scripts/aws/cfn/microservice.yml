@@ -395,8 +395,8 @@ Resources:
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
       Code:
-        S3Bucket: !Ref LambdasBucketName
-        S3Key: !Sub "${BucketBasePath}/senderDashboardDataIndexer.zip"
+        S3Bucket: !Ref MicroserviceBucketBaseKey
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/senderDashboardDataIndexer.zip"
       Timeout: 900
       MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
