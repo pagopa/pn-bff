@@ -50,6 +50,10 @@ components:
 
     BffNewMandateRequest:
       type: object
+      required:
+        - delegate
+        - verificationCode
+        - dateto
       properties:
         delegate:
           $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UserDto'

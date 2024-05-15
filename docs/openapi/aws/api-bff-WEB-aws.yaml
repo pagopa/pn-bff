@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: v8dEmQLLHwLnmyPG/II9oB8G3Nq3eNryRlpA1LWkF6s=
+  version: ZrSiPzPJa8I3WU98O2OLqz2/4zmFbU6o/1TMxHNBt/Q=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5312,6 +5312,10 @@ components:
           pattern: ^[ -~ ]*$
     BffNewMandateRequest:
       type: object
+      required:
+        - delegate
+        - verificationCode
+        - dateto
       properties:
         delegate:
           $ref: '#/components/schemas/UserDto'
