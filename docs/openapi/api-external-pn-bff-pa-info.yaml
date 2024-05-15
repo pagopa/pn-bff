@@ -21,7 +21,7 @@ servers:
   - url: https://webapi.dev.notifichedigitali.it
     description: Ambiente di sviluppo
 tags:
-  - name: InstitutionProducts
+  - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
 
 paths:
@@ -34,14 +34,14 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-        - InstitutionAndProduct
+        - InfoPa
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionList'
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionList'
         '400':
           description: Bad request
           content:
@@ -64,14 +64,14 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InstitutionAndProduct
+      - InfoPa
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: './institution-and-product-schemas/institution-and-product.yaml#/components/schemas/BffInstitutionProductList'
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionProductList'
         '400':
           description: Bad request
           content:
@@ -80,6 +80,42 @@ paths:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/groups':
+    get:
+      summary: Get groups
+      description: |-
+        This operation retrieves the groups from Self Care.
+      operationId: getGroupsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
           content:
             application/problem+json:
               schema:

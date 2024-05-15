@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {PnExternalRegistriesClientImpl.class})
 @ExtendWith(SpringExtension.class)
 class PnExternalRegistriesClientImplTest {
-    private final UserMock userMock = new UserMock();
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
@@ -48,14 +47,14 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.nullable(String.class)
-        )).thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getInstitutionResourcePNMock()));
 
         StepVerifier.create(pnExternalRegistriesClient.getInstitutions(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getInstitutionResourcePNMock()).verifyComplete();
     }
 
     @Test
@@ -87,14 +86,14 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.nullable(String.class)
-        )).thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getProductResourcePNMock()));
 
         StepVerifier.create(pnExternalRegistriesClient.getInstitutionProducts(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getProductResourcePNMock()).verifyComplete();
     }
 
     @Test
@@ -124,14 +123,14 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any(PaGroupStatus.class)
-        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
         StepVerifier.create(pnExternalRegistriesClient.getGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 PaGroupStatus.ACTIVE
-        )).expectNextSequence(userMock.getPaGroupsMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getPaGroupsMock()).verifyComplete();
     }
 
     @Test

@@ -2,14 +2,13 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
-import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
+import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.service.InstitutionAndProductPaService;
+import it.pagopa.pn.bff.service.InfoPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -29,28 +28,28 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 @Slf4j
-@WebFluxTest(InstitutionAndProductPaController.class)
+@WebFluxTest(InfoPaController.class)
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-class InstitutionAndProductPaControllerTest {
+class InfoPaControllerTest {
 
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     @Autowired
     WebTestClient webTestClient;
     @Autowired
     private PnBffConfigs pnBffConfigs;
     @MockBean
-    private InstitutionAndProductPaService institutionAndProductPaService;
+    private InfoPaService infoPaService;
 
     @Test
     void getInstitutionsV1() {
-        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
+        List<BffInstitution> bffInstitutions = paInfoMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
         Mockito
-                .when(institutionAndProductPaService.getInstitutions(
+                .when(infoPaService.getInstitutions(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -74,7 +73,7 @@ class InstitutionAndProductPaControllerTest {
     void getInstitutionsV1Error() {
         Mockito
                 .doThrow(new PnBffException("Error Message", "Error Description", HttpStatus.NOT_FOUND.value(), "Error Code"))
-                .when(institutionAndProductPaService).getInstitutions(
+                .when(infoPaService).getInstitutions(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -93,12 +92,12 @@ class InstitutionAndProductPaControllerTest {
 
     @Test
     void getInstitutionProductV1() {
-        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
+        List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
         Mockito
-                .when(institutionAndProductPaService.getInstitutionProducts(
+                .when(infoPaService.getInstitutionProducts(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -122,7 +121,7 @@ class InstitutionAndProductPaControllerTest {
     void getInstitutionProductErrorV1Error() {
         Mockito
                 .doThrow(new PnBffException("Error Message", "Error Description", HttpStatus.NOT_FOUND.value(), "Error Code"))
-                .when(institutionAndProductPaService).getInstitutionProducts(
+                .when(infoPaService).getInstitutionProducts(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -135,6 +134,55 @@ class InstitutionAndProductPaControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.toString())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void getGroupsV1() {
+        List<BffPaGroup> paGroups = paInfoMock.getPaGroupsMock()
+                .stream()
+                .map(GroupsMapper.modelMapper::mapGroups)
+                .toList();
+        Mockito
+                .when(infoPaService.getGroups(
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.nullable(BffPaGroupStatus.class)))
+                .thenReturn(Flux.fromIterable(paGroups));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PATH).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(BffPaGroup.class)
+                .isEqualTo(paGroups);
+    }
+
+    @Test
+    void getGroupsV1Error() {
+        Mockito
+                .when(infoPaService.getGroups(
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.nullable(BffPaGroupStatus.class)
+                ))
+                .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PATH).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus().isNotFound();
     }

@@ -8,7 +8,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
@@ -39,8 +39,7 @@ class PnExternalRegistriesClientImplTestIT {
     private final String pathGroups = "/ext-registry/pa/v1/groups";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
     private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
-    private final UserMock userMock = new UserMock();
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
@@ -64,7 +63,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutions() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(institutionAndProductMock.getInstitutionResourcePNMock());
+        String response = objectMapper.writeValueAsString(paInfoMock.getInstitutionResourcePNMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions))
                 .respond(response()
                         .withStatusCode(200)
@@ -77,7 +76,7 @@ class PnExternalRegistriesClientImplTestIT {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectNextSequence(institutionAndProductMock.getInstitutionResourcePNMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getInstitutionResourcePNMock()).verifyComplete();
     }
 
     @Test
@@ -95,7 +94,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutionProducts() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(institutionAndProductMock.getProductResourcePNMock());
+        String response = objectMapper.writeValueAsString(paInfoMock.getProductResourcePNMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
                 .respond(response()
                         .withStatusCode(200)
@@ -108,7 +107,7 @@ class PnExternalRegistriesClientImplTestIT {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS
-        )).expectNextSequence(institutionAndProductMock.getProductResourcePNMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getProductResourcePNMock()).verifyComplete();
     }
 
     @Test
@@ -126,7 +125,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getGroups() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(userMock.getPaGroupsMock());
+        String response = objectMapper.writeValueAsString(paInfoMock.getPaGroupsMock());
         mockServerClient.when(request().withMethod("GET").withPath(pathGroups))
                 .respond(response()
                         .withStatusCode(200)
@@ -139,7 +138,7 @@ class PnExternalRegistriesClientImplTestIT {
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 PaGroupStatus.ACTIVE
-        )).expectNextSequence(userMock.getPaGroupsMock()).verifyComplete();
+        )).expectNextSequence(paInfoMock.getPaGroupsMock()).verifyComplete();
 
     }
 
