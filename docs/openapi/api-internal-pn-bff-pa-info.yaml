@@ -102,7 +102,7 @@ paths:
         This operation retrieves the groups from Self Care.
       operationId: getGroupsV1
 #      security:                                      # ONLY EXTERNAL
-#      - bearerAuth: [ ]                            # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoPa
       parameters: # NO EXTERNAL
