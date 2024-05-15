@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.mappers.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.SearchMandateRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.SearchMandateResponseDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.UserDto;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateResponse;
 import it.pagopa.pn.bff.mocks.MandateMock;
@@ -28,6 +29,9 @@ class SearchMandateByDelegateMapperTest {
     @Test
     void testSearchMandatesByDelegateResponseMapper() {
         SearchMandateResponseDto responseToMap = mandateMock.getSearchMandatesByDelegateResponseMock();
+        UserDto delegate = new UserDto();
+        delegate.setPerson(true);
+        responseToMap.getResultsPage().get(0).setDelegate(delegate);
         BffSearchMandateResponse response = SearchMandateByDelegateMapper.modelMapper.mapResponse(responseToMap);
         assertNotNull(response);
         assertEquals(response.getMoreResult(), responseToMap.getMoreResult());
@@ -40,8 +44,9 @@ class SearchMandateByDelegateMapperTest {
             assertEquals(response.getResultsPage().get(i).getVerificationCode(), responseToMap.getResultsPage().get(i).getVerificationCode());
             assertEquals(response.getResultsPage().get(i).getStatus().getValue(), responseToMap.getResultsPage().get(i).getStatus().getValue());
             assertThat(response.getResultsPage().get(i).getGroups()).usingRecursiveComparison().isEqualTo(responseToMap.getResultsPage().get(i).getGroups());
-            assertThat(response.getResultsPage().get(i).getDelegate()).usingRecursiveComparison().isEqualTo(responseToMap.getResultsPage().get(i).getDelegate());
+            assertThat(response.getResultsPage().get(i).getDelegator()).usingRecursiveComparison().isEqualTo(responseToMap.getResultsPage().get(i).getDelegator());
             assertThat(response.getResultsPage().get(i).getVisibilityIds()).usingRecursiveComparison().isEqualTo(responseToMap.getResultsPage().get(i).getVisibilityIds());
+            assertNull(response.getResultsPage().get(i).getDelegate());
         }
         BffSearchMandateResponse responseNull = SearchMandateByDelegateMapper.modelMapper.mapResponse(null);
         assertNull(responseNull);

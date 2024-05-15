@@ -177,7 +177,7 @@ public class MandateRecipientService {
         log.info("getMandatesByDelegate");
         return pnMandateClientRecipient
                 .getMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, status)
-                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .map(MandatesMapper.modelMapper::mapMandateByDelegate)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
@@ -225,7 +225,7 @@ public class MandateRecipientService {
         log.info("getMandatesByDelegator");
         return pnMandateClientRecipient
                 .getMandatesByDelegator(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole)
-                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .map(MandatesMapper.modelMapper::mapMandateByDelegator)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
