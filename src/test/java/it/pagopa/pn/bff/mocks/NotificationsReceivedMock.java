@@ -62,7 +62,7 @@ public class NotificationsReceivedMock {
     }
     public BffRequestCheckAarMandateDto getRequestCheckAarMandateDtoPNMock(){
         BffRequestCheckAarMandateDto bffRequestCheckAarMandateDto = new BffRequestCheckAarMandateDto();
-        bffRequestCheckAarMandateDto.setAarQrCodeValue("qrCodeValue");
+        bffRequestCheckAarMandateDto.setAarQrCodeValue("S0FVRC1XTUFLLUdLTVktMjAyNDAzLU4tMV9QRi0zNzY1NDU2MS00NDZhLTRjODgtYjMyOC02Njk5YTgzMjJiMzNfZGI0YmJiZDktM2UwNy00YWJlLTk2ZTktOGY4ZTVlMzRkYWM2");
         return bffRequestCheckAarMandateDto;
     }
 }
