@@ -67,14 +67,14 @@ public class InfoPaService {
      * @param statusFilter    Filter for the status of the groups
      * @return the list of groups
      */
-    public Flux<PaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus statusFilter){
+    public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus statusFilter){
         log.info("getGroups");
 
         Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getGroups(
                 xPagopaPnUid,
                 xPagopaPnCxId,
                 xPagopaPnCxGroups,
-                null
+                GroupsMapper.modelMapper.mapGroupStatus(statusFilter)
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return paGroups.map(GroupsMapper.modelMapper::mapGroups);

@@ -81,10 +81,10 @@ public class InfoPaController implements InfoPaApi {
      * @return the list of groups
      */
     @Override
-    public Mono<ResponseEntity<Flux<PaGroup>>> getGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus statusFilter, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffPaGroup>>> getGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus statusFilter, ServerWebExchange exchange) {
         log.logStartingProcess("getGroupsV1");
 
-        Flux<PaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, statusFilter);
+        Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, statusFilter);
 
         log.logEndingProcess("getGroupsV1");
         return Mono.just(ResponseEntity.ok(serviceResponse));

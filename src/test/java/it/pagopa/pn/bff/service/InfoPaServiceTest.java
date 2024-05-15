@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaGroup;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
@@ -129,7 +129,7 @@ class InfoPaServiceTest {
 
     @Test
     void getGroups() {
-        List<PaGroup> groups = paInfoMock.getPaGroupsMock()
+        List<BffPaGroup> groups = paInfoMock.getPaGroupsMock()
                 .stream()
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
@@ -141,7 +141,7 @@ class InfoPaServiceTest {
                 Mockito.nullable(PaGroupStatus.class)
         )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
-        Flux<PaGroup> result = infoPaService.getGroups(
+        Flux<BffPaGroup> result = infoPaService.getGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -162,7 +162,7 @@ class InfoPaServiceTest {
                 Mockito.nullable(PaGroupStatus.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Flux<PaGroup> result = infoPaService.getGroups(
+        Flux<BffPaGroup> result = infoPaService.getGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,

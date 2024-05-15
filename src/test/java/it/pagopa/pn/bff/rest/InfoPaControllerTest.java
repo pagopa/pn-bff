@@ -140,7 +140,7 @@ class InfoPaControllerTest {
 
     @Test
     void getGroupsV1() {
-        List<PaGroup> paGroups = paInfoMock.getPaGroupsMock()
+        List<BffPaGroup> paGroups = paInfoMock.getPaGroupsMock()
                 .stream()
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
@@ -161,7 +161,7 @@ class InfoPaControllerTest {
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(PaGroup.class)
+                .expectBodyList(BffPaGroup.class)
                 .isEqualTo(paGroups);
     }
 
