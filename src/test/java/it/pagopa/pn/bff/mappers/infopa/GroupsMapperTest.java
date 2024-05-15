@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GroupsMapperTest {
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
 
     @Test
     void testGroupsMapper() {
-        List<PaGroup> paGroups = userMock.getPaGroupsMock();
+        List<PaGroup> paGroups = paInfoMock.getPaGroupsMock();
 
         List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaGroup> bffPaGroups = paGroups.stream()
                 .map(GroupsMapper.modelMapper::mapGroups)

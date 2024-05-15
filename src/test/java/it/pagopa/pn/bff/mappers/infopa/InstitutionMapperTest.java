@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.RootParentResourcePN;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class InstitutionMapperTest {
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     @Autowired
     private PnBffConfigs pnBffConfigs;
 
     @Test
     void testInstitutionMapper() {
-        InstitutionResourcePN institutionResourcePN = institutionAndProductMock.getInstitutionResourcePNMock().get(0);
+        InstitutionResourcePN institutionResourcePN = paInfoMock.getInstitutionResourcePNMock().get(0);
 
         institutionResourcePN.setRootParent(new RootParentResourcePN());
         institutionResourcePN.getRootParent().setDescription("Parent Description");

@@ -11,7 +11,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaGroup;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -41,7 +41,7 @@ class InfoPaServiceTest {
 
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     private final UserMock userMock = new UserMock();
 
     @Autowired
@@ -57,13 +57,13 @@ class InfoPaServiceTest {
 
     @Test
     void getInstitutions() {
-        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
+        List<BffInstitution> bffInstitutions = paInfoMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
 
         when(pnExternalRegistriesClient.getInstitutions(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.anyString(), Mockito.anyList()))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getInstitutionResourcePNMock()));
+                .thenReturn(Flux.fromIterable(paInfoMock.getInstitutionResourcePNMock()));
 
         Flux<BffInstitution> result = infoPaService.getInstitutions(
                 UserMock.PN_UID,
@@ -94,12 +94,12 @@ class InfoPaServiceTest {
 
     @Test
     void getInstitutionProduct() {
-        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
+        List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
         when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
-                .thenReturn(Flux.fromIterable(institutionAndProductMock.getProductResourcePNMock()));
+                .thenReturn(Flux.fromIterable(paInfoMock.getProductResourcePNMock()));
 
         Flux<BffInstitutionProduct> result = infoPaService.getInstitutionProducts(
                 UserMock.PN_UID,
@@ -128,8 +128,8 @@ class InfoPaServiceTest {
     }
 
     @Test
-    void getGroups(){
-        List<PaGroup> groups = userMock.getPaGroupsMock()
+    void getGroups() {
+        List<PaGroup> groups = paInfoMock.getPaGroupsMock()
                 .stream()
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
@@ -139,7 +139,7 @@ class InfoPaServiceTest {
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.nullable(PaGroupStatus.class)
-        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
         Flux<PaGroup> result = infoPaService.getGroups(
                 UserMock.PN_UID,
@@ -154,7 +154,7 @@ class InfoPaServiceTest {
     }
 
     @Test
-    void getGroupsError(){
+    void getGroupsError() {
         when(pnExternalRegistriesClient.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),

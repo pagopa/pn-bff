@@ -6,7 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
-import it.pagopa.pn.bff.mocks.InstitutionAndProductMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.InfoPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -34,8 +34,7 @@ import java.util.List;
 @TestPropertySource(locations = "classpath:application-test.properties")
 class InfoPaControllerTest {
 
-    private final InstitutionAndProductMock institutionAndProductMock = new InstitutionAndProductMock();
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     @Autowired
     WebTestClient webTestClient;
     @Autowired
@@ -45,7 +44,7 @@ class InfoPaControllerTest {
 
     @Test
     void getInstitutionsV1() {
-        List<BffInstitution> bffInstitutions = institutionAndProductMock.getInstitutionResourcePNMock()
+        List<BffInstitution> bffInstitutions = paInfoMock.getInstitutionResourcePNMock()
                 .stream()
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
                 .toList();
@@ -93,7 +92,7 @@ class InfoPaControllerTest {
 
     @Test
     void getInstitutionProductV1() {
-        List<BffInstitutionProduct> bffInstitutionProducts = institutionAndProductMock.getProductResourcePNMock()
+        List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
                 .stream()
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
                 .toList();
@@ -141,7 +140,7 @@ class InfoPaControllerTest {
 
     @Test
     void getGroupsV1() {
-        List<PaGroup> paGroups = userMock.getPaGroupsMock()
+        List<PaGroup> paGroups = paInfoMock.getPaGroupsMock()
                 .stream()
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
@@ -167,7 +166,7 @@ class InfoPaControllerTest {
     }
 
     @Test
-    void getGroupsV1Error(){
+    void getGroupsV1Error() {
         Mockito
                 .when(infoPaService.getGroups(
                         Mockito.anyString(),
