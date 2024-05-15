@@ -73,10 +73,10 @@ public class InfoPaController implements InfoPaApi {
      * GET /v1/groups
      * Get the list of groups for the user
      *
-     * @param xPagopaPnUid  (required)
-     * @param xPagopaPnCxId  (required)
-     * @param xPagopaPnCxGroups  (required)
-     * @param statusFilter  (optional)
+     * @param xPagopaPnUid      User Identifier  (required)
+     * @param xPagopaPnCxId     Public Administration id     (required)
+     * @param xPagopaPnCxGroups Public Administration Group id List (required)
+     * @param statusFilter      Filter for the status of the groups     (optional)
      * @param exchange
      * @return the list of groups
      */
