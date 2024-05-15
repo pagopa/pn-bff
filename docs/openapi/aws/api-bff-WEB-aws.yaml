@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: fTDf29fo9HYIk/KfWGDK7bKCihAi1yZRf1/Mx9kBAkw=
+  version: /D86RLuA7wz47qgA9Y8eigsJOT21nhhSGIbOiqrh6sA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1126,6 +1126,8 @@ paths:
       summary: Get groups
       description: This operation retrieves the groups from Self Care.
       operationId: getGroupsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InfoPa
         - name: statusFilter
@@ -1141,7 +1143,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaGroupList'
+                $ref: '#/components/schemas/BffPaGroupList'
         '400':
           description: Invalid input
           content:
@@ -1154,8 +1156,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/groups
@@ -4283,15 +4283,7 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
-    PaGroupStatus:
-      title: Status of group defined in Self Care
-      description: Contains the name list of groups defined in SelfCare
-      type: string
-      enum:
-        - ACTIVE
-        - SUSPENDED
-        - DELETED
-    PaGroup:
+    BffPaGroup:
       title: Group defined in Self Care
       description: Contains the name list of groups defined in SelfCare
       type: object
@@ -4300,16 +4292,12 @@ components:
           type: string
         name:
           type: string
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/PaGroupStatus'
-    PaGroupList:
+    BffPaGroupList:
       title: Groups defined in Self Care
       description: Contains the list of groups defined in SelfCare
       type: array
       items:
-        $ref: '#/components/schemas/PaGroup'
+        $ref: '#/components/schemas/BffPaGroup'
     ConsentType:
       type: string
       description: type of consent
