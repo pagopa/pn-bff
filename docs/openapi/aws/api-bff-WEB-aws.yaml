@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: RYz5JI7li0FRXr5EuqI7NVIMWmjxHsJm9FPTI18+jGs=
+  version: fTDf29fo9HYIk/KfWGDK7bKCihAi1yZRf1/Mx9kBAkw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1009,7 +1009,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
-        - InstitutionAndProduct
+        - InfoPa
       responses:
         '200':
           description: OK
@@ -1070,7 +1070,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
-        - InstitutionAndProduct
+        - InfoPa
       responses:
         '200':
           description: OK
@@ -1114,6 +1114,72 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/groups:
+    get:
+      summary: Get groups
+      description: This operation retrieves the groups from Self Care.
+      operationId: getGroupsV1
+      tags:
+        - InfoPa
+        - name: statusFilter
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: >-
+              ./info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupStatus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaGroupList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/groups API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -4217,6 +4283,33 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
+    PaGroupStatus:
+      title: Status of group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: string
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - DELETED
+    PaGroup:
+      title: Group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/PaGroupStatus'
+    PaGroupList:
+      title: Groups defined in Self Care
+      description: Contains the list of groups defined in SelfCare
+      type: array
+      items:
+        $ref: '#/components/schemas/PaGroup'
     ConsentType:
       type: string
       description: type of consent
@@ -4752,7 +4845,7 @@ tags:
       notifiche a loro destinate.
   - name: ApiKeys
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
-  - name: InstitutionProducts
+  - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
