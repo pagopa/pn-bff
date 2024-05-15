@@ -23,7 +23,7 @@ public class MandateRecipientController implements MandateApi {
     }
 
     /**
-     * GET bff/v1/mandate/delegates/count: Mandates count
+     * GET bff/v1/mandate/delegate/count: Mandates count
      * Get total mandates based on required status if filter's specified.
      * If no filter is present, returns total of all pending and active mandates
      *
@@ -290,7 +290,7 @@ public class MandateRecipientController implements MandateApi {
     }
 
     /**
-     * GET bff/v1/mandate/delegators: Get created mandates.
+     * GET bff/v1/mandate/delegator: Get created mandates.
      *
      * @param xPagopaPnCxId     User id
      * @param xPagopaPnCxType   User Type

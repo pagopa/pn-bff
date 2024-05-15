@@ -52,7 +52,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates/count")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate/count")
                                 .queryParam("status", "pending")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates/count")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate/count")
                                 .queryParam("status", "pending")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -513,7 +513,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate")
                                 .queryParam("status", "pending")
                                 .build())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -550,7 +550,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate")
                                 .queryParam("status", "pending")
                                 .build())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -589,7 +589,7 @@ class MandateRecipientControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate")
                                 .queryParam("size", "10")
                                 .queryParam("nextPageKey", "NEXT_PAGE")
                                 .build())
@@ -635,7 +635,7 @@ class MandateRecipientControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegates")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegate")
                                 .queryParam("size", "10")
                                 .queryParam("nextPageKey", "NEXT_PAGE")
                                 .build())
@@ -679,7 +679,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegators")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegator")
                                 .build())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
@@ -713,7 +713,7 @@ class MandateRecipientControllerTest {
         webTestClient.get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.MANDATE_PATH + "/delegators")
+                                .path(PnBffRestConstants.MANDATE_PATH + "/delegator")
                                 .build())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())

@@ -26,7 +26,7 @@ tags:
       Invocazioni utilizzate per la gestione delle deleghe.
 
 paths:
-  '/bff/v1/mandate/delegates/count':
+  '/bff/v1/mandate/delegate/count':
     get:
       summary: >-
         Ritorna il numero totale di deleghe in base al filtro stato (se specificato).
@@ -165,7 +165,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  '/bff/v1/mandate/delegates':
+  '/bff/v1/mandate/delegate':
     get:
       summary: >-
         Ritorna la lista delle deleghe a carico in base al filtro per stato (se specificato).
@@ -221,7 +221,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  '/bff/v1/mandate/delegators':
+  '/bff/v1/mandate/delegator':
     get:
       summary: Ritorna tutte le deleghe create
       tags:
