@@ -272,7 +272,7 @@ Parameters:
   SenderDashboardDataIndexerCron:
     Type: String
     Default: '0 16 * * ? *'
-    Description: Cron to schedule the Lambda.
+    Description: Cron to schedule the Lambda (UTC).
 
   # DataIndexer Env
   DlBucketName:

@@ -60,7 +60,7 @@ Resources:
     Properties:
       TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
       Parameters:
-        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer2
+        LogGroupName: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
