@@ -71,9 +71,9 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnUid,
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
+            Mono<BffNewMandateRequest> newMandateRequest,
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
-            Mono<BffNewMandateRequest> newMandateRequest,
             final ServerWebExchange exchange) {
         log.logStartingProcess("createMandateV1");
 
@@ -105,9 +105,9 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
             String mandateId,
+            Mono<BffAcceptRequest> acceptRequest,
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
-            Mono<BffAcceptRequest> acceptRequest,
             final ServerWebExchange exchange) {
         log.logStartingProcess("acceptMandateV1");
 
@@ -139,9 +139,9 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
             String mandateId,
+            Mono<BffUpdateRequest> updateRequest,
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
-            Mono<BffUpdateRequest> updateRequest,
             final ServerWebExchange exchange) {
         log.logStartingProcess("updateMandateV1");
 
@@ -273,10 +273,10 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
             Integer size,
+            Mono<BffSearchMandateRequest> searchMandateRequest,
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             String nextPageKey,
-            Mono<BffSearchMandateRequest> searchMandateRequest,
             final ServerWebExchange exchange) {
         log.logStartingProcess("searchMandatesByDelegateV1");
 

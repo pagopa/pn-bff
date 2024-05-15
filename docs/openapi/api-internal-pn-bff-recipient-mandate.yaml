@@ -71,6 +71,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -100,6 +101,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -129,6 +131,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -237,6 +240,7 @@ paths:
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQuerySize'
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQueryNextPageKey'
       requestBody:
+        required: true
         content:
           application/json:
             schema:

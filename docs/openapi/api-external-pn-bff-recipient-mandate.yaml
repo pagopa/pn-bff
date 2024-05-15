@@ -61,6 +61,7 @@ paths:
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -86,6 +87,7 @@ paths:
       parameters:
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -111,6 +113,7 @@ paths:
       parameters:
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -203,6 +206,7 @@ paths:
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQuerySize'
         - $ref: './mandate-schemas/mandate.yaml#/components/parameters/BffQueryNextPageKey'
       requestBody:
+        required: true
         content:
           application/json:
             schema:

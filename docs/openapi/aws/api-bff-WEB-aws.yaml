@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ZrSiPzPJa8I3WU98O2OLqz2/4zmFbU6o/1TMxHNBt/Q=
+  version: rDBuM3xaKTQI0fZKZ/uOkhOdB7k0cZoXuSpklD5St7o=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1891,6 +1891,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1946,6 +1947,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2002,6 +2004,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/BffPathMandateId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2208,6 +2211,7 @@ paths:
         - $ref: '#/components/parameters/BffQuerySize'
         - $ref: '#/components/parameters/BffQueryNextPageKey'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
