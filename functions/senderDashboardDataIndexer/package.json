@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test-build-old": "npm run-script test && npm run-script coverage && npm run-script sonar && npm run-script build",
     "test-build": "npm run-script test && npm run-script coverage && npm run-script build",

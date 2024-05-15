@@ -14,8 +14,10 @@ const {
   getPnFocusIndexObjectKey,
 } = require('./config.js');
 
-const dlBucketName = getDlBucketName();
-const dlBucketRegion = getDlBucketRegion();
+const dlBucketName =
+  getDlBucketName() === 'test' ? getPnBucketName() : getDlBucketName();
+const dlBucketRegion =
+  getDlBucketRegion() === 'test' ? getPnBucketRegion() : getDlBucketRegion();
 const dlAssumeRoleArn = getDlAssumeRoleArn();
 const dlOverviewObjectKey = getDlOverviewObjectKey();
 const dlFocusObjectKey = getDlFocusObjectKey();
@@ -32,13 +34,10 @@ const dlCredentials =
     ? getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND')
     : undefined;
 
-const dlS3Client =
-  dlBucketName !== 'test'
-    ? new S3Client({
-        region: dlBucketRegion,
-        credentials: dlCredentials,
-      })
-    : undefined;
+const dlS3Client = new S3Client({
+  region: dlBucketRegion,
+  credentials: dlCredentials,
+});
 
 const handleEvent = async () => {
   const overviewIndex = await createIndexObject(

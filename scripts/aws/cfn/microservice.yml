@@ -271,7 +271,7 @@ Parameters:
 
   SenderDashboardDataIndexerCron:
     Type: String
-    Default: 'cron(0 16 * * ? *)'
+    Default: '0 16 * * ? *'
     Description: Cron to schedule the Lambda.
 
   # DataIndexer Env
@@ -464,7 +464,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
-      ScheduleExpression: !Ref SenderDashboardDataIndexerCron
+      ScheduleExpression: !Sub cron(${SenderDashboardDataIndexerCron})
       State: ENABLED
       Targets:
         - Id: TargetFunction

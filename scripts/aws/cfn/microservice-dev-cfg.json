@@ -13,6 +13,7 @@
     "DlOverviewObjectKey": "overview.json",
     "DlFocusObjectKey": "focus.json",
     "PnOverviewIndexObjectKey": "indexes/notifications_overview_index.json",
-    "PnFocusIndexObjectKey": "indexes/digital_notifications_focus.json"
+    "PnFocusIndexObjectKey": "indexes/digital_notifications_focus.json",
+    "SenderDashboardDataIndexerCron": "0 16 * * ? *"
   }
 }

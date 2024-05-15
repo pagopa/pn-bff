@@ -19,7 +19,18 @@ const headObject = async (s3Client, bucketName, objectKey) => {
   });
 
   console.log(`Doing HEAD: s3://${bucketName}/${objectKey}`);
-  return await s3Client.send(params);
+  try {
+    return await s3Client.send(params);
+  } catch (error) {
+    if (error.name === 'NoSuchBucket') {
+      console.error(`Bucket not found: ${bucketName}`);
+    } else if (error.name === 'NoSuchKey' || error.name === 'NotFound') {
+      console.error(`Object not found: ${objectKey} in bucket ${bucketName}`);
+    } else {
+      console.error(`Error retrieving metadata: ${error.message}`);
+    }
+    throw error;
+  }
 };
 
 /**
