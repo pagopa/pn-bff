@@ -167,8 +167,8 @@ public class MandateMock {
 
     public List<MandateDto> getMandatesByDelegateMock() {
         List<MandateDto> mandates = new ArrayList<>();
-        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegate"));
-        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegate"));
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegator"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegator"));
         return mandates;
     }
 
@@ -208,16 +208,16 @@ public class MandateMock {
         nextPagesKey.add("page-2");
         searchResponse.setNextPagesKey(nextPagesKey);
         List<MandateDto> mandates = new ArrayList<>();
-        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegate"));
-        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegate"));
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Mario", "Rossi", "RSSMRA80A01H501U"), "delegator"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Davide", "Legato", "DVDLGT83C12H501C"), "delegator"));
         searchResponse.setResultsPage(mandates);
         return searchResponse;
     }
 
     public List<MandateDto> getMandatesByDelegatorMock() {
         List<MandateDto> mandates = new ArrayList<>();
-        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Sara", "Bianchi", "BNCSRA96L53H501D"), "delegator"));
-        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Maria", "Verdi", "VRDMRA07P69H501I"), "delegator"));
+        mandates.add(getMandateMock(1, MandateDto.StatusEnum.PENDING, getUserMock("Sara", "Bianchi", "BNCSRA96L53H501D"), "delegate"));
+        mandates.add(getMandateMock(2, MandateDto.StatusEnum.ACTIVE, getUserMock("Maria", "Verdi", "VRDMRA07P69H501I"), "delegate"));
         return mandates;
     }
 }

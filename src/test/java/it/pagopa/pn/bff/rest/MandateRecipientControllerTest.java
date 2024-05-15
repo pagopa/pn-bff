@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
-import it.pagopa.pn.bff.mappers.mandate.MandatesByDelegateMapper;
+import it.pagopa.pn.bff.mappers.mandate.MandatesMapper;
 import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -498,7 +498,7 @@ class MandateRecipientControllerTest {
     void getMandatesByDelegate() {
         List<BffMandate> response = mandateMock.getMandatesByDelegateMock()
                 .stream()
-                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .map(MandatesMapper.modelMapper::mapMandateByDelegate)
                 .toList();
         Mockito.when(mandateRecipientService.getMandatesByDelegate(
                         Mockito.anyString(),
@@ -665,7 +665,7 @@ class MandateRecipientControllerTest {
     void getMandatesByDelegator() {
         List<BffMandate> response = mandateMock.getMandatesByDelegatorMock()
                 .stream()
-                .map(MandatesByDelegateMapper.modelMapper::mapMandate)
+                .map(MandatesMapper.modelMapper::mapMandateByDelegator)
                 .toList();
         Mockito.when(mandateRecipientService.getMandatesByDelegator(
                         Mockito.anyString(),
