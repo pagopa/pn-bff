@@ -247,7 +247,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
   
-  "/bff/v1/notifications/received/check-aar-qr-code":
+  '/bff/v1/notifications/received/check-aar-qr-code':
     post:
       summary: Servizio per la verifica del aar-qr-code
       tags:
