@@ -264,7 +264,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest"
+              $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest'
         required: true
       responses:
         '200':
@@ -272,7 +272,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffCheckAarResponse"
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarResponse'
         '404':
           description: QrCode reference Not Found
           content:
