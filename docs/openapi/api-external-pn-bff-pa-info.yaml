@@ -95,6 +95,7 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoPa
+      parameters:
         - name: status
           description: Se valorizzato indica di tornare solo i gruppi nello stato passato
           in: query

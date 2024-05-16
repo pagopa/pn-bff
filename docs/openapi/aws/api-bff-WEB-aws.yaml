@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: H0PbH8e0GMohuXgUm6SBK14ev7RAM+vCdl4KRuQv6YA=
+  version: BZVLCE29PfaxfMQS5UCVpBHc1j5QCkf/Eu3/Il4zZes=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1130,13 +1130,13 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
         - InfoPa
+      parameters:
         - name: status
           description: Se valorizzato indica di tornare solo i gruppi nello stato passato
           in: query
           required: false
           schema:
-            $ref: >-
-              ./info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupStatus
+            $ref: '#/components/schemas/PaGroupStatus'
       responses:
         '200':
           description: OK
@@ -1174,7 +1174,6 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-      parameters: []
     options:
       operationId: Options for /v1/groups API CORS
       x-amazon-apigateway-integration:
@@ -4805,6 +4804,14 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
+    PaGroupStatus:
+      title: Status of group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: string
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - DELETED
     BffPaGroup:
       title: Group defined in Self Care
       description: Contains the name list of groups defined in SelfCare

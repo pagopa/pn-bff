@@ -105,7 +105,7 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoPa
-      parameters: # NO EXTERNAL
+      parameters:
         - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'                          # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'                         # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'                     # NO EXTERNAL
