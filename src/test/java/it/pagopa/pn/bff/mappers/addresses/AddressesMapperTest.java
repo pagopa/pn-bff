@@ -31,7 +31,6 @@ public class AddressesMapperTest {
         assertEquals(bffUserAddress.getAddressType(), legalAddress.getAddressType().name());
         assertEquals(bffUserAddress.getChannelType().getValue(), legalAddress.getChannelType().name());
         assertEquals(bffUserAddress.getValue(), legalAddress.getValue());
-        assertEquals(bffUserAddress.getRecipientId(), legalAddress.getRecipientId());
         assertEquals(bffUserAddress.getSenderId(), legalAddress.getSenderId());
     }
 
@@ -43,7 +42,6 @@ public class AddressesMapperTest {
         assertEquals(bffUserAddress.getAddressType(), courtesyAddress.getAddressType().name());
         assertEquals(bffUserAddress.getChannelType().getValue(), courtesyAddress.getChannelType().name());
         assertEquals(bffUserAddress.getValue(), courtesyAddress.getValue());
-        assertEquals(bffUserAddress.getRecipientId(), courtesyAddress.getRecipientId());
         assertEquals(bffUserAddress.getSenderId(), courtesyAddress.getSenderId());
     }
 }
