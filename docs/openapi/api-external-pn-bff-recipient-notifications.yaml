@@ -231,7 +231,7 @@ paths:
     post:
       summary: Servizio per la verifica del aar-qr-code
       tags:
-      - NotificationReceived
+        - NotificationReceived
       operationId: checkAarQrCodeV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
