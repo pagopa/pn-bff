@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: BZVLCE29PfaxfMQS5UCVpBHc1j5QCkf/Eu3/Il4zZes=
+  version: PA6zIzBw3jpUsXeqWqhnMmKmMSp/KBzPRpWQ7+G3YX8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -719,6 +719,64 @@ paths:
         requestParameters:
           integration.request.path.iun: method.request.path.iun
           integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/check-aar-qr-code:
+    post:
+      summary: Servizio per la verifica del aar-qr-code
+      tags:
+        - NotificationReceived
+      operationId: checkAarQrCodeV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCheckAarMandateDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseCheckAarMandateDto'
+        '404':
+          description: QrCode reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/received/check-aar-qr-code API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -4628,6 +4686,31 @@ components:
             $ref: '#/components/schemas/StatusDetail'
       required:
         - status
+    RequestCheckAarMandateDto:
+      description: Le informazioni fornite per verificare l'AAR-QR-CodeValue
+      type: object
+      required:
+        - aarQrCodeValue
+      properties:
+        aarQrCodeValue:
+          type: string
+          description: valore del token QR-Code presente sull'avviso di avvenuta ricezione
+          pattern: ^[A-Za-z0-9_-]*$
+          minLength: 106
+          maxLength: 136
+    ResponseCheckAarMandateDto:
+      description: >-
+        Le informazioni fornite in risposta alla verifica del AAR-QR-CodeValue
+        con possibile identificativo della delega attiva
+      type: object
+      required:
+        - iun
+      properties:
+        iun:
+          $ref: '#/components/schemas/IUN'
+        mandateId:
+          description: identificativo della delega
+          type: string
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object
