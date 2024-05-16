@@ -235,13 +235,12 @@ paths:
       operationId: checkAarQrCodeV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest'
-        required: true
       responses:
         '200':
           description: OK

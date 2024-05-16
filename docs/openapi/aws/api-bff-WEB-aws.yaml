@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: degA5BqOj0U/3I8yL70oAQr2u3ydWDV8R6bEpvgUqGg=
+  version: td3G31+gQBjsQ4sPNyJ9WkcmLOGaoXIto6Le/BtGbQA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -731,13 +731,12 @@ paths:
       operationId: checkAarQrCodeV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
-      parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RequestCheckAarMandateDto'
-        required: true
       responses:
         '200':
           description: OK
@@ -769,6 +768,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/notifications/received/check-aar-qr-code API CORS
       x-amazon-apigateway-integration:

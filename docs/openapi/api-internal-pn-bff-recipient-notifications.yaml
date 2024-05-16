@@ -255,17 +255,17 @@ paths:
       operationId: checkAarQrCodeV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
-      - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
-      - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest'
-        required: true
       responses:
         '200':
           description: OK
