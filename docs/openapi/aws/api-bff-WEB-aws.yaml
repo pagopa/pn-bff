@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: PA6zIzBw3jpUsXeqWqhnMmKmMSp/KBzPRpWQ7+G3YX8=
+  version: x6unvswilBjP4b/Y7PKtU1kHd2po85fmFzzOM6hfz2Y=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5358,8 +5358,6 @@ components:
       properties:
         addressType:
           type: string
-        recipientId:
-          type: string
         senderId:
           type: string
           description: senderId or 'default'
@@ -5372,8 +5370,6 @@ components:
           type: string
         pecValid:
           type: boolean
-        codeValid:
-          type: boolean
     BffUserAddresses:
       type: array
       items:
@@ -5381,8 +5377,8 @@ components:
     BffAddressType:
       type: string
       enum:
-        - legal
-        - courtesy
+        - LEGAL
+        - COURTESY
     VerificationCode:
       type: string
       description: Verification Code
