@@ -166,8 +166,8 @@ components:
     BffRequestStatus:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/712398812afa832d50772e7ec587b088f5c5e33e/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
     
-    BffRequestCheckAarMandateDto:
+    BffCheckAarRequest:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
     
-    BffResponseCheckAarMandateDto:
+    BffCheckAarResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'

@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
-import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
@@ -328,7 +328,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
                 UserMock.PN_CX_GROUPS
         )).expectNext(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()).verifyComplete();
     }
@@ -347,7 +347,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
-                NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }

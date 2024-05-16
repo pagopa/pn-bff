@@ -3,9 +3,9 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.RequestCheckAarMandateDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffCheckAarRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffCheckAarResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestCheckAarMandateDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseCheckAarMandateDto;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import org.junit.jupiter.api.Test;
 
@@ -42,14 +42,14 @@ public class NotificationsReceivedMapperTest {
 
     @Test
     void testRequestCheckAarMandateMapper() {
-        BffRequestCheckAarMandateDto requestCheckAarMandateDto = notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock();
+        BffCheckAarRequest bffCheckAarMandate = notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock();
 
-        RequestCheckAarMandateDto requestCheckAarMandateDtoV1 = NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(requestCheckAarMandateDto);
+        RequestCheckAarMandateDto requestCheckAarMandateDtoV1 = NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(bffCheckAarMandate);
         assertNotNull(requestCheckAarMandateDtoV1);
 
-        assertEquals(requestCheckAarMandateDtoV1.getAarQrCodeValue(), requestCheckAarMandateDto.getAarQrCodeValue());
+        assertEquals(requestCheckAarMandateDtoV1.getAarQrCodeValue(), bffCheckAarMandate.getAarQrCodeValue());
 
-        RequestCheckAarMandateDto requestCheckAarMandateDtoV1Null = NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(null);
+        RequestCheckAarMandateDto requestCheckAarMandateDtoV1Null = NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(null);
         assertNull(requestCheckAarMandateDtoV1Null);
     }
 
@@ -57,13 +57,13 @@ public class NotificationsReceivedMapperTest {
     void testResponseCheckAarMandateMapper() {
         ResponseCheckAarMandateDto responseCheckAarMandateDto = notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock();
 
-        BffResponseCheckAarMandateDto bffResponseCheckAarMandateDto = NotificationsReceivedMapper.modelMapper.toBffResponseCheckAarMandateDto(responseCheckAarMandateDto);
+        BffCheckAarResponse bffResponseCheckAarMandateDto = NotificationAarQrCodeMapper.modelMapper.toBffResponseCheckAarMandateDto(responseCheckAarMandateDto);
         assertNotNull(bffResponseCheckAarMandateDto);
 
         assertEquals(bffResponseCheckAarMandateDto.getMandateId(), responseCheckAarMandateDto.getMandateId());
         assertEquals(bffResponseCheckAarMandateDto.getIun(), responseCheckAarMandateDto.getIun());
 
-        BffResponseCheckAarMandateDto bffResponseCheckAarMandateDtoV1Null = NotificationsReceivedMapper.modelMapper.toBffResponseCheckAarMandateDto(null);
+        BffCheckAarResponse bffResponseCheckAarMandateDtoV1Null = NotificationAarQrCodeMapper.modelMapper.toBffResponseCheckAarMandateDto(null);
         assertNull(bffResponseCheckAarMandateDtoV1Null);
     }
 

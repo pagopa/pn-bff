@@ -255,7 +255,7 @@ paths:
       operationId: checkAarQrCodeV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
+      parameters:
       - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
       - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
       - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
@@ -264,7 +264,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffRequestCheckAarMandateDto"
+              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest"
         required: true
       responses:
         '200':
@@ -272,7 +272,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffResponseCheckAarMandateDto"
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffCheckAarResponse"
         '404':
           description: QrCode reference Not Found
           content:

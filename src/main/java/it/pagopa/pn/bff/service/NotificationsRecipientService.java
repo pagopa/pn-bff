@@ -303,25 +303,25 @@ public class NotificationsRecipientService {
      * @param xPagopaPnUid                User Identifier
      * @param xPagopaPnCxType             Receiver Type
      * @param xPagopaPnCxId               Receiver id
-     * @param bffRequestCheckAarMandateDto the request to check the AAR QR code
+     * @param bffCheckAarMandate the request to check the AAR QR code
      * @param xPagopaPnCxGroups           Receiver Group id List
      * @return the response of the check
      */
-    public Mono<BffResponseCheckAarMandateDto> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<BffCheckAarResponse> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                               String xPagopaPnCxId,
-                                                              Mono<BffRequestCheckAarMandateDto> bffRequestCheckAarMandateDto,
+                                                              Mono<BffCheckAarRequest> bffCheckAarMandate,
                                                               List<String> xPagopaPnCxGroups
     ) {
     log.info("checkAarQrCode");
 
-        return bffRequestCheckAarMandateDto.flatMap(requestDto ->
+        return bffCheckAarMandate.flatMap(requestDto ->
                 pnDeliveryClient.checkAarQrCode(
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                         xPagopaPnCxId,
-                        NotificationsReceivedMapper.modelMapper.toRequestCheckAarMandateDto(requestDto),
+                        NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(requestDto),
                         xPagopaPnCxGroups
                 ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-        ).map(NotificationsReceivedMapper.modelMapper::toBffResponseCheckAarMandateDto);
+        ).map(NotificationAarQrCodeMapper.modelMapper::toBffResponseCheckAarMandateDto);
     }
 }

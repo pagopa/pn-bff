@@ -246,16 +246,16 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Receiver Type
      * @param xPagopaPnCxId     Receiver id
-     * @param bffRequestCheckAarMandateDto Request to check AAR mandate
+     * @param bffCheckAarRequest Request to check AAR mandate
      * @param xPagopaPnCxGroups Receiver Group id List
      * @param exchange
      * @return the response of the check AAR mandate
      */
     @Override
-    public Mono<ResponseEntity<BffResponseCheckAarMandateDto>> checkAarQrCodeV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffRequestCheckAarMandateDto> bffRequestCheckAarMandateDto, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffCheckAarResponse>> checkAarQrCodeV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffCheckAarRequest> bffCheckAarRequest, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
         log.logStartingProcess("checkAarQrCodeV1");
 
-        Mono<BffResponseCheckAarMandateDto> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffRequestCheckAarMandateDto, xPagopaPnCxGroups);
+        Mono<BffCheckAarResponse> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffCheckAarRequest, xPagopaPnCxGroups);
 
         log.logEndingProcess("checkAarQrCodeV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
