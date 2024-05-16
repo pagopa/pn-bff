@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeyGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeyRow;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApiKeysMapperTest {
 
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
 
     private BffApiKeyGroup getMappedApiKeyGroups(String group, List<PaGroup> paGroups) {
         BffApiKeyGroup bffApiKeyGroup = new BffApiKeyGroup();
@@ -40,7 +40,7 @@ class ApiKeysMapperTest {
     @Test
     void testApiKeysMapper() {
         ApiKeysResponse apiKeysResponse = apiKeysMock.getApiKeysMock();
-        List<PaGroup> paGroups = userMock.getPaGroupsMock();
+        List<PaGroup> paGroups = paInfoMock.getPaGroupsMock();
 
         BffApiKeysResponse bffApiKeysResponse = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysResponse, paGroups);
         assertNotNull(bffApiKeysResponse);

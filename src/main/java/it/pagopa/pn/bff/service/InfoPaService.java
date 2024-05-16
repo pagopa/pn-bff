@@ -1,12 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.institutionandproduct.InstitutionMapper;
-import it.pagopa.pn.bff.mappers.institutionandproduct.ProductMapper;
+import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
+import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class InstitutionAndProductPaService {
+public class InfoPaService {
     private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffConfigs pnBffConfigs;
     private final PnBffExceptionUtility pnBffExceptionUtility;
@@ -57,5 +56,27 @@ public class InstitutionAndProductPaService {
                 .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
+
+    /**
+     * Get the list of groups for the user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxGroups  Public Administration Group id List
+     * @param status    Filter for the status of the groups
+     * @return the list of groups
+     */
+    public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status){
+        log.info("getGroups");
+
+        Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getGroups(
+                xPagopaPnUid,
+                xPagopaPnCxId,
+                xPagopaPnCxGroups,
+                GroupsMapper.modelMapper.mapGroupStatus(status)
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return paGroups.map(GroupsMapper.modelMapper::mapGroups);
     }
 }

@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.mappers.institutionandproduct;
+package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.ProductResourcePN;

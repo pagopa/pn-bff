@@ -27,6 +27,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnApikeyManagerClientPAImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/api-key-self/api-keys";
@@ -38,6 +39,8 @@ class PnApikeyManagerClientPAImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -53,9 +56,6 @@ class PnApikeyManagerClientPAImplTestIT {
 
     @Test
     void getApiKeys() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(apiKeysMock.getApiKeysMock());
         mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
@@ -95,7 +95,6 @@ class PnApikeyManagerClientPAImplTestIT {
 
     @Test
     void newApiKey() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(apiKeysMock.geRequestNewApiKeyMock());
         String response = objectMapper.writeValueAsString(apiKeysMock.geResponseNewApiKeyMock());
         mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
@@ -116,7 +115,6 @@ class PnApikeyManagerClientPAImplTestIT {
 
     @Test
     void newApiKeyError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(apiKeysMock.geRequestNewApiKeyMock());
         mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
                 .respond(response().withStatusCode(404));
@@ -165,7 +163,6 @@ class PnApikeyManagerClientPAImplTestIT {
     void changeStatusApiKey() throws JsonProcessingException {
         RequestApiKeyStatus requestApiKeyStatus = new RequestApiKeyStatus();
         requestApiKeyStatus.setStatus(RequestApiKeyStatus.StatusEnum.BLOCK);
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(requestApiKeyStatus);
         mockServerClient.when(request().withMethod("PUT").withPath(path + "/API_KEY_ID/status").withBody(request))
                 .respond(response()
@@ -187,7 +184,6 @@ class PnApikeyManagerClientPAImplTestIT {
     void changeStatusApiKeyError() throws JsonProcessingException {
         RequestApiKeyStatus requestApiKeyStatus = new RequestApiKeyStatus();
         requestApiKeyStatus.setStatus(RequestApiKeyStatus.StatusEnum.BLOCK);
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(requestApiKeyStatus);
         mockServerClient.when(request().withMethod("PUT").withPath(path + "/API_KEY_ID/status").withBody(request))
                 .respond(response().withStatusCode(404));

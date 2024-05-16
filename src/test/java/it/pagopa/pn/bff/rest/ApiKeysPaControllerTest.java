@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -15,7 +16,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -33,17 +33,15 @@ class ApiKeysPaControllerTest {
     private static final String LAST_KEY = "LAST_KEY";
     private static final String LAST_UPDATE = "LAST_UPDATE";
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
     private ApiKeysPaService apiKeysPaService;
-    @SpyBean
-    private ApiKeysPaController apiKeysPaController;
 
     @Test
     void getApiKeys() {
-        BffApiKeysResponse response = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), userMock.getPaGroupsMock());
+        BffApiKeysResponse response = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), paInfoMock.getPaGroupsMock());
         Mockito.when(apiKeysPaService.getApiKeys(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),

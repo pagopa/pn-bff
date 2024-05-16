@@ -64,6 +64,8 @@ public class TosPrivacyController implements UserConsentsApi {
                 .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
 
         log.logEndingProcess("putTosPrivacyV1");
-        return serviceResponse.map(response -> ResponseEntity.noContent().build());
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 }
