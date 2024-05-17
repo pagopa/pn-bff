@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
@@ -41,6 +42,7 @@ class PnDeliveryClientRecipientImplTestIT {
     private final String attachmentName = "PAGOPA";
     private final String notificationListPath = "/delivery/notifications/received";
     private final String notificationDetailPath = "/delivery/v2.3/notifications/received/" + iun;
+    private final String notificationQrCodePath = "/delivery/notifications/received/check-aar-qr-code";
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
@@ -274,6 +276,40 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID(),
                 0
+        )).expectError().verify();
+    }
+
+    @Test
+    void checkAarQrCode() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock());
+        mockServerClient.when(request().withMethod("POST").withPath(notificationQrCodePath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()).verifyComplete();
+    }
+
+    @Test
+    void checkAarQrCodeError() {
+        mockServerClient.when(request().withMethod("POST").withPath(notificationQrCodePath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 }
