@@ -42,7 +42,6 @@ class InfoPaServiceTest {
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final PaInfoMock paInfoMock = new PaInfoMock();
-    private final UserMock userMock = new UserMock();
 
     @Autowired
     private PnBffConfigs pnBffConfigs;
