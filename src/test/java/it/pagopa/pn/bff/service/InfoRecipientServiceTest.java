@@ -11,7 +11,6 @@ import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientIm
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
@@ -22,24 +21,21 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InfoRecipientServiceTest {
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
-    private final UserMock userMock = new UserMock();
-    private InfoRecipientService infoRecipientService;
+    private static InfoRecipientService infoRecipientService;
 
     @BeforeAll
-    public void setup() {
+    public static void setup() {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         infoRecipientService = new InfoRecipientService(pnExternalRegistriesClient, pnBffExceptionUtility);
     }
 
     @Test
-    void getGroups(){
+    void getGroups() {
         List<BffPgGroup> bffPgGroups = recipientInfoMock.getPgGroupsMock()
                 .stream()
                 .map(GroupsMapper.modelMapper::mapGroups)
@@ -65,7 +61,7 @@ class InfoRecipientServiceTest {
     }
 
     @Test
-    void getGroupsError(){
+    void getGroupsError() {
         when(pnExternalRegistriesClient.getPgGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),

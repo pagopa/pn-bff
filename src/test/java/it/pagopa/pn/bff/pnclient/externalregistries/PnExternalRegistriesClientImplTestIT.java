@@ -137,7 +137,7 @@ class PnExternalRegistriesClientImplTestIT {
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -151,7 +151,7 @@ class PnExternalRegistriesClientImplTestIT {
         mockServerClient.when(request().withMethod("GET").withPath(pathGroupsPa))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,

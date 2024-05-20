@@ -39,6 +39,6 @@ public class InfoRecipientController implements InfoRecipientApi {
         Flux<BffPgGroup> bffPgGroups = infoRecipientService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
 
         log.logEndingProcess("getPGGroupsV1");
-        return Mono.just(ResponseEntity.ok(bffPgGroups));
+        return bffPgGroups.collectList().map(groups -> ResponseEntity.ok(Flux.fromIterable(groups)));
     }
 }

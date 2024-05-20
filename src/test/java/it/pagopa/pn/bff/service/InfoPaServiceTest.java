@@ -134,7 +134,7 @@ class InfoPaServiceTest {
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
 
-        when(pnExternalRegistriesClient.getPaGroups(
+        when(pnExternalRegistriesClient.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -155,7 +155,7 @@ class InfoPaServiceTest {
 
     @Test
     void getGroupsError() {
-        when(pnExternalRegistriesClient.getPaGroups(
+        when(pnExternalRegistriesClient.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),

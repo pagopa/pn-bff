@@ -27,10 +27,10 @@ public class PnExternalRegistriesClientImpl {
     private final InfoPgApi infoPgApi;
     private final PaymentInfoApi paymentInfoApi;
 
-    public Flux<PaGroup> getPaGroups(String xPagopaPnUid,
-                                     String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
-                                     PaGroupStatus paGroupStatus) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPaGroups");
+    public Flux<PaGroup> getGroups(String xPagopaPnUid,
+                                   String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
+                                   PaGroupStatus paGroupStatus) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getGroups");
 
         return infoPaApi.getGroups(
                 xPagopaPnUid,

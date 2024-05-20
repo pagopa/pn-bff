@@ -280,16 +280,16 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-BFF INFO RECIPIENT -->
+                    <!-- OPEN API PN-BFF RECIPIENT INFO -->
                     <execution>
-                        <id>pn-internal-bff-info-recipient</id>
+                        <id>pn-internal-bff-recipient-info</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-info-recipient.yaml
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-info.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>

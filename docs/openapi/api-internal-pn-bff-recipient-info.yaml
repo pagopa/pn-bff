@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Recipient Info
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-info-recipient
+  x-api-id: api-internal-pn-bff-recipient-info
   x-summary: 'API di pn-bff esposte al Web per i destinatari'
   version: '1.0.0'
   contact:
