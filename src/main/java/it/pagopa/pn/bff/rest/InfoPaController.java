@@ -73,10 +73,10 @@ public class InfoPaController implements InfoPaApi {
      * GET /v1/groups
      * Get the list of groups for the user
      *
-     * @param xPagopaPnUid  (required)
-     * @param xPagopaPnCxId  (required)
-     * @param xPagopaPnCxGroups  (required)
-     * @param status  (optional)
+     * @param xPagopaPnUid      (required)
+     * @param xPagopaPnCxId     (required)
+     * @param xPagopaPnCxGroups (required)
+     * @param status            (optional)
      * @param exchange
      * @return the list of groups
      */
@@ -87,6 +87,8 @@ public class InfoPaController implements InfoPaApi {
         Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
 
         log.logEndingProcess("getGroupsV1");
-        return Mono.just(ResponseEntity.ok(serviceResponse));
+        return serviceResponse
+                .collectList()
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
     }
 }

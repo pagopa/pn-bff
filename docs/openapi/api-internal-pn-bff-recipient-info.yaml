@@ -12,17 +12,17 @@ info:
     name: Licenza di PN
     url: 'https://da-definire/'
 servers:
-- url: https://webapi.notifichedigitali.it
-  description: Ambiente di produzione
-- url: https://webapi.uat.notifichedigitali.it
-  description: Ambiente di UAT
-- url: https://webapi.test.notifichedigitali.it
-  description: Ambiente di test
-- url: https://webapi.dev.notifichedigitali.it
-  description: Ambiente di sviluppo
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
 tags:
 - name: InfoRecipient
-  description: Invocazioni per sapere i portali disponibili di un ente
+  description: Invocazioni per sapere i gruppi disponibili di un ente
 
 paths:
   '/bff/v1/pg/groups':
@@ -34,17 +34,17 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InfoRecipient
+        - InfoRecipient
       parameters:
-      - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
-      - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
-      - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL                  # NO EXTERNAL
-      - name: status
-        description: Se valorizzato indica di tornare solo i gruppi nello stato passato
-        in: query
-        required: false
-        schema:
-          $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPgGroupStatus'
+        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPgGroupStatus'
       responses:
         '200':
           description: OK
