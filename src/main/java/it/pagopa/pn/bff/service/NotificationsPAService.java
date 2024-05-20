@@ -257,8 +257,31 @@ public class NotificationsPAService {
                                                            List<String> xPagopaPnCxGroups) {
         log.info("notificationCancellation");
         Mono<RequestStatus> bffRequestStatus = pnDeliveryPushClient.notificationCancellation(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType), xPagopaPnCxId, iun, xPagopaPnCxGroups
-                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return bffRequestStatus.map(NotificationCancellationMapper.modelMapper::mapNotificationCancellation);
+    }
+
+    /**
+     * Create new notification
+     *
+     * @param xPagopaPnUid           User Identifier
+     * @param xPagopaPnCxType        Public Administration Type
+     * @param xPagopaPnCxId          Public Administration id
+     * @param newNotificationRequest The request that contains the notification to create
+     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @return the request of the newly created notification
+     */
+    public Mono<BffNewNotificationResponse> newSentNotification(String xPagopaPnUid,
+                                                                CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId,
+                                                                Mono<BffNewNotificationRequest> newNotificationRequest,
+                                                                List<String> xPagopaPnCxGroups) {
+        log.info("newSentNotification");
+        return newNotificationRequest.flatMap(request ->
+                pnDeliveryClient.newSentNotification(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NewSentNotificationMapper.modelMapper.mapRequest(request), xPagopaPnCxGroups)
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(NewSentNotificationMapper.modelMapper::mapResponse)
+        );
     }
 }

@@ -1,13 +1,12 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsSentMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -30,12 +29,15 @@ class PnDeliveryClientPAImplTest {
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
     private SenderReadB2BApi senderReadB2BApi;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi")
     private SenderReadWebApi senderReadWebApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi")
+    private NewNotificationApi newNotificationApi;
 
     @Test
     void searchSentNotifications() {
@@ -230,6 +232,50 @@ class PnDeliveryClientPAImplTest {
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
                 0
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void newSentNotification() throws RestClientException {
+        when(newNotificationApi.sendNewNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NewNotificationRequestV23.class),
+                Mockito.anyList(),
+                Mockito.nullable(String.class),
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.just(newSentNotificationMock.getNewSentNotificationResponse()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(newSentNotificationMock.getNewSentNotificationResponse()).verifyComplete();
+    }
+
+    @Test
+    void newSentNotificationError() {
+        when(newNotificationApi.sendNewNotificationV23(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(NewNotificationRequestV23.class),
+                Mockito.anyList(),
+                Mockito.nullable(String.class),
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
 }

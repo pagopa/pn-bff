@@ -186,4 +186,27 @@ public class SentNotificationController implements NotificationSentApi {
         log.logEndingProcess("notificationCancellationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
     }
+
+    /**
+     * POST bff/v1/notifications/sent: Create new notification
+     *
+     * @param xPagopaPnUid           User Identifier
+     * @param xPagopaPnCxType        Public Administration Type
+     * @param xPagopaPnCxId          Public Administration id
+     * @param newNotificationRequest The request that contains the notification to create
+     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @param exchange
+     * @return the request of the newly created notification
+     */
+    @Override
+    public Mono<ResponseEntity<BffNewNotificationResponse>> newSentNotificationV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffNewNotificationRequest> newNotificationRequest, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+        log.logStartingProcess("newSentNotificationV1");
+
+        Mono<BffNewNotificationResponse> serviceResponse = notificationsPAService.newSentNotification(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, newNotificationRequest, xPagopaPnCxGroups
+        );
+
+        log.logEndingProcess("newSentNotificationV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
+    }
 }

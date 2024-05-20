@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsSentMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,9 +39,11 @@ class PnDeliveryClientPAImplTestIT {
     private final String notificationDetailPath = "/delivery/v2.3/notifications/sent/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
+    private final String newNotificationPath = "/delivery/v2.3/requests";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -218,6 +217,49 @@ class PnDeliveryClientPAImplTestIT {
                 attachmentName,
                 UserMock.PN_CX_GROUPS,
                 0
+        )).expectError().verify();
+    }
+
+    @Test
+    void newSentNotification() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationRequest());
+        String response = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationResponse());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(newNotificationPath)
+                        .withBody(request)
+                )
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(newSentNotificationMock.getNewSentNotificationResponse()).verifyComplete();
+    }
+
+    @Test
+    void newSentNotificationError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationRequest());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(newNotificationPath)
+                        .withBody(request)
+                )
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 }

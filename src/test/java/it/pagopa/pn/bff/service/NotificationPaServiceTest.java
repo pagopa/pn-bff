@@ -6,14 +6,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationCancellationMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsSentMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mappers.notifications.*;
+import it.pagopa.pn.bff.mocks.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -39,6 +33,7 @@ class NotificationPaServiceTest {
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
+    private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
 
     @BeforeAll
@@ -506,7 +501,7 @@ class NotificationPaServiceTest {
     }
 
     @Test
-    void notificationCancellation(){
+    void notificationCancellation() {
         when(pnDeliveryPushClient.notificationCancellation(
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet.class),
@@ -529,7 +524,7 @@ class NotificationPaServiceTest {
     }
 
     @Test
-    void notificationCancellationError(){
+    void notificationCancellationError() {
         when(pnDeliveryPushClient.notificationCancellation(
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet.class),
@@ -543,6 +538,53 @@ class NotificationPaServiceTest {
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void newSentNotification() {
+        when(pnDeliveryClientPA.newSentNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(newSentNotificationMock.getNewSentNotificationResponse()));
+
+        Mono<BffNewNotificationResponse> result = notificationsPAService.newSentNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                Mono.just(newSentNotificationMock.getBffNewSentNotificationRequest()),
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectNext(NewSentNotificationMapper.modelMapper.mapResponse(newSentNotificationMock.getNewSentNotificationResponse()))
+                .verifyComplete();
+    }
+
+    @Test
+    void newSentNotificationError() {
+        when(pnDeliveryClientPA.newSentNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffNewNotificationResponse> result = notificationsPAService.newSentNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                Mono.just(newSentNotificationMock.getBffNewSentNotificationRequest()),
                 UserMock.PN_CX_GROUPS
         );
 

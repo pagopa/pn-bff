@@ -70,6 +70,53 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
+    post:
+      summary: Richiesta invio notifica
+      description: |-
+        Operazione utilizzata dalla Pubblica Amministrazione per richiedere l'invio di una notifica.
+
+        La restituzione di uno stato HTTP 202 significa solo che la richiesta è sintatticamente
+        valida, non che la richiesta sia stata validata ed accettata.
+      tags:
+        - NotificationSent
+      operationId: newSentNotificationV1
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationRequest"
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
   '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica'
