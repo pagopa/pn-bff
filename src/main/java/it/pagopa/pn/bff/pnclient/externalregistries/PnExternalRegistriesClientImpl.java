@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
@@ -23,18 +24,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PnExternalRegistriesClientImpl {
     private final InfoPaApi infoPaApi;
+    private final InfoPgApi infoPgApi;
     private final PaymentInfoApi paymentInfoApi;
 
-    public Flux<PaGroup> getGroups(String xPagopaPnUid,
-                                   String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
-                                   PaGroupStatus paGroupStatus) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getGroups");
+    public Flux<PaGroup> getPaGroups(String xPagopaPnUid,
+                                     String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
+                                     PaGroupStatus paGroupStatus) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPaGroups");
 
         return infoPaApi.getGroups(
                 xPagopaPnUid,
                 xPagopaPnCxId,
                 xPagopaPnCxGroups,
                 paGroupStatus
+        );
+    }
+
+    public Flux<PgGroup> getPgGroups(String xPagopaPnUid,
+                                     String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
+                                     PgGroupStatus pgGroupStatus) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPgGroups");
+        return infoPgApi.getPgGroups(
+                xPagopaPnUid,
+                xPagopaPnCxId,
+                xPagopaPnCxGroups,
+                pgGroupStatus
         );
     }
 

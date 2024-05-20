@@ -70,7 +70,7 @@ public class InfoPaService {
     public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status){
         log.info("getGroups");
 
-        Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getGroups(
+        Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getPaGroups(
                 xPagopaPnUid,
                 xPagopaPnCxId,
                 xPagopaPnCxGroups,
