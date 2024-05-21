@@ -42,7 +42,6 @@ class InfoPaServiceTest {
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final PaInfoMock paInfoMock = new PaInfoMock();
-    private final UserMock userMock = new UserMock();
 
     @Autowired
     private PnBffConfigs pnBffConfigs;
@@ -134,7 +133,7 @@ class InfoPaServiceTest {
                 .map(GroupsMapper.modelMapper::mapGroups)
                 .toList();
 
-        when(pnExternalRegistriesClient.getGroups(
+        when(pnExternalRegistriesClient.getPaGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -155,7 +154,7 @@ class InfoPaServiceTest {
 
     @Test
     void getGroupsError() {
-        when(pnExternalRegistriesClient.getGroups(
+        when(pnExternalRegistriesClient.getPaGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),

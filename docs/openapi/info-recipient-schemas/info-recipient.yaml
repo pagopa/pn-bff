@@ -1,0 +1,21 @@
+components:
+  schemas:
+    BffPgGroupStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PgGroupStatus'
+    
+    BffPgGroupList:
+      title: Groups defined in Self Care PG (Notifiche digitali)
+      description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPgGroup'
+        
+    BffPgGroup:
+      title: Group defined in Self Care PG (Notifiche digitali)
+      description: Contains the name list of groups defined in SelfCare PG (Notifiche digitali)
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
