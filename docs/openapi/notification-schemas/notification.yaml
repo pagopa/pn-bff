@@ -246,3 +246,9 @@ components:
 
     BffNewNotificationResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
+
+    BffPreLoadRequest:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
+
+    BffPreLoadResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'

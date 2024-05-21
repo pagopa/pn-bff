@@ -10,6 +10,7 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -108,6 +109,18 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxGroups,
                 null,
                 null
+        );
+    }
+
+    public Flux<PreLoadResponse> preSignedUpload(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                 String xPagopaPnCxId, List<PreLoadRequest> preLoadRequest) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "presignedUploadRequest");
+
+        return newNotificationApi.presignedUploadRequest(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                preLoadRequest
         );
     }
 }

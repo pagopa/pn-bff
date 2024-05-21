@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
+import it.pagopa.pn.bff.utils.helpers.FluxMatcher;
 import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,11 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -722,6 +725,80 @@ class SentNotificationControllerTest {
                 eq(UserMock.PN_CX_ID),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void preSignedUpload() {
+        List<BffPreLoadRequest> request = newSentNotificationMock.getBffPreloadRequestMock();
+        List<BffPreLoadResponse> response = newSentNotificationMock.getPreloadResponseMock()
+                .stream()
+                .map(NotificationSentPreloadDocumentsMapper.modelMapper::mapResponse)
+                .toList();
+        Mockito.when(notificationsPAService.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any()
+        )).thenReturn(Flux.fromIterable(response));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PRELOAD_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(BffPreLoadResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).preSignedUpload(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
+        );
+    }
+
+    @Test
+    void preSignedUploadError() {
+        List<BffPreLoadRequest> request = newSentNotificationMock.getBffPreloadRequestMock();
+        Mockito.when(notificationsPAService.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any()
+        )).thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PRELOAD_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).preSignedUpload(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
         );
     }
 }

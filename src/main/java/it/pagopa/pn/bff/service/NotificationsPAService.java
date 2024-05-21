@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -282,6 +283,28 @@ public class NotificationsPAService {
                 pnDeliveryClient.newSentNotification(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NewSentNotificationMapper.modelMapper.mapRequest(request), xPagopaPnCxGroups)
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                         .map(NewSentNotificationMapper.modelMapper::mapResponse)
+        );
+    }
+
+    /**
+     * Upload one or more documents
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param bffPreLoadRequest Request to get the pre-signed urls
+     * @return the ids of the uploaded documents
+     */
+    public Flux<BffPreLoadResponse> preSignedUpload(String xPagopaPnUid,
+                                                    CxTypeAuthFleet xPagopaPnCxType,
+                                                    String xPagopaPnCxId,
+                                                    Flux<BffPreLoadRequest> bffPreLoadRequest) {
+        log.info("preSignedUpload");
+
+        return bffPreLoadRequest.collectList().flatMapMany(request ->
+                pnDeliveryClient.preSignedUpload(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NotificationSentPreloadDocumentsMapper.modelMapper.mapRequest(request))
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(NotificationSentPreloadDocumentsMapper.modelMapper::mapResponse)
         );
     }
 }

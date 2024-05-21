@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PreLoadResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
@@ -15,10 +16,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -586,6 +589,54 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_ID,
                 Mono.just(newSentNotificationMock.getBffNewSentNotificationRequest()),
                 UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void preSignedUpload() {
+        List<PreLoadResponse> response = newSentNotificationMock.getPreloadResponseMock();
+        List<BffPreLoadResponse> bffResponse = response
+                .stream()
+                .map(NotificationSentPreloadDocumentsMapper.modelMapper::mapResponse)
+                .toList();
+        when(pnDeliveryClientPA.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Flux.fromIterable(response));
+
+        Flux<BffPreLoadResponse> result = notificationsPAService.preSignedUpload(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                Flux.fromIterable(newSentNotificationMock.getBffPreloadRequestMock())
+        );
+
+        StepVerifier.create(result)
+                .expectNextSequence(bffResponse)
+                .verifyComplete();
+    }
+
+    @Test
+    void preSignedUploadError() {
+        when(pnDeliveryClientPA.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Flux<BffPreLoadResponse> result = notificationsPAService.preSignedUpload(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                Flux.fromIterable(newSentNotificationMock.getBffPreloadRequestMock())
         );
 
         StepVerifier.create(result)

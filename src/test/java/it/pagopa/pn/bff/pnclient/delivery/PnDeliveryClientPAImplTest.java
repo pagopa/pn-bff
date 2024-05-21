@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -276,6 +277,40 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_ID,
                 newSentNotificationMock.getNewSentNotificationRequest(),
                 UserMock.PN_CX_GROUPS
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void preSignedUpload() throws RestClientException {
+        when(newNotificationApi.presignedUploadRequest(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Flux.fromIterable(newSentNotificationMock.getPreloadResponseMock()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
+        )).expectNextSequence(newSentNotificationMock.getPreloadResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void preSignedUploadError() {
+        when(newNotificationApi.presignedUploadRequest(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
         )).expectError(WebClientResponseException.class).verify();
     }
 }

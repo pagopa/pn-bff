@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewNotificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPreLoadRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,8 +139,7 @@ public class NewSentNotificationMock {
 
     public BffNewNotificationRequest getBffNewSentNotificationRequest() {
         NewNotificationRequestV23 msRequest = getNewSentNotificationRequest();
-        BffNewNotificationRequest request = mapper.convertValue(msRequest, BffNewNotificationRequest.class);
-        return request;
+        return mapper.convertValue(msRequest, BffNewNotificationRequest.class);
     }
 
     public NewNotificationResponse getNewSentNotificationResponse() {
@@ -148,5 +148,41 @@ public class NewSentNotificationMock {
         response.setNotificationRequestId("RVBRTi1OVExOLUtUS0otMjAyNDA1LUotMQ==");
         response.setPaProtocolNumber("12345678910");
         return response;
+    }
+
+    public List<PreLoadRequest> getPreloadRequestMock() {
+        List<PreLoadRequest> preLoadRequests = new ArrayList<>();
+        PreLoadRequest preLoadRequest = new PreLoadRequest();
+        preLoadRequest.setContentType("application/pdf");
+        preLoadRequest.setSha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE0");
+        preLoadRequests.add(preLoadRequest);
+        preLoadRequest.setContentType("application/pdf");
+        preLoadRequest.setSha256("jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE1");
+        preLoadRequests.add(preLoadRequest);
+        return preLoadRequests;
+    }
+
+    public List<BffPreLoadRequest> getBffPreloadRequestMock() {
+        List<BffPreLoadRequest> preLoadRequests = new ArrayList<>();
+        for (PreLoadRequest msRequest : getPreloadRequestMock()) {
+            preLoadRequests.add(mapper.convertValue(msRequest, BffPreLoadRequest.class));
+        }
+        return preLoadRequests;
+    }
+
+    public List<PreLoadResponse> getPreloadResponseMock() {
+        List<PreLoadResponse> preLoadResponses = new ArrayList<>();
+        PreLoadResponse preLoadResponse = new PreLoadResponse();
+        preLoadResponse.setKey("key-0");
+        preLoadResponse.setUrl("https://url-0.com");
+        preLoadResponse.setHttpMethod(PreLoadResponse.HttpMethodEnum.POST);
+        preLoadResponse.setSecret("secret-0");
+        preLoadResponses.add(preLoadResponse);
+        preLoadResponse.setKey("key-1");
+        preLoadResponse.setUrl("https://url-1.com");
+        preLoadResponse.setHttpMethod(PreLoadResponse.HttpMethodEnum.POST);
+        preLoadResponse.setSecret("secret-1");
+        preLoadResponses.add(preLoadResponse);
+        return preLoadResponses;
     }
 }

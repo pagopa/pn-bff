@@ -40,6 +40,7 @@ class PnDeliveryClientPAImplTestIT {
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
     private final String newNotificationPath = "/delivery/v2.3/requests";
+    private final String preloadRequestPath = "/delivery/attachments/preload";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
@@ -260,6 +261,47 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_CX_ID,
                 newSentNotificationMock.getNewSentNotificationRequest(),
                 UserMock.PN_CX_GROUPS
+        )).expectError().verify();
+    }
+
+    @Test
+    void preSignedUpload() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadRequestMock());
+        String response = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadResponseMock());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(preloadRequestPath)
+                        .withBody(request)
+                )
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
+        )).expectNextSequence(newSentNotificationMock.getPreloadResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void preSignedUploadError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadRequestMock());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(preloadRequestPath)
+                        .withBody(request)
+                )
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
         )).expectError().verify();
     }
 }

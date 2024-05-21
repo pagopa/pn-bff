@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -208,5 +209,29 @@ public class SentNotificationController implements NotificationSentApi {
 
         log.logEndingProcess("newSentNotificationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
+    }
+
+    /**
+     * POST bff/v1/notifications/sent/documents/upload: Upload one or more documents
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param bffPreLoadRequest Request to get the pre-signed urls
+     * @param exchange
+     * @return the request of the newly created notification
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<BffPreLoadResponse>>> preSignedUploadV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Flux<BffPreLoadRequest> bffPreLoadRequest, ServerWebExchange exchange) {
+        log.logStartingProcess("preSignedUploadV1");
+
+        Flux<BffPreLoadResponse> serviceResponse = notificationsPAService.preSignedUpload(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffPreLoadRequest
+        );
+
+        log.logEndingProcess("preSignedUploadV1");
+        return serviceResponse
+                .collectList()
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
     }
 }
