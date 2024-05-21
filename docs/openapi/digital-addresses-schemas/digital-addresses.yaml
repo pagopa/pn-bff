@@ -3,7 +3,7 @@ info:
 components:
   parameters:
     BffSenderId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
   schemas:
     BffUserAddresses:
       type: array
@@ -49,7 +49,7 @@ components:
         - COURTESY
 
     BffAddressVerificationRequest:
-      $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
+      $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
 
     BffAddressVerificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/develop/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerificationResponse'
