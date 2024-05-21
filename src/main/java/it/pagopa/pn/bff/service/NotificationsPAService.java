@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -257,8 +258,53 @@ public class NotificationsPAService {
                                                            List<String> xPagopaPnCxGroups) {
         log.info("notificationCancellation");
         Mono<RequestStatus> bffRequestStatus = pnDeliveryPushClient.notificationCancellation(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType), xPagopaPnCxId, iun, xPagopaPnCxGroups
-                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return bffRequestStatus.map(NotificationCancellationMapper.modelMapper::mapNotificationCancellation);
+    }
+
+    /**
+     * Create new notification
+     *
+     * @param xPagopaPnUid           User Identifier
+     * @param xPagopaPnCxType        Public Administration Type
+     * @param xPagopaPnCxId          Public Administration id
+     * @param newNotificationRequest The request that contains the notification to create
+     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @return the request of the newly created notification
+     */
+    public Mono<BffNewNotificationResponse> newSentNotification(String xPagopaPnUid,
+                                                                CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId,
+                                                                Mono<BffNewNotificationRequest> newNotificationRequest,
+                                                                List<String> xPagopaPnCxGroups) {
+        log.info("newSentNotification");
+        return newNotificationRequest.flatMap(request ->
+                pnDeliveryClient.newSentNotification(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NewSentNotificationMapper.modelMapper.mapRequest(request), xPagopaPnCxGroups)
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(NewSentNotificationMapper.modelMapper::mapResponse)
+        );
+    }
+
+    /**
+     * Upload one or more documents
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param bffPreLoadRequest Request to get the pre-signed urls
+     * @return the ids of the uploaded documents
+     */
+    public Flux<BffPreLoadResponse> preSignedUpload(String xPagopaPnUid,
+                                                    CxTypeAuthFleet xPagopaPnCxType,
+                                                    String xPagopaPnCxId,
+                                                    Flux<BffPreLoadRequest> bffPreLoadRequest) {
+        log.info("preSignedUpload");
+
+        return bffPreLoadRequest.collectList().flatMapMany(request ->
+                pnDeliveryClient.preSignedUpload(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NotificationSentPreloadDocumentsMapper.modelMapper.mapRequest(request))
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(NotificationSentPreloadDocumentsMapper.modelMapper::mapResponse)
+        );
     }
 }

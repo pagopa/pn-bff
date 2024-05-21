@@ -25,7 +25,7 @@ tags:
     description: Invocazioni per sapere i gruppi disponibili di un ente
 
 paths:
-  '/bff/v1/recipient/groups':
+  '/bff/v1/pg/groups':
     get:
       summary: Get PG Groups list
       description: |-
