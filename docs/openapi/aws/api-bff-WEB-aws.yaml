@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 3fsKFI07rkQ3S0iaNVuYRzZh6sWWZocthVYKOwdv82k=
+  version: ydugoEMyksrRwSj6SgBX+2XrSJpxZfc0hNUr2pdKTYk=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1319,11 +1319,11 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/groups:
+  /v1/pa/groups:
     get:
-      summary: Get groups
+      summary: Get PA Groups list
       description: This operation retrieves the groups from Self Care.
-      operationId: getGroupsV1
+      operationId: getPAGroupsV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -1356,7 +1356,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1373,10 +1373,75 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/groups API CORS
+      operationId: Options for /v1/pa/groups API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/groups:
+    get:
+      summary: Get PG Groups list
+      description: This operation retrieves the PG Groups from Self Care.
+      operationId: getPGGroupsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoRecipient
+      parameters:
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PgGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPgGroupList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pg/groups API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -1811,7 +1876,7 @@ paths:
       summary: Make a payment by calling the Checkout API
       tags:
         - Payments
-      operationId: PaymentsCartV1
+      operationId: paymentsCartV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -5222,6 +5287,33 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffPaGroup'
+    PgGroupStatus:
+      title: Status of group defined in Self Care PG (Notifiche digitali)
+      description: >-
+        Contains the status of groups defined in SelfCare PG (Notifiche
+        digitali)
+      type: string
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - DELETED
+    BffPgGroup:
+      title: Group defined in Self Care PG (Notifiche digitali)
+      description: >-
+        Contains the name list of groups defined in SelfCare PG (Notifiche
+        digitali)
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    BffPgGroupList:
+      title: Groups defined in Self Care PG (Notifiche digitali)
+      description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPgGroup'
     ConsentType:
       type: string
       description: type of consent
@@ -5967,6 +6059,8 @@ tags:
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
   - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
+  - name: InfoRecipient
+    description: Invocazioni per sapere i gruppi disponibili di un ente
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
   - name: Downtime

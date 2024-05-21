@@ -11,6 +11,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderRea
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
@@ -88,6 +89,17 @@ public class MsClientConfig extends CommonBaseClient {
                 );
         apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
         return new InfoPaApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    InfoPgApi infoPgApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
+        return new InfoPgApi(apiClient);
     }
 
     @Bean

@@ -8,8 +8,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroupStatus;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
+import it.pagopa.pn.bff.mocks.RecipientInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -36,10 +38,12 @@ class PnExternalRegistriesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
-    private final String pathGroups = "/ext-registry/pa/v1/groups";
+    private final String pathGroupsPa = "/ext-registry/pa/v1/groups";
+    private final String pathGroupsPg = "/ext-registry/pg/v1/groups";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
     private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
     private final PaInfoMock paInfoMock = new PaInfoMock();
+    private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
@@ -124,16 +128,16 @@ class PnExternalRegistriesClientImplTestIT {
     }
 
     @Test
-    void getGroups() throws JsonProcessingException {
+    void getGroupsPa() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(paInfoMock.getPaGroupsMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathGroups))
+        mockServerClient.when(request().withMethod("GET").withPath(pathGroupsPa))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -143,15 +147,46 @@ class PnExternalRegistriesClientImplTestIT {
     }
 
     @Test
-    void getGroupsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathGroups))
+    void getGroupsPaError() {
+        mockServerClient.when(request().withMethod("GET").withPath(pathGroupsPa))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 PaGroupStatus.ACTIVE
+        )).expectError().verify();
+    }
+
+    @Test
+    void getGroupsPg() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(recipientInfoMock.getPgGroupsMock());
+        mockServerClient.when(request().withMethod("GET").withPath(pathGroupsPg))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.getPgGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                PgGroupStatus.ACTIVE
+        )).expectNextSequence(recipientInfoMock.getPgGroupsMock()).verifyComplete();
+    }
+
+    @Test
+    void getGroupsPgError() {
+        mockServerClient.when(request().withMethod("GET").withPath(pathGroupsPg))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPgGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                PgGroupStatus.ACTIVE
         )).expectError().verify();
     }
 

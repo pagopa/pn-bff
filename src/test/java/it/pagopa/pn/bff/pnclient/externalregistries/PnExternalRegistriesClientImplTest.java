@@ -5,10 +5,13 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroupStatus;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
+import it.pagopa.pn.bff.mocks.RecipientInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +33,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class PnExternalRegistriesClientImplTest {
     private final PaInfoMock paInfoMock = new PaInfoMock();
+    private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     @MockBean
     private InfoPaApi infoPaApi;
+    @MockBean
+    private InfoPgApi infoPgApi;
     @MockBean
     private PaymentInfoApi paymentInfoApi;
 
@@ -117,7 +123,7 @@ class PnExternalRegistriesClientImplTest {
     }
 
     @Test
-    void getGroups() {
+    void getGroupsPa() {
         when(infoPaApi.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -125,7 +131,7 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.any(PaGroupStatus.class)
         )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -134,7 +140,7 @@ class PnExternalRegistriesClientImplTest {
     }
 
     @Test
-    void getGroupsError() {
+    void getGroupsPaError() {
         when(infoPaApi.getGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -142,11 +148,45 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.any(PaGroupStatus.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 PaGroupStatus.ACTIVE
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void getGroupsPg() {
+        when(infoPgApi.getPgGroups(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(PgGroupStatus.class)
+        )).thenReturn(Flux.fromIterable(recipientInfoMock.getPgGroupsMock()));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPgGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                PgGroupStatus.ACTIVE
+        )).expectNextSequence(recipientInfoMock.getPgGroupsMock()).verifyComplete();
+    }
+
+    @Test
+    void getGroupsPgError() {
+        when(infoPgApi.getPgGroups(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.any(PgGroupStatus.class)
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPgGroups(
+                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                PgGroupStatus.ACTIVE
         )).expectError(WebClientResponseException.class).verify();
     }
 

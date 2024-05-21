@@ -154,7 +154,7 @@ class InfoPaControllerTest {
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PATH).build())
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PA_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -178,7 +178,7 @@ class InfoPaControllerTest {
 
         webTestClient
                 .get()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PATH).build())
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.GROUPS_PA_PATH).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)

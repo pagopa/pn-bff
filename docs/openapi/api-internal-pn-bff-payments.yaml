@@ -68,7 +68,7 @@ paths:
       summary: Make a payment by calling the Checkout API
       tags:
         - Payments
-      operationId: PaymentsCartV1
+      operationId: paymentsCartV1
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
