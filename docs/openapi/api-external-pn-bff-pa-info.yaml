@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Institutions and Products
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-pa-institution-and-product
+  x-api-id: api-internal-pn-bff-pa-info
   x-summary: 'API di pn-bff esposte al Web per i mittenti'
   version: '1.0.0'
   contact:
@@ -85,12 +85,12 @@ paths:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
   
-  '/bff/v1/groups':
+  '/bff/v1/pa/groups':
     get:
-      summary: Get groups
+      summary: Get PA Groups list
       description: |-
         This operation retrieves the groups from Self Care.
-      operationId: getGroupsV1
+      operationId: getPAGroupsV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

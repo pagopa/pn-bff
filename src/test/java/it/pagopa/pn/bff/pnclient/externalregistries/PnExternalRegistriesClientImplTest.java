@@ -131,7 +131,7 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.any(PaGroupStatus.class)
         )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -148,7 +148,7 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.any(PaGroupStatus.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnExternalRegistriesClient.getGroups(
+        StepVerifier.create(pnExternalRegistriesClient.getPaGroups(
                 UserMock.PN_UID,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
@@ -157,7 +157,7 @@ class PnExternalRegistriesClientImplTest {
     }
 
     @Test
-    void getGroupsPg(){
+    void getGroupsPg() {
         when(infoPgApi.getPgGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
@@ -174,7 +174,7 @@ class PnExternalRegistriesClientImplTest {
     }
 
     @Test
-    void getGroupsPgError(){
+    void getGroupsPgError() {
         when(infoPgApi.getPgGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),

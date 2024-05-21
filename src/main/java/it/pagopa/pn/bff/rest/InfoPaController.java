@@ -70,7 +70,7 @@ public class InfoPaController implements InfoPaApi {
     }
 
     /**
-     * GET /v1/groups
+     * GET bff/v1/pa/groups
      * Get the list of groups for the user
      *
      * @param xPagopaPnUid      (required)
@@ -81,7 +81,7 @@ public class InfoPaController implements InfoPaApi {
      * @return the list of groups
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffPaGroup>>> getGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffPaGroup>>> getPAGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status, ServerWebExchange exchange) {
         log.logStartingProcess("getGroupsV1");
 
         Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);

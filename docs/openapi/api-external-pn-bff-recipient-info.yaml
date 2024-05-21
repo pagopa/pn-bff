@@ -25,20 +25,17 @@ tags:
     description: Invocazioni per sapere i gruppi disponibili di un ente
 
 paths:
-  '/bff/v1/pg/groups':
+  '/bff/v1/recipient/groups':
     get:
       summary: Get PG Groups list
       description: |-
         This operation retrieves the PG Groups from Self Care.
       operationId: getPGGroupsV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoRecipient
       parameters:
-        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
-        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
-        - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
         - name: status
           description: Se valorizzato indica di tornare solo i gruppi nello stato passato
           in: query

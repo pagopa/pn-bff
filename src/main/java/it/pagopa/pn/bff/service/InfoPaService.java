@@ -63,14 +63,14 @@ public class InfoPaService {
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxId     Public Administration id
-     * @param xPagopaPnCxGroups  Public Administration Group id List
-     * @param status    Filter for the status of the groups
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param status            Filter for the status of the groups
      * @return the list of groups
      */
-    public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status){
+    public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status) {
         log.info("getGroups");
 
-        Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getGroups(
+        Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getPaGroups(
                 xPagopaPnUid,
                 xPagopaPnCxId,
                 xPagopaPnCxGroups,

@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
 import it.pagopa.pn.bff.service.InfoRecipientService;
 import lombok.CustomLog;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -39,6 +40,6 @@ public class InfoRecipientController implements InfoRecipientApi {
         Flux<BffPgGroup> bffPgGroups = infoRecipientService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
 
         log.logEndingProcess("getPGGroupsV1");
-        return bffPgGroups.collectList().map(groups -> ResponseEntity.ok(Flux.fromIterable(groups)));
+        return bffPgGroups.collectList().map(groups -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(groups)));
     }
 }
