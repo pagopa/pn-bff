@@ -52,6 +52,11 @@ public class PnExternalRegistriesClientImpl {
         );
     }
 
+    public Flux<PaSummary> getPaList(String paNameFilter, List<String> id) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "listOnboardedPa");
+        return infoPaApi.listOnboardedPa(paNameFilter, id);
+    }
+
     public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutions");
         return infoPaApi
@@ -83,4 +88,6 @@ public class PnExternalRegistriesClientImpl {
         return paymentInfoApi
                 .checkoutCart(paymentRequest);
     }
+
+
 }

@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoRecipientApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
 import it.pagopa.pn.bff.service.InfoRecipientService;
@@ -41,5 +42,25 @@ public class InfoRecipientController implements InfoRecipientApi {
 
         log.logEndingProcess("getPGGroupsV1");
         return bffPgGroups.collectList().map(groups -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(groups)));
+    }
+
+    /**
+     * GET bff/v1/pa-list
+     * Get the list of PA that use PN
+     *
+     * @param paNameFilter The prefix of the PA name
+     * @param id           The id of the PA
+     * @return The list of PA
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<BffPaSummary>>> getPAListV1(String paNameFilter,
+                                                                List<String> id,
+                                                                final ServerWebExchange exchange) {
+        log.logStartingProcess("getPAListV1");
+
+        Flux<BffPaSummary> paSummaryFlux = infoRecipientService.getPaList(paNameFilter, id);
+
+        log.logEndingProcess("getPAListV1");
+        return paSummaryFlux.collectList().map(paSummaries -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(paSummaries)));
     }
 }

@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
+import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class InfoRecipientService {
      * @param status            Group status
      * @return the list of the groups or error
      */
-    public Flux<BffPgGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPgGroupStatus status){
+    public Flux<BffPgGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPgGroupStatus status) {
         log.info("getGroups");
 
         Flux<PgGroup> pgGroups = pnExternalRegistriesClient.getPgGroups(
@@ -44,5 +46,20 @@ public class InfoRecipientService {
         );
 
         return pgGroups.map(GroupsMapper.modelMapper::mapGroups);
+    }
+
+    /**
+     * Get the list of PAs that use the PN
+     *
+     * @param paNameFilter The prefix of the PA name
+     * @param id           The id of the PA
+     * @return The list of PAs
+     */
+    public Flux<BffPaSummary> getPaList(String paNameFilter, List<String> id) {
+        log.info("getPaList");
+
+        return pnExternalRegistriesClient.getPaList(paNameFilter, id)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                .map(PaListMapper.modelMapper::mapPaList);
     }
 }

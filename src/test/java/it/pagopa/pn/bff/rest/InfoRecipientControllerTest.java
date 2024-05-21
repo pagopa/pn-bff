@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
+import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.InfoRecipientService;
@@ -57,7 +59,7 @@ class InfoRecipientControllerTest {
     }
 
     @Test
-    void getGroupsV1Error(){
+    void getGroupsV1Error() {
         Mockito
                 .when(infoRecipientService.getGroups(
                         Mockito.anyString(),
@@ -73,6 +75,45 @@ class InfoRecipientControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void getPaListV1() {
+        List<BffPaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
+                .stream()
+                .map(PaListMapper.modelMapper::mapPaList)
+                .toList();
+
+        Mockito
+                .when(infoRecipientService.getPaList(
+                        Mockito.nullable(String.class),
+                        Mockito.nullable(List.class)))
+                .thenReturn(Flux.fromIterable(bffPaList));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(BffPaSummary.class)
+                .isEqualTo(bffPaList);
+    }
+
+    @Test
+    void getPaListV1Error() {
+        Mockito
+                .when(infoRecipientService.getPaList(
+                        Mockito.nullable(String.class),
+                        Mockito.nullable(List.class)))
+                .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound();
     }

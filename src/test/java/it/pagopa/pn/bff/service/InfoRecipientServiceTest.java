@@ -3,8 +3,10 @@ package it.pagopa.pn.bff.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
+import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
@@ -81,4 +83,42 @@ class InfoRecipientServiceTest {
                 .verify();
     }
 
+    @Test
+    void getPaList() {
+        List<BffPaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
+                .stream()
+                .map(PaListMapper.modelMapper::mapPaList)
+                .toList();
+
+        when(pnExternalRegistriesClient.getPaList(
+                Mockito.nullable(String.class),
+                Mockito.nullable(List.class)
+        )).thenReturn(Flux.fromIterable(recipientInfoMock.getPaSummaryList()));
+
+        Flux<BffPaSummary> result = infoRecipientService.getPaList(
+                null,
+                null
+        );
+
+        StepVerifier.create(result.collectList())
+                .expectNext(bffPaList)
+                .verifyComplete();
+    }
+
+    @Test
+    void getPaListError() {
+        when(pnExternalRegistriesClient.getPaList(
+                Mockito.nullable(String.class),
+                Mockito.nullable(List.class)
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Flux<BffPaSummary> result = infoRecipientService.getPaList(
+                null,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
 }

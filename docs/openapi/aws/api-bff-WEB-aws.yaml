@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: MeOzIJOfNk5Ax2mPk2VjuAPIzeTM4Aej3VPJUhxGfEY=
+  version: x4M7vl5XwCP/KdkBuBswt5YeHdPekwmwRbKYp2/xzf8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1244,7 +1244,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/recipient/groups:
+  /v1/pg/groups:
     get:
       summary: Get PG Groups list
       description: This operation retrieves the PG Groups from Self Care.
@@ -1281,7 +1281,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/recipient/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1298,10 +1298,85 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/recipient/groups API CORS
+      operationId: Options for /v1/pg/groups API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/recipient/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pa-list:
+    get:
+      summary: Get PA list
+      description: This operation retrieves the list of PA that use PN
+      operationId: getPAListV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoRecipient
+      parameters:
+        - name: paNameFilter
+          description: Se valorizzato indica il prefisso della denominazione della PA
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaNameFilter'
+        - name: id
+          description: >-
+            Se valorizzato indica gli id delle PA di cui si vuole la
+            denominazione
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SelfCarePaId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPaSummariesList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa-list
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pa-list API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa-list
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -5002,6 +5077,37 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffPgGroup'
+    PaNameFilter:
+      title: Admitted character for PA denomination field
+      type: string
+      minLength: 3
+      maxLength: 250
+      pattern: ^([\x20-\xFF]{1,250})$
+    SelfCarePaId:
+      title: The PA id used by self care
+      description: An unique ID that identify a Public Administration
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: ^[ -~ ]*$
+    BffPaSummary:
+      title: PA in short
+      description: PA with minimal information
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/SelfCarePaId'
+        name:
+          type: string
+    BffPaSummariesList:
+      title: Brief list of PAs
+      description: Contains a list of PA with minimal information
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPaSummary'
     ConsentType:
       type: string
       description: type of consent
@@ -5748,7 +5854,9 @@ tags:
   - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
   - name: InfoRecipient
-    description: Invocazioni per sapere i gruppi disponibili di un ente
+    description: >-
+      Invocazioni per sapere i gruppi disponibili di un ente e le PA che usano
+      PN
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
   - name: Downtime

@@ -22,6 +22,7 @@ public class PnBffRestConstants {
     public static final String NOTIFICATION_SENT_CANCEL_PATH = NOTIFICATION_SENT_PATH + "/cancel";
     public static final String GROUPS_PA_PATH = BFF_PATH + VERSION_1 + "/pa/groups";
     public static final String GROUPS_PG_PATH = BFF_PATH + VERSION_1 + "/pg/groups";
+    public static final String PA_LIST = BFF_PATH + VERSION_1 + "/pa-list";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";
