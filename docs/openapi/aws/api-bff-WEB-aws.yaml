@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: MeOzIJOfNk5Ax2mPk2VjuAPIzeTM4Aej3VPJUhxGfEY=
+  version: p2udXEdER6enHzPJD13G7wQBijKrXVPqGkqYNDZS7Hc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1244,7 +1244,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/recipient/groups:
+  /v1/pg/groups:
     get:
       summary: Get PG Groups list
       description: This operation retrieves the PG Groups from Self Care.
@@ -1281,7 +1281,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/recipient/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1298,10 +1298,10 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/recipient/groups API CORS
+      operationId: Options for /v1/pg/groups API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/recipient/groups
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
