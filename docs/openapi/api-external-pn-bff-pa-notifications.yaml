@@ -257,3 +257,46 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/documents/preload':
+    post:
+      summary: Richiesta di pre-caricamento dei documenti della notifica
+      description: >-
+        Operazione che richiede a Piattaforma Notifica le informazioni e le autorizzazioni necessarie 
+        a pre-caricare uno o più file da allegare a una notifica.
+      tags:
+        - NotificationSent
+      operationId: preSignedUploadV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadRequest"
+              minItems: 1
+              maxItems: 15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
