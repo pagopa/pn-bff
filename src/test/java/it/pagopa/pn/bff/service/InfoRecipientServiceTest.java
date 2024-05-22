@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
 import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
@@ -85,7 +85,7 @@ class InfoRecipientServiceTest {
 
     @Test
     void getPaList() {
-        List<BffPaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
+        List<PaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
                 .stream()
                 .map(PaListMapper.modelMapper::mapPaList)
                 .toList();
@@ -93,7 +93,7 @@ class InfoRecipientServiceTest {
         when(pnExternalRegistriesClient.getPaList(Mockito.nullable(String.class)))
                 .thenReturn(Flux.fromIterable(recipientInfoMock.getPaSummaryList()));
 
-        Flux<BffPaSummary> result = infoRecipientService.getPaList(null);
+        Flux<PaSummary> result = infoRecipientService.getPaList(null);
 
         StepVerifier.create(result.collectList())
                 .expectNext(bffPaList)
@@ -105,7 +105,7 @@ class InfoRecipientServiceTest {
         when(pnExternalRegistriesClient.getPaList(Mockito.nullable(String.class)))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Flux<BffPaSummary> result = infoRecipientService.getPaList(null);
+        Flux<PaSummary> result = infoRecipientService.getPaList(null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)

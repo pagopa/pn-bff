@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.mappers.inforecipient;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaSummary;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
 import org.junit.jupiter.api.Test;
 
@@ -14,13 +13,13 @@ public class PaListMapperTest {
     void testPaListMapper() {
         PaSummary paSummary = recipientInfoMock.getPaSummary();
 
-        BffPaSummary bffPaSummary = PaListMapper.modelMapper.mapPaList(paSummary);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary bffPaSummary = PaListMapper.modelMapper.mapPaList(paSummary);
         assertNotNull(bffPaSummary);
 
         assertEquals(bffPaSummary.getId(), paSummary.getId());
         assertEquals(bffPaSummary.getName(), paSummary.getName());
 
-        BffPaSummary bffPaSummaryNull = PaListMapper.modelMapper.mapPaList(null);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary bffPaSummaryNull = PaListMapper.modelMapper.mapPaList(null);
         assertNull(bffPaSummaryNull);
     }
 }

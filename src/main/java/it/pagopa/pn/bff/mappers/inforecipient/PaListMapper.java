@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.mappers.inforecipient;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaSummary;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -19,5 +18,5 @@ public interface PaListMapper {
      * @param paList List of PA
      * @return BffPaSummary
      */
-    BffPaSummary mapPaList(PaSummary paList);
+    it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary mapPaList(PaSummary paList);
 }

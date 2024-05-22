@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
 import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
@@ -54,7 +54,7 @@ public class InfoRecipientService {
      * @param paNameFilter The prefix of the PA name
      * @return The list of PAs
      */
-    public Flux<BffPaSummary> getPaList(String paNameFilter) {
+    public Flux<PaSummary> getPaList(String paNameFilter) {
         log.info("getPaList");
 
         return pnExternalRegistriesClient.getPaList(paNameFilter)

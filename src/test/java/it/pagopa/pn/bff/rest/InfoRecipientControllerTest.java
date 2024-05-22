@@ -1,9 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
 import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
@@ -81,7 +82,7 @@ class InfoRecipientControllerTest {
 
     @Test
     void getPaListV1() {
-        List<BffPaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
+        List<PaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
                 .stream()
                 .map(PaListMapper.modelMapper::mapPaList)
                 .toList();
@@ -94,9 +95,11 @@ class InfoRecipientControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
                 .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(BffPaSummary.class)
+                .expectBodyList(PaSummary.class)
                 .isEqualTo(bffPaList);
     }
 
@@ -110,7 +113,28 @@ class InfoRecipientControllerTest {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
                 .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    void getPaListV1ForbiddenError() {
+        List<PaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
+                .stream()
+                .map(PaListMapper.modelMapper::mapPaList)
+                .toList();
+
+        Mockito
+                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
+                .thenReturn(Flux.fromIterable(bffPaList));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isForbidden();
     }
 }

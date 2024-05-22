@@ -22,9 +22,6 @@ components:
         name:
           type: string
 
-    BffPaSummary:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummary'
-
     BffPaNameFilter:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
 
@@ -32,8 +29,4 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
 
     BffPaList:
-      title: Brief list of PAs
-      description: Contains a list of PA with minimal information
-      type: array
-      items:
-        $ref: '#/components/schemas/BffPaSummary'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummariesList'

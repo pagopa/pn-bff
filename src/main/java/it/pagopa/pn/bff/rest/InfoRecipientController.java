@@ -1,13 +1,14 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoRecipientApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
 import it.pagopa.pn.bff.service.InfoRecipientService;
 import it.pagopa.pn.bff.utils.RequestUtility;
 import lombok.CustomLog;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,17 +55,17 @@ public class InfoRecipientController implements InfoRecipientApi {
      * @return The list of PA
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffPaSummary>>> getPAListV1(String paNameFilter,
-                                                                final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<PaSummary>>> getPAListV1(String paNameFilter,
+                                                             final ServerWebExchange exchange) {
         log.logStartingProcess("getPAListV1");
 
-        var headers = exchange.getRequest().getHeaders();
+        HttpHeaders headers = exchange.getRequest().getHeaders();
         if (!RequestUtility.checkCxIdIsValid(headers.get("x-pagopa-pn-cx-id")) ||
                 !RequestUtility.checkCxTypeIsValid(headers.get("x-pagopa-pn-cx-type"), List.of(CxTypeAuthFleet.PF, CxTypeAuthFleet.PG))) {
-            return Mono.just(ResponseEntity.badRequest().build());
+            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
         }
 
-        Flux<BffPaSummary> paSummaryFlux = infoRecipientService.getPaList(paNameFilter);
+        Flux<PaSummary> paSummaryFlux = infoRecipientService.getPaList(paNameFilter);
 
         log.logEndingProcess("getPAListV1");
         return paSummaryFlux.collectList().map(paSummaries -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(paSummaries)));
