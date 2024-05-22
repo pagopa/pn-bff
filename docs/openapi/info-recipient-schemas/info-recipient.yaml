@@ -19,3 +19,5 @@ components:
           type: string
         name:
           type: string
+        status:
+          $ref: '#/components/schemas/BffPgGroupStatus'
