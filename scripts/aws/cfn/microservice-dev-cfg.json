@@ -13,6 +13,6 @@
     "DlOverviewObjectKey": "export-notifications_overview.json",
     "DlFocusObjectKey": "export-digital_notifications_focus.json",
     "PnBucketRegion": "eu-south-1",
-    "PnIndexObjectKey": "senderDashboardIndex.json"
+    "PnIndexObjectKey": "indexes/senderDashboardIndex.json"
   }
 }

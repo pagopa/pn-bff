@@ -337,14 +337,14 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/ecs/${ECSClusterName}/pn-bff:*'
-          # Allow SenderDashboard S3 access
-          - Effect: Allow
-            Action:
-              - s3:GetObject
-              - s3:GetObjectVersion
-              - s3:PutObject
-            Resource:
-              - !Sub '${IndexesBucketArn}/*'
+#          # Allow SenderDashboard S3 access
+#          - Effect: Allow
+#            Action:
+#              - s3:GetObject
+#              - s3:GetObjectVersion
+#              - s3:PutObject
+#            Resource:
+#              - !Sub '${IndexesBucketArn}/*'
 
   BffMicroservicePublicWebAPI:
     Type: AWS::CloudFormation::Stack
