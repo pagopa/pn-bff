@@ -73,7 +73,6 @@ public class DatalakeS3Resource {
                 .region(Region.of(DEFAULT_STS_REGION))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
-        updateCredentials();
     }
 
     /**
