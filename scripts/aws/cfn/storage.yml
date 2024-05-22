@@ -32,6 +32,11 @@ Parameters:
     Type: Number
     Default: 14
 
+  # DataIndexer params
+  IndexesBucketVersionExpiresAfterDays:
+    Type: Number
+    Default: 365
+    Description: Indexes expiration days.
 
 Resources:
 
@@ -46,7 +51,27 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
 
+  IndexesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-bff-sender-dashboard-data-${AWS::Region}-${AWS::AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldVersions
+            Status: Enabled
+            Prefix: indexes/
+            NoncurrentVersionExpiration:
+              NoncurrentDays: !Ref IndexesBucketVersionExpiresAfterDays
 Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
+  # Bucket exports
+  IndexesBucketArn:
+    Value: !GetAtt IndexesBucket.Arn
+  IndexesBucketName:
+    Value: !Ref IndexesBucket
+  IndexesBucketRegion:
+    Value: !Ref AWS::Region
