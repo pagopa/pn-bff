@@ -114,4 +114,19 @@ public class PnDeliveryClientRecipientImpl {
                 attachmentIdx
         );
     }
+
+    public Mono<ResponseCheckAarMandateDto> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                           String xPagopaPnCxId,
+                                                           RequestCheckAarMandateDto requestCheckAarMandateDto,
+                                                           List<String> xPagopaPnCxGroups){
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "checkAarQrCode");
+
+        return recipientReadApi.checkAarQrCode(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                requestCheckAarMandateDto,
+                xPagopaPnCxGroups
+        );
+    }
 }

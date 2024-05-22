@@ -35,5 +35,4 @@ public class NotificationsReceivedMapperTest {
         BffNotificationsResponse bffNotificationsResponseV1Null = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(null);
         assertNull(bffNotificationsResponseV1Null);
     }
-
 }

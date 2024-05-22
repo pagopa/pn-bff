@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
@@ -33,6 +34,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnDeliveryClientRecipientImplTestIT {
+    private final static ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
@@ -40,8 +42,8 @@ class PnDeliveryClientRecipientImplTestIT {
     private final String attachmentName = "PAGOPA";
     private final String notificationListPath = "/delivery/notifications/received";
     private final String notificationDetailPath = "/delivery/v2.3/notifications/received/" + iun;
+    private final String notificationQrCodePath = "/delivery/notifications/received/check-aar-qr-code";
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
-
     private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
@@ -53,6 +55,8 @@ class PnDeliveryClientRecipientImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -68,9 +72,6 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void searchReceivedNotifications() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationsReceivedMock.getNotificationReceivedPNMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationListPath))
                 .respond(response()
@@ -120,9 +121,6 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void searchReceivedDelegatedNotifications() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationsReceivedMock.getNotificationReceivedPNMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationListPath + "/delegated"))
                 .respond(response()
@@ -172,9 +170,6 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void getReceivedNotification() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationDetailPath))
                 .respond(response()
@@ -210,7 +205,6 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void getReceivedNotificationDocument() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getRecipientAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(documentDownloadPath))
                 .respond(response()
@@ -248,7 +242,6 @@ class PnDeliveryClientRecipientImplTestIT {
 
     @Test
     void getReceivedNotificationPayment() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getRecipientAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(paymentDownloadPath))
                 .respond(response()
@@ -283,6 +276,40 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID(),
                 0
+        )).expectError().verify();
+    }
+
+    @Test
+    void checkAarQrCode() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock());
+        mockServerClient.when(request().withMethod("POST").withPath(notificationQrCodePath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()).verifyComplete();
+    }
+
+    @Test
+    void checkAarQrCodeError() {
+        mockServerClient.when(request().withMethod("POST").withPath(notificationQrCodePath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.checkAarQrCode(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 }

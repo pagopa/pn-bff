@@ -1,9 +1,8 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV23;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
@@ -11,6 +10,7 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
@@ -23,6 +23,7 @@ public class PnDeliveryClientPAImpl {
 
     private final SenderReadB2BApi senderReadB2BApi;
     private final SenderReadWebApi senderReadWebApi;
+    private final NewNotificationApi newNotificationApi;
 
     public Mono<NotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                     String xPagopaPnCxId, OffsetDateTime startDate,
@@ -91,6 +92,35 @@ public class PnDeliveryClientPAImpl {
                 attachmentName,
                 xPagopaPnCxGroups,
                 attachmentIdx
+        );
+    }
+
+    public Mono<NewNotificationResponse> newSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                             String xPagopaPnCxId, NewNotificationRequestV23 newNotificationRequestV23,
+                                                             List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV23");
+
+        return newNotificationApi.sendNewNotificationV23(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                "WEB",
+                newNotificationRequestV23,
+                xPagopaPnCxGroups,
+                null,
+                null
+        );
+    }
+
+    public Flux<PreLoadResponse> preSignedUpload(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                 String xPagopaPnCxId, List<PreLoadRequest> preLoadRequest) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "presignedUploadRequest");
+
+        return newNotificationApi.presignedUploadRequest(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                preLoadRequest
         );
     }
 }

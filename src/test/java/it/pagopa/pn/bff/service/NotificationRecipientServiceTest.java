@@ -6,10 +6,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
@@ -595,6 +593,53 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID(),
                 0
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void checkAarQrCode(){
+        when(pnDeliveryClientRecipient.checkAarQrCode(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()));
+
+        Mono<BffCheckAarResponse> result = notificationsRecipientService.checkAarQrCode(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                Mono.just(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectNext(NotificationAarQrCodeMapper.modelMapper.toBffResponseCheckAarMandateDto(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void checkAarQrCodeError(){
+        when(pnDeliveryClientRecipient.checkAarQrCode(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffCheckAarResponse> result = notificationsRecipientService.checkAarQrCode(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                Mono.just(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
+                UserMock.PN_CX_GROUPS
         );
 
         StepVerifier.create(result)

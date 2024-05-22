@@ -226,3 +226,31 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/notifications/received/check-aar-qr-code':
+    post:
+      summary: Servizio per la verifica del aar-qr-code
+      tags:
+        - NotificationReceived
+      operationId: checkAarQrCodeV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarResponse'
+        '404':
+          description: QrCode reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

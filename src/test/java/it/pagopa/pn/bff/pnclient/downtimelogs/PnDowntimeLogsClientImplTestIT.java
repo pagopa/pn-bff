@@ -28,6 +28,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class PnDowntimeLogsClientImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
@@ -40,6 +41,8 @@ public class PnDowntimeLogsClientImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -55,7 +58,6 @@ public class PnDowntimeLogsClientImplTestIT {
 
     @Test
     void getCurrentStatus() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(downtimeLogsMock.getStatusMockOK());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/status"))
                 .respond(response()
@@ -79,9 +81,6 @@ public class PnDowntimeLogsClientImplTestIT {
 
     @Test
     void getStatusHistory() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(downtimeLogsMock.getDowntimeHistoryMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/history"))
                 .respond(response()
@@ -117,7 +116,6 @@ public class PnDowntimeLogsClientImplTestIT {
 
     @Test
     void getLegalFact() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(downtimeLogsMock.getLegalFactMetadataMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/legal-facts/" + LEGAL_FACT_ID))
                 .respond(response()
