@@ -224,6 +224,44 @@ Parameters:
     Type: String
     Description: 'AuthFleet base URL'
 
+ # Sender dashboard
+  IndexesBucketArn:
+    Type: String
+    Description: PN bucket Arn of indexes files.
+
+  IndexesBucketName:
+    Type: String
+    Description: PN bucket of index files.
+
+  IndexesBucketRegion:
+    Type: String
+    Description: PN bucket region of index files.
+
+  # DataIndexer Env
+  DlBucketName:
+    Type: String
+    Description: Name of data-lake bucket.
+
+  DlBucketRegion:
+    Type: String
+    Description: Default region for data-lake bucket.
+
+  DlAssumeRoleArn:
+    Type: String
+    Description: ARN of the role Lambda will assume.
+
+  DlOverviewObjectKey:
+    Type: String
+    Description: S3 object key for overview file.
+
+  DlFocusObjectKey:
+    Type: String
+    Description: S3 object key for focus focus.
+
+  PnIndexObjectKey:
+    Type: String
+    Description: S3 index object key.
+
 Resources:
 
   # PN-bff microservice
@@ -262,6 +300,16 @@ Resources:
         ContainerEnvEntry11: !Sub 'PN_BFF_DELIVERY_PUSH_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry12: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
         ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        # Sender dashboard
+        ContainerEnvEntry14: !Sub 'PN_BUCKET_NAME=${IndexesBucketName}'
+        ContainerEnvEntry15: !Sub 'PN_BUCKET_REGION=${IndexesBucketRegion}'
+        ContainerEnvEntry16: !Sub 'PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
+        ContainerEnvEntry17: !Sub 'DL_BUCKET_NAME=${DlBucketName}'
+        ContainerEnvEntry19: !Sub 'DL_BUCKET_REGION=${DlBucketRegion}'
+        ContainerEnvEntry20: !Sub 'DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}'
+        ContainerEnvEntry21: !Sub 'DL_OVERVIEW_OBJECT_KEY=${DlOverviewObjectKey}'
+        ContainerEnvEntry22: !Sub 'DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
+
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
@@ -289,6 +337,14 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/ecs/${ECSClusterName}/pn-bff:*'
+          # Allow SenderDashboard S3 access
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:PutObject
+            Resource:
+              - !Sub '${IndexesBucketArn}/*'
 
   BffMicroservicePublicWebAPI:
     Type: AWS::CloudFormation::Stack
