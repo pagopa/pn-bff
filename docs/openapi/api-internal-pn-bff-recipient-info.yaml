@@ -65,7 +65,6 @@ paths:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
 
-
   '/bff/v1/pa-list':
     get:
       summary: Get PA list
@@ -83,21 +82,13 @@ paths:
           required: false
           schema:
             $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPaNameFilter'
-        - name: id
-          description: Se valorizzato indica gli id delle PA di cui si vuole la denominazione
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffSelfCarePaId'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPaSummariesList'
+                $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPaList'
         '400':
           description: Invalid input
           content:

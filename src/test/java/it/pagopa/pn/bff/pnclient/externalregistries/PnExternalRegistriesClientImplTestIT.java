@@ -269,10 +269,8 @@ class PnExternalRegistriesClientImplTestIT {
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaList(
-                null,
-                null
-        )).expectNextSequence(recipientInfoMock.getPaSummaryList()).verifyComplete();
+        StepVerifier.create(pnExternalRegistriesClient.getPaList(null))
+                .expectNextSequence(recipientInfoMock.getPaSummaryList()).verifyComplete();
     }
 
     @Test
@@ -280,9 +278,6 @@ class PnExternalRegistriesClientImplTestIT {
         mockServerClient.when(request().withMethod("GET").withPath(pathPaList))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaList(
-                null,
-                null
-        )).expectError().verify();
+        StepVerifier.create(pnExternalRegistriesClient.getPaList(null)).expectError().verify();
     }
 }

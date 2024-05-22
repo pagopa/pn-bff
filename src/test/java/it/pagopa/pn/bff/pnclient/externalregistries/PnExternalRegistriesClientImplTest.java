@@ -250,10 +250,8 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.nullable(List.class)
         )).thenReturn(Flux.fromIterable(recipientInfoMock.getPaSummaryList()));
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaList(
-                "Comune di Milano",
-                null
-        )).expectNextSequence(recipientInfoMock.getPaSummaryList()).verifyComplete();
+        StepVerifier.create(pnExternalRegistriesClient.getPaList("Comune di Milano"))
+                .expectNextSequence(recipientInfoMock.getPaSummaryList()).verifyComplete();
     }
 
     @Test
@@ -263,9 +261,7 @@ class PnExternalRegistriesClientImplTest {
                 Mockito.nullable(List.class)
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnExternalRegistriesClient.getPaList(
-                "Comune di Milano",
-                null
-        )).expectError(WebClientResponseException.class).verify();
+        StepVerifier.create(pnExternalRegistriesClient.getPaList("Comune di Milano"))
+                .expectError(WebClientResponseException.class).verify();
     }
 }

@@ -52,13 +52,12 @@ public class InfoRecipientService {
      * Get the list of PAs that use the PN
      *
      * @param paNameFilter The prefix of the PA name
-     * @param id           The id of the PA
      * @return The list of PAs
      */
-    public Flux<BffPaSummary> getPaList(String paNameFilter, List<String> id) {
+    public Flux<BffPaSummary> getPaList(String paNameFilter) {
         log.info("getPaList");
 
-        return pnExternalRegistriesClient.getPaList(paNameFilter, id)
+        return pnExternalRegistriesClient.getPaList(paNameFilter)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                 .map(PaListMapper.modelMapper::mapPaList);
     }

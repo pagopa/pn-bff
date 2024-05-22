@@ -4,7 +4,9 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoRecipientApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaSummary;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.InfoRecipientService;
+import it.pagopa.pn.bff.utils.RequestUtility;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,16 +51,20 @@ public class InfoRecipientController implements InfoRecipientApi {
      * Get the list of PA that use PN
      *
      * @param paNameFilter The prefix of the PA name
-     * @param id           The id of the PA
      * @return The list of PA
      */
     @Override
     public Mono<ResponseEntity<Flux<BffPaSummary>>> getPAListV1(String paNameFilter,
-                                                                List<String> id,
                                                                 final ServerWebExchange exchange) {
         log.logStartingProcess("getPAListV1");
 
-        Flux<BffPaSummary> paSummaryFlux = infoRecipientService.getPaList(paNameFilter, id);
+        var headers = exchange.getRequest().getHeaders();
+        if (!RequestUtility.checkCxIdIsValid(headers.get("x-pagopa-pn-cx-id")) ||
+                !RequestUtility.checkCxTypeIsValid(headers.get("x-pagopa-pn-cx-type"), List.of(CxTypeAuthFleet.PF, CxTypeAuthFleet.PG))) {
+            return Mono.just(ResponseEntity.badRequest().build());
+        }
+
+        Flux<BffPaSummary> paSummaryFlux = infoRecipientService.getPaList(paNameFilter);
 
         log.logEndingProcess("getPAListV1");
         return paSummaryFlux.collectList().map(paSummaries -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(paSummaries)));

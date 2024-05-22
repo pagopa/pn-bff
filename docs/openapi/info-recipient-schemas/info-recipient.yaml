@@ -23,17 +23,7 @@ components:
           type: string
 
     BffPaSummary:
-      title: PA in short
-      description: PA with minimal information
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          $ref: '#/components/schemas/BffSelfCarePaId'
-        name:
-          type: string
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummary'
 
     BffPaNameFilter:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
@@ -41,7 +31,7 @@ components:
     BffSelfCarePaId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
 
-    BffPaSummariesList:
+    BffPaList:
       title: Brief list of PAs
       description: Contains a list of PA with minimal information
       type: array

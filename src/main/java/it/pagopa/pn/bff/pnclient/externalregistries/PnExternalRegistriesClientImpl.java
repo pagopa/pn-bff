@@ -52,9 +52,9 @@ public class PnExternalRegistriesClientImpl {
         );
     }
 
-    public Flux<PaSummary> getPaList(String paNameFilter, List<String> id) {
+    public Flux<PaSummary> getPaList(String paNameFilter) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "listOnboardedPa");
-        return infoPaApi.listOnboardedPa(paNameFilter, id);
+        return infoPaApi.listOnboardedPa(paNameFilter, null);
     }
 
     public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {

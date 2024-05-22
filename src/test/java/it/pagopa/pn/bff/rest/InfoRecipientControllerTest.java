@@ -87,9 +87,7 @@ class InfoRecipientControllerTest {
                 .toList();
 
         Mockito
-                .when(infoRecipientService.getPaList(
-                        Mockito.nullable(String.class),
-                        Mockito.nullable(List.class)))
+                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
                 .thenReturn(Flux.fromIterable(bffPaList));
 
         webTestClient
@@ -105,9 +103,7 @@ class InfoRecipientControllerTest {
     @Test
     void getPaListV1Error() {
         Mockito
-                .when(infoRecipientService.getPaList(
-                        Mockito.nullable(String.class),
-                        Mockito.nullable(List.class)))
+                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
                 .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient

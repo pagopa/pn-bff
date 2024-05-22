@@ -90,15 +90,10 @@ class InfoRecipientServiceTest {
                 .map(PaListMapper.modelMapper::mapPaList)
                 .toList();
 
-        when(pnExternalRegistriesClient.getPaList(
-                Mockito.nullable(String.class),
-                Mockito.nullable(List.class)
-        )).thenReturn(Flux.fromIterable(recipientInfoMock.getPaSummaryList()));
+        when(pnExternalRegistriesClient.getPaList(Mockito.nullable(String.class)))
+                .thenReturn(Flux.fromIterable(recipientInfoMock.getPaSummaryList()));
 
-        Flux<BffPaSummary> result = infoRecipientService.getPaList(
-                null,
-                null
-        );
+        Flux<BffPaSummary> result = infoRecipientService.getPaList(null);
 
         StepVerifier.create(result.collectList())
                 .expectNext(bffPaList)
@@ -107,15 +102,10 @@ class InfoRecipientServiceTest {
 
     @Test
     void getPaListError() {
-        when(pnExternalRegistriesClient.getPaList(
-                Mockito.nullable(String.class),
-                Mockito.nullable(List.class)
-        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+        when(pnExternalRegistriesClient.getPaList(Mockito.nullable(String.class)))
+                .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Flux<BffPaSummary> result = infoRecipientService.getPaList(
-                null,
-                null
-        );
+        Flux<BffPaSummary> result = infoRecipientService.getPaList(null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
