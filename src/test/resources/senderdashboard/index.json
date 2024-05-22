@@ -1,0 +1,141 @@
+{
+  "bucketName": "testBucket",
+  "bucketRegion": "eu-south-1",
+  "overviewObjectKey": "testKeyOverview",
+  "focusObjectKey": "testKeyFocus",
+  "overviewObjectVersionId": "testVersionId",
+  "focusObjectVersionId": "testVersionId",
+  "genTimestamp": "2024-05-22T10:31:00.611Z",
+  "startDate": "2023-07-17",
+  "lastDate": "2024-05-08",
+  "overviewObjectProcessTimeMs": 34,
+  "focusObjectProcessTimeMs": 3,
+  "overviewObjectSizeByte": 1618696,
+  "focusObjectSizeByte": 98669,
+  "overviewObjectLines": 3356,
+  "focusObjectLines": 579,
+  "overviewSendersId": {
+    "5b994d4a-0fa8-47ac-9c7b-354f1d44a1ce": {
+      "start": 2,
+      "numRows": 47,
+      "end": 22587
+    },
+    "026e8c72-7944-4dcd-8668-f596447fec6d": {
+      "start": 22588,
+      "numRows": 255,
+      "end": 145557
+    },
+    "56ed074c-13b6-4d61-ba49-221953e6b60f": {
+      "start": 145558,
+      "numRows": 33,
+      "end": 161394
+    },
+    "614b68f2-f80f-4ebc-be30-2ad87e88aa10": {
+      "start": 161395,
+      "numRows": 121,
+      "end": 219893
+    },
+    "a95dace4-4a47-4149-a814-0e669113ce40": {
+      "start": 219894,
+      "numRows": 34,
+      "end": 236137
+    },
+    "acb31680-55e6-4a3d-9355-b7531f55d11a": {
+      "start": 236138,
+      "numRows": 658,
+      "end": 553258
+    },
+    "17ff3e25-9d77-4f82-ad13-dc67c6b5f7f2": {
+      "start": 553259,
+      "numRows": 97,
+      "end": 600009
+    },
+    "6f85a2cf-75b1-47e6-915b-2a25366c9950": {
+      "start": 600010,
+      "numRows": 7,
+      "end": 603341
+    },
+    "a7d30345-3537-499f-8b4f-9a078a94d295": {
+      "start": 603342,
+      "numRows": 21,
+      "end": 613470
+    },
+    "01cecde7-636d-4261-8271-7984807fc50e": {
+      "start": 613471,
+      "numRows": 54,
+      "end": 639180
+    },
+    "588ad483-8ead-4cd8-b0ad-0198c635fceb": {
+      "start": 639181,
+      "numRows": 44,
+      "end": 660440
+    },
+    "e955a1a1-86f0-4d7d-9c2a-f90783f6067c": {
+      "start": 660441,
+      "numRows": 1983,
+      "end": 1618694
+    }
+  },
+  "focusSendersId": {
+    "5b994d4a-0fa8-47ac-9c7b-354f1d44a1ce": {
+      "start": 2,
+      "numRows": 12,
+      "end": 1963
+    },
+    "026e8c72-7944-4dcd-8668-f596447fec6d": {
+      "start": 1964,
+      "numRows": 30,
+      "end": 6908
+    },
+    "56ed074c-13b6-4d61-ba49-221953e6b60f": {
+      "start": 6909,
+      "numRows": 12,
+      "end": 8865
+    },
+    "614b68f2-f80f-4ebc-be30-2ad87e88aa10": {
+      "start": 8866,
+      "numRows": 17,
+      "end": 11698
+    },
+    "a95dace4-4a47-4149-a814-0e669113ce40": {
+      "start": 11699,
+      "numRows": 6,
+      "end": 12680
+    },
+    "acb31680-55e6-4a3d-9355-b7531f55d11a": {
+      "start": 12681,
+      "numRows": 115,
+      "end": 31946
+    },
+    "17ff3e25-9d77-4f82-ad13-dc67c6b5f7f2": {
+      "start": 31947,
+      "numRows": 17,
+      "end": 34761
+    },
+    "6f85a2cf-75b1-47e6-915b-2a25366c9950": {
+      "start": 34762,
+      "numRows": 2,
+      "end": 35087
+    },
+    "a7d30345-3537-499f-8b4f-9a078a94d295": {
+      "start": 35088,
+      "numRows": 7,
+      "end": 36230
+    },
+    "01cecde7-636d-4261-8271-7984807fc50e": {
+      "start": 36231,
+      "numRows": 14,
+      "end": 38514
+    },
+    "588ad483-8ead-4cd8-b0ad-0198c635fceb": {
+      "start": 38515,
+      "numRows": 16,
+      "end": 41195
+    },
+    "e955a1a1-86f0-4d7d-9c2a-f90783f6067c": {
+      "start": 41196,
+      "numRows": 329,
+      "end": 98667
+    }
+  }
+}
