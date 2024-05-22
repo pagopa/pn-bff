@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ydugoEMyksrRwSj6SgBX+2XrSJpxZfc0hNUr2pdKTYk=
+  version: +x2G6JYkb2fpZ4fa0TGO7BBOab+0xBMleImgZVW+aJQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5308,6 +5308,8 @@ components:
           type: string
         name:
           type: string
+        status:
+          $ref: '#/components/schemas/PgGroupStatus'
     BffPgGroupList:
       title: Groups defined in Self Care PG (Notifiche digitali)
       description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
