@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -25,14 +24,12 @@ import static org.mockito.ArgumentMatchers.eq;
 @Slf4j
 @ContextConfiguration(classes = AuthController.class)
 @WebFluxTest
-public class AuthControllerTest {
+class AuthControllerTest {
     @Autowired
     WebTestClient webTestClient;
     AuthFleetMock authFleetMock = new AuthFleetMock();
     @MockBean
     private AuthService authService;
-    @SpyBean
-    private AuthController authController;
 
     @Test
     void tokenExchange() {

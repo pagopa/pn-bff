@@ -238,4 +238,26 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
         log.logEndingProcess("getReceivedNotificationPaymentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
+
+    /**
+     * POST bff/v1/notifications/received/check-aar-qr-code: Check AAR QR Code
+     * Check the AAR QR Code
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param bffCheckAarRequest Request to check AAR mandate
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param exchange
+     * @return the response of the check AAR mandate
+     */
+    @Override
+    public Mono<ResponseEntity<BffCheckAarResponse>> checkAarQrCodeV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffCheckAarRequest> bffCheckAarRequest, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+        log.logStartingProcess("checkAarQrCodeV1");
+
+        Mono<BffCheckAarResponse> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffCheckAarRequest, xPagopaPnCxGroups);
+
+        log.logEndingProcess("checkAarQrCodeV1");
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }

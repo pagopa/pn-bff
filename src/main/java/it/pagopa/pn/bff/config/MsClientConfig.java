@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.config;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
@@ -10,6 +11,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderRea
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
@@ -57,6 +60,17 @@ public class MsClientConfig extends CommonBaseClient {
 
     @Bean
     @Primary
+    NewNotificationApi newNotificationApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+        return new NewNotificationApi(apiClient);
+    }
+
+    @Bean
+    @Primary
     ApiKeysApi apiKeysApi(PnBffConfigs cfg) {
         it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.ApiClient apiClient =
                 new it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.ApiClient(
@@ -75,6 +89,17 @@ public class MsClientConfig extends CommonBaseClient {
                 );
         apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
         return new InfoPaApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    InfoPgApi infoPgApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
+        return new InfoPgApi(apiClient);
     }
 
     @Bean
@@ -166,5 +191,15 @@ public class MsClientConfig extends CommonBaseClient {
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.ApiClient.buildWebClientBuilder()));
         apiClient.setBasePath(cfg.getDeliveryBaseUrl());
         return new NotificationCancellationApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    MandateServiceApi mandateApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.mandate.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.mandate.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.mandate.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getMandateBaseUrl());
+        return new MandateServiceApi(apiClient);
     }
 }

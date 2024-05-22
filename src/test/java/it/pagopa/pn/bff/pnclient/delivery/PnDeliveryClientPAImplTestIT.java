@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsSentMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,6 +28,7 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PnDeliveryClientPAImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
@@ -41,9 +39,12 @@ class PnDeliveryClientPAImplTestIT {
     private final String notificationDetailPath = "/delivery/v2.3/notifications/sent/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
+    private final String newNotificationPath = "/delivery/v2.3/requests";
+    private final String preloadRequestPath = "/delivery/attachments/preload";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -51,6 +52,8 @@ class PnDeliveryClientPAImplTestIT {
     public static void startMockServer() {
         mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterAll
@@ -66,9 +69,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void searchSentNotifications() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationsSentMock.getNotificationSentPNMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationsListPath))
                 .respond(response()
@@ -116,9 +116,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotification() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
         String response = objectMapper.writeValueAsString(notificationDetailPaMock.getNotificationMultiRecipientMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationDetailPath))
                 .respond(response()
@@ -152,7 +149,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationDocument() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getPaAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(documentDownloadPath))
                 .respond(response()
@@ -188,7 +184,6 @@ class PnDeliveryClientPAImplTestIT {
 
     @Test
     void getSentNotificationPayment() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(notificationDownloadDocumentMock.getPaAttachmentMock());
         mockServerClient.when(request().withMethod("GET").withPath(paymentDownloadPath))
                 .respond(response()
@@ -223,6 +218,90 @@ class PnDeliveryClientPAImplTestIT {
                 attachmentName,
                 UserMock.PN_CX_GROUPS,
                 0
+        )).expectError().verify();
+    }
+
+    @Test
+    void newSentNotification() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationRequest());
+        String response = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationResponse());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(newNotificationPath)
+                        .withBody(request)
+                )
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
+        )).expectNext(newSentNotificationMock.getNewSentNotificationResponse()).verifyComplete();
+    }
+
+    @Test
+    void newSentNotificationError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getNewSentNotificationRequest());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(newNotificationPath)
+                        .withBody(request)
+                )
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.newSentNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getNewSentNotificationRequest(),
+                UserMock.PN_CX_GROUPS
+        )).expectError().verify();
+    }
+
+    @Test
+    void preSignedUpload() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadRequestMock());
+        String response = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadResponseMock());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(preloadRequestPath)
+                        .withBody(request)
+                )
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
+        )).expectNextSequence(newSentNotificationMock.getPreloadResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void preSignedUploadError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(newSentNotificationMock.getPreloadRequestMock());
+        mockServerClient.when(request()
+                        .withMethod("POST")
+                        .withPath(preloadRequestPath)
+                        .withBody(request)
+                )
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.preSignedUpload(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                newSentNotificationMock.getPreloadRequestMock()
         )).expectError().verify();
     }
 }

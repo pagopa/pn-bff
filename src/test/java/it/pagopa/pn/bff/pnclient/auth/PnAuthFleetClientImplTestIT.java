@@ -23,11 +23,11 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class PnAuthFleetClientImplTestIT {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/token-exchange";
     private final AuthFleetMock authFleetMock = new AuthFleetMock();
-
     @Autowired
     PnAuthFleetClientImpl pnAuthFleetClient;
 
@@ -50,7 +50,6 @@ public class PnAuthFleetClientImplTestIT {
 
     @Test
     void tokenExchange() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeBody());
         String response = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeResponse());
 
@@ -72,7 +71,6 @@ public class PnAuthFleetClientImplTestIT {
 
     @Test
     void tokenExchangeError() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(authFleetMock.getTokenExchangeBody());
 
         mockServerClient.when(request()

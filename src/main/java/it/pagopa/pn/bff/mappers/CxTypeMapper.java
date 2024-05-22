@@ -68,4 +68,12 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet convertDeliveryPushCXType(CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff CxTypeAuthFleet to the mandate CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet convertMandateCXType(CxTypeAuthFleet cxType);
 }

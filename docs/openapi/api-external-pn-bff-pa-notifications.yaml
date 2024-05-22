@@ -66,6 +66,48 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
+    post:
+      summary: Richiesta invio notifica
+      description: |-
+        Operazione utilizzata dalla Pubblica Amministrazione per richiedere l'invio di una notifica.
+
+        La restituzione di uno stato HTTP 202 significa solo che la richiesta è sintatticamente
+        valida, non che la richiesta sia stata validata ed accettata.
+      tags:
+        - NotificationSent
+      operationId: newSentNotificationV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationRequest"
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
   '/bff/v1/notifications/sent/{iun}':
     get:
       summary: 'Mittente: lettura dettagli notifica'
@@ -205,6 +247,49 @@ paths:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/documents/preload':
+    post:
+      summary: Richiesta di pre-caricamento dei documenti della notifica
+      description: >-
+        Operazione che richiede a Piattaforma Notifica le informazioni e le autorizzazioni necessarie 
+        a pre-caricare uno o più file da allegare a una notifica.
+      tags:
+        - NotificationSent
+      operationId: preSignedUploadV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadRequest"
+              minItems: 1
+              maxItems: 15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadResponse"
+        '400':
+          description: Bad request
           content:
             application/problem+json:
               schema:
