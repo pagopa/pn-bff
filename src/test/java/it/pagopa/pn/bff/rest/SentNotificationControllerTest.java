@@ -2,16 +2,12 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationCancellationMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationsSentMapper;
-import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsSentMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mappers.notifications.*;
+import it.pagopa.pn.bff.mocks.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
+import it.pagopa.pn.bff.utils.helpers.FluxMatcher;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,9 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(SentNotificationController.class)
@@ -31,6 +32,7 @@ class SentNotificationControllerTest {
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
+    private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
@@ -648,6 +650,155 @@ class SentNotificationControllerTest {
                 UserMock.PN_CX_ID,
                 IUN,
                 UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void newSentNotification() {
+        BffNewNotificationRequest request = newSentNotificationMock.getBffNewSentNotificationRequest();
+        BffNewNotificationResponse response = NewSentNotificationMapper.modelMapper.mapResponse(newSentNotificationMock.getNewSentNotificationResponse());
+        Mockito.when(notificationsPAService.newSentNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_SENT_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isAccepted()
+                .expectBody(BffNewNotificationResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).newSentNotification(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new MonoMatcher<>(Mono.just(request))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void newSentNotificationError() {
+        BffNewNotificationRequest request = newSentNotificationMock.getBffNewSentNotificationRequest();
+        Mockito.when(notificationsPAService.newSentNotification(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any(),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATIONS_SENT_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).newSentNotification(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new MonoMatcher<>(Mono.just(request))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void preSignedUpload() {
+        List<BffPreLoadRequest> request = newSentNotificationMock.getBffPreloadRequestMock();
+        List<BffPreLoadResponse> response = newSentNotificationMock.getPreloadResponseMock()
+                .stream()
+                .map(NotificationSentPreloadDocumentsMapper.modelMapper::mapResponse)
+                .toList();
+        Mockito.when(notificationsPAService.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any()
+        )).thenReturn(Flux.fromIterable(response));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PRELOAD_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(BffPreLoadResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).preSignedUpload(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
+        );
+    }
+
+    @Test
+    void preSignedUploadError() {
+        List<BffPreLoadRequest> request = newSentNotificationMock.getBffPreloadRequestMock();
+        Mockito.when(notificationsPAService.preSignedUpload(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.any()
+        )).thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.post()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_PRELOAD_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).preSignedUpload(
+                eq(UserMock.PN_UID),
+                eq(CxTypeAuthFleet.PA),
+                eq(UserMock.PN_CX_ID),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
         );
     }
 }

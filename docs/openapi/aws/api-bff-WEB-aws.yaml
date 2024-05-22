@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: x4M7vl5XwCP/KdkBuBswt5YeHdPekwmwRbKYp2/xzf8=
+  version: dhsThWtY/2ULTAcZp15Eo0Cs2ixCGCX9nIkp7LPy4Ss=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -66,6 +66,72 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+    post:
+      summary: Richiesta invio notifica
+      description: >-
+        Operazione utilizzata dalla Pubblica Amministrazione per richiedere
+        l'invio di una notifica.
+
+
+        La restituzione di uno stato HTTP 202 significa solo che la richiesta è
+        sintatticamente
+
+        valida, non che la richiesta sia stata validata ed accettata.
+      tags:
+        - NotificationSent
+      operationId: newSentNotificationV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffNewNotificationRequest'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewNotificationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/notifications/sent API CORS
       x-amazon-apigateway-integration:
@@ -360,6 +426,80 @@ paths:
         httpMethod: ANY
         requestParameters:
           integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/sent/documents/preload:
+    post:
+      summary: Richiesta di pre-caricamento dei documenti della notifica
+      description: >-
+        Operazione che richiede a Piattaforma Notifica le informazioni e le
+        autorizzazioni necessarie  a pre-caricare uno o più file da allegare a
+        una notifica.
+      tags:
+        - NotificationSent
+      operationId: preSignedUploadV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PreLoadRequest'
+              minItems: 1
+              maxItems: 15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreLoadResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/documents/preload
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/notifications/sent/documents/preload API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/documents/preload
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -1325,23 +1465,13 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/PaNameFilter'
-        - name: id
-          description: >-
-            Se valorizzato indica gli id delle PA di cui si vuole la
-            denominazione
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/SelfCarePaId'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPaSummariesList'
+                $ref: '#/components/schemas/PaSummariesList'
         '400':
           description: Invalid input
           content:
@@ -3297,6 +3427,101 @@ components:
       enum:
         - FLAT_RATE
         - DELIVERY_MODE
+    BffNewNotificationRequest:
+      description: I campi utilizzati per la creazione di una nuova Notifica.
+      type: object
+      required:
+        - paProtocolNumber
+        - subject
+        - recipients
+        - documents
+        - physicalCommunicationType
+        - notificationFeePolicy
+        - senderDenomination
+        - senderTaxId
+        - taxonomyCode
+      properties:
+        paProtocolNumber:
+          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        subject:
+          type: string
+          description: titolo della notifica
+          maxLength: 134
+          pattern: ^.*$
+        abstract:
+          type: string
+          description: descrizione sintetica della notifica
+          pattern: ^.*$
+          maxLength: 1024
+        recipients:
+          type: array
+          description: Informazioni sui destinatari
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV23'
+        documents:
+          type: array
+          description: Documenti notificati
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+          minItems: 1
+        notificationFeePolicy:
+          $ref: '#/components/schemas/NotificationFeePolicy'
+        cancelledIun:
+          $ref: '#/components/schemas/IUN'
+        physicalCommunicationType:
+          type: string
+          description: Tipologia comunicazione fisica
+          enum:
+            - AR_REGISTERED_LETTER
+            - REGISTERED_LETTER_890
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        senderTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        taxonomyCode:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^([0-9]{6}[A-Z]{1})$
+          description: >-
+            Codice tassonomico della notifica basato sulla definizione presente
+            nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
+            PIATTAFORMA NOTIFICHE
+            DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+    NewNotificationResponse:
+      title: Identificativi della richiesta di notifica
+      description: >-
+        Contiene le informazioni per identificare una richiesta di invio
+        notifica che non è ancora stata accettata da Piattaforma notifiche.
+      type: object
+      required:
+        - notificationRequestId
+        - paProtocolNumber
+      properties:
+        notificationRequestId:
+          type: string
+          description: >-
+            identificativo univoco di una richiesta di invio notifica, non è lo
+            IUN
+          maxLength: 36
+          pattern: ^[A-Za-z0-9+/=]{36}$
+        paProtocolNumber:
+          type: string
+          description: Identificativo inviato dalla pubblica amministrazione
+        idempotenceToken:
+          description: >-
+            Ripetizione del token usato per disambiguare "richieste di
+            notificazione"  effettuate con lo stesso numero di protocollo (campo
+            _paProtocolNumber_).
+          type: string
     PaFeeV23:
       type: number
       description: >-
@@ -4826,6 +5051,83 @@ components:
             $ref: '#/components/schemas/StatusDetail'
       required:
         - status
+    PreLoadRequest:
+      title: Richiesta di precaricamento di un File
+      type: object
+      required:
+        - sha256
+      properties:
+        preloadIdx:
+          title: Id della richiesta di precaricamento di un file
+          description: >-
+            Identificativo univoco all'interno della request HTTP, serve per
+            correlare la risposta. Stringa alfanumerica con caratteri
+            utilizzabili in un nome file.
+          type: string
+          minLength: 1
+          maxLength: 512
+          pattern: ^[a-zA-Z0-9._-]{1,512}$
+        contentType:
+          title: MIME type del file che verrà caricato
+          description: >-
+            Il MIME type dell'allegato che dovrà essere caricato. Attualmente
+            sono supportati
+              - application/pdf
+              - application/json
+          type: string
+          minLength: 15
+          maxLength: 16
+          pattern: ^application\/(pdf|json)$
+        sha256:
+          title: checksum sha256 del file che verrà caricato
+          description: >-
+            checksum sha256, codificato in base 64, del contenuto binario del
+            file che verrà caricato
+          type: string
+          example: jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=
+          minLength: 44
+          maxLength: 44
+          pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
+    PreLoadResponse:
+      title: Informazioni per il caricamento file
+      description: >-
+        Per ogni richiesta che è stata fatta viene fornito un presigned URL e
+        le  informazioni per usarlo.
+      type: object
+      properties:
+        preloadIdx:
+          description: >-
+            per correlazione con la richiesta. Stringa alfanumerica con
+            caratteri utilizzabili in un file.
+          type: string
+          minLength: 1
+          maxLength: 512
+          pattern: ^[a-zA-Z0-9._-]{1,512}$
+        secret:
+          description: >-
+            Token aggiuntivo per far si che sia necessario intercettare anche
+            gli  header e non solo l'URL di upload del contenuto del documento.
+          example: AZ23RF12
+          type: string
+        httpMethod:
+          description: >-
+            Indica se per l'upload del contenuto file bisogna utilizzare il
+            metodo PUT o POST
+          type: string
+          example: PUT
+          enum:
+            - POST
+            - PUT
+        url:
+          description: URL a cui effettuare l'upload del contenuto del documento.
+          type: string
+          example: https://preloadpn.aws.amazon.......
+        key:
+          description: >-
+            la chiave restituita sarà globalmente unica e andrà utilizzata nella
+            richiesta  di notifica.
+          example: PN_NOTIFICATION_ATTACHMENTS-0001-301W-B9CB-9U72-WIKD
+          type: string
     RequestCheckAarMandateDto:
       description: Le informazioni fornite per verificare l'AAR-QR-CodeValue
       type: object
@@ -5071,6 +5373,8 @@ components:
           type: string
         name:
           type: string
+        status:
+          $ref: '#/components/schemas/PgGroupStatus'
     BffPgGroupList:
       title: Groups defined in Self Care PG (Notifiche digitali)
       description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
@@ -5090,7 +5394,7 @@ components:
       minLength: 1
       maxLength: 50
       pattern: ^[ -~ ]*$
-    BffPaSummary:
+    PaSummary:
       title: PA in short
       description: PA with minimal information
       type: object
@@ -5102,12 +5406,12 @@ components:
           $ref: '#/components/schemas/SelfCarePaId'
         name:
           type: string
-    BffPaSummariesList:
+    PaSummariesList:
       title: Brief list of PAs
       description: Contains a list of PA with minimal information
       type: array
       items:
-        $ref: '#/components/schemas/BffPaSummary'
+        $ref: '#/components/schemas/PaSummary'
     ConsentType:
       type: string
       description: type of consent

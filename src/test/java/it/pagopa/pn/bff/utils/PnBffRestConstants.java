@@ -20,6 +20,7 @@ public class PnBffRestConstants {
     public static final String NOTIFICATION_SENT_DOCUMENT_PATH = NOTIFICATION_SENT_PATH + "/documents/{documentType}";
     public static final String NOTIFICATION_SENT_PAYMENT_PATH = NOTIFICATION_SENT_PATH + "/payments/{recipientIdx}/{attachmentName}";
     public static final String NOTIFICATION_SENT_CANCEL_PATH = NOTIFICATION_SENT_PATH + "/cancel";
+    public static final String NOTIFICATION_SENT_PRELOAD_PATH = NOTIFICATIONS_SENT_PATH + "/documents/preload";
     public static final String GROUPS_PA_PATH = BFF_PATH + VERSION_1 + "/pa/groups";
     public static final String GROUPS_PG_PATH = BFF_PATH + VERSION_1 + "/pg/groups";
     public static final String PA_LIST = BFF_PATH + VERSION_1 + "/pa-list";

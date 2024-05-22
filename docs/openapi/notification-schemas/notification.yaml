@@ -171,3 +171,84 @@ components:
     
     BffCheckAarResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'
+
+    BffNewNotificationRequest:
+      description: I campi utilizzati per la creazione di una nuova Notifica.
+      type: object
+      required:
+        - paProtocolNumber
+        - subject
+        - recipients
+        - documents
+        - physicalCommunicationType
+        - notificationFeePolicy
+        - senderDenomination
+        - senderTaxId
+        - taxonomyCode
+      properties:
+        paProtocolNumber:
+          description: >-
+            Numero di protocollo che la PA mittente assegna alla notifica stessa
+          type: string
+          # wide range of characters
+          pattern: ^.*$
+          maxLength: 256
+        subject:
+          type: string
+          description: titolo della notifica
+          maxLength: 134
+          # wide range of characters
+          pattern: ^.*$
+        abstract:
+          type: string
+          description: descrizione sintetica della notifica
+          # wide range of characters
+          pattern: ^.*$
+          maxLength: 1024
+        recipients:
+          type: array
+          description: Informazioni sui destinatari
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV23'
+        documents:
+          type: array
+          description: Documenti notificati
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument'
+          minItems: 1
+        notificationFeePolicy:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationFeePolicy'
+        cancelledIun:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN'
+        physicalCommunicationType:
+          type: string
+          description: Tipologia comunicazione fisica
+          enum:
+            - AR_REGISTERED_LETTER
+            - REGISTERED_LETTER_890
+        senderDenomination:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination'
+        senderTaxId:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1bb29785f067926d24f19f229a9b9dcdea0ea75b/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId'
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          # ASCII printable characters
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        taxonomyCode:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: "^([0-9]{6}[A-Z]{1})$"
+          description: >-
+            Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+
+    BffNewNotificationResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
+
+    BffPreLoadRequest:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
+
+    BffPreLoadResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/018e5bcf4be395d1ed816cb811bc404b47d2f073/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'

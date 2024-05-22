@@ -21,6 +21,8 @@ components:
           type: string
         name:
           type: string
+        status:
+          $ref: '#/components/schemas/BffPgGroupStatus'
 
     BffPaNameFilter:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
