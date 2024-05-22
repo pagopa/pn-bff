@@ -1,0 +1,65 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Dashboard Mittenti
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-sender-dashboard
+  x-summary: 'API di pn-bff esposte al Web per il recupero dei dati da mostrare nella dashboard mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: SenderDashboard
+    description: >-
+      Invocazioni per il recupero dei dati da mostrare nella dashboard mittenti.
+
+paths:
+  '/bff/v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}':
+    get:
+      summary: recupero dati per dashboard mittenti
+      description: >-
+        servizio per il recupero dei dati per dashboard mittenti
+      tags:
+        - SenderDashboard
+      operationId: getDashboardDataV1
+      parameters:
+        # Header params
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        # Path params
+        - $ref: './sender-dashboard-schemas/sender-dashboard.yaml#/components/parameters/BffSenderDashboardPathCxType'
+        - $ref: './sender-dashboard-schemas/sender-dashboard.yaml#/components/parameters/BffSenderDashboardPathCxId'
+        # Query params
+        - $ref: './sender-dashboard-schemas/sender-dashboard.yaml#/components/parameters/BffSenderDashboardQueryStartDate'
+        - $ref: './sender-dashboard-schemas/sender-dashboard.yaml#/components/parameters/BffSenderDashboardQueryEndDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './sender-dashboard-schemas/sender-dashboard.yaml#/components/schemas/BffSenderDashboardDataResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

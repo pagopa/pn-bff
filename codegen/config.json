@@ -11,7 +11,8 @@
         "api-internal-pn-bff-downtime-logs.yaml",
         "api-internal-pn-bff-auth.yaml",
         "api-internal-pn-bff-payments.yaml",
-        "api-internal-pn-bff-digital-addresses.yaml"
+        "api-internal-pn-bff-digital-addresses.yaml",
+        "api-internal-pn-bff-sender-dashboard.yaml"
       ],
       "servicePath": "bff"
     }

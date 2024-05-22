@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: RYz5JI7li0FRXr5EuqI7NVIMWmjxHsJm9FPTI18+jGs=
+  version: IB/yo9vFMegZ2igjV4siggoiwgVJVrzKVvlC4RhJo7E=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1826,6 +1826,75 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}:
+    get:
+      summary: recupero dati per dashboard mittenti
+      description: servizio per il recupero dei dati per dashboard mittenti
+      tags:
+        - SenderDashboard
+      operationId: getDashboardDataV1
+      parameters:
+        - $ref: '#/components/parameters/BffSenderDashboardPathCxType'
+        - $ref: '#/components/parameters/BffSenderDashboardPathCxId'
+        - $ref: '#/components/parameters/BffSenderDashboardQueryStartDate'
+        - $ref: '#/components/parameters/BffSenderDashboardQueryEndDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffSenderDashboardDataResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.cxType: method.request.path.cxType
+          integration.request.path.cxId: method.request.path.cxId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.cxType: method.request.path.cxType
+          integration.request.path.cxId: method.request.path.cxId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -2037,6 +2106,44 @@ components:
         type: string
         maxLength: 50
         pattern: ^[ -~ ]*$
+    BffSenderDashboardPathCxType:
+      name: cxType
+      in: path
+      description: Customer/Receiver Type
+      required: true
+      schema:
+        type: string
+        enum:
+          - PA
+          - PF
+          - PG
+    BffSenderDashboardPathCxId:
+      name: cxId
+      in: path
+      description: Customer/Receiver Identifier
+      required: true
+      schema:
+        type: string
+        pattern: ^[ -~]*$
+        maxLength: 64
+    BffSenderDashboardQueryStartDate:
+      name: startDate
+      in: query
+      description: YYYY-MM-DD search start date
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
+    BffSenderDashboardQueryEndDate:
+      name: endDate
+      in: query
+      description: YYYY-MM-DD search end date (included)
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
   schemas:
     NotificationStatus:
       type: string
@@ -4728,6 +4835,162 @@ components:
           enum:
             - CODE_VERIFICATION_REQUIRED
             - PEC_VALIDATION_REQUIRED
+    BffSenderDashboardNotificationOverview:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        notification_request_status:
+          description: |-
+            Stato richiesta notifica:
+              - __'ACCEPTED'__
+              - __'REFUSED'__
+          type: string
+          example: ACCEPTED
+        notification_status:
+          description: |-
+            Ultimo stato della notifica:
+              - __'REFUSED'__
+              - __'ACCEPETED'__
+              - __'CANCELLED'__
+              - __'DELIVERED'__
+              - __'DELIVERING'__
+              - __'EFFECTIVE_DATE'__
+              - __'UNREACHABLE'__
+              - __'VIEWED'__
+          type: string
+          example: VIEWED
+        notification_type:
+          description: |-
+            Tipo di notifica:
+              - __'DIGITAL'__
+              - __'ANALOGIC'__
+              - __'-'__
+          type: string
+          example: DIGITAL
+        status_digital_delivery:
+          description: |-
+            Esito invio notifica digitale:
+              - __'OK'__
+              - __'KO'__
+              - __'IN CORSO'__
+              - __'-'__
+          type: string
+          example: OK
+        notification_delivered:
+          description: Notifica consegnata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        notification_viewed:
+          description: Notifica visionata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        notification_refined:
+          description: Notifica perfezionata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        attempt_count_per_digital_notification:
+          description: Numero di tentativi notifica digitale
+          type: number
+          minimum: 0
+          maximum: 8
+          example: 0
+        notifications_count:
+          description: Numero Notifiche
+          type: number
+          minimum: 0
+          example: 2
+        delivery_time:
+          description: Tempo di consegna in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 0.11
+        view_time:
+          description: Tempo di visualizzazione in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 2.76
+        refinement_time:
+          description: Tempo di perfezionamento in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 4.77
+        validation_time:
+          description: Tempo di validazione in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 2.01
+    BffSenderDashboardDigitalNotificationFocus:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        error_type:
+          description: |-
+            Tipo di errore:
+              - __'ERRORE DOMINIO PEC NON VALIDO'__
+              - __'ERRORE CONSEGNA'__
+              - __'NON ACCETTAZIONE'__
+              - __'-'__
+          type: string
+          example: ERRORE DOMINIO PEC NON VALIDO
+        failed_attempts_count:
+          type: number
+          example: 1
+        notifications_count:
+          type: number
+          minimum: 0
+          example: 4
+    BffSenderDashboardDataResponse:
+      type: object
+      properties:
+        senderId:
+          type: string
+          description: Unique identifier for the sender
+        genTimestamp:
+          description: Index generation date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        lastDate:
+          description: YYYY-MM-DD last date on DL files
+          type: string
+          format: date
+          example: '2023-12-06'
+        startDate:
+          description: YYYY-MM-DD start date
+          type: string
+          format: date
+          example: '2023-12-06'
+        endDate:
+          description: YYYY-MM-DD end date (included)
+          type: string
+          format: date
+          example: '2023-12-06'
+        notificationsOverview:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardNotificationOverview'
+        digitalNotificationFocus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -4768,6 +5031,8 @@ tags:
       pagamenti.
   - name: Addresses
     description: Gestione dei recapiti
+  - name: SenderDashboard
+    description: Invocazioni per il recupero dei dati da mostrare nella dashboard mittenti.
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
