@@ -111,8 +111,13 @@ public class DatalakeS3Resource {
         IndexObject.SenderInfo focusIndex = indexObject.getFocusSendersId().get(senderId);
         IndexObject.SenderInfo overviewIndex = indexObject.getOverviewSendersId().get(senderId);
         if(overviewIndex == null){
-            return null;
+            return null; // TODO throw error
         }
+
+        String overviewVersionId = indexObject.getOverviewObjectVersionId().equals("test")
+                ? null : indexObject.getOverviewObjectVersionId();
+        String focusVersionId = indexObject.getFocusObjectVersionId().equals("test")
+                ? null : indexObject.getFocusObjectVersionId();
 
         List<BffSenderDashboardNotificationOverview> overviewList;
         List<BffSenderDashboardDigitalNotificationFocus> focusList;
@@ -125,7 +130,7 @@ public class DatalakeS3Resource {
                     overviewIndex.getStart(),
                     overviewIndex.getEnd(),
                     overviewObjectKey,
-                    indexObject.getOverviewObjectVersionId(),
+                    overviewVersionId,
                     BffSenderDashboardNotificationOverview.class)
                     .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                     .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
@@ -138,7 +143,7 @@ public class DatalakeS3Resource {
                         focusIndex.getStart(),
                         focusIndex.getEnd(),
                         focusObjectKey,
-                        indexObject.getFocusObjectVersionId(),
+                        focusVersionId,
                         BffSenderDashboardDigitalNotificationFocus.class)
                         .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                         .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
@@ -257,13 +262,18 @@ public class DatalakeS3Resource {
     private <E> Stream<E> getObjectsAsStream(long startByte, long endByte, String objectKey, String versionId, Class<E> valueType) {
         String bucketName = pnBffConfigs.getDlAssumeRoleArn().equals("test") ? pnBffConfigs.getPnBucketName() : pnBffConfigs.getDlBucketName();
 
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+        GetObjectRequest.Builder getObjectRequestBuilder = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
-                .versionId(versionId)
-                .range("bytes=" + startByte + "-" + endByte)
-                .build();
+                .range("bytes=" + startByte + "-" + endByte);
 
+        if (versionId != null && !versionId.isEmpty()) {
+            getObjectRequestBuilder.versionId(versionId);
+        }
+
+        GetObjectRequest getObjectRequest = getObjectRequestBuilder.build();
+
+        log.info("Fetching object from S3: s3://{}/{}?versionId={}", bucketName, objectKey, versionId);
         ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
         BufferedReader reader = new BufferedReader(new InputStreamReader(s3Object));
 
