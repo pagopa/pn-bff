@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service.senderdashboard.connectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.JacksonConfig;
 import it.pagopa.pn.bff.config.PnBffConfigs;
+import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -82,7 +84,7 @@ public class DatalakeS3ResourceTest {
     }
 
     @Test
-    public void testGetDataResponse() throws IOException {
+    public void testGetDataResponse() throws IOException, SenderNotFoundException {
         // Arrange
         Instant expiration = Instant.now().plusSeconds(3 * 60 * 60);
         ReflectionTestUtils.setField(datalakeS3Resource, "credentialsExpiration", expiration);
@@ -107,7 +109,7 @@ public class DatalakeS3ResourceTest {
     }
 
     @Test
-    public void testGetDataResponseOnDates() throws IOException {
+    public void testGetDataResponseOnDates() throws IOException, SenderNotFoundException {
         // Arrange
         Instant expiration = Instant.now().plusSeconds(3 * 60 * 60);
         ReflectionTestUtils.setField(datalakeS3Resource, "credentialsExpiration", expiration);
@@ -131,6 +133,20 @@ public class DatalakeS3ResourceTest {
         assertEquals(response.getEndDate(), endDate);
         assertEquals(response.getNotificationsOverview().size(), 1703);
         assertEquals(response.getDigitalNotificationFocus().size(), 277);
+    }
+
+    @Test
+    public void testGetDataResponseSenderNotFound() {
+        // Arrange
+        Instant expiration = Instant.now().plusSeconds(3 * 60 * 60);
+        ReflectionTestUtils.setField(datalakeS3Resource, "credentialsExpiration", expiration);
+
+        String senderId = "sender_not_in_index";
+
+        // Act & Assert
+        assertThrows(SenderNotFoundException.class, () -> {
+            datalakeS3Resource.getDataResponse(senderId, null, null);
+        });
     }
 
     private void mockS3(byte[] overviewBytes, byte[] focusBytes) {
