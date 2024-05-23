@@ -6,4 +6,5 @@ public class PnBffExceptionCodes extends PnExceptionsCodes {
     public static final String ERROR_CODE_BFF_BODYNOTFOUND = "PN_BFF_BODYNOTFOUND";
     public static final String ERROR_CODE_BFF_DOCUMENTIDNOTFOUND = "PN_BFF_DOCUMENTIDNOTFOUND";
     public static final String ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND = "ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND";
+    public static final String ERROR_CODE_BFF_INVALIDBODY = "PN_BFF_INVALIDBODY";
 }

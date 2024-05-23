@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
@@ -17,6 +18,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+
+import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_INVALIDBODY;
 
 @Service
 @RequiredArgsConstructor
@@ -64,14 +67,12 @@ public class InfoRecipientService {
         if (!List.of(CxTypeAuthFleet.PF, CxTypeAuthFleet.PG).contains(xPagopaPnCxType)
                 || xPagopaPnCxId.isEmpty()
         ) {
-            throw pnBffExceptionUtility.wrapException(new WebClientResponseException(
-                    "Invalid xPagopaPnCxType",
-                    HttpStatus.FORBIDDEN.value(),
-                    "Forbidden",
-                    null,
-                    null,
-                    null
-            ));
+            return Flux.error(new PnBffException(
+                    "Invalid request body",
+                    "Invalid request body",
+                    HttpStatus.BAD_REQUEST.value(),
+                    ERROR_CODE_BFF_INVALIDBODY)
+            );
         }
 
         return pnExternalRegistriesClient.getPaList(paNameFilter)

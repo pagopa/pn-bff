@@ -112,4 +112,16 @@ class InfoRecipientServiceTest {
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void paListInvalidBodyError() {
+        Flux<PaSummary> result = infoRecipientService.getPaList(UserMock.PN_CX_ID, CxTypeAuthFleet.PA, null);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("Invalid request body")
+                )
+                .verify();
+    }
 }
