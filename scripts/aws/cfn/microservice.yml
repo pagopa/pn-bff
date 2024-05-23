@@ -8,6 +8,9 @@ Parameters:
     Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create
       experimental environments without crash official development environment'
 
+  EnvType:
+    Type: String
+
   WebApiDnsName:
     Type: String
     Description: 'The DNS name used for WEB rest API.'
@@ -262,6 +265,12 @@ Parameters:
     Type: String
     Description: S3 index object key.
 
+Conditions:
+  CreateFakeDLRole:
+    Fn::Or:
+      - Fn::Equals: [!Ref EnvType, dev]
+      - Fn::Equals: [!Ref EnvType, test]
+
 Resources:
 
   # PN-bff microservice
@@ -307,7 +316,9 @@ Resources:
         ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
         ContainerEnvEntry18: !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}'
         ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
-        ContainerEnvEntry20: !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}'
+        ContainerEnvEntry20: !If [CreateFakeDLRole,
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}']
         ContainerEnvEntry21: !Sub 'PN_BFF_DL_OVERVIEW_OBJECT_KEY=${DlOverviewObjectKey}'
         ContainerEnvEntry22: !Sub 'PN_BFF_DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
         MappedPaths: '/bff/*'
@@ -365,6 +376,7 @@ Resources:
 
   PnBffSenderDashboardFakeDLRole:
     Type: AWS::IAM::Role
+    Condition: CreateFakeDLRole
     Properties:
       RoleName: !Sub ${ProjectName}-bff-SenderDashboardFakeDLRole
       AssumeRolePolicyDocument:
