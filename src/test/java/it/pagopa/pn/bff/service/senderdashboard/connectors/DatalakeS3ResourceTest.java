@@ -59,7 +59,7 @@ public class DatalakeS3ResourceTest {
 
     @BeforeAll
     public void setup() throws IOException {
-        InputStream indexResource = getResource("./senderdashboard/index.json");
+        InputStream indexResource = getResource("./senderdashboard/senderDashboardIndex_test.json");
         IndexObject indexObject = objectMapper.readValue(indexResource, IndexObject.class);
         when(pnS3IndexResource.getIndexObject()).thenReturn(indexObject);
         datalakeS3Resource = new DatalakeS3Resource(pnBffConfigs, objectMapper, pnS3IndexResource);
@@ -89,8 +89,8 @@ public class DatalakeS3ResourceTest {
 
         String senderId = "acb31680-55e6-4a3d-9355-b7531f55d11a";
 
-        byte[] overviewBytes = readResourceAsBytes("./senderdashboard/overviewTest.json");
-        byte[] focusBytes = readResourceAsBytes("./senderdashboard/focusTest.json");
+        byte[] overviewBytes = readResourceAsBytes("./senderdashboard/export-notifications_overview_test.json");
+        byte[] focusBytes = readResourceAsBytes("./senderdashboard/export-digital_notifications_focus_test.json");
 
         mockS3(overviewBytes, focusBytes);
 
@@ -114,8 +114,8 @@ public class DatalakeS3ResourceTest {
 
         String senderId = "e955a1a1-86f0-4d7d-9c2a-f90783f6067c";
 
-        byte[] overviewBytes = readResourceAsBytes("./senderdashboard/overviewTest.json");
-        byte[] focusBytes = readResourceAsBytes("./senderdashboard/focusTest.json");
+        byte[] overviewBytes = readResourceAsBytes("./senderdashboard/export-notifications_overview_test.json");
+        byte[] focusBytes = readResourceAsBytes("./senderdashboard/export-digital_notifications_focus_test.json");
 
         mockS3(overviewBytes, focusBytes);
 

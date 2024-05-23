@@ -32,7 +32,7 @@ public class CustomDeserializersTest {
     @Test
     public void testOverviewDeserialization() throws IOException {
         // Arrange
-        InputStream indexResource = getResource("./senderdashboard/overviewTest.json");
+        InputStream indexResource = getResource("./senderdashboard/export-notifications_overview_test.json");
 
         // Act
         var values = getLinesAsObjects(indexResource, BffSenderDashboardNotificationOverview.class);
@@ -46,7 +46,7 @@ public class CustomDeserializersTest {
     @Test
     public void testFocusDeserialization() throws IOException {
         // Arrange
-        InputStream indexResource = getResource("./senderdashboard/focusTest.json");
+        InputStream indexResource = getResource("./senderdashboard/export-digital_notifications_focus_test.json");
 
         // Act
         var values = getLinesAsObjects(indexResource, BffSenderDashboardDigitalNotificationFocus.class);

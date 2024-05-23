@@ -59,7 +59,7 @@ public class PnS3IndexResourceTest {
     @Test
     public void testGetOverviewObject() throws IOException {
         // Arrange
-        InputStream jsonInputStream = mockS3GetObject("./senderdashboard/index.json");
+        InputStream jsonInputStream = mockS3GetObject("./senderdashboard/senderDashboardIndex_test.json");
 
         // Act
         IndexObject actualIndexObject = pnS3IndexResource.getIndexObject();
@@ -69,8 +69,8 @@ public class PnS3IndexResourceTest {
         assertEquals(actualIndexObject.getBucketRegion(), "eu-south-1");
         assertEquals(actualIndexObject.getOverviewObjectKey(), "testKeyOverview");
         assertEquals(actualIndexObject.getFocusObjectKey(), "testKeyFocus");
-        assertEquals(actualIndexObject.getOverviewObjectVersionId(), "testVersionId");
-        assertEquals(actualIndexObject.getFocusObjectVersionId(), "testVersionId");
+        assertEquals(actualIndexObject.getOverviewObjectVersionId(), "test");
+        assertEquals(actualIndexObject.getFocusObjectVersionId(), "test");
         assertEquals(actualIndexObject.getGenTimestamp(), OffsetDateTime.parse("2024-05-22T10:31:00.611Z"));
         assertEquals(actualIndexObject.getLastDate(), LocalDate.parse("2024-05-08"));
         assertEquals(actualIndexObject.getStartDate(), LocalDate.parse("2023-07-17"));
