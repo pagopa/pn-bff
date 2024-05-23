@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
 import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
@@ -10,6 +11,7 @@ import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientIm
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
@@ -51,11 +53,26 @@ public class InfoRecipientService {
     /**
      * Get the list of PAs that use the PN
      *
-     * @param paNameFilter The prefix of the PA name
+     * @param xPagopaPnCxId   Public Administration id
+     * @param xPagopaPnCxType The type of the user
+     * @param paNameFilter    The prefix of the PA name
      * @return The list of PAs
      */
-    public Flux<PaSummary> getPaList(String paNameFilter) {
+    public Flux<PaSummary> getPaList(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, String paNameFilter) {
         log.info("getPaList");
+
+        if (!List.of(CxTypeAuthFleet.PF, CxTypeAuthFleet.PG).contains(xPagopaPnCxType)
+                || xPagopaPnCxId.isEmpty()
+        ) {
+            throw pnBffExceptionUtility.wrapException(new WebClientResponseException(
+                    "Invalid xPagopaPnCxType",
+                    HttpStatus.FORBIDDEN.value(),
+                    "Forbidden",
+                    null,
+                    null,
+                    null
+            ));
+        }
 
         return pnExternalRegistriesClient.getPaList(paNameFilter)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)

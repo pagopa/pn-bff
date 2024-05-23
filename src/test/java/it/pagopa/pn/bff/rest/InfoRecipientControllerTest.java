@@ -88,7 +88,7 @@ class InfoRecipientControllerTest {
                 .toList();
 
         Mockito
-                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
+                .when(infoRecipientService.getPaList(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.nullable(String.class)))
                 .thenReturn(Flux.fromIterable(bffPaList));
 
         webTestClient
@@ -106,7 +106,7 @@ class InfoRecipientControllerTest {
     @Test
     void getPaListV1Error() {
         Mockito
-                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
+                .when(infoRecipientService.getPaList(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.nullable(String.class)))
                 .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
@@ -120,20 +120,16 @@ class InfoRecipientControllerTest {
     }
 
     @Test
-    void getPaListV1ForbiddenError() {
-        List<PaSummary> bffPaList = recipientInfoMock.getPaSummaryList()
-                .stream()
-                .map(PaListMapper.modelMapper::mapPaList)
-                .toList();
-
-        Mockito
-                .when(infoRecipientService.getPaList(Mockito.nullable(String.class)))
-                .thenReturn(Flux.fromIterable(bffPaList));
+    void wrongCxTypePaListError() {
+        Mockito.when(infoRecipientService.getPaList(Mockito.anyString(), Mockito.any(CxTypeAuthFleet.class), Mockito.nullable(String.class)))
+                .thenThrow(new PnBffException("Forbidden", "Forbidden", 403, "FORBIDDEN"));
 
         webTestClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.PA_LIST).build())
                 .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
                 .exchange()
                 .expectStatus().isForbidden();
     }

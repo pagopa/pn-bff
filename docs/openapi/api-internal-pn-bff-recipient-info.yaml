@@ -76,6 +76,8 @@ paths:
       tags:
         - InfoRecipient
       parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
         - name: paNameFilter
           description: Se valorizzato indica il prefisso della denominazione della PA
           in: query
