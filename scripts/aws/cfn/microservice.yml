@@ -390,7 +390,7 @@ Resources:
             Condition:
               ArnEquals:
                 aws:PrincipalArn:
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole/*
       Path: /
       Policies:
         - PolicyName: DatalakeS3Policy
