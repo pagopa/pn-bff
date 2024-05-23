@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDigitalNotificationFocus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardNotificationOverview;
+import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -101,7 +100,8 @@ public class DatalakeS3Resource {
      * @param endDate the end date of the range (included)
      * @return the sender dashboard data response
      */
-    public BffSenderDashboardDataResponse getDataResponse(String senderId, LocalDate startDate, LocalDate endDate) {
+    public BffSenderDashboardDataResponse getDataResponse(String senderId, LocalDate startDate, LocalDate endDate)
+            throws SenderNotFoundException {
         updateCredentialsIfNecessary();
         IndexObject indexObject = pnS3IndexResource.getIndexObject();
         String overviewObjectKey = pnBffConfigs.getDlOverviewObjectKey();
@@ -111,7 +111,7 @@ public class DatalakeS3Resource {
         IndexObject.SenderInfo focusIndex = indexObject.getFocusSendersId().get(senderId);
         IndexObject.SenderInfo overviewIndex = indexObject.getOverviewSendersId().get(senderId);
         if(overviewIndex == null){
-            return null; // TODO throw error
+            throw new SenderNotFoundException();
         }
 
         String overviewVersionId = indexObject.getOverviewObjectVersionId().equals("test")
@@ -152,10 +152,14 @@ public class DatalakeS3Resource {
                 focusList = new ArrayList<>();
             }
 
+            // Order lists by notification_send_date in ascending order
+            overviewList.sort(Comparator.comparing(BffSenderDashboardNotificationOverview::getNotificationSendDate));
+            focusList.sort(Comparator.comparing(BffSenderDashboardDigitalNotificationFocus::getNotificationSendDate));
+
+            // Calc startDate and endDate if not defined
             LocalDate resStartDate = startDate == null ? indexObject.getStartDate() : startDate;
             LocalDate resEndDate = endDate == null ? indexObject.getLastDate() : endDate;
 
-            // Default dates are taken from overview
             return BffSenderDashboardDataResponse.builder()
                     .senderId(senderId)
                     .genTimestamp(indexObject.getGenTimestamp())
