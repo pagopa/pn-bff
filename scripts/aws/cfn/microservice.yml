@@ -8,7 +8,7 @@ Parameters:
     Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create
       experimental environments without crash official development environment'
 
-  EnvType:
+  EnvironmentType:
     Type: String
 
   WebApiDnsName:
@@ -268,8 +268,8 @@ Parameters:
 Conditions:
   CreateFakeDLRole:
     Fn::Or:
-      - Fn::Equals: [!Ref EnvType, dev]
-      - Fn::Equals: [!Ref EnvType, test]
+      - Fn::Equals: [!Ref EnvironmentType, dev]
+      - Fn::Equals: [!Ref EnvironmentType, test]
 
 Resources:
 
