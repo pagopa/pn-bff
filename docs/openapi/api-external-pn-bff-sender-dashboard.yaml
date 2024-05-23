@@ -55,6 +55,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal Server Error
           content:
