@@ -434,6 +434,11 @@ Resources:
                   - s3:PutObject
                 Resource:
                   - !Sub ${IndexesBucketArn}/*
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource:
+                  - !Ref DlAssumeRoleArn
 
   # Fires the alarm when a duration threshold is reached
   SenderDashboardDataIndexerDurationAlarm:
