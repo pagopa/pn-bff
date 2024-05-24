@@ -36,6 +36,7 @@ public class PnBffConfigs {
     private String pnBucketRegion;
     private String pnBucketName;
     private String pnIndexObjectKey;
+    private Long pnIndexObjectCacheExpirationMinutes;
 
     @PostConstruct
     public void init() {
