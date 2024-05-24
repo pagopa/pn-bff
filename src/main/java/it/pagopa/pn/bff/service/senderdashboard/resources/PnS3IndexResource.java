@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * This class is responsible for managing the S3 client and retrieving index objects
@@ -28,7 +29,7 @@ import java.time.Instant;
 @Component
 @RequiredArgsConstructor
 public class PnS3IndexResource {
-    private static final long CACHE_EXPIRATION_MINUTES = 30;
+    private static final long DEFAULT_CACHE_EXPIRATION_MINUTES = 30;
 
     private final PnBffConfigs pnBffConfigs;
     private final ObjectMapper objectMapper;
@@ -36,6 +37,7 @@ public class PnS3IndexResource {
     private S3Client s3Client;
     private String bucketName;
     private String indexKey;
+    private long cacheExpirationMinutes;
 
     private volatile IndexObject cachedIndexObject;
     private volatile Instant lastUpdated;
@@ -48,6 +50,9 @@ public class PnS3IndexResource {
         bucketName = pnBffConfigs.getPnBucketName();
         indexKey = pnBffConfigs.getPnIndexObjectKey();
         String bucketRegion = pnBffConfigs.getPnBucketRegion();
+        cacheExpirationMinutes = Objects.requireNonNullElse(
+                pnBffConfigs.getPnIndexObjectCacheExpirationMinutes(),
+                DEFAULT_CACHE_EXPIRATION_MINUTES);
 
         // Create the S3 client
         s3Client = S3Client.builder()
@@ -85,7 +90,7 @@ public class PnS3IndexResource {
      */
     private boolean isCacheExpired() {
         return lastUpdated == null || Instant.now()
-                .minusSeconds(CACHE_EXPIRATION_MINUTES * 60)
+                .minusSeconds(cacheExpirationMinutes * 60)
                 .isAfter(lastUpdated);
     }
 
@@ -97,6 +102,8 @@ public class PnS3IndexResource {
             log.info("Refreshing cache by retrieving object from S3: s3://{}/{}", bucketName, indexKey);
             cachedIndexObject = fetchIndexObjectFromS3();
             lastUpdated = Instant.now();
+            log.info("Cache will expire at {}",
+                    lastUpdated.minusSeconds(cacheExpirationMinutes * 60));
         } catch (IOException e) {
             log.error("Error refreshing cache from S3:", e);
         }
