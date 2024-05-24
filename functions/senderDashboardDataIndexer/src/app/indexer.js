@@ -97,7 +97,7 @@ const createIndexObject = async (
   // Get object metadata
   let metadata = await headObject(s3Client, bucketName, overviewObjectKey);
   console.log(metadata);
-  overviewObjectVersionId = metadata.VersionId;
+  const overviewObjectVersionId = metadata.VersionId;
   // Create index
   const resOverview = await createSenderMap(
     s3Client,
@@ -113,7 +113,7 @@ const createIndexObject = async (
   // Get object metadata
   metadata = await headObject(s3Client, bucketName, focusObjectKey);
   console.log(metadata);
-  focusObjectVersionId = metadata.VersionId;
+  const focusObjectVersionId = metadata.VersionId;
 
   const resFocus = await createSenderMap(
     s3Client,
