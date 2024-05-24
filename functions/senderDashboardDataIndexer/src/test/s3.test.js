@@ -19,7 +19,7 @@ describe('s3 tests', function () {
   it('should streamLines', async () => {
     // Given
     const s3Mock = mockClient(S3Client);
-    const stream = fs.createReadStream('./src/test/data/overview.json');
+    const stream = fs.createReadStream('./src/test/data/overviewTest.json');
     const sdkStream = sdkStreamMixin(stream);
     s3Mock.on(GetObjectCommand).resolves({
       Body: sdkStream,
@@ -41,8 +41,8 @@ describe('s3 tests', function () {
     );
 
     // Then
-    expect(lines).to.be.equal(2369);
-    expect(bytes).to.be.equal(1142348);
+    expect(lines).to.be.equal(3356);
+    expect(bytes).to.be.equal(1618696);
     s3Mock.reset();
   });
 
