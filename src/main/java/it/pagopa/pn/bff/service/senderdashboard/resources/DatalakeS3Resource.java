@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.service.senderdashboard.connectors;
+package it.pagopa.pn.bff.service.senderdashboard.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.PnBffConfigs;

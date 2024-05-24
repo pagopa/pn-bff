@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.service.senderdashboard.connectors;
+package it.pagopa.pn.bff.service.senderdashboard.resources;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
