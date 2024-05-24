@@ -315,7 +315,7 @@ Resources:
         ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${IndexesBucketRegion}'
         ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
         ContainerEnvEntry18: !If [CreateFakeDLRole,
-            !Sub 'PN_BFF_DL_BUCKET_NAME=${PnBucketName}'
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${IndexesBucketName}',
             !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}']
         ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
         ContainerEnvEntry20: !If [CreateFakeDLRole,
