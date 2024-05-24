@@ -295,13 +295,10 @@ Parameters:
     Type: String
     Description: S3 object key for focus focus.
 
-  PnOverviewIndexObjectKey:
+  PnIndexObjectKey:
     Type: String
-    Description: S3 index object key for overview file.
+    Description: S3 index object key.
 
-  PnFocusIndexObjectKey:
-    Type: String
-    Description: S3 index object key for focus file.
 
 Resources:
 
@@ -408,8 +405,7 @@ Resources:
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
           PN_BUCKET_NAME: !Ref IndexesBucketName
           PN_BUCKET_REGION: !Ref IndexesBucketRegion
-          PN_OVERVIEW_INDEX_OBJECT_KEY: !Ref PnOverviewIndexObjectKey
-          PN_FOCUS_INDEX_OBJECT_KEY: !Ref PnFocusIndexObjectKey
+          PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role

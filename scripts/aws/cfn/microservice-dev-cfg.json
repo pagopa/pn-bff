@@ -7,13 +7,11 @@
     "SelfCareSendProdId": "prod-pn-dev",
     "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it",
 
-    "DlBucketName": "test",
     "DlBucketRegion": "eu-south-1",
-    "DlAssumeRoleArn": "test",
-    "DlOverviewObjectKey": "overview.json",
-    "DlFocusObjectKey": "focus.json",
-    "PnOverviewIndexObjectKey": "indexes/notifications_overview_index.json",
-    "PnFocusIndexObjectKey": "indexes/digital_notifications_focus.json",
+    "DlOverviewObjectKey": "export-notifications_overview_test.json",
+    "DlFocusObjectKey": "export-digital_notifications_focus_test.json",
+    "PnBucketRegion": "eu-south-1",
+    "PnIndexObjectKey": "indexes/senderDashboardIndex_test.json"
     "SenderDashboardDataIndexerCron": "0 16 * * ? *"
   }
 }
