@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.service.senderdashboard;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.exceptions.PnBffExceptionCodes;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
-import it.pagopa.pn.bff.service.senderdashboard.connectors.DatalakeS3Resource;
+import it.pagopa.pn.bff.service.senderdashboard.resources.DatalakeS3Resource;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,7 @@ public class SenderDashboardService {
             LocalDate startDate,
             LocalDate endDate) {
 
+        // Path cxType and cxId mismatch
         if(!Objects.equals(cxType, pathCxType) || !Objects.equals(cxId, pathCxId)) {
             return Mono.error(
                     new PnBffException(
@@ -51,6 +52,18 @@ public class SenderDashboardService {
                     ));
         }
 
+        // End date before start date
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+            return Mono.error(
+                    new PnBffException(
+                            "Invalid date range",
+                            "The end date cannot be before the start date",
+                            HttpStatus.BAD_REQUEST.value(),
+                            PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
+                    ));
+        }
+
+        // Get data response
         return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
                 .onErrorMap(SenderNotFoundException.class, e -> {
                     log.error("Exception occurred while fetching data from Datalake", e);
