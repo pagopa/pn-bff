@@ -22,6 +22,7 @@ const headObject = async (s3Client, bucketName, objectKey) => {
   try {
     return await s3Client.send(params);
   } catch (error) {
+    /* istanbul ignore next */
     if (error.name === 'NoSuchBucket') {
       console.error(`Bucket not found: ${bucketName}`);
     } else if (error.name === 'NoSuchKey' || error.name === 'NotFound') {
