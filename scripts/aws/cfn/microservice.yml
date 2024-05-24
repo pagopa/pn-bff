@@ -387,7 +387,7 @@ Resources:
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Ref DataIndexerLambdaName
+      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
       Runtime: !Ref DataIndexerLambdaRuntime
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
