@@ -13,10 +13,8 @@ const {
   getPnIndexObjectKey,
 } = require('./config.js');
 
-const dlBucketName =
-  getDlBucketName() === 'test' ? getPnBucketName() : getDlBucketName();
-const dlBucketRegion =
-  getDlBucketRegion() === 'test' ? getPnBucketRegion() : getDlBucketRegion();
+const dlBucketName = getDlBucketName();
+const dlBucketRegion = getDlBucketRegion();
 const dlAssumeRoleArn = getDlAssumeRoleArn();
 const dlOverviewObjectKey = getDlOverviewObjectKey();
 const dlFocusObjectKey = getDlFocusObjectKey();
@@ -27,10 +25,7 @@ const pnIndexObjectKey = getPnIndexObjectKey();
 
 const pnS3Client = new S3Client({ region: pnBucketRegion });
 
-const dlCredentials =
-  dlAssumeRoleArn !== 'test'
-    ? getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND')
-    : undefined;
+const dlCredentials = getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND');
 
 const dlS3Client = new S3Client({
   region: dlBucketRegion,
