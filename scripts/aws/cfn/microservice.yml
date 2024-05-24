@@ -356,6 +356,14 @@ Resources:
               - s3:PutObject
             Resource:
               - !Sub '${IndexesBucketArn}/*'
+          # Allow assuming data lake role
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource:
+              - !If [ CreateFakeDLRole,
+                      !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                      !Ref DlAssumeRoleArn ]
 
   BffMicroservicePublicWebAPI:
     Type: AWS::CloudFormation::Stack
