@@ -37,11 +37,7 @@ const getPnBucketName = () => getEnvironmentVariable('PN_BUCKET_NAME');
 const getPnBucketRegion = () =>
   getEnvironmentVariable('PN_BUCKET_REGION', PN_BUCKET_REGION_DEFAULT);
 
-const getPnOverviewIndexObjectKey = () =>
-  getEnvironmentVariable('PN_OVERVIEW_INDEX_OBJECT_KEY');
-
-const getPnFocusIndexObjectKey = () =>
-  getEnvironmentVariable('PN_FOCUS_INDEX_OBJECT_KEY');
+const getPnIndexObjectKey = () => getEnvironmentVariable('PN_INDEX_OBJECT_KEY');
 
 module.exports = {
   getDlBucketName,
@@ -51,6 +47,5 @@ module.exports = {
   getDlFocusObjectKey,
   getPnBucketName,
   getPnBucketRegion,
-  getPnOverviewIndexObjectKey,
-  getPnFocusIndexObjectKey,
+  getPnIndexObjectKey,
 };

@@ -10,8 +10,7 @@ const {
   getDlFocusObjectKey,
   getPnBucketName,
   getPnBucketRegion,
-  getPnOverviewIndexObjectKey,
-  getPnFocusIndexObjectKey,
+  getPnIndexObjectKey,
 } = require('./config.js');
 
 const dlBucketName =
@@ -24,8 +23,7 @@ const dlFocusObjectKey = getDlFocusObjectKey();
 
 const pnBucketName = getPnBucketName();
 const pnBucketRegion = getPnBucketRegion();
-const pnOverviewIndexObjectKey = getPnOverviewIndexObjectKey();
-const pnFocusIndexObjectKey = getPnFocusIndexObjectKey();
+const pnIndexObjectKey = getPnIndexObjectKey();
 
 const pnS3Client = new S3Client({ region: pnBucketRegion });
 
@@ -40,29 +38,18 @@ const dlS3Client = new S3Client({
 });
 
 const handleEvent = async () => {
-  const overviewIndex = await createIndexObject(
+  const index = await createIndexObject(
     dlS3Client,
     dlBucketName,
-    dlOverviewObjectKey
-  );
-  const focusIndex = await createIndexObject(
-    dlS3Client,
-    dlBucketName,
+    dlOverviewObjectKey,
     dlFocusObjectKey
   );
 
   await writeObject(
     pnS3Client,
     pnBucketName,
-    pnOverviewIndexObjectKey,
-    JSON.stringify(overviewIndex)
-  );
-
-  await writeObject(
-    pnS3Client,
-    pnBucketName,
-    pnFocusIndexObjectKey,
-    JSON.stringify(focusIndex)
+    pnIndexObjectKey,
+    JSON.stringify(index)
   );
 
   return {
