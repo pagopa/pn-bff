@@ -179,7 +179,7 @@ public class DatalakeS3Resource {
      */
     public void updateCredentials() {
         log.info("Updating AWS credentials...");
-        if(!pnBffConfigs.getDlAssumeRoleArn().equals("test")) {
+        //if(!pnBffConfigs.getDlAssumeRoleArn().equals("test")) {
             String assumeRoleArn = pnBffConfigs.getDlAssumeRoleArn();
 
             // Obtain credentials for the IAM role
@@ -220,7 +220,7 @@ public class DatalakeS3Resource {
             } finally {
                 lock.writeLock().unlock();
             }
-        } else {
+        /*} else {
             lock.writeLock().lock();
             try {
                 credentialsExpiration = Instant.now().plusSeconds(60 * 60 * 2);
@@ -231,7 +231,7 @@ public class DatalakeS3Resource {
             } finally {
                 lock.writeLock().unlock();
             }
-        }
+        }*/
         log.info("S3 client updated with new credentials. Credentials will expire at {}", credentialsExpiration);
     }
 
@@ -264,7 +264,8 @@ public class DatalakeS3Resource {
      * @return a stream of objects
      */
     private <E> Stream<E> getObjectsAsStream(long startByte, long endByte, String objectKey, String versionId, Class<E> valueType) {
-        String bucketName = pnBffConfigs.getDlAssumeRoleArn().equals("test") ? pnBffConfigs.getPnBucketName() : pnBffConfigs.getDlBucketName();
+        //String bucketName = pnBffConfigs.getDlAssumeRoleArn().equals("test") ? pnBffConfigs.getPnBucketName() : pnBffConfigs.getDlBucketName();
+        String bucketName = pnBffConfigs.getDlBucketName();
 
         GetObjectRequest.Builder getObjectRequestBuilder = GetObjectRequest.builder()
                 .bucket(bucketName)
