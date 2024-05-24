@@ -114,10 +114,8 @@ public class DatalakeS3Resource {
             throw new SenderNotFoundException();
         }
 
-        String overviewVersionId = indexObject.getOverviewObjectVersionId().equals("test")
-                ? null : indexObject.getOverviewObjectVersionId();
-        String focusVersionId = indexObject.getFocusObjectVersionId().equals("test")
-                ? null : indexObject.getFocusObjectVersionId();
+        String overviewVersionId = indexObject.getOverviewObjectVersionId();
+        String focusVersionId = indexObject.getFocusObjectVersionId();
 
         List<BffSenderDashboardNotificationOverview> overviewList;
         List<BffSenderDashboardDigitalNotificationFocus> focusList;
@@ -179,59 +177,46 @@ public class DatalakeS3Resource {
      */
     public void updateCredentials() {
         log.info("Updating AWS credentials...");
-        //if(!pnBffConfigs.getDlAssumeRoleArn().equals("test")) {
-            String assumeRoleArn = pnBffConfigs.getDlAssumeRoleArn();
+        String assumeRoleArn = pnBffConfigs.getDlAssumeRoleArn();
 
-            // Obtain credentials for the IAM role
-            AssumeRoleRequest roleRequest = AssumeRoleRequest.builder()
-                    .roleArn(assumeRoleArn)
-                    .roleSessionName(ROLE_SESSION_NAME)
-                    .build();
+        // Obtain credentials for the IAM role
+        AssumeRoleRequest roleRequest = AssumeRoleRequest.builder()
+                .roleArn(assumeRoleArn)
+                .roleSessionName(ROLE_SESSION_NAME)
+                .build();
 
-            AssumeRoleResponse roleResponse = stsClient.assumeRole(roleRequest);
-            Credentials sessionCredentials = roleResponse.credentials();
+        AssumeRoleResponse roleResponse = stsClient.assumeRole(roleRequest);
+        Credentials sessionCredentials = roleResponse.credentials();
 
-            // Create AwsSessionCredentials object with the retrieved credentials
-            AwsSessionCredentials awsCredentials = AwsSessionCredentials.create(
-                    sessionCredentials.accessKeyId(),
-                    sessionCredentials.secretAccessKey(),
-                    sessionCredentials.sessionToken());
+        // Create AwsSessionCredentials object with the retrieved credentials
+        AwsSessionCredentials awsCredentials = AwsSessionCredentials.create(
+                sessionCredentials.accessKeyId(),
+                sessionCredentials.secretAccessKey(),
+                sessionCredentials.sessionToken());
 
-            // Provide temporary security credentials for the S3 clients
-            AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(awsCredentials);
+        // Provide temporary security credentials for the S3 clients
+        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(awsCredentials);
 
-            lock.writeLock().lock();
+        lock.writeLock().lock();
+        try {
+            // Close S3 client for a new instance
             try {
-                // Close S3 client for a new instance
-                try {
-                    if (s3Client != null) {
-                        s3Client.close();
-                    }
-                } catch (Exception e) {
-                    log.error("Error closing S3 client:", e);
+                if (s3Client != null) {
+                    s3Client.close();
                 }
-                // Update expiration
-                credentialsExpiration = sessionCredentials.expiration();
-                // Create the updated S3 client
-                s3Client = S3Client.builder()
-                        .region(Region.of(pnBffConfigs.getDlBucketRegion()))
-                        .credentialsProvider(credentialsProvider)
-                        .build();
-            } finally {
-                lock.writeLock().unlock();
+            } catch (Exception e) {
+                log.error("Error closing S3 client:", e);
             }
-        /*} else {
-            lock.writeLock().lock();
-            try {
-                credentialsExpiration = Instant.now().plusSeconds(60 * 60 * 2);
-                s3Client = S3Client.builder()
-                        .region(Region.of(pnBffConfigs.getPnBucketRegion()))
-                        .credentialsProvider(DefaultCredentialsProvider.create())
-                        .build();
-            } finally {
-                lock.writeLock().unlock();
-            }
-        }*/
+            // Update expiration
+            credentialsExpiration = sessionCredentials.expiration();
+            // Create the updated S3 client
+            s3Client = S3Client.builder()
+                    .region(Region.of(pnBffConfigs.getDlBucketRegion()))
+                    .credentialsProvider(credentialsProvider)
+                    .build();
+        } finally {
+            lock.writeLock().unlock();
+        }
         log.info("S3 client updated with new credentials. Credentials will expire at {}", credentialsExpiration);
     }
 
@@ -264,7 +249,6 @@ public class DatalakeS3Resource {
      * @return a stream of objects
      */
     private <E> Stream<E> getObjectsAsStream(long startByte, long endByte, String objectKey, String versionId, Class<E> valueType) {
-        //String bucketName = pnBffConfigs.getDlAssumeRoleArn().equals("test") ? pnBffConfigs.getPnBucketName() : pnBffConfigs.getDlBucketName();
         String bucketName = pnBffConfigs.getDlBucketName();
 
         GetObjectRequest.Builder getObjectRequestBuilder = GetObjectRequest.builder()
