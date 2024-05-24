@@ -21,7 +21,6 @@ public class SenderDashboardService {
 
     private final DatalakeS3Resource datalakeResource;
 
-
     /**
      * Fetches dashboard data for the specified sender.
      *
@@ -46,7 +45,8 @@ public class SenderDashboardService {
             return Mono.error(
                     new PnBffException(
                         "cxType and cxId mismatch",
-                        "The provided cxType and cxId do not match the values in the headers x-pagopa-pn-cx-type and x-pagopa-pn-cx-id",
+                        "The provided cxType and cxId do not match the values in the headers " +
+                                "x-pagopa-pn-cx-type and x-pagopa-pn-cx-id",
                         HttpStatus.BAD_REQUEST.value(),
                         PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
                     ));
