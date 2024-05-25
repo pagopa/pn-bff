@@ -21,12 +21,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -57,9 +59,9 @@ public class PnS3IndexResourceTest {
     }
 
     @Test
-    public void testGetOverviewObject() throws IOException {
+    public void testGetOverviewObject() {
         // Arrange
-        InputStream jsonInputStream = mockS3GetObject("./senderdashboard/senderDashboardIndex_test.json");
+        mockS3GetObject("./senderdashboard/senderDashboardIndex_test.json");
 
         // Act
         IndexObject actualIndexObject = pnS3IndexResource.getIndexObject();
@@ -69,8 +71,8 @@ public class PnS3IndexResourceTest {
         assertEquals(actualIndexObject.getBucketRegion(), "eu-south-1");
         assertEquals(actualIndexObject.getOverviewObjectKey(), "testKeyOverview");
         assertEquals(actualIndexObject.getFocusObjectKey(), "testKeyFocus");
-        assertEquals(actualIndexObject.getOverviewObjectVersionId(), null);
-        assertEquals(actualIndexObject.getFocusObjectVersionId(), null);
+        assertNull(actualIndexObject.getOverviewObjectVersionId());
+        assertNull(actualIndexObject.getFocusObjectVersionId());
         assertEquals(actualIndexObject.getGenTimestamp(), OffsetDateTime.parse("2024-05-22T10:31:00.611Z"));
         assertEquals(actualIndexObject.getLastDate(), LocalDate.parse("2024-05-08"));
         assertEquals(actualIndexObject.getStartDate(), LocalDate.parse("2023-07-17"));
@@ -78,19 +80,42 @@ public class PnS3IndexResourceTest {
         assertEquals(actualIndexObject.getFocusObjectSizeByte(), 98669);
         assertEquals(actualIndexObject.getOverviewSendersId().size(), 12);
         assertEquals(actualIndexObject.getFocusSendersId().size(), 12);
-
-        jsonInputStream.close();
     }
 
-    private InputStream mockS3GetObject(String src) {
-        InputStream jsonInputStream = getResource(src);
+    @Test
+    public void testGetOverviewObjectImmutability() {
+        // Arrange
+        mockS3GetObject("./senderdashboard/senderDashboardIndex_test.json");
 
-        ResponseInputStream<GetObjectResponse> responseInputStream = new ResponseInputStream<>(
-                GetObjectResponse.builder().build(), jsonInputStream
-        );
-        when(s3Client.getObject(any(GetObjectRequest.class))).thenReturn(responseInputStream);
-        return jsonInputStream;
+        // Act
+        IndexObject fisrtIndexObject = pnS3IndexResource.getIndexObject();
+        mockS3GetObject("./senderdashboard/empty.json");
+        IndexObject secondIndexObject = pnS3IndexResource.getIndexObject();
+
+        // Assert
+        assertEquals(fisrtIndexObject.getBucketName(), "testBucket");
+        assertNull(secondIndexObject.getBucketName());
     }
+
+    private void mockS3GetObject(String src) {
+        when(s3Client.getObject(any(GetObjectRequest.class))).thenAnswer(invocation -> {
+            byte[] data = readResourceAsBytes(src);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+            return new ResponseInputStream<>(
+                    GetObjectResponse.builder().build(), inputStream
+            );
+        });
+    }
+
+    private static byte[] readResourceAsBytes(String resourcePath) throws IOException {
+        try (InputStream inputStream = getResource(resourcePath)) {
+            if (inputStream == null) {
+                throw new IOException("Resource not found: " + resourcePath);
+            }
+            return inputStream.readAllBytes();
+        }
+    }
+
     private static InputStream getResource(String src) {
         return Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(src);
