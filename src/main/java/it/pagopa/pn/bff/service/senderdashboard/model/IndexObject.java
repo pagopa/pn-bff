@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class IndexObject {
+public final class IndexObject {
 
     @JsonProperty
     private String bucketName;
