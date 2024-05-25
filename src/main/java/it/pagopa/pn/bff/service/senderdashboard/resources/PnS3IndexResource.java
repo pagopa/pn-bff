@@ -96,6 +96,8 @@ public class PnS3IndexResource {
 
     /**
      * Refreshes the cache by retrieving the latest index object from S3.
+     * This method might be called concurrently by multiple threads if the cache is expired.
+     * The use of 'volatile' ensures visibility of changes across threads.
      */
     private void refreshCache() {
         try {
