@@ -470,6 +470,7 @@ Resources:
       Targets:
         - Id: TargetFunction
           Arn: !GetAtt SenderDashboardDataIndexer.Arn
+          Input: '{}' 
 
   # Adding permissions to allow EventBridge to invoke the data indexer Lambda
   SenderDashboardDataIndexerInvokePermission:
