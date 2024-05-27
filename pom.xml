@@ -24,6 +24,18 @@
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${awssdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>it.pagopa.pn</groupId>
@@ -65,6 +77,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
         </dependency>
         <!--LOCALSTACK/TESTCONTAINERS-->
         <dependency>
@@ -237,14 +257,59 @@
 
                     <!-- OPEN API PN-BFF INSTITUTION AND PRODUCT -->
                     <execution>
-                        <id>pn-internal-bff-institution-and-product</id>
+                        <id>pn-internal-bff-pa-info</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-institution-and-product.yaml
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-pa-info.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-BFF RECIPIENT INFO -->
+                    <execution>
+                        <id>pn-internal-bff-recipient-info</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-info.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
@@ -363,15 +428,16 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-BFF DIGITAL ADDRESSES-->
+                    <!-- OPEN API PN-BFF RECIPIENT DIGITAL ADDRESSES-->
                     <execution>
-                        <id>api-internal-pn-bff-digital-addresses</id>
+                        <id>api-internal-pn-bff-recipient-digital-addresses</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-digital-addresses.yaml
+                            <inputSpec>
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-digital-addresses.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
@@ -498,6 +564,90 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-payments.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-BFF RECIPIENT MANDATE-->
+                    <execution>
+                        <id>api-internal-pn-bff-recipient-mandate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-mandate.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-BFF SENDER DASHBOARD-->
+                    <execution>
+                        <id>api-internal-pn-bff-sender-dashboard</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-sender-dashboard.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
@@ -888,6 +1038,43 @@
                                 </apiPackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-push.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-MANDATE-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-mandate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-mandate/a89376a450b6fe77f66d05fd4cf37019cc34b868/docs/openapi/pn-mandate-internal.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.mandate.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.mandate.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

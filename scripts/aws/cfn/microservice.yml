@@ -8,6 +8,9 @@ Parameters:
     Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create
       experimental environments without crash official development environment'
 
+  EnvironmentType:
+    Type: String
+
   WebApiDnsName:
     Type: String
     Description: 'The DNS name used for WEB rest API.'
@@ -225,16 +228,6 @@ Parameters:
     Description: 'AuthFleet base URL'
 
   # Lambdas
-  LambdasBucketName:
-    Type: String
-    Default: ''
-    Description: 'Name of the bucket where the lambda files are copied during deploy'
-
-  BucketBasePath:
-    Type: String
-    Default: ''
-    Description: 'Base path of the lambda in the s3 bucket'
-
   DataIndexerLambdaName:
     Type: String
     Description: Name of the DataIndexer Lambda.
@@ -251,6 +244,7 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
+ # Sender dashboard
   IndexesBucketArn:
     Type: String
     Description: PN bucket Arn of indexes files.
@@ -299,6 +293,12 @@ Parameters:
     Type: String
     Description: S3 index object key.
 
+Conditions:
+  CreateFakeDLRole:
+    Fn::Or:
+      - Fn::Equals: [!Ref EnvironmentType, dev]
+      - Fn::Equals: [!Ref EnvironmentType, test]
+      - Fn::Equals: [!Ref EnvironmentType, uat]
 
 Resources:
 
@@ -334,10 +334,24 @@ Resources:
         ContainerEnvEntry7: !Sub 'PN_BFF_EXTERNALREGISTRIESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry8: !Sub 'PN_BFF_USERATTRIBUTESBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry9: !Sub 'PN_BFF_DOWNTIME_LOGS_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry10: !Sub 'PN_BFF_AUTHFLEETBASEURL=${AuthFleetBaseUrl}'
+        ContainerEnvEntry10: !Sub 'PN_BFF_AUTHFLEET_BASE_URL=${AuthFleetBaseUrl}'
         ContainerEnvEntry11: !Sub 'PN_BFF_DELIVERY_PUSH_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
-        ContainerEnvEntry12: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
-        ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        ContainerEnvEntry12: !Sub 'PN_BFF_MANDATE_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
+        ContainerEnvEntry14: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        # Sender dashboard
+        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${IndexesBucketName}'
+        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${IndexesBucketRegion}'
+        ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
+        ContainerEnvEntry18: !If [CreateFakeDLRole,
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${IndexesBucketName}',
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}']
+        ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
+        ContainerEnvEntry20: !If [CreateFakeDLRole,
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}']
+        ContainerEnvEntry21: !Sub 'PN_BFF_DL_OVERVIEW_OBJECT_KEY=${DlOverviewObjectKey}'
+        ContainerEnvEntry22: !Sub 'PN_BFF_DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
@@ -365,6 +379,21 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/ecs/${ECSClusterName}/pn-bff:*'
+          # Allow SenderDashboard S3 access
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+            Resource:
+              - !Sub '${IndexesBucketArn}/*'
+          # Allow assuming data lake role
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource:
+              - !If [ CreateFakeDLRole,
+                      !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                      !Ref DlAssumeRoleArn ]
 
   BffMicroservicePublicWebAPI:
     Type: AWS::CloudFormation::Stack
@@ -427,6 +456,7 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
+              # Allow SenderDashboard S3 access
               - Effect: Allow
                 Action:
                   - s3:GetObject
@@ -434,11 +464,46 @@ Resources:
                   - s3:PutObject
                 Resource:
                   - !Sub ${IndexesBucketArn}/*
+              # Allow assuming data lake role
               - Effect: Allow
                 Action:
                   - sts:AssumeRole
                 Resource:
-                  - !Ref DlAssumeRoleArn
+                  - !If [ CreateFakeDLRole,
+                          !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                          !Ref DlAssumeRoleArn ]
+    
+  PnBffSenderDashboardFakeDLRole:
+    Type: AWS::IAM::Role
+    Condition: CreateFakeDLRole
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-SenderDashboardFakeDLRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action:
+              - sts:AssumeRole
+            Condition:
+              ArnEquals:
+                aws:PrincipalArn:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      Path: /
+      Policies:
+        - PolicyName: DatalakeS3Policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              # Allow fake data-lake S3 access
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource:
+                  - !Sub ${IndexesBucketArn}/*
 
   # Fires the alarm when a duration threshold is reached
   SenderDashboardDataIndexerDurationAlarm:

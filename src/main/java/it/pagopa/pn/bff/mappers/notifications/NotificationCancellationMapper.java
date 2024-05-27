@@ -5,6 +5,9 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the RequestStatus to the BffRequestStatus
+ */
 @Mapper
 public interface NotificationCancellationMapper {
     // Instance of the mapper

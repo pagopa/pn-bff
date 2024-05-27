@@ -38,7 +38,6 @@ Parameters:
     Default: 365
     Description: Indexes expiration days.
 
-
 Resources:
 
   PnBffLogGroup:
@@ -82,8 +81,6 @@ Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
-  # DataIndexerLogGroup:
-  #   Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Lambda exports
   DataIndexerLambdaName:
     Value: SenderDashboardDataIndexer

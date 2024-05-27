@@ -296,4 +296,32 @@ public class NotificationsRecipientService {
 
         return notificationDetail.map(NotificationDownloadDocumentMapper.modelMapper::mapReceivedAttachmentDownloadResponse);
     }
+
+    /**
+     * Check the AAR QR code.
+     *
+     * @param xPagopaPnUid                User Identifier
+     * @param xPagopaPnCxType             Receiver Type
+     * @param xPagopaPnCxId               Receiver id
+     * @param bffCheckAarMandate the request to check the AAR QR code
+     * @param xPagopaPnCxGroups           Receiver Group id List
+     * @return the response of the check
+     */
+    public Mono<BffCheckAarResponse> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                              String xPagopaPnCxId,
+                                                              Mono<BffCheckAarRequest> bffCheckAarMandate,
+                                                              List<String> xPagopaPnCxGroups
+    ) {
+    log.info("checkAarQrCode");
+
+        return bffCheckAarMandate.flatMap(requestDto ->
+                pnDeliveryClient.checkAarQrCode(
+                        xPagopaPnUid,
+                        CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
+                        xPagopaPnCxId,
+                        NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(requestDto),
+                        xPagopaPnCxGroups
+                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+        ).map(NotificationAarQrCodeMapper.modelMapper::toBffResponseCheckAarMandateDto);
+    }
 }

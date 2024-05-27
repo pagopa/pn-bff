@@ -24,8 +24,19 @@ public class PnBffConfigs {
     private String downtimeLogsBaseUrl;
     private String authFleetBaseUrl;
     private String deliveryPushBaseUrl;
+    private String mandateBaseUrl;
     private String selfcareBaseUrl;
     private String selfcareSendProdId;
+    // Sender dashboard
+    private String dlBucketName;
+    private String dlBucketRegion;
+    private String dlAssumeRoleArn;
+    private String dlOverviewObjectKey;
+    private String dlFocusObjectKey;
+    private String pnBucketRegion;
+    private String pnBucketName;
+    private String pnIndexObjectKey;
+    private Long pnIndexObjectCacheExpirationMinutes;
 
     @PostConstruct
     public void init() {

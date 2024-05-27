@@ -60,7 +60,7 @@ public class ApiKeysPaService {
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // list of groups linked to the pa
-        Mono<List<PaGroup>> paGroups = pnExternalRegistriesClient.getGroups(
+        Mono<List<PaGroup>> paGroups = pnExternalRegistriesClient.getPaGroups(
                         xPagopaPnUid,
                         xPagopaPnCxId,
                         xPagopaPnCxGroups,
