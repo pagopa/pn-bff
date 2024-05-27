@@ -44,10 +44,6 @@ components:
         example: '2023-12-06'
 
   schemas:
-    Date:
-      type: string
-      format: date
-      example: '2023-12-06'
     BffSenderDashboardDataResponse:
       type: object
       properties:
