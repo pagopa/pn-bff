@@ -272,6 +272,7 @@ Parameters:
   DlBucketName:
     Type: String
     Description: Name of data-lake bucket.
+    Default: ''
 
   DlBucketRegion:
     Type: String
@@ -280,6 +281,7 @@ Parameters:
   DlAssumeRoleArn:
     Type: String
     Description: ARN of the role Lambda will assume.
+    Default: ''
 
   DlOverviewObjectKey:
     Type: String
@@ -438,8 +440,6 @@ Resources:
           PN_BUCKET_NAME: !Ref IndexesBucketName
           PN_BUCKET_REGION: !Ref IndexesBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
-          TEST_DL_BUCKET_NAME: !Ref DlBucketName
-          TEST_DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
