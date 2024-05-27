@@ -46,11 +46,6 @@ describe('indexer tests', function () {
       'testKeyOverview',
       'testKeyFocus'
     );
-    console.log(index);
-    /* fs.writeFileSync(
-      './src/test/data/index.json',
-      JSON.stringify(index, null, 2)
-    ); */
 
     // Then
     expect(index.bucketName).to.be.equal('testBucket');
