@@ -25,10 +25,10 @@ components:
           $ref: '#/components/schemas/BffPgGroupStatus'
 
     BffPaNameFilter:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
 
     BffSelfCarePaId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
 
     BffPaList:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/f49e1a815e81a70834c21c95c0fb7e9e8d39c054/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummariesList'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummariesList'
