@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service.senderdashboard;
 
+import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
@@ -44,8 +45,8 @@ public class SenderDashboardServiceTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof PnBffException
-                        && ((PnBffException) throwable).getProblem().getStatus() == 400)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffBadRequestException
+                        && ((PnBffBadRequestException) throwable).getProblem().getStatus() == 400)
                 .verify();
     }
 
@@ -57,8 +58,8 @@ public class SenderDashboardServiceTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof PnBffException
-                        && ((PnBffException) throwable).getProblem().getStatus() == 400)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffBadRequestException
+                        && ((PnBffBadRequestException) throwable).getProblem().getStatus() == 400)
                 .verify();
     }
 
