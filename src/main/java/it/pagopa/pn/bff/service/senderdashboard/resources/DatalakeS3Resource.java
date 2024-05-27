@@ -5,7 +5,11 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDigitalNotificationFocus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardNotificationOverview;
+import it.pagopa.pn.bff.mappers.senderdashboard.DatalakeDigitalNotificationFocusMapper;
+import it.pagopa.pn.bff.mappers.senderdashboard.DatalakeNotificationOverviewMapper;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
+import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeDigitalNotificationFocus;
+import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeNotificationOverview;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,9 +133,10 @@ public class DatalakeS3Resource {
                     overviewIndex.getEnd(),
                     overviewObjectKey,
                     overviewVersionId,
-                    BffSenderDashboardNotificationOverview.class)
+                    DatalakeNotificationOverview.class)
                     .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                     .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
+                    .map(DatalakeNotificationOverviewMapper.modelMapper::toBffSenderDashboardNotificationOverview)
                     .collect(Collectors.toList());
 
 
@@ -142,9 +147,11 @@ public class DatalakeS3Resource {
                         focusIndex.getEnd(),
                         focusObjectKey,
                         focusVersionId,
-                        BffSenderDashboardDigitalNotificationFocus.class)
+                        DatalakeDigitalNotificationFocus.class)
                         .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                         .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
+                        .map(DatalakeDigitalNotificationFocusMapper.modelMapper
+                                ::toBffSenderDashboardDigitalNotificationFocus)
                         .collect(Collectors.toList());
             } else {
                 focusList = new ArrayList<>();
