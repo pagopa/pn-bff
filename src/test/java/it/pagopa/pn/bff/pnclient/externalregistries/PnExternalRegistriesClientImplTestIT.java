@@ -40,6 +40,7 @@ class PnExternalRegistriesClientImplTestIT {
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
     private final String pathGroupsPa = "/ext-registry/pa/v1/groups";
     private final String pathGroupsPg = "/ext-registry/pg/v1/groups";
+    private final String pathPaList = "/ext-registry/pa/v1/activated-on-pn";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
     private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
     private final PaInfoMock paInfoMock = new PaInfoMock();
@@ -256,5 +257,27 @@ class PnExternalRegistriesClientImplTestIT {
         StepVerifier.create(pnExternalRegistriesClient.paymentsCart(
                 paymentRequest
         )).expectError().verify();
+    }
+
+    @Test
+    void getPaList() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(recipientInfoMock.getPaSummaryList());
+        mockServerClient.when(request().withMethod("GET").withPath(pathPaList))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.getPaList(null))
+                .expectNextSequence(recipientInfoMock.getPaSummaryList()).verifyComplete();
+    }
+
+    @Test
+    void getPaListError() {
+        mockServerClient.when(request().withMethod("GET").withPath(pathPaList))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPaList(null)).expectError().verify();
     }
 }
