@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service.senderdashboard;
 
+import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.exceptions.PnBffExceptionCodes;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
@@ -8,6 +9,7 @@ import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundExcepti
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -43,28 +45,32 @@ public class SenderDashboardService {
         // Path cxType and cxId mismatch
         if(!Objects.equals(cxType, pathCxType) || !Objects.equals(cxId, pathCxId)) {
             return Mono.error(
-                    new PnBffException(
+                    new PnBffBadRequestException(
                         "cxType and cxId mismatch",
                         "The provided cxType and cxId do not match the values in the headers " +
                                 "x-pagopa-pn-cx-type and x-pagopa-pn-cx-id",
-                        HttpStatus.BAD_REQUEST.value(),
-                        PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
+                        PnBffExceptionCodes.ERROR_CODE_BFF_SENDERINPUTMISMATCH
                     ));
         }
 
         // End date before start date
         if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
             return Mono.error(
-                    new PnBffException(
+                    new PnBffBadRequestException(
                             "Invalid date range",
                             "The end date cannot be before the start date",
-                            HttpStatus.BAD_REQUEST.value(),
-                            PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
+                            PnBffExceptionCodes.ERROR_CODE_BFF_INVALIDDATERANGE
                     ));
         }
 
+        try {
+            return Mono.just(datalakeResource.getDataResponse(cxId, startDate, endDate));
+        } catch (SenderNotFoundException e) {
+            return Mono.empty();
+        }
+
         // Get data response
-        return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
+        /* return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
                 .onErrorMap(SenderNotFoundException.class, e -> {
                     log.error("Exception occurred while fetching data from Datalake", e);
                     return new PnBffException(
@@ -82,6 +88,6 @@ public class SenderDashboardService {
                             HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
                     );
-                });
+                });*/
     }
 }
