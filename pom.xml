@@ -22,7 +22,6 @@
         <pagopa.codegen.version>v01.03.03</pagopa.codegen.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
-        <aws.java.sdk.version>2.25.52</aws.java.sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -30,7 +29,7 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>${aws.java.sdk.version}</version>
+                <version>${awssdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
