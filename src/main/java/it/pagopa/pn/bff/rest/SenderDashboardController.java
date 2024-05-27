@@ -43,7 +43,6 @@ public class SenderDashboardController implements SenderDashboardApi {
             LocalDate startDate,
             LocalDate endDate,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("getDashboardDataV1");
         Mono<BffSenderDashboardDataResponse> serviceResponse =
                 senderDashboardService.getDashboardData(
                         xPagopaPnCxType.getValue(),
@@ -52,7 +51,6 @@ public class SenderDashboardController implements SenderDashboardApi {
                         cxId,
                         startDate,
                         endDate);
-        log.logEndingProcess("getDashboardDataV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
     }
