@@ -96,7 +96,8 @@ const createIndexObject = async (
   let start = performance.now();
   // Get object metadata
   let metadata = await headObject(s3Client, bucketName, overviewObjectKey);
-  console.log(metadata);
+  console.log(`Overview LastModified: ${metadata.LastModified}`);
+  console.log(`Overview VersionId: ${metadata.VersionId}`);
   const overviewObjectVersionId = metadata.VersionId;
   // Create index
   const resOverview = await createSenderMap(
@@ -112,7 +113,8 @@ const createIndexObject = async (
   start = performance.now();
   // Get object metadata
   metadata = await headObject(s3Client, bucketName, focusObjectKey);
-  console.log(metadata);
+  console.log(`Focus LastModified: ${metadata.LastModified}`);
+  console.log(`Focus VersionId: ${metadata.VersionId}`);
   const focusObjectVersionId = metadata.VersionId;
 
   const resFocus = await createSenderMap(
