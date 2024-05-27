@@ -32,11 +32,9 @@ public class DowntimeLogsController implements DowntimeApi {
      */
     @Override
     public Mono<ResponseEntity<BffPnStatusResponse>> getCurrentStatusV1(final ServerWebExchange exchange) {
-        log.logStartingProcess("getCurrentStatusV1");
 
         Mono<BffPnStatusResponse> serviceResponse = downtimeLogsService.getCurrentStatus();
 
-        log.logEndingProcess("getCurrentStatusV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -53,11 +51,9 @@ public class DowntimeLogsController implements DowntimeApi {
      */
     @Override
     public Mono<ResponseEntity<BffPnDowntimeHistoryResponse>> getStatusHistoryV1(OffsetDateTime fromDate, OffsetDateTime toDate, String page, String size, final ServerWebExchange exchange) {
-        log.logStartingProcess("getStatusHistoryV1");
 
         Mono<BffPnDowntimeHistoryResponse> serviceResponse = downtimeLogsService.getStatusHistory(fromDate, toDate, page, size);
 
-        log.logEndingProcess("getStatusHistoryV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -71,11 +67,9 @@ public class DowntimeLogsController implements DowntimeApi {
      */
     @Override
     public Mono<ResponseEntity<BffLegalFactDownloadMetadataResponse>> getLegalFactV1(String legalFactId, final ServerWebExchange exchange) {
-        log.logStartingProcess("getLegalFactV1");
 
         Mono<BffLegalFactDownloadMetadataResponse> serviceResponse = downtimeLogsService.getLegalFact(legalFactId);
-
-        log.logEndingProcess("getLegalFactV1");
+        
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }
