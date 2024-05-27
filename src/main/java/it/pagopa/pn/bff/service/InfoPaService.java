@@ -34,7 +34,7 @@ public class InfoPaService {
      * @return the list of the institutions or error
      */
     public Flux<BffInstitution> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
-        log.info("getInstitutions");
+        log.info("Get user institutions - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return pnExternalRegistriesClient
                 .getInstitutions(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(institution -> InstitutionMapper.modelMapper.toBffInstitution(institution, pnBffConfigs))
@@ -51,7 +51,7 @@ public class InfoPaService {
      * @return the list of the products or error
      */
     public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
-        log.info("getInstitutionProducts");
+        log.info("Get institution products - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return pnExternalRegistriesClient
                 .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
                 .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
@@ -68,7 +68,7 @@ public class InfoPaService {
      * @return the list of groups
      */
     public Flux<BffPaGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status) {
-        log.info("getGroups");
+        log.info("Get user groups - senderId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
 
         Flux<it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup> paGroups = pnExternalRegistriesClient.getPaGroups(
                 xPagopaPnUid,

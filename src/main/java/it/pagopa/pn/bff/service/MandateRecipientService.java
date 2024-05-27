@@ -35,7 +35,8 @@ public class MandateRecipientService {
     public Mono<BffMandatesCount> countMandatesByDelegate(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                                           List<String> xPagopaPnCxGroups, String xPagopaPnCxRole,
                                                           String status) {
-        log.info("countMandatesByDelegate");
+        log.info("Count mandates by delegate - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
         return pnMandateClientRecipient
                 .countMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, status)
                 .map(MandateCountMapper.modelMapper::mapCount)

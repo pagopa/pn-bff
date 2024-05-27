@@ -38,7 +38,7 @@ public class InfoRecipientService {
      * @return the list of the groups or error
      */
     public Flux<BffPgGroup> getGroups(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPgGroupStatus status) {
-        log.info("getGroups");
+        log.info("Get user groups - recipientId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
 
         Flux<PgGroup> pgGroups = pnExternalRegistriesClient.getPgGroups(
                 xPagopaPnUid,
@@ -62,14 +62,15 @@ public class InfoRecipientService {
      * @return The list of PAs
      */
     public Flux<PaSummary> getPaList(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, String paNameFilter) {
-        log.info("getPaList");
+        log.info("Get pa list - recipientId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
 
         if (!List.of(CxTypeAuthFleet.PF, CxTypeAuthFleet.PG).contains(xPagopaPnCxType)
                 || xPagopaPnCxId.isEmpty()
         ) {
+            log.error("Invalid request body");
             return Flux.error(new PnBffException(
                     "Invalid request body",
-                    "Invalid request body",
+                    "The request body is invalid",
                     HttpStatus.BAD_REQUEST.value(),
                     ERROR_CODE_BFF_INVALIDBODY)
             );
