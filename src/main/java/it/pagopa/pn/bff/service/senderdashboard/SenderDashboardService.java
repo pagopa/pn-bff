@@ -63,22 +63,11 @@ public class SenderDashboardService {
                     ));
         }
 
-        try {
-            return Mono.just(datalakeResource.getDataResponse(cxId, startDate, endDate));
-        } catch (SenderNotFoundException e) {
-            return Mono.empty();
-        }
-
         // Get data response
-        /* return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
-                .onErrorMap(SenderNotFoundException.class, e -> {
-                    log.error("Exception occurred while fetching data from Datalake", e);
-                    return new PnBffException(
-                            "cxId not found ",
-                            "cxId not found ",
-                            HttpStatus.NOT_FOUND.value(),
-                            PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
-                    );
+        return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
+                .onErrorResume(SenderNotFoundException.class, e -> {
+                    log.debug("SenderId [{}] not found", cxId);
+                    return Mono.empty();
                 })
                 .onErrorMap(Exception.class,  e -> {
                     log.error("Exception occurred while fetching data from Datalake", e);
@@ -88,6 +77,6 @@ public class SenderDashboardService {
                             HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             PnBffExceptionCodes.ERROR_CODE_PN_GENERIC_ERROR
                     );
-                });*/
+                });
     }
 }

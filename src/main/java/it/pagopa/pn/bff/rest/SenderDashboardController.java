@@ -53,6 +53,7 @@ public class SenderDashboardController implements SenderDashboardApi {
                         startDate,
                         endDate);
         log.logEndingProcess("getDashboardDataV1");
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
     }
 }
