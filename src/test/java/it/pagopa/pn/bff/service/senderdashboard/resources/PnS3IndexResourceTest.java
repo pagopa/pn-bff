@@ -1,7 +1,8 @@
 package it.pagopa.pn.bff.service.senderdashboard.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.pagopa.pn.bff.config.JacksonConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,10 +14,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.http.AbortableInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -36,14 +37,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-@Import(JacksonConfig.class)
 public class PnS3IndexResourceTest {
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private PnBffConfigs pnBffConfigs;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Mock
     private S3Client s3Client;
@@ -53,6 +51,8 @@ public class PnS3IndexResourceTest {
 
     @BeforeAll
     public void setup() {
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
         pnS3IndexResource = new PnS3IndexResource(pnBffConfigs, objectMapper);
         pnS3IndexResource.init();
         MockitoAnnotations.openMocks(this);
@@ -100,9 +100,10 @@ public class PnS3IndexResourceTest {
     private void mockS3GetObject(String src) {
         when(s3Client.getObject(any(GetObjectRequest.class))).thenAnswer(invocation -> {
             byte[] data = readResourceAsBytes(src);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+            AbortableInputStream abortableInputStream = AbortableInputStream.create(byteArrayInputStream);
             return new ResponseInputStream<>(
-                    GetObjectResponse.builder().build(), inputStream
+                    GetObjectResponse.builder().build(), abortableInputStream
             );
         });
     }

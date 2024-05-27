@@ -1,7 +1,8 @@
 package it.pagopa.pn.bff.service.senderdashboard.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.pagopa.pn.bff.config.JacksonConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
@@ -14,11 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.http.AbortableInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -43,12 +44,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PnBffConfigs.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-@Import(JacksonConfig.class)
 public class DatalakeS3ResourceTest {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Autowired
     private PnBffConfigs pnBffConfigs;
-    @Autowired
-    private ObjectMapper objectMapper;
+
     @Mock
     private PnS3IndexResource pnS3IndexResource;
     @Mock
@@ -61,6 +62,8 @@ public class DatalakeS3ResourceTest {
 
     @BeforeAll
     public void setup() throws IOException {
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
         InputStream indexResource = getResource("./senderdashboard/senderDashboardIndex_test.json");
         IndexObject indexObject = objectMapper.readValue(indexResource, IndexObject.class);
         when(pnS3IndexResource.getIndexObject()).thenReturn(indexObject);
@@ -174,15 +177,17 @@ public class DatalakeS3ResourceTest {
 
                 // Convert the byte array to an InputStream
                 ByteArrayInputStream rangeInputStream = new ByteArrayInputStream(rangeData);
+                AbortableInputStream rangeAbortableInputStream = AbortableInputStream.create(rangeInputStream);
                 return new ResponseInputStream<>(
-                        GetObjectResponse.builder().build(), rangeInputStream
+                        GetObjectResponse.builder().build(), rangeAbortableInputStream
                 );
             }
 
             if (data != null) {
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+                AbortableInputStream abortableInputStream = AbortableInputStream.create(inputStream);
                 return new ResponseInputStream<>(
-                        GetObjectResponse.builder().build(), inputStream
+                        GetObjectResponse.builder().build(), abortableInputStream
                 );
             }
 
