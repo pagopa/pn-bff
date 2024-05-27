@@ -13,6 +13,6 @@
     "PnIndexObjectKey": "indexes/senderDashboardIndex_test.json",
     "SenderDashboardDataIndexerCron": "0 16 * * ? *",
     "DlBucketName": "testDlBucketName",
-    "DlBucketRoleArn": "testDlBucketRoleArn"
+    "DlAssumeRoleArn": "testDlAssumeRoleArn"
   }
 }
