@@ -427,14 +427,19 @@ Resources:
       MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
         Variables:
-          DL_BUCKET_NAME: !Ref DlBucketName
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
           DL_BUCKET_REGION: !Ref DlBucketRegion
-          DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
+          DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
+            !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Ref DlAssumeRoleArn]
+          
           DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
           PN_BUCKET_NAME: !Ref IndexesBucketName
           PN_BUCKET_REGION: !Ref IndexesBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
+          TEST_DL_BUCKET_NAME: !Ref DlBucketName
+          TEST_DL_ASSUME_ROLE_ARN: !Ref DlAssumeRoleArn
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
