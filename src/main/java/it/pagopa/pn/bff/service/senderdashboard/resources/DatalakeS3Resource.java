@@ -2,12 +2,8 @@ package it.pagopa.pn.bff.service.senderdashboard.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.PnBffConfigs;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDigitalNotificationFocus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardNotificationOverview;
-import it.pagopa.pn.bff.mappers.senderdashboard.DatalakeDigitalNotificationFocusMapper;
-import it.pagopa.pn.bff.mappers.senderdashboard.DatalakeNotificationOverviewMapper;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
+import it.pagopa.pn.bff.service.senderdashboard.model.DataResponse;
 import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeDigitalNotificationFocus;
 import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeNotificationOverview;
 import it.pagopa.pn.bff.service.senderdashboard.model.IndexObject;
@@ -104,7 +100,7 @@ public class DatalakeS3Resource {
      * @param endDate the end date of the range (included)
      * @return the sender dashboard data response
      */
-    public BffSenderDashboardDataResponse getDataResponse(String senderId, LocalDate startDate, LocalDate endDate)
+    public DataResponse getDataResponse(String senderId, LocalDate startDate, LocalDate endDate)
             throws SenderNotFoundException {
         updateCredentialsIfNecessary();
         IndexObject indexObject = pnS3IndexResource.getIndexObject();
@@ -121,8 +117,8 @@ public class DatalakeS3Resource {
         String overviewVersionId = indexObject.getOverviewObjectVersionId();
         String focusVersionId = indexObject.getFocusObjectVersionId();
 
-        List<BffSenderDashboardNotificationOverview> overviewList;
-        List<BffSenderDashboardDigitalNotificationFocus> focusList;
+        List<DatalakeNotificationOverview> overviewList;
+        List<DatalakeDigitalNotificationFocus> focusList;
 
         lock.readLock().lock();
         try {
@@ -136,7 +132,6 @@ public class DatalakeS3Resource {
                     DatalakeNotificationOverview.class)
                     .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                     .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
-                    .map(DatalakeNotificationOverviewMapper.modelMapper::toBffSenderDashboardNotificationOverview)
                     .collect(Collectors.toList());
 
 
@@ -150,22 +145,20 @@ public class DatalakeS3Resource {
                         DatalakeDigitalNotificationFocus.class)
                         .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
                         .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
-                        .map(DatalakeDigitalNotificationFocusMapper.modelMapper
-                                ::toBffSenderDashboardDigitalNotificationFocus)
                         .collect(Collectors.toList());
             } else {
                 focusList = new ArrayList<>();
             }
 
             // Order lists by notification_send_date in ascending order
-            overviewList.sort(Comparator.comparing(BffSenderDashboardNotificationOverview::getNotificationSendDate));
-            focusList.sort(Comparator.comparing(BffSenderDashboardDigitalNotificationFocus::getNotificationSendDate));
+            overviewList.sort(Comparator.comparing(DatalakeNotificationOverview::getNotificationSendDate));
+            focusList.sort(Comparator.comparing(DatalakeDigitalNotificationFocus::getNotificationSendDate));
 
             // Calc startDate and endDate if not defined
             LocalDate resStartDate = startDate == null ? indexObject.getStartDate() : startDate;
             LocalDate resEndDate = endDate == null ? indexObject.getLastDate() : endDate;
 
-            return BffSenderDashboardDataResponse.builder()
+            return DataResponse.builder()
                     .senderId(senderId)
                     .genTimestamp(indexObject.getGenTimestamp())
                     .lastDate(indexObject.getLastDate())
