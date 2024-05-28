@@ -434,7 +434,6 @@ Resources:
           DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
             !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
             !Ref DlAssumeRoleArn]
-          
           DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
           PN_BUCKET_NAME: !Ref IndexesBucketName
