@@ -8,6 +8,9 @@ Parameters:
     Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create
       experimental environments without crash official development environment'
 
+  EnvironmentType:
+    Type: String
+
   WebApiDnsName:
     Type: String
     Description: 'The DNS name used for WEB rest API.'
@@ -224,6 +227,81 @@ Parameters:
     Type: String
     Description: 'AuthFleet base URL'
 
+  # Lambdas
+  DataIndexerLambdaName:
+    Type: String
+    Description: Name of the DataIndexer Lambda.
+
+  DataIndexerLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the DataIndexer Lambda.
+
+  DataIndexerLambdaRuntime:
+    Type: String
+    Default: nodejs20.x
+    Description: Runtime of the DataIndexer Lambda.
+
+ # Sender dashboard
+  IndexesBucketArn:
+    Type: String
+    Description: PN bucket Arn of indexes files.
+
+  IndexesBucketName:
+    Type: String
+    Description: PN bucket of index files.
+
+  IndexesBucketRegion:
+    Type: String
+    Description: PN bucket region of index files.
+
+  SenderDashboardDataIndexerAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
+
+  SenderDashboardDataIndexerCron:
+    Type: String
+    Default: '0 16 * * ? *'
+    Description: Cron to schedule the Lambda (UTC).
+
+  # DataIndexer Env
+  DlBucketName:
+    Type: String
+    Description: Name of data-lake bucket.
+    Default: ''
+
+  DlBucketRegion:
+    Type: String
+    Description: Default region for data-lake bucket.
+
+  DlAssumeRoleArn:
+    Type: String
+    Description: ARN of the role Lambda will assume.
+    Default: ''
+
+  DlOverviewObjectKey:
+    Type: String
+    Description: S3 object key for overview file.
+
+  DlFocusObjectKey:
+    Type: String
+    Description: S3 object key for focus focus.
+
+  PnIndexObjectKey:
+    Type: String
+    Description: S3 index object key.
+
+Conditions:
+  CreateFakeDLRole:
+    Fn::Or:
+      - Fn::Equals: [!Ref EnvironmentType, dev]
+      - Fn::Equals: [!Ref EnvironmentType, test]
+      - Fn::Equals: [!Ref EnvironmentType, uat]
+
 Resources:
 
   # PN-bff microservice
@@ -263,6 +341,19 @@ Resources:
         ContainerEnvEntry12: !Sub 'PN_BFF_MANDATE_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
         ContainerEnvEntry14: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
+        # Sender dashboard
+        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${IndexesBucketName}'
+        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${IndexesBucketRegion}'
+        ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
+        ContainerEnvEntry18: !If [CreateFakeDLRole,
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${IndexesBucketName}',
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}']
+        ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
+        ContainerEnvEntry20: !If [CreateFakeDLRole,
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}']
+        ContainerEnvEntry21: !Sub 'PN_BFF_DL_OVERVIEW_OBJECT_KEY=${DlOverviewObjectKey}'
+        ContainerEnvEntry22: !Sub 'PN_BFF_DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
@@ -290,6 +381,21 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/ecs/${ECSClusterName}/pn-bff:*'
+          # Allow SenderDashboard S3 access
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+            Resource:
+              - !Sub '${IndexesBucketArn}/*'
+          # Allow assuming data lake role
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource:
+              - !If [ CreateFakeDLRole,
+                      !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                      !Ref DlAssumeRoleArn ]
 
   BffMicroservicePublicWebAPI:
     Type: AWS::CloudFormation::Stack
@@ -307,3 +413,139 @@ Resources:
         CloudwatchLogKinesisStreamArn: !Ref LogsKinesisSourceStreamArn
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
+
+  # DataIndexer Lambda
+  SenderDashboardDataIndexer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      Runtime: !Ref DataIndexerLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/senderDashboardDataIndexer.zip"
+      Timeout: 900
+      MemorySize: !Ref DataIndexerLambdaMemory
+      Environment:
+        Variables:
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
+          DL_BUCKET_REGION: !Ref DlBucketRegion
+          DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
+            !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Ref DlAssumeRoleArn]
+          DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
+          DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
+          PN_BUCKET_NAME: !Ref IndexesBucketName
+          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
+
+  SenderDashboardDataIndexerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessIndexesBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Allow SenderDashboard S3 access
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${IndexesBucketArn}/*
+              # Allow assuming data lake role
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource:
+                  - !If [ CreateFakeDLRole,
+                          !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                          !Ref DlAssumeRoleArn ]
+    
+  PnBffSenderDashboardFakeDLRole:
+    Type: AWS::IAM::Role
+    Condition: CreateFakeDLRole
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-SenderDashboardFakeDLRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action:
+              - sts:AssumeRole
+            Condition:
+              ArnEquals:
+                aws:PrincipalArn:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      Path: /
+      Policies:
+        - PolicyName: DatalakeS3Policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              # Allow fake data-lake S3 access
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource:
+                  - !Sub ${IndexesBucketArn}/*
+
+  # Fires the alarm when a duration threshold is reached
+  SenderDashboardDataIndexerDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref SenderDashboardDataIndexerAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      TreatMissingData: notBreaching
+
+  # EventBridge Rule to trigger the Lambda
+  SenderDashboardDataIndexerTrigger:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
+      ScheduleExpression: !Sub cron(${SenderDashboardDataIndexerCron})
+      State: ENABLED
+      Targets:
+        - Id: TargetFunction
+          Arn: !GetAtt SenderDashboardDataIndexer.Arn
+          Input: '{}' 
+
+  # Adding permissions to allow EventBridge to invoke the data indexer Lambda
+  SenderDashboardDataIndexerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
