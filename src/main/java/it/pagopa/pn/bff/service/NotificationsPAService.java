@@ -66,7 +66,8 @@ public class NotificationsPAService {
                                                                   OffsetDateTime endDate,
                                                                   Integer size,
                                                                   String nextPagesKey) {
-        log.info("searchSentNotifications");
+        log.info("Search notifications - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchSentNotifications(
                 xPagopaPnUid,
@@ -101,7 +102,9 @@ public class NotificationsPAService {
                                                                  String xPagopaPnCxId, String iun,
                                                                  List<String> xPagopaPnCxGroups
     ) {
-        log.info("Get notification detail for iun {}", iun);
+        log.info("Get notification detail - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<FullSentNotificationV23> notificationDetail = pnDeliveryClient.getSentNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
@@ -136,10 +139,12 @@ public class NotificationsPAService {
                                                                                  LegalFactCategory documentCategory,
                                                                                  List<String> xPagopaPnCxGroups
     ) {
-        log.info("Get notification {} for iun {}", documentType, iun);
+        log.info("Get notification document - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
             if (documentIdx == null) { // attachment case
+                log.error("Attachment idx not found");
                 return Mono.error(new PnBffException(
                         "Attachment idx not found",
                         "The attachment idx is missed",
@@ -158,6 +163,7 @@ public class NotificationsPAService {
             return attachment.map(NotificationDownloadDocumentMapper.modelMapper::mapSentAttachmentDownloadResponse);
         } else if (documentType == BffDocumentType.AAR) { // AAR case
             if (documentId == null) {
+                log.error("AAR id not found");
                 return Mono.error(new PnBffException(
                         "AAR id not found",
                         "The AAR id is missed",
@@ -178,6 +184,7 @@ public class NotificationsPAService {
             return document.map(NotificationDownloadDocumentMapper.modelMapper::mapDocumentDownloadResponse);
         } else { // legal fact case
             if (documentId == null) {
+                log.error("Legal fact id not found");
                 return Mono.error(new PnBffException(
                         "Legal fact id not found",
                         "The legal fact id is missed",
@@ -186,6 +193,7 @@ public class NotificationsPAService {
                 ));
             }
             if (documentCategory == null) {
+                log.error("Legal fact category not found");
                 return Mono.error(new PnBffException(
                         "Legal fact category not found",
                         "The legal fact category is missed",
@@ -226,7 +234,10 @@ public class NotificationsPAService {
                                                                                 String attachmentName, List<String> xPagopaPnCxGroups,
                                                                                 Integer attachmentIdx
     ) {
-        log.info("Get notification payment {} number {} for iun {} and recipient {}", attachmentName, attachmentIdx, iun, recipientIdx);
+        log.info("Get notification payment - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        // log.info("Get notification payment {} number {} for iun {} and recipient {}", attachmentName, attachmentIdx, iun, recipientIdx);
+
         Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getSentNotificationPayment(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
@@ -256,7 +267,9 @@ public class NotificationsPAService {
                                                            String xPagopaPnCxId,
                                                            String iun,
                                                            List<String> xPagopaPnCxGroups) {
-        log.info("notificationCancellation");
+        log.info("Cancel notification - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<RequestStatus> bffRequestStatus = pnDeliveryPushClient.notificationCancellation(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType), xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
@@ -278,7 +291,8 @@ public class NotificationsPAService {
                                                                 String xPagopaPnCxId,
                                                                 Mono<BffNewNotificationRequest> newNotificationRequest,
                                                                 List<String> xPagopaPnCxGroups) {
-        log.info("newSentNotification");
+        log.info("Create notification - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return newNotificationRequest.flatMap(request ->
                 pnDeliveryClient.newSentNotification(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NewSentNotificationMapper.modelMapper.mapRequest(request), xPagopaPnCxGroups)
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
@@ -299,8 +313,8 @@ public class NotificationsPAService {
                                                     CxTypeAuthFleet xPagopaPnCxType,
                                                     String xPagopaPnCxId,
                                                     Flux<BffPreLoadRequest> bffPreLoadRequest) {
-        log.info("preSignedUpload");
-
+        log.info("Request pre-signed url to upload document - senderId: {} - type: {}",
+                xPagopaPnCxId, xPagopaPnCxType);
         return bffPreLoadRequest.collectList().flatMapMany(request ->
                 pnDeliveryClient.preSignedUpload(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NotificationSentPreloadDocumentsMapper.modelMapper.mapRequest(request))
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
