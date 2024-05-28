@@ -1,9 +1,10 @@
 package it.pagopa.pn.bff.service.senderdashboard;
 
 import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
+import it.pagopa.pn.bff.service.senderdashboard.model.DataResponse;
+import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeNotificationOverview;
 import it.pagopa.pn.bff.service.senderdashboard.resources.DatalakeS3Resource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,9 +68,15 @@ public class SenderDashboardServiceTest {
 
     @Test
     public void testGetData() throws SenderNotFoundException {
+        var overviewObj = new DatalakeNotificationOverview();
+        overviewObj.setSenderId("senderTest");
+        List<DatalakeNotificationOverview> overviewList = new ArrayList<>();
+        overviewList.add(overviewObj);
         // Arrange
-        BffSenderDashboardDataResponse res = new BffSenderDashboardDataResponse();
-        res.setSenderId("test");
+        var res = DataResponse.builder()
+                .senderId("test")
+                .notificationsOverview(overviewList)
+                .build();
         when(datalakeS3Resource.getDataResponse("test", null, null)).thenReturn(res);
 
         // Act
@@ -75,6 +84,8 @@ public class SenderDashboardServiceTest {
                 "test", "test", "test", "test", null, null);
 
         // Assert
-        assertEquals(Objects.requireNonNull(result.block()).getSenderId(), "test");
+        assertEquals("test", Objects.requireNonNull(result.block()).getSenderId());
+        assertEquals("senderTest",
+                Objects.requireNonNull(result.block()).getNotificationsOverview().get(0).getSenderId());
     }
 }
