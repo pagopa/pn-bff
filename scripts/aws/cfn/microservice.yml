@@ -295,6 +295,63 @@ Parameters:
     Type: String
     Description: S3 index object key.
 
+  RaddStoreRegistryLambdaName:
+    Type: String
+    Description: Name of the RaddStoreRegistry Lambda.
+
+  RaddStoreRegistryLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the RaddStoreRegistry Lambda.
+
+  RaddStoreRegistryLambdaRuntime:
+    Type: String
+    Default: nodejs20.x
+    Description: Runtime of the RaddStoreRegistry Lambda.
+
+  IndexesBucketRaddStoreRegistryPrefix:
+    Type: String
+    Description: Name of s3 bucket for generated csv
+
+  WebLandingBucketName:
+    Type: String
+    Description: name of bucket for web-landing
+
+  WebLandingBucketArn:
+    Type: String
+    Description: Arn of bucket for web-landing
+
+  WebLandingBucketPrefix:
+    Type: String
+    Description: Folder to upload store registry csv
+    Default: 'public/static/documents'
+
+  RaddStoreRegistryFileName:
+    Type: String
+    Description: Name of csv file for store locator
+    Default: 'radd-stores-registry'
+
+  RaddStoreRegistryCsvConfigurationParameter:
+    Type: String
+    Description: Name of parameter in parameter store containing store locator csv configuration
+
+  RaddStoreRegistryGenerateInterval:
+    Type: Number
+    Description: Time interval (days) for Store Locator generate csv
+    Default: 7
+
+  RaddStoreRegistryAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
+
+  RaddStoreRegistrySendToWebLandingParameter:
+    Type: String
+    Description: name of parameter in parameter store to enable send to web landing
+
 Conditions:
   CreateFakeDLRole:
     Fn::Or:
@@ -549,3 +606,85 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
+
+  RaddStoreRegistryLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}
+      Runtime: !Ref RaddStoreRegistryLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt RaddStoreRegistryLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/raddStoreRegistryLambda.zip"
+      MemorySize: !Ref RaddStoreRegistryLambdaMemory
+      Timeout: 900
+      Environment:
+        Variables:
+          BFF_BUCKET_NAME: !Ref IndexesBucketName
+          BFF_BUCKET_PREFIX: !Ref IndexesBucketRaddStoreRegistryPrefix
+          WEB_LANDING_BUCKET_NAME: !Ref WebLandingBucketName
+          WEB_LANDING_BUCKET_PREFIX: !Ref WebLandingBucketPrefix
+          FILE_NAME: !Ref RaddStoreRegistryFileName
+          CSV_CONFIGURATION_PARAMETER: !Ref RaddStoreRegistryCsvConfigurationParameter
+          GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
+          RADD_STORE_SEND_TO_WEB_LANDING_PARAMETER: !Ref RaddStoreRegistrySendToWebLandingParameter
+          RADD_ALT_BASE_URL: !Sub http://${ApplicationLoadBalancerDomain}:8080
+
+  # Lambda function role
+  RaddStoreRegistryLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}-ExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessIndexesBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucketVersions
+                Resource:
+                  - !Sub ${IndexesBucketArn}/${IndexesBucketRaddStoreRegistryPrefix}/*
+        - PolicyName: AccessWebLandingBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${WebLandingBucketArn}/${WebLandingBucketPrefix}/*
+
+  # Fires the alarm when a duration threshold is reached
+  RaddStoreRegistryLambdaAlarms:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}-DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${RaddStoreRegistryAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref RaddStoreRegistryAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}
+      TreatMissingData: notBreaching
