@@ -43,22 +43,22 @@ public final class IndexObject {
     private LocalDate lastDate;
 
     @JsonProperty
-    private long overviewObjectProcessTimeMs;
+    private Long overviewObjectProcessTimeMs;
 
     @JsonProperty
-    private long focusObjectProcessTimeMs;
+    private Long focusObjectProcessTimeMs;
 
     @JsonProperty
-    private long overviewObjectSizeByte;
+    private Long overviewObjectSizeByte;
 
     @JsonProperty
-    private long focusObjectSizeByte;
+    private Long focusObjectSizeByte;
 
     @JsonProperty
-    private long overviewObjectLines;
+    private Long overviewObjectLines;
 
     @JsonProperty
-    private long focusObjectLines;
+    private Long focusObjectLines;
 
     @JsonProperty
     private Map<String, SenderInfo> overviewSendersId = new HashMap<>();
@@ -69,12 +69,12 @@ public final class IndexObject {
     @Data
     public static class SenderInfo {
         @JsonProperty
-        private int start;
+        private Integer start;
 
         @JsonProperty
-        private int end;
+        private Integer end;
 
         @JsonProperty
-        private int numRows;
+        private Integer numRows;
     }
 }
