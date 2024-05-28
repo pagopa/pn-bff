@@ -227,6 +227,23 @@ Parameters:
     Type: String
     Description: 'AuthFleet base URL'
 
+  # Lambdas
+  DataIndexerLambdaName:
+    Type: String
+    Description: Name of the DataIndexer Lambda.
+
+  DataIndexerLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the DataIndexer Lambda.
+
+  DataIndexerLambdaRuntime:
+    Type: String
+    Default: nodejs20.x
+    Description: Runtime of the DataIndexer Lambda.
+
  # Sender dashboard
   IndexesBucketArn:
     Type: String
@@ -240,10 +257,22 @@ Parameters:
     Type: String
     Description: PN bucket region of index files.
 
+  SenderDashboardDataIndexerAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
+
+  SenderDashboardDataIndexerCron:
+    Type: String
+    Default: '0 16 * * ? *'
+    Description: Cron to schedule the Lambda (UTC).
+
   # DataIndexer Env
   DlBucketName:
     Type: String
     Description: Name of data-lake bucket.
+    Default: ''
 
   DlBucketRegion:
     Type: String
@@ -252,6 +281,7 @@ Parameters:
   DlAssumeRoleArn:
     Type: String
     Description: ARN of the role Lambda will assume.
+    Default: ''
 
   DlOverviewObjectKey:
     Type: String
@@ -356,7 +386,6 @@ Resources:
             Action:
               - s3:GetObject
               - s3:GetObjectVersion
-              - s3:PutObject
             Resource:
               - !Sub '${IndexesBucketArn}/*'
           # Allow assuming data lake role
@@ -385,6 +414,69 @@ Resources:
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
 
+  # DataIndexer Lambda
+  SenderDashboardDataIndexer:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      Runtime: !Ref DataIndexerLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/senderDashboardDataIndexer.zip"
+      Timeout: 900
+      MemorySize: !Ref DataIndexerLambdaMemory
+      Environment:
+        Variables:
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
+          DL_BUCKET_REGION: !Ref DlBucketRegion
+          DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
+            !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+            !Ref DlAssumeRoleArn]
+          DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
+          DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
+          PN_BUCKET_NAME: !Ref IndexesBucketName
+          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
+
+  SenderDashboardDataIndexerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessIndexesBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Allow SenderDashboard S3 access
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${IndexesBucketArn}/*
+              # Allow assuming data lake role
+              - Effect: Allow
+                Action:
+                  - sts:AssumeRole
+                Resource:
+                  - !If [ CreateFakeDLRole,
+                          !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
+                          !Ref DlAssumeRoleArn ]
+    
   PnBffSenderDashboardFakeDLRole:
     Type: AWS::IAM::Role
     Condition: CreateFakeDLRole
@@ -402,6 +494,7 @@ Resources:
               ArnEquals:
                 aws:PrincipalArn:
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
       Path: /
       Policies:
         - PolicyName: DatalakeS3Policy
@@ -414,4 +507,45 @@ Resources:
                   - s3:GetObject
                   - s3:GetObjectVersion
                 Resource:
-                  - !Sub '${IndexesBucketArn}/*'
+                  - !Sub ${IndexesBucketArn}/*
+
+  # Fires the alarm when a duration threshold is reached
+  SenderDashboardDataIndexerDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref SenderDashboardDataIndexerAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      TreatMissingData: notBreaching
+
+  # EventBridge Rule to trigger the Lambda
+  SenderDashboardDataIndexerTrigger:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ${ProjectName}-bff-SenderDashboardDataIndexerDailyTrigger
+      ScheduleExpression: !Sub cron(${SenderDashboardDataIndexerCron})
+      State: ENABLED
+      Targets:
+        - Id: TargetFunction
+          Arn: !GetAtt SenderDashboardDataIndexer.Arn
+          Input: '{}' 
+
+  # Adding permissions to allow EventBridge to invoke the data indexer Lambda
+  SenderDashboardDataIndexerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SenderDashboardDataIndexer.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
