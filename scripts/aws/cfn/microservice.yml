@@ -688,3 +688,23 @@ Resources:
         - Name: FunctionName
           Value: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}
       TreatMissingData: notBreaching
+
+  #Scheduled Event Bridge Rule that send event to target lambda
+  RaddStoreRegistryScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
+      ScheduleExpression: !Sub rate(${RaddStoreRegistryRuleScheduleExpression})
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt RaddStoreRegistryLambda.Arn
+          Id: RaddStoreRegistryLambdaTarget
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt RaddStoreRegistryLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        - Arn: !GetAtt RaddStoreRegistryScheduledRule.Arn
