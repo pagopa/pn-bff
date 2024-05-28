@@ -326,12 +326,12 @@ Parameters:
   WebLandingBucketPrefix:
     Type: String
     Description: Folder to upload store registry csv
-    Default: '/static/documents'
+    Default: 'public/static/documents'
 
   RaddStoreRegistryFileName:
     Type: String
     Description: Name of csv file for store locator
-    Default: 'radd-stores-registry.csv'
+    Default: 'radd-stores-registry'
 
   RaddStoreRegistryCsvConfigurationParameter:
     Type: String
@@ -348,11 +348,9 @@ Parameters:
     Default: 480000
     Description: Threshold in minutes of DataIndexer Lambda.
 
-  RaddStoreRegistrySendToWebLanding:
+  RaddStoreRegistrySendToWebLandingParameter:
     Type: String
-    Description: Send generated csv to web landing
-    Default: true
-    AllowedValues: [ true, false ]
+    Description: name of parameter in parameter store to enable send to web landing
 
 Conditions:
   CreateFakeDLRole:
@@ -630,7 +628,7 @@ Resources:
           FILE_NAME: !Ref RaddStoreRegistryFileName
           CSV_CONFIGURATION_PARAMETER: !Ref RaddStoreRegistryCsvConfigurationParameter
           GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
-          RADD_STORE_SEND_TO_WEB_LANDING: !Ref RaddStoreRegistrySendToWebLanding
+          RADD_STORE_SEND_TO_WEB_LANDING_PARAMETER: !Ref RaddStoreRegistrySendToWebLandingParameter
           RADD_ALT_BASE_URL: !Sub http://${ApplicationLoadBalancerDomain}:8080
 
   # Lambda function role
@@ -660,7 +658,7 @@ Resources:
                   - s3:PutObject
                   - s3:ListBucketVersions
                 Resource:
-                  - !Sub ${IndexesBucketArn}/${IndexesBuckeRaddStoreRegistryPrefix}/*
+                  - !Sub ${IndexesBucketArn}/${IndexesBucketRaddStoreRegistryPrefix}/*
         - PolicyName: AccessWebLandingBucket
           PolicyDocument:
             Version: '2012-10-17'
@@ -690,23 +688,3 @@ Resources:
         - Name: FunctionName
           Value: !Sub ${ProjectName}-bff-${RaddStoreRegistryLambdaName}
       TreatMissingData: notBreaching
-
-  #Scheduled Event Bridge Rule that send event to target lambda
-  RaddStoreRegistryScheduledRule:
-    Type: AWS::Events::Rule
-    Properties:
-      Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
-      ScheduleExpression: !Sub rate(${RaddStoreRegistryRuleScheduleExpression})
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt RaddStoreRegistryLambda.Arn
-          Id: RaddStoreRegistryLambdaTarget
-
-  PermissionForEventsToInvokeLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt RaddStoreRegistryLambda.Arn
-      Action: lambda:InvokeFunction
-      Principal: events.amazonaws.com
-      SourceArn:
-        - Arn: !GetAtt RaddStoreRegistryScheduledRule.Arn

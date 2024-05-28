@@ -14,11 +14,11 @@
     "SenderDashboardDataIndexerCron": "0 16 * * ? *",
     "RaddStoreRegistryLambdaRateExpression": "24 hours",
     "RaddStoreRegistryFileName": "radd-stores-registry",
-    "RaddStoreRegistryCsvConfigurationParameter":  "/pn-radd-alt/csv-configuration",
+    "RaddStoreRegistryCsvConfigurationParameter":  "/pn-radd-store-registry-lambda/csv-configuration",
     "RaddStoreRegistryGenerateInterval": 7,
     "WebLandingBucketName": "",
     "WebLandingBucketArn": "",
-    "WebLandingBucketPrefix": "/public/static/documents",
-    "RaddStoreRegistrySendToWebLanding": "false"
+    "WebLandingBucketPrefix": "public/static/documents",
+    "RaddStoreRegistrySendToWebLandingParameter":  "/pn-radd-store-registry-lambda/send-to-web-landing"
   }
 }
