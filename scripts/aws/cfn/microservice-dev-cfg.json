@@ -11,6 +11,14 @@
     "DlFocusObjectKey": "export-digital_notifications_focus_test.json",
     "PnBucketRegion": "eu-south-1",
     "PnIndexObjectKey": "indexes/senderDashboardIndex_test.json",
-    "SenderDashboardDataIndexerCron": "0 16 * * ? *"
+    "SenderDashboardDataIndexerCron": "0 16 * * ? *",
+    "RaddStoreRegistryLambdaRateExpression": "24 hours",
+    "RaddStoreRegistryFileName": "radd-stores-registry",
+    "RaddStoreRegistryCsvConfigurationParameter":  "/pn-radd-alt/csv-configuration",
+    "RaddStoreRegistryGenerateInterval": 7,
+    "WebLandingBucketName": "",
+    "WebLandingBucketArn": "",
+    "WebLandingBucketPrefix": "/public/static/documents",
+    "RaddStoreRegistrySendToWebLanding": "false"
   }
 }
