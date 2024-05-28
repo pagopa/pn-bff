@@ -34,8 +34,7 @@ public class PaymentsService {
      * @return the detailed list of payments
      */
     public Mono<List<BffPaymentInfoItem>> getPaymentsInfo(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Flux<PaymentInfoRequest> paymentInfoRequest) {
-        log.info("Get payment info - recipientId: {} - type: {}",
-                xPagopaPnCxId, xPagopaPnCxType);
+        log.info("Get payment info - recipientId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
 
         return paymentInfoRequest.collectList().flatMap(request -> {
             Flux<PaymentInfoV21> paymentsInfo = pnExternalRegistriesClient.getPaymentsInfo(

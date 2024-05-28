@@ -48,6 +48,7 @@ public class ApiKeysPaService {
     ) {
         // list of api keys
         log.info("Get api key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<ApiKeysResponse> apiKeysResponse = pnApikeyManagerClientPA.getApiKeys(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(xPagopaPnCxType),
@@ -61,6 +62,7 @@ public class ApiKeysPaService {
 
         // list of groups linked to the pa
         log.info("Get user groups - senderId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
+
         Mono<List<PaGroup>> paGroups = pnExternalRegistriesClient.getPaGroups(
                         xPagopaPnUid,
                         xPagopaPnCxId,
@@ -87,6 +89,7 @@ public class ApiKeysPaService {
                                                 String xPagopaPnCxId, Mono<BffRequestNewApiKey> requestNewApiKey,
                                                 List<String> xPagopaPnCxGroups) {
         log.info("Create new api key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return requestNewApiKey.flatMap(request -> {
             Mono<ResponseNewApiKey> responseNewApiKey = pnApikeyManagerClientPA.newApiKey(
                     xPagopaPnUid,
@@ -113,7 +116,8 @@ public class ApiKeysPaService {
     public Mono<Void> deleteApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                    String xPagopaPnCxId, String id,
                                    List<String> xPagopaPnCxGroups) {
-        log.info("Delete api key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Delete api key {} - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return pnApikeyManagerClientPA.deleteApiKeys(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(xPagopaPnCxType),
@@ -137,7 +141,7 @@ public class ApiKeysPaService {
     public Mono<Void> changeStatusApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                          String xPagopaPnCxId, String id, Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
                                          List<String> xPagopaPnCxGroups) {
-        log.info("Change api key status - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Change api key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return bffRequestApiKeyStatus.flatMap(request ->
                 pnApikeyManagerClientPA.changeStatusApiKey(
                         xPagopaPnUid,

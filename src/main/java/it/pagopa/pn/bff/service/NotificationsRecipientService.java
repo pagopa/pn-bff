@@ -156,8 +156,8 @@ public class NotificationsRecipientService {
     public Mono<BffFullNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
                                                              String mandateId) {
-        log.info("Get notification detail - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<FullReceivedNotificationV23> notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
@@ -196,8 +196,8 @@ public class NotificationsRecipientService {
                                                                                      List<String> xPagopaPnCxGroups,
                                                                                      UUID mandateId
     ) {
-        log.info("Get notification document - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Get notification document - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
             if (documentIdx == null) {
@@ -292,9 +292,8 @@ public class NotificationsRecipientService {
                                                                                     List<String> xPagopaPnCxGroups, UUID mandateId,
                                                                                     Integer attachmentIdx
     ) {
-        log.info("Get notification payment - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
-        //log.info("Get notification payment {} number {} for iun {}", attachmentName, attachmentIdx, iun);
+        log.info("Get notification payment - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getReceivedNotificationPayment(
                 xPagopaPnUid,

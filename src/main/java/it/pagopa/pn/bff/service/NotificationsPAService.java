@@ -102,8 +102,8 @@ public class NotificationsPAService {
                                                                  String xPagopaPnCxId, String iun,
                                                                  List<String> xPagopaPnCxGroups
     ) {
-        log.info("Get notification detail - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<FullSentNotificationV23> notificationDetail = pnDeliveryClient.getSentNotification(
                 xPagopaPnUid,
@@ -139,8 +139,8 @@ public class NotificationsPAService {
                                                                                  LegalFactCategory documentCategory,
                                                                                  List<String> xPagopaPnCxGroups
     ) {
-        log.info("Get notification document - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Get notification document - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
             if (documentIdx == null) { // attachment case
@@ -234,9 +234,8 @@ public class NotificationsPAService {
                                                                                 String attachmentName, List<String> xPagopaPnCxGroups,
                                                                                 Integer attachmentIdx
     ) {
-        log.info("Get notification payment - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
-        // log.info("Get notification payment {} number {} for iun {} and recipient {}", attachmentName, attachmentIdx, iun, recipientIdx);
+        log.info("Get notification payment - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getSentNotificationPayment(
                 xPagopaPnUid,
@@ -267,8 +266,8 @@ public class NotificationsPAService {
                                                            String xPagopaPnCxId,
                                                            String iun,
                                                            List<String> xPagopaPnCxGroups) {
-        log.info("Cancel notification - senderId: {} - type: {} - groups: {}",
-                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Cancel notification - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<RequestStatus> bffRequestStatus = pnDeliveryPushClient.notificationCancellation(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType), xPagopaPnCxId, iun, xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
@@ -293,6 +292,7 @@ public class NotificationsPAService {
                                                                 List<String> xPagopaPnCxGroups) {
         log.info("Create notification - senderId: {} - type: {} - groups: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return newNotificationRequest.flatMap(request ->
                 pnDeliveryClient.newSentNotification(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NewSentNotificationMapper.modelMapper.mapRequest(request), xPagopaPnCxGroups)
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
@@ -315,6 +315,7 @@ public class NotificationsPAService {
                                                     Flux<BffPreLoadRequest> bffPreLoadRequest) {
         log.info("Request pre-signed url to upload document - senderId: {} - type: {}",
                 xPagopaPnCxId, xPagopaPnCxType);
+
         return bffPreLoadRequest.collectList().flatMapMany(request ->
                 pnDeliveryClient.preSignedUpload(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType), xPagopaPnCxId, NotificationSentPreloadDocumentsMapper.modelMapper.mapRequest(request))
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
