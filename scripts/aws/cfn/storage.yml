@@ -33,7 +33,7 @@ Parameters:
     Default: 14
 
   # DataIndexer params
-  IndexesBucketVersionExpiresAfterDays:
+  SenderDashboardIndexesVersionExpiresAfterDays:
     Type: Number
     Default: 365
     Description: Indexes expiration days.
@@ -63,19 +63,19 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
-  IndexesBucket:
+  BffBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${ProjectName}-bff-sender-dashboard-data-${AWS::Region}-${AWS::AccountId}
+      BucketName: !Sub ${ProjectName}-bff-data-${AWS::Region}-${AWS::AccountId}
       VersioningConfiguration:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: DeleteOldVersions
+          - Id: DeleteOldVersionsForSenderDashboardIndexes
             Status: Enabled
-            Prefix: indexes/
+            Prefix: sender-dashboard/indexes/
             NoncurrentVersionExpiration:
-              NoncurrentDays: !Ref IndexesBucketVersionExpiresAfterDays
+              NoncurrentDays: !Ref SenderDashboardIndexesVersionExpiresAfterDays
 
   # Lambda RaddStoreRegistry
   RaddStoreRegistryLambdaLogGroup:
@@ -99,9 +99,9 @@ Outputs:
   DataIndexerLambdaName:
     Value: SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Bucket exports
-  IndexesBucketArn:
-    Value: !GetAtt IndexesBucket.Arn
-  IndexesBucketName:
-    Value: !Ref IndexesBucket
-  IndexesBucketRegion:
+  BffBucketArn:
+    Value: !GetAtt BffBucket.Arn
+  BffBucketName:
+    Value: !Ref BffBucket
+  BffBucketRegion:
     Value: !Ref AWS::Region
