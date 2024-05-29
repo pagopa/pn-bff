@@ -244,18 +244,17 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
- # Sender dashboard
-  IndexesBucketArn:
+  BffBucketArn:
     Type: String
-    Description: PN bucket Arn of indexes files.
+    Description: PN bff bucket ARN.
 
-  IndexesBucketName:
+  BffBucketName:
     Type: String
-    Description: PN bucket of index files.
+    Description: PN bff bucket name.
 
-  IndexesBucketRegion:
+  BffBucketRegion:
     Type: String
-    Description: PN bucket region of index files.
+    Description: PN bff bucket region.
 
   SenderDashboardDataIndexerAlarmThreshold:
     Type: Number
@@ -311,9 +310,9 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the RaddStoreRegistry Lambda.
 
-  IndexesBucketRaddStoreRegistryPrefix:
+  BffBucketRaddStoreRegistryPrefix:
     Type: String
-    Description: Name of s3 bucket for generated csv
+    Description: s3 bucket prefix for generated csv
 
   WebLandingBucketName:
     Type: String
@@ -486,15 +485,15 @@ Resources:
       MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
         Variables:
-          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref BffBucketName, !Ref DlBucketName]
           DL_BUCKET_REGION: !Ref DlBucketRegion
           DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
             !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
             !Ref DlAssumeRoleArn]
           DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
-          PN_BUCKET_NAME: !Ref IndexesBucketName
-          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_BUCKET_NAME: !Ref BffBucketName
+          PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
 
   SenderDashboardDataIndexerExecutionRole:
@@ -621,8 +620,8 @@ Resources:
       Timeout: 900
       Environment:
         Variables:
-          BFF_BUCKET_NAME: !Ref IndexesBucketName
-          BFF_BUCKET_PREFIX: !Ref IndexesBucketRaddStoreRegistryPrefix
+          BFF_BUCKET_NAME: !Ref BffBucketName
+          BFF_BUCKET_PREFIX: !Ref BffBucketRaddStoreRegistryPrefix
           WEB_LANDING_BUCKET_NAME: !Ref WebLandingBucketName
           WEB_LANDING_BUCKET_PREFIX: !Ref WebLandingBucketPrefix
           FILE_NAME: !Ref RaddStoreRegistryFileName
@@ -658,7 +657,7 @@ Resources:
                   - s3:PutObject
                   - s3:ListBucketVersions
                 Resource:
-                  - !Sub ${IndexesBucketArn}/${IndexesBucketRaddStoreRegistryPrefix}/*
+                  - !Sub ${BffBucketArn}/${BffBucketRaddStoreRegistryPrefix}/*
         - PolicyName: AccessWebLandingBucket
           PolicyDocument:
             Version: '2012-10-17'
