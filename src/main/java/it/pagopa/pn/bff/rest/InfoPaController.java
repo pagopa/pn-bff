@@ -35,12 +35,10 @@ public class InfoPaController implements InfoPaApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffInstitution>>> getInstitutionsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("getInstitutionsV1");
 
         Flux<BffInstitution> bffInstitutions = infoPaService
                 .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
 
-        log.logEndingProcess("getInstitutionsV1");
         return bffInstitutions
                 .collectList()
                 .map(institution -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(institution)));
@@ -58,12 +56,10 @@ public class InfoPaController implements InfoPaApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("getInstitutionProducts");
 
         Flux<BffInstitutionProduct> bffInstitutionProducts = infoPaService
                 .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
 
-        log.logEndingProcess("getInstitutionProducts");
         return bffInstitutionProducts
                 .collectList()
                 .map(institutionProduct -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(institutionProduct)));
@@ -82,11 +78,9 @@ public class InfoPaController implements InfoPaApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffPaGroup>>> getPAGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status, ServerWebExchange exchange) {
-        log.logStartingProcess("getGroupsV1");
 
         Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
-
-        log.logEndingProcess("getGroupsV1");
+        
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

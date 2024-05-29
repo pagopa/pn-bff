@@ -26,14 +26,12 @@ public class AuthController implements TokenExchangeApi {
             Mono<BffTokenExchangeBody> tokenExchangeBodyMono,
             final ServerWebExchange exchange
     ) {
-        log.logStartingProcess("tokenExchangeV1");
-        
+
         Mono<BffTokenExchangeResponse> serviceResponse = authService.tokenExchange(
                 exchange.getRequest().getHeaders().getOrigin(),
                 tokenExchangeBodyMono
         );
 
-        log.logEndingProcess("tokenExchangeV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

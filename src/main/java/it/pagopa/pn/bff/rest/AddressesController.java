@@ -39,13 +39,10 @@ public class AddressesController implements AddressesApi {
                                                                      String xPagopaPnCxRole,
                                                                      final ServerWebExchange exchange
     ) {
-        log.logStartingProcess("getUserAddressesV1");
 
         Flux<BffUserAddress> serviceResponse = addressesService.getUserAddresses(
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole
         );
-
-        log.logEndingProcess("getUserAddressesV1");
 
         return serviceResponse
                 .collectList()
@@ -76,7 +73,6 @@ public class AddressesController implements AddressesApi {
                                                                                         List<String> xPagopaPnCxGroups,
                                                                                         String xPagopaPnCxRole,
                                                                                         final ServerWebExchange exchange) {
-        log.logStartingProcess("createOrUpdateAddressV1");
 
         Mono<BffAddressVerificationResponse> serviceResponse = addressesService.createOrUpdateAddress(
                 xPagopaPnCxId,
@@ -88,8 +84,6 @@ public class AddressesController implements AddressesApi {
                 addressVerification,
                 xPagopaPnCxGroups
         );
-
-        log.logEndingProcess("createOrUpdateAddressV1");
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
@@ -113,7 +107,6 @@ public class AddressesController implements AddressesApi {
                                                       BffAddressType addressType, String senderId,
                                                       BffChannelType channelType, List<String> xPagopaPnCxGroups,
                                                       String xPagopaPnCxRole, final ServerWebExchange exchange) {
-        log.logStartingProcess("deleteAddressV1");
 
         Mono<Void> serviceResponse = addressesService.deleteDigitalAddress(
                 xPagopaPnCxId,
@@ -124,8 +117,6 @@ public class AddressesController implements AddressesApi {
                 channelType,
                 xPagopaPnCxGroups
         );
-
-        log.logEndingProcess("deleteAddressV1");
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
