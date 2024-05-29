@@ -78,7 +78,7 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
-  BffBucketBucket:
+  BffBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${ProjectName}-bff-data-${AWS::Region}-${AWS::AccountId}
@@ -107,9 +107,9 @@ Outputs:
     Value: SenderDashboardDataIndexer
   # Bucket exports
   BffBucketArn:
-    Value: !GetAtt BffBucketBucket.Arn
+    Value: !GetAtt BffBucket.Arn
   BffBucketName:
-    Value: !Ref BffBucketBucket
+    Value: !Ref BffBucket
   BffBucketRegion:
     Value: !Ref AWS::Region
   BffBucketRaddStoreRegistryPrefix:
