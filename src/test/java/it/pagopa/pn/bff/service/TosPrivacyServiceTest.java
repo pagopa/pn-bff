@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
@@ -9,6 +10,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Objects;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -25,16 +29,18 @@ import static org.mockito.Mockito.when;
 class TosPrivacyServiceTest {
     private static TosPrivacyService tosPrivacyService;
     private static PnUserAttributesClientImpl pnUserAttributesClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     ConsentsMock consentsMock = new ConsentsMock();
 
     @BeforeAll
     public static void setup() {
         pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
-        tosPrivacyService = new TosPrivacyService(pnUserAttributesClient);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        tosPrivacyService = new TosPrivacyService(pnUserAttributesClient, pnBffExceptionUtility);
     }
 
     @Test
-    void testGetTosContent() {
+    void getTosContent() {
         Consent tosConsent = consentsMock.getTosConsentResponseMock();
         Consent privacyConsent = consentsMock.getPrivacyConsentResponseMock();
 
@@ -57,7 +63,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void testGetTosContentError() {
+    void getTosContentError() {
         when(pnUserAttributesClient.getTosConsent(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class)
@@ -78,7 +84,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOrDeclineTosPrivacyTest() {
+    void acceptOrDeclineTosPrivacy() {
         BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock();
 
         when(pnUserAttributesClient.acceptConsent(
@@ -99,7 +105,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOnlyTosTest() {
+    void acceptOnlyTos() {
         BffTosPrivacyBody tosPrivacyBody = consentsMock.acceptTosPrivacyBodyMock().privacy(null);
 
         when(pnUserAttributesClient.acceptConsent(
@@ -121,15 +127,7 @@ class TosPrivacyServiceTest {
     }
 
     @Test
-    void acceptOrDeclineTosPrivacyEmptyBodyErrorTest() {
-        when(pnUserAttributesClient.acceptConsent(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.any(ConsentAction.class),
-                Mockito.anyString()
-        )).thenReturn(Mono.error(new WebClientResponseException(400, "Bad Request", null, null, null)));
-
+    void acceptOrDeclineTosPrivacyEmptyBodyError() {
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
@@ -137,7 +135,8 @@ class TosPrivacyServiceTest {
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("Missing tos or privacy body")
+                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The body of the request is missed")
                 )
                 .verify();
     }

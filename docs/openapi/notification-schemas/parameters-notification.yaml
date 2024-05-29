@@ -1,0 +1,113 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    ############################################################################################
+    ###                     PARAMETRI RICERCA NOTIFICHE                                      ###
+    ############################################################################################
+    BffNotificationSearchStartDate:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchStartDate'
+
+    BffNotificationSearchEndDate:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchEndDate'
+
+    BffNotificationSearchRecipientId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchRecipientId'
+
+    BffNotificationSearchSenderId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchSenderId'
+
+    BffNotificationSearchGroup:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchGroup'
+
+    BffNotificationSearchStatus:
+      name: status
+      in: query
+      required: false
+      description: stato della notifica
+      schema:
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/remote-refs.yaml#/components/schemas/NotificationStatus'
+
+    BffNotificationSearchSubject:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchSubject'
+
+    BffSearchIun:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchIun'
+
+    BffNotificationSearchPageSize:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchPageSize'
+
+    BffNotificationSearchNextPagesKey:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchNextPagesKey'
+
+    ############################################################################################
+    ###                     PARAMETRI DETTAGLIO NOTIFICA                                     ###
+    ############################################################################################
+    BffPathIun:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
+
+    BffNotificationSearchMandateId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
+
+    ############################################################################################
+    ###                     PARAMETRI DOWLOAD DOCUMENTI NOTIFICA                             ###
+    ############################################################################################
+    BffQueryMandateId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/api-internal-web-recipient.yaml#/components/parameters/queryMandateId'
+
+    BffPathDocumentType:
+      description: Tipo documento
+      name: documentType
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/BffDocumentType'
+
+    BffQueryDocumentIdx:
+      description: Indice del documento
+      name: documentIdx
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+
+    BffQueryDocumentId:
+      description: Identificativo del documento
+      name: documentId
+      in: query
+      required: false
+      schema:
+        type: string
+        pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
+        maxLength: 1024
+
+    BffQueryDocumentCategory:
+      description: >-
+        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a disposizione dei suoi utenti.
+      name: documentCategory
+      in: query
+      required: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/26f1012c79cba1bc92d06ffbfc6b0794fc729411/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
+
+    ############################################################################################
+    ###                     PARAMETRI DOWLOAD PAGAMENTI NOTIFICA                             ###
+    ############################################################################################
+    BffPathRecipientIdx:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/pathRecipientIdx'
+    BffPathAttachmentName:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/pathAttachmentName'
+    BffQueryAttachmentIdx:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/623609ffaa1555eed3606eeeff789844b34afaa4/docs/openapi/api-internal-b2b-pa.yaml#/components/parameters/attachmentIdx'
+
+  schemas:
+    # this is needed because the openapi generator doesn't work well if we put the content of this schema
+    # directly into BffPathDocumentType parameter
+    BffDocumentType:
+      type: string
+      enum:
+        - ATTACHMENT
+        - LEGAL_FACT
+        - AAR

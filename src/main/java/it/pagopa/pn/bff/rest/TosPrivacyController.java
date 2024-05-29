@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
@@ -10,7 +9,6 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -36,13 +34,9 @@ public class TosPrivacyController implements UserConsentsApi {
     public Mono<ResponseEntity<BffTosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
                                                                       CxTypeAuthFleet xPagopaPnCxType,
                                                                       final ServerWebExchange exchange) {
-        log.logStartingProcess("getTosPrivacyV1");
 
         Mono<BffTosPrivacyConsent> serviceResponse = tosPrivacyService
-                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        log.logEndingProcess("getTosPrivacyV1");
+                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType);
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
@@ -62,14 +56,12 @@ public class TosPrivacyController implements UserConsentsApi {
                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                          Mono<BffTosPrivacyBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
-        log.logStartingProcess("putTosPrivacyV1");
 
         Mono<Void> serviceResponse = tosPrivacyService
-                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
-
-        log.logEndingProcess("putTosPrivacyV1");
-
-        return serviceResponse.map(response -> ResponseEntity.noContent().build());
+                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+        
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 }

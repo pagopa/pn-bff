@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
@@ -12,6 +11,7 @@ import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.StatusResponseMapper;
 import it.pagopa.pn.bff.pnclient.downtimelogs.PnDowntimeLogsClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,7 @@ import java.util.List;
 @Slf4j
 public class DowntimeLogsService {
     private final PnDowntimeLogsClientImpl pnDowntimeLogsClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Get application status
@@ -38,8 +39,9 @@ public class DowntimeLogsService {
      */
     public Mono<BffPnStatusResponse> getCurrentStatus() {
         log.info("Get application status");
+
         Mono<PnStatusResponse> statusResponse = pnDowntimeLogsClient.getCurrentStatus()
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return statusResponse.map(StatusResponseMapper.modelMapper::mapPnStatusResponse);
     }
@@ -61,7 +63,7 @@ public class DowntimeLogsService {
         List<PnFunctionality> functionalities = new ArrayList<>(Arrays.asList(PnFunctionality.values()));
 
         Mono<PnDowntimeHistoryResponse> pnDowntimeHistoryResponse = pnDowntimeLogsClient.getStatusHistory(fromTime, toTime, functionalities, page, size)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return pnDowntimeHistoryResponse.map(DowntimeHistoryResponseMapper.modelMapper::mapPnDowntimeHistoryResponse);
     }
@@ -76,7 +78,7 @@ public class DowntimeLogsService {
         log.info("Get downtime legal fact");
 
         Mono<LegalFactDownloadMetadataResponse> legalFactDownloadMetadataResponse = pnDowntimeLogsClient.getLegalFact(legalFactId)
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return legalFactDownloadMetadataResponse.map(LegalFactDownloadResponseMapper.modelMapper::mapLegalFactDownloadMetadataResponse);
     }

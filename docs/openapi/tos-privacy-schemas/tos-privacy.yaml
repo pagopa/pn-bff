@@ -3,7 +3,7 @@ info:
 components:
   schemas:
     BffConsent:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
 
     BffTosPrivacyConsent:
       type: object
@@ -29,8 +29,8 @@ components:
         - version
         - action
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
-              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/f4a52e24db850caf34fe6e3f0f76d994fe19a71d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'

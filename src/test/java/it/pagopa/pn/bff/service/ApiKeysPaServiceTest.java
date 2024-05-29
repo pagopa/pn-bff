@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
@@ -11,9 +12,11 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,20 +35,22 @@ class ApiKeysPaServiceTest {
 
     private static ApiKeysPaService apiKeysPaService;
     private static PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
-    private static PnInfoPaClientImpl pnInfoPaClient;
+    private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
+    private static PnBffExceptionUtility pnBffExceptionUtility;
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
 
     @BeforeAll
     public static void setup() {
         pnApikeyManagerClientPA = mock(PnApikeyManagerClientPAImpl.class);
-        pnInfoPaClient = mock(PnInfoPaClientImpl.class);
+        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
+        pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnInfoPaClient);
+        apiKeysPaService = new ApiKeysPaService(pnApikeyManagerClientPA, pnExternalRegistriesClient, pnBffExceptionUtility);
     }
 
     @Test
-    void testGetApiKeys() {
+    void getApiKeys() {
         when(pnApikeyManagerClientPA.getApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -57,12 +62,12 @@ class ApiKeysPaServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.just(apiKeysMock.getApiKeysMock()));
 
-        when(pnInfoPaClient.getGroups(
+        when(pnExternalRegistriesClient.getPaGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any()
-        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
         Mono<BffApiKeysResponse> result = apiKeysPaService.getApiKeys(
                 UserMock.PN_UID,
@@ -76,12 +81,12 @@ class ApiKeysPaServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), userMock.getPaGroupsMock()))
+                .expectNext(ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), paInfoMock.getPaGroupsMock()))
                 .verifyComplete();
     }
 
     @Test
-    void testGetApiKeysError() {
+    void getApiKeysError() {
         when(pnApikeyManagerClientPA.getApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -93,12 +98,12 @@ class ApiKeysPaServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        when(pnInfoPaClient.getGroups(
+        when(pnExternalRegistriesClient.getPaGroups(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any()
-        )).thenReturn(Flux.fromIterable(userMock.getPaGroupsMock()));
+        )).thenReturn(Flux.fromIterable(paInfoMock.getPaGroupsMock()));
 
         Mono<BffApiKeysResponse> result = apiKeysPaService.getApiKeys(
                 UserMock.PN_UID,
@@ -118,7 +123,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testNewApiKey() {
+    void newApiKey() {
         BffRequestNewApiKey bffRequestNewApiKey = new BffRequestNewApiKey();
         bffRequestNewApiKey.setName("mock-api-key-name");
         List<String> groups = new ArrayList<>();
@@ -148,7 +153,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testNewApiKeysError() {
+    void newApiKeysError() {
         BffRequestNewApiKey bffRequestNewApiKey = new BffRequestNewApiKey();
         bffRequestNewApiKey.setName("mock-api-key-name");
         List<String> groups = new ArrayList<>();
@@ -179,7 +184,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testDeleteApiKey() {
+    void deleteApiKey() {
         when(pnApikeyManagerClientPA.deleteApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -202,7 +207,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testDeleteApiKeyError() {
+    void deleteApiKeyError() {
         when(pnApikeyManagerClientPA.deleteApiKeys(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -226,7 +231,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testChangeStatusApiKey() {
+    void changeStatusApiKey() {
         BffRequestApiKeyStatus bffRequestApiKeyStatus = new BffRequestApiKeyStatus();
         bffRequestApiKeyStatus.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
 
@@ -254,7 +259,7 @@ class ApiKeysPaServiceTest {
     }
 
     @Test
-    void testChangeStatusApiKeyError() {
+    void changeStatusApiKeyError() {
         BffRequestApiKeyStatus bffRequestApiKeyStatus = new BffRequestApiKeyStatus();
         bffRequestApiKeyStatus.setStatus(BffRequestApiKeyStatus.StatusEnum.BLOCK);
 

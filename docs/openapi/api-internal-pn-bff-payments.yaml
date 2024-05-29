@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Pagamenti
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-payments
+  x-summary: 'API di pn-bff esposte al Web per il recupero delle informazioni relativi ai pagamenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Payments
+    description: >-
+      Invocazioni utilizzate per il recupero delle informazioni relativi ai pagamenti.
+
+paths:
+
+  '/bff/v1/payments/info':
+    post:
+      summary: Retrieve payment information given a list of payments identifiers
+      tags:
+        - Payments
+      operationId: getPaymentsInfoV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:                                                                       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './payments-schemas/payments.yaml#/components/schemas/BffPaymentInfoRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './payments-schemas/payments.yaml#/components/schemas/BffPaymentInfoResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  /bff/v1/payments/cart:
+    post:
+      summary: Make a payment by calling the Checkout API
+      tags:
+        - Payments
+      operationId: paymentsCartV1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "./payments-schemas/payments.yaml#/components/schemas/BffPaymentRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './payments-schemas/payments.yaml#/components/schemas/BffPaymentResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

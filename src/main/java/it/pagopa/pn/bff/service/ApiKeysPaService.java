@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ResponseNewApiKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
@@ -11,7 +10,8 @@ import it.pagopa.pn.bff.mappers.apikeys.RequestApiKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.apikeys.RequestNewApiKeyMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnApikeyManagerClientPAImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnInfoPaClientImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
+import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,8 @@ import java.util.List;
 @Slf4j
 public class ApiKeysPaService {
     private final PnApikeyManagerClientPAImpl pnApikeyManagerClientPA;
-    private final PnInfoPaClientImpl pnInfoPaClient;
+    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
+    private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
      * Get a paginated list of the api keys that belong to a Public Administration and are accessible by the current user
@@ -45,8 +46,9 @@ public class ApiKeysPaService {
                                                Integer limit, String lastKey,
                                                String lastUpdate, Boolean showVirtualKey
     ) {
-        log.info("Get api key list");
         // list of api keys
+        log.info("Get api key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<ApiKeysResponse> apiKeysResponse = pnApikeyManagerClientPA.getApiKeys(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(xPagopaPnCxType),
@@ -56,16 +58,18 @@ public class ApiKeysPaService {
                 lastKey,
                 lastUpdate,
                 showVirtualKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // list of groups linked to the pa
-        Mono<List<PaGroup>> paGroups = pnInfoPaClient.getGroups(
+        log.info("Get user groups - senderId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
+
+        Mono<List<PaGroup>> paGroups = pnExternalRegistriesClient.getPaGroups(
                         xPagopaPnUid,
                         xPagopaPnCxId,
                         xPagopaPnCxGroups,
                         null
                 )
-                .onErrorMap(WebClientResponseException.class, PnBffException::wrapException)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                 .collectList();
 
         return Mono.zip(apiKeysResponse, paGroups).map(res -> ApiKeysMapper.modelMapper.mapApiKeysResponse(res.getT1(), res.getT2()));
@@ -84,7 +88,8 @@ public class ApiKeysPaService {
     public Mono<BffResponseNewApiKey> newApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                 String xPagopaPnCxId, Mono<BffRequestNewApiKey> requestNewApiKey,
                                                 List<String> xPagopaPnCxGroups) {
-        log.info("Create new api key");
+        log.info("Create new api key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return requestNewApiKey.flatMap(request -> {
             Mono<ResponseNewApiKey> responseNewApiKey = pnApikeyManagerClientPA.newApiKey(
                     xPagopaPnUid,
@@ -92,7 +97,7 @@ public class ApiKeysPaService {
                     xPagopaPnCxId,
                     RequestNewApiKeyMapper.modelMapper.mapRequestNewApiKey(request),
                     xPagopaPnCxGroups
-            ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
             return responseNewApiKey.map(ResponseNewApiKeyMapper.modelMapper::mapResponseNewApiKey);
         });
@@ -111,14 +116,15 @@ public class ApiKeysPaService {
     public Mono<Void> deleteApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                    String xPagopaPnCxId, String id,
                                    List<String> xPagopaPnCxGroups) {
-        log.info("Delete api key");
+        log.info("Delete api key {} - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return pnApikeyManagerClientPA.deleteApiKeys(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
                 id,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
     /**
@@ -135,7 +141,7 @@ public class ApiKeysPaService {
     public Mono<Void> changeStatusApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                          String xPagopaPnCxId, String id, Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
                                          List<String> xPagopaPnCxGroups) {
-        log.info("Change api key status");
+        log.info("Change api key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return bffRequestApiKeyStatus.flatMap(request ->
                 pnApikeyManagerClientPA.changeStatusApiKey(
                         xPagopaPnUid,
@@ -144,7 +150,7 @@ public class ApiKeysPaService {
                         id,
                         RequestApiKeyStatusMapper.modelMapper.mapRequestApiKeyStatus(request),
                         xPagopaPnCxGroups
-                ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException)
+                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         );
     }
 }

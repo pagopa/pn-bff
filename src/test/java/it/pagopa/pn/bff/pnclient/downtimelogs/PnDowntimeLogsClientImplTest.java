@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.downtimelogs;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ class PnDowntimeLogsClientImplTest {
     void getCurrentStatusError() {
         when(downtimeApi.currentStatus()).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnDowntimeLogsClient.getCurrentStatus()).expectError(PnBffException.class).verify();
+        StepVerifier.create(pnDowntimeLogsClient.getCurrentStatus()).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -79,7 +78,7 @@ class PnDowntimeLogsClientImplTest {
                 downtimeLogsMock.getFunctionalityMock(),
                 "0",
                 "10"
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -101,6 +100,6 @@ class PnDowntimeLogsClientImplTest {
 
         StepVerifier.create(pnDowntimeLogsClient.getLegalFact(
                 LEGAL_FACT_ID
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

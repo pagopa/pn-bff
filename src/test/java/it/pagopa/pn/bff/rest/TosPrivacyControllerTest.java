@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
@@ -8,17 +9,15 @@ import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.argThat;
@@ -33,8 +32,6 @@ class TosPrivacyControllerTest {
     ConsentsMock consentsMock = new ConsentsMock();
     @MockBean
     private TosPrivacyService tosPrivacyService;
-    @SpyBean
-    private TosPrivacyController tosPrivacyController;
 
     @Test
     void getTosPrivacy() {
@@ -69,7 +66,7 @@ class TosPrivacyControllerTest {
         Mockito.when(tosPrivacyService.getTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class)))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -107,13 +104,13 @@ class TosPrivacyControllerTest {
                 .body(Mono.just(request), BffTosPrivacyBody.class)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isNoContent()
                 .expectBody(Void.class);
 
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 
@@ -123,7 +120,7 @@ class TosPrivacyControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.any()))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         BffTosPrivacyBody request = BffTosPrivacyBody.builder()
                 .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
@@ -143,7 +140,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 }

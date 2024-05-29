@@ -1,0 +1,34 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    BffPgGroupStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PgGroupStatus'
+    
+    BffPgGroupList:
+      title: Groups defined in Self Care PG (Notifiche digitali)
+      description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPgGroup'
+        
+    BffPgGroup:
+      title: Group defined in Self Care PG (Notifiche digitali)
+      description: Contains the name list of groups defined in SelfCare PG (Notifiche digitali)
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/BffPgGroupStatus'
+
+    BffPaNameFilter:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaNameFilter'
+
+    BffSelfCarePaId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/SelfCarePaId'
+
+    BffPaList:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaSummariesList'

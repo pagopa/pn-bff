@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Notifiche Mittenti
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-pa
+  x-api-id: api-internal-pn-bff-pa-notifications
   x-summary: 'API di pn-bff esposte al Web ai mittenti per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
@@ -27,16 +27,104 @@ tags:
       di notifica inviate e delle notifiche accettate.
 
 paths:
+  '/bff/v1/notifications/sent':
+    get:
+      summary: 'Mittente: ricerca notifiche inviate'
+      description: |-
+        Questa operazione permette di ricercare le notifiche inviate.
+      tags:
+        - NotificationSent
+      operationId: searchSentNotificationsV1
+#      security:                                    # ONLY EXTERNAL
+#       - bearerAuth: [ ]                           # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+    post:
+      summary: Richiesta invio notifica
+      description: |-
+        Operazione utilizzata dalla Pubblica Amministrazione per richiedere l'invio di una notifica.
+
+        La restituzione di uno stato HTTP 202 significa solo che la richiesta è sintatticamente
+        valida, non che la richiesta sia stata validata ed accettata.
+      tags:
+        - NotificationSent
+      operationId: newSentNotificationV1
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationRequest"
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffNewNotificationResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
   '/bff/v1/notifications/sent/{iun}':
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 1'
+      summary: 'Mittente: lettura dettagli notifica'
       description: |-
         Questa operazione permette di leggere tutti i dettagli di una notifica accettata.
       tags:
         - NotificationSent
-      operationId: getSentNotificationV1                                      # NO EXTERNAL
-#      operationId: retrieveSentNotificationV1                                # ONLY EXTERNAL
+      operationId: getSentNotificationV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -44,7 +132,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
       responses:
         '200':
           description: OK
@@ -52,6 +140,183 @@ paths:
             application/json:
               schema:
                 $ref: './notification-schemas/notification.yaml#/components/schemas/BffFullNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/{iun}/documents/{documentType}':
+    get:
+      summary: |-
+        Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationDocumentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentIdx'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentCategory'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}':
+    get:
+      summary: Download allegato per pagamento
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationPaymentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathRecipientIdx'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathAttachmentName'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryAttachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/notifications/sent/{iun}/cancel':
+    put:
+      summary: 'Mittente: annullamento notifica'
+      description: |-
+        Questa operazione permette di annullare una notifica inviata.
+      tags:
+        - NotificationSent
+      operationId: notificationCancellationV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+      responses:
+        '202':
+          description: Accepted - Richiesta annullamento presa in carico
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffRequestStatus'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/sent/documents/preload':
+    post:
+      summary: Richiesta di pre-caricamento dei documenti della notifica
+      description: >-
+        Operazione che richiede a Piattaforma Notifica le informazioni e le autorizzazioni necessarie 
+        a pre-caricare uno o più file da allegare a una notifica.
+      tags:
+        - NotificationSent
+      operationId: preSignedUploadV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'          # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadRequest"
+              minItems: 1
+              maxItems: 15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./notification-schemas/notification.yaml#/components/schemas/BffPreLoadResponse"
         '400':
           description: Bad request
           content:

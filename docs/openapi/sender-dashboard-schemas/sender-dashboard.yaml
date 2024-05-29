@@ -1,0 +1,202 @@
+info:
+  version: v1.0
+
+components:
+  parameters:
+    BffSenderDashboardPathCxId:
+      name: cxId
+      in: path
+      description: Customer/Receiver Identifier
+      required: true
+      schema:
+        type: string
+        # ASCII printable characters
+        pattern: ^[ -~]*$
+        maxLength: 64
+    BffSenderDashboardPathCxType:
+      name: cxType
+      in: path
+      description: Customer/Receiver Type
+      required: true
+      schema:
+        type: string
+        enum:
+          - 'PA'
+          - 'PF'
+          - 'PG'
+    BffSenderDashboardQueryStartDate:
+      name: startDate
+      in: query
+      description: YYYY-MM-DD search start date
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
+    BffSenderDashboardQueryEndDate:
+      name: endDate
+      in: query
+      description: YYYY-MM-DD search end date (included)
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
+
+  schemas:
+    BffSenderDashboardDataResponse:
+      type: object
+      properties:
+        senderId:
+          type: string
+          description: Unique identifier for the sender
+        genTimestamp:
+          description: Index generation date and time referred to UTC
+          example: 2022-07-27T12:22:33.444Z
+          type: string
+          format: date-time
+        lastDate:
+          description: YYYY-MM-DD last date on DL files
+          type: string
+          format: date
+          example: '2023-12-06'
+        startDate:
+          description: YYYY-MM-DD start date
+          type: string
+          format: date
+          example: '2023-12-06'
+        endDate:
+          description: YYYY-MM-DD end date (included)
+          type: string
+          format: date
+          example: '2023-12-06'
+        notificationsOverview:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardNotificationOverview'
+        digitalNotificationFocus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
+    BffSenderDashboardNotificationOverview:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        notification_request_status:
+          description: >-
+            Stato richiesta notifica:
+              - __'ACCEPTED'__
+              - __'REFUSED'__
+          type: string
+          example: 'ACCEPTED'
+        notification_status:
+          description: >-
+            Ultimo stato della notifica:
+              - __'REFUSED'__
+              - __'ACCEPETED'__
+              - __'CANCELLED'__
+              - __'DELIVERED'__
+              - __'DELIVERING'__
+              - __'EFFECTIVE_DATE'__
+              - __'UNREACHABLE'__
+              - __'VIEWED'__
+          type: string
+          example: 'VIEWED'
+        notification_type:
+          description: >-
+            Tipo di notifica:
+              - __'DIGITAL'__
+              - __'ANALOGIC'__
+              - __'-'__
+          type: string
+          example: 'DIGITAL'
+        status_digital_delivery:
+          description: >-
+            Esito invio notifica digitale:
+              - __'OK'__
+              - __'KO'__
+              - __'IN CORSO'__
+              - __'-'__
+          type: string
+          example: 'OK'
+        notification_delivered:
+          description: Notifica consegnata __'SI'__ o __'NO'__
+          type: string
+          example: 'SI'
+        notification_viewed:
+          description: Notifica visionata __'SI'__ o __'NO'__
+          type: string
+          example: 'SI'
+        notification_refined:
+          description: Notifica perfezionata __'SI'__ o __'NO'__
+          type: string
+          example: 'SI'
+        attempt_count_per_digital_notification:
+          description: Numero di tentativi notifica digitale
+          type: integer
+          minimum: 0
+          maximum: 8
+          example: 0
+        notifications_count:
+          description: Numero Notifiche
+          type: integer
+          minimum: 0
+          example: 2
+        delivery_time:
+          description: Tempo di consegna in ore
+          type: number
+          format: double
+          minimum: 0.0
+          example: 0.11
+        view_time:
+          description: Tempo di visualizzazione in ore
+          type: number
+          format: double
+          minimum: 0.0
+          example: 2.76
+        refinement_time:
+          description: Tempo di perfezionamento in ore
+          type: number
+          format: double
+          minimum: 0.0
+          example: 4.77
+        validation_time:
+          description: Tempo di validazione in ore
+          type: number
+          format: double
+          minimum: 0.0
+          example: 2.01
+    BffSenderDashboardDigitalNotificationFocus:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        error_type:
+          description: >-
+            Tipo di errore:
+              - __'ERRORE DOMINIO PEC NON VALIDO'__
+              - __'ERRORE CONSEGNA'__
+              - __'NON ACCETTAZIONE'__
+              - __'-'__
+          type: string
+          example: 'ERRORE DOMINIO PEC NON VALIDO'
+        failed_attempts_count:
+          type: integer
+          example: 1
+        notifications_count:
+          type: integer
+          minimum: 0
+          example: 4

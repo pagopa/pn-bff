@@ -1,0 +1,55 @@
+info:
+  version: v1.0
+components:
+  parameters:
+    BffSenderId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
+  schemas:
+    BffUserAddresses:
+      type: array
+      items:
+        $ref: '#/components/schemas/BffUserAddress'
+
+    BffUserAddress:
+      type: object
+      required:
+        - addressType
+        - recipientId
+        - senderId
+        - channelType
+        - value
+      properties:
+        addressType:
+          type: string
+        senderId:
+          type: string
+          description: senderId or 'default'
+        senderName:
+          type: string
+          description: name of the sender
+        channelType:
+          $ref: '#/components/schemas/BffChannelType'
+        value:
+          type: string
+        pecValid:
+          type: boolean
+
+    BffChannelType:
+      type: string
+      enum:
+        - EMAIL
+        - SMS
+        - PEC
+        - APPIO
+
+    BffAddressType:
+      type: string
+      enum:
+        - LEGAL
+        - COURTESY
+
+    BffAddressVerificationRequest:
+      $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
+
+    BffAddressVerificationResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/a339c4ed2d8e5e9193c1eddaac322c68e9ff9b5a/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerificationResponse'

@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Institutions and Products
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-pa-info
+  x-summary: 'API di pn-bff esposte al Web per i mittenti'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: InfoPa
+    description: Invocazioni per sapere i portali disponibili di un ente
+
+paths:
+  '/bff/v1/institutions':
+    get:
+      summary: Get Institutions list
+      description: |-
+        This operation retrieves the institutions from Self Care.
+      operationId: getInstitutionsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/institutions/products':
+    get:
+      summary: Get Products list of an Institution
+      description: |-
+        This operation retrieves all active products associated with the specified institution and user.
+      operationId: getInstitutionProductsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+      - InfoPa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffInstitutionProductList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/pa/groups':
+    get:
+      summary: Get PA Groups list
+      description: |-
+        This operation retrieves the groups from Self Care.
+      operationId: getPAGroupsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+      parameters:
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffPaGroupList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'

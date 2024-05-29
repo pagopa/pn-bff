@@ -3,7 +3,7 @@ info:
   title: PN BFF BE Microservice - Notifiche Destinatari
   description: Documentation APIs v1.0
   termsOfService: https://termofservice.it
-  x-api-id: api-internal-pn-bff-recipient
+  x-api-id: api-internal-pn-bff-recipient-notifications
   x-summary: 'API di pn-bff esposte al Web ai destinatari per la visualizzazione e gestione delle notifiche'
   version: '1.0.0'
   contact:
@@ -26,7 +26,94 @@ tags:
       Invocazioni utilizzate dai destinatari per ottenere informazioni sulle notifiche a loro destinate.
 
 paths:
+  '/bff/v1/notifications/received':
+    get:
+      summary: 'Destinatario: ricerca notifiche ricevute'
+      description: |-
+        Questa operazione permette di ricercare le notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedNotificationsV1
+#      security:                                    # ONLY EXTERNAL
+#       - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSenderId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSubject'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
 
+  '/bff/v1/notifications/received/delegated':
+    get:
+      summary: 'Destinatario: ricerca notifiche delegate ricevute'
+      description: |-
+        Questa operazione permette di ricercare le notifiche delegate ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedDelegatedNotificationsV1
+#      security:                                    # ONLY EXTERNAL
+#       - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSenderId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchGroup'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStatus'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffNotificationsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+  
   '/bff/v1/notifications/received/{iun}':
     get:
       summary: Accesso notifiche ricevute
@@ -43,8 +130,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'              # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'          # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffPathIun'
-        - $ref: './notification-schemas/parameters-notification-search.yaml#/components/parameters/BffNotificationSearchMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
       responses:
         '200':
           description: OK
@@ -64,5 +151,131 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '401':
-          description: Access token is missing or invalid
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/{iun}/documents/{documentType}':
+    get:
+      summary: |-
+        Questa operazione permette di scaricare qualsiasi documento legato alla notifica.
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationDocumentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentIdx'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentCategory'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/{iun}/payments/{attachmentName}':
+    get:
+      summary: Download allegato per pagamento
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationPaymentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathAttachmentName'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryAttachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+  
+  '/bff/v1/notifications/received/check-aar-qr-code':
+    post:
+      summary: Servizio per la verifica del aar-qr-code
+      tags:
+        - NotificationReceived
+      operationId: checkAarQrCodeV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters: # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckAarResponse'
+        '404':
+          description: QrCode reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

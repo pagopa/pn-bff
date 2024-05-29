@@ -1,0 +1,95 @@
+info:
+  version: v1.0
+components:
+  parameters:
+
+    BffQueryStatus:
+      description: Stato della delega
+      name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - pending
+          - active
+          - revoked
+          - rejected
+          - expired
+
+    BffPathMandateId:
+      name: mandateId
+      in: path
+      required: true
+      schema:
+        type: string
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+
+    BffQuerySize:
+      name: size
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int32
+        maximum: 50
+
+    BffQueryNextPageKey:
+      name: nextPageKey
+      in: query
+      schema:
+        type: string
+        # ASCII printable characters
+        maxLength: 4096
+        pattern: ^[ -~ ]*$
+
+  schemas:
+
+    BffMandatesCount:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateCountsDto'
+
+    BffNewMandateRequest:
+      type: object
+      required:
+        - delegate
+        - verificationCode
+        - dateto
+      properties:
+        delegate:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UserDto'
+        visibilityIds:
+          type: array
+          description: Available always, not required on mandate creation.
+          nullable: true
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/GroupDto'
+
+    BffAcceptRequest:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/AcceptRequestDto'
+
+    BffUpdateRequest:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UpdateRequestDto'
+
+    BffMandate:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateDto'
+
+    BffSearchMandateRequest:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateRequestDto'
+
+    BffSearchMandateResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/3cc100fc9191b827a6dad28aa6ce2b110a9df7bb/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateResponseDto'

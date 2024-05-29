@@ -1,13 +1,11 @@
 package it.pagopa.pn.bff.pnclient.apikeys;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class PnApikeyManagerClientPAImpl {
                 lastKey,
                 lastUpdate,
                 showVirtualKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<ResponseNewApiKey> newApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -48,7 +46,7 @@ public class PnApikeyManagerClientPAImpl {
                 xPagopaPnCxId,
                 requestNewApiKey,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<Void> deleteApiKeys(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -62,7 +60,7 @@ public class PnApikeyManagerClientPAImpl {
                 xPagopaPnCxId,
                 id,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 
     public Mono<Void> changeStatusApiKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -77,6 +75,6 @@ public class PnApikeyManagerClientPAImpl {
                 id,
                 requestApiKeyStatus,
                 xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
     }
 }

@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
@@ -9,7 +8,6 @@ import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -49,14 +47,11 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                                  String lastUpdate,
                                                                  Boolean showVirtualKey,
                                                                  final ServerWebExchange exchange) {
-        log.logStartingProcess("getApiKeysV1");
 
         Mono<BffApiKeysResponse> serviceResponse = apiKeysPaService.getApiKeys(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, limit, lastKey, lastUpdate, showVirtualKey
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
-
-        log.logEndingProcess("getApiKeysV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -78,14 +73,11 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                                   Mono<BffRequestNewApiKey> bffRequestNewApiKey,
                                                                   List<String> xPagopaPnCxGroups,
                                                                   final ServerWebExchange exchange) {
-        log.logStartingProcess("newApiKeyV1");
 
         Mono<BffResponseNewApiKey> serviceResponse = apiKeysPaService.newApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffRequestNewApiKey, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
-
-        log.logEndingProcess("newApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -108,14 +100,11 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                      String id,
                                                      List<String> xPagopaPnCxGroups,
                                                      final ServerWebExchange exchange) {
-        log.logStartingProcess("deleteApiKeyV1");
 
         Mono<Void> serviceResponse = apiKeysPaService.deleteApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
-
-        log.logEndingProcess("deleteApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -140,14 +129,11 @@ public class ApiKeysPaController implements ApiKeysApi {
                                                            Mono<BffRequestApiKeyStatus> bffRequestApiKeyStatus,
                                                            List<String> xPagopaPnCxGroups,
                                                            final ServerWebExchange exchange) {
-        log.logStartingProcess("changeStatusApiKeyV1");
 
         Mono<Void> serviceResponse = apiKeysPaService.changeStatusApiKey(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, bffRequestApiKeyStatus, xPagopaPnCxGroups
-        ).onErrorMap(WebClientResponseException.class, PnBffException::wrapException);
+        );
 
-
-        log.logEndingProcess("changeStatusApiKeyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

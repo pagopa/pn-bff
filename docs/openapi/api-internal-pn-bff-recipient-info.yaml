@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Recipient Info
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-recipient-info
+  x-summary: 'API di pn-bff esposte al Web per i destinatari'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: InfoRecipient
+    description: Invocazioni per sapere i gruppi disponibili di un ente e le PA che usano PN
+
+paths:
+  '/bff/v1/pg/groups':
+    get:
+      summary: Get PG Groups list
+      description: |-
+        This operation retrieves the PG Groups from Self Care.
+      operationId: getPGGroupsV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoRecipient
+      parameters:
+        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPgGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPgGroupList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/pa-list':
+    get:
+      summary: Get PA list
+      description: |-
+        This operation retrieves the list of PA that use PN
+      operationId: getPAListV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoRecipient
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
+        - name: paNameFilter
+          description: Se valorizzato indica il prefisso della denominazione della PA
+          in: query
+          required: false
+          schema:
+            $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPaNameFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-recipient-schemas/info-recipient.yaml#/components/schemas/BffPaList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

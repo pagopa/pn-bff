@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.pnclient.apikeys;
 
-import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
@@ -77,7 +76,7 @@ class PnApikeyManagerClientPAImplTest {
                 "LAST_KEY",
                 "LAST_UPDATE",
                 true
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -115,7 +114,7 @@ class PnApikeyManagerClientPAImplTest {
                 UserMock.PN_CX_ID,
                 apiKeysMock.geRequestNewApiKeyMock(),
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -153,7 +152,7 @@ class PnApikeyManagerClientPAImplTest {
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -199,6 +198,6 @@ class PnApikeyManagerClientPAImplTest {
                 "API_KEY_ID",
                 requestApiKeyStatus,
                 UserMock.PN_CX_GROUPS
-        )).expectError(PnBffException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

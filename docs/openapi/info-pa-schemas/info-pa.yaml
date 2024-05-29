@@ -1,0 +1,77 @@
+components:
+  schemas:
+    BffInstitutionList:
+      description: The list of institutions
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitution'
+    
+    BffInstitution:
+      type: object
+      required:
+        - id
+        - name
+        - productRole
+        - entityUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the institution
+        name:
+          type: string
+          description: The name of the institution
+        productRole:
+          type: string
+          description: The role of the product
+        logoUrl:
+          type: string
+          description: The URL of the logo
+        parentName:
+          type: string
+          description: The name of the parent institution
+        entityUrl:
+          type: string
+          description: The URL of the entity
+    
+    BffInstitutionProductList:
+      description: The list of products
+      type: array
+      items:
+        $ref: '#/components/schemas/BffInstitutionProduct'
+    
+    BffInstitutionProduct:
+      type: object
+      required:
+        - id
+        - title
+        - productUrl
+      properties:
+        id:
+          type: string
+          description: The identifier of the product
+        title:
+          type: string
+          description: The title of the product
+        productUrl:
+          type: string
+          description: The URL of the product
+    
+    BffPaGroupStatus:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/73742125f2f0b48bd1bb5bb14a36a4839ba3dc71/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
+    
+    BffPaGroupList:
+      title: Groups defined in Self Care
+      description: Contains the list of groups defined in SelfCare
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPaGroup'
+    
+    BffPaGroup:
+      title: Group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string

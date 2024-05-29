@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
@@ -15,25 +16,21 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 
 @Slf4j
 @WebFluxTest(DowntimeLogsController.class)
-public class DowntimeLogsControllerTest {
+class DowntimeLogsControllerTest {
     private final String LEGAL_FACT_ID = "LEGAL_FACT_ID";
     @Autowired
     WebTestClient webTestClient;
     DowntimeLogsMock downtimeLogsMock = new DowntimeLogsMock();
     @MockBean
     private DowntimeLogsService downtimeLogsService;
-    @SpyBean
-    private DowntimeLogsController downtimeLogsController;
 
     @Test
     void getCurrentStatus() {
@@ -58,7 +55,7 @@ public class DowntimeLogsControllerTest {
     @Test
     void getCurrentStatusError() {
         Mockito.when(downtimeLogsService.getCurrentStatus())
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -109,7 +106,7 @@ public class DowntimeLogsControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString())
                 )
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()
@@ -153,7 +150,7 @@ public class DowntimeLogsControllerTest {
     @Test
     void getLegalFactError() {
         Mockito.when(downtimeLogsService.getLegalFact(Mockito.anyString()))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
                 .get()

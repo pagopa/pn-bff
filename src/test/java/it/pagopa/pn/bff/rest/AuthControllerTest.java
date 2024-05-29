@@ -5,14 +5,13 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTokenExchangeResponse
 import it.pagopa.pn.bff.mocks.AuthFleetMock;
 import it.pagopa.pn.bff.service.AuthService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -25,18 +24,12 @@ import static org.mockito.ArgumentMatchers.eq;
 @Slf4j
 @ContextConfiguration(classes = AuthController.class)
 @WebFluxTest
-public class AuthControllerTest {
+class AuthControllerTest {
     @Autowired
     WebTestClient webTestClient;
-
+    AuthFleetMock authFleetMock = new AuthFleetMock();
     @MockBean
     private AuthService authService;
-
-    @SpyBean
-    private AuthController authController;
-
-    AuthFleetMock authFleetMock = new AuthFleetMock();
-
 
     @Test
     void tokenExchange() {
@@ -63,7 +56,7 @@ public class AuthControllerTest {
 
         Mockito.verify(authService).tokenExchange(
                 eq(AuthFleetMock.ORIGIN),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 
@@ -89,7 +82,7 @@ public class AuthControllerTest {
 
         Mockito.verify(authService).tokenExchange(
                 eq(AuthFleetMock.ORIGIN),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request))))
+                argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
 }

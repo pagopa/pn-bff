@@ -1,23 +1,23 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
+import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.ApiKeysPaService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoComparator;
+import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -33,17 +33,15 @@ class ApiKeysPaControllerTest {
     private static final String LAST_KEY = "LAST_KEY";
     private static final String LAST_UPDATE = "LAST_UPDATE";
     private final ApiKeysMock apiKeysMock = new ApiKeysMock();
-    private final UserMock userMock = new UserMock();
+    private final PaInfoMock paInfoMock = new PaInfoMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
     private ApiKeysPaService apiKeysPaService;
-    @SpyBean
-    private ApiKeysPaController apiKeysPaController;
 
     @Test
     void getApiKeys() {
-        BffApiKeysResponse response = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), userMock.getPaGroupsMock());
+        BffApiKeysResponse response = ApiKeysMapper.modelMapper.mapApiKeysResponse(apiKeysMock.getApiKeysMock(), paInfoMock.getPaGroupsMock());
         Mockito.when(apiKeysPaService.getApiKeys(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -101,7 +99,7 @@ class ApiKeysPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyBoolean()
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.get()
@@ -176,7 +174,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -197,7 +195,7 @@ class ApiKeysPaControllerTest {
                         Mockito.any(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.post()
@@ -220,7 +218,7 @@ class ApiKeysPaControllerTest {
                 eq(UserMock.PN_UID),
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -269,7 +267,7 @@ class ApiKeysPaControllerTest {
                         Mockito.anyString(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.delete()
@@ -331,7 +329,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -349,7 +347,7 @@ class ApiKeysPaControllerTest {
                         Mockito.any(),
                         Mockito.anyList()
                 ))
-                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
         webTestClient.put()
@@ -372,7 +370,7 @@ class ApiKeysPaControllerTest {
                 eq(CxTypeAuthFleet.PA),
                 eq(UserMock.PN_CX_ID),
                 eq("API_KEY_ID"),
-                argThat((argumentToCompare -> MonoComparator.compare(argumentToCompare, Mono.just(request)))),
+                argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }

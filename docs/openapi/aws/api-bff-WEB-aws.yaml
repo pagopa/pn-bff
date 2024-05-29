@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: QU42c3CDnxIFHZFsH/h5i72ZLrS8QrZpZsTPq7v0hus=
+  version: glNLFJSLRxC2Dokw9uw3ZA3EgdBCkMKHezHhtYuXyMc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -11,15 +11,148 @@ servers:
     x-amazon-apigateway-endpoint-configuration:
       disableExecuteApiEndpoint: true
 paths:
+  /v1/notifications/sent:
+    get:
+      summary: 'Mittente: ricerca notifiche inviate'
+      description: Questa operazione permette di ricercare le notifiche inviate.
+      tags:
+        - NotificationSent
+      operationId: searchSentNotificationsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/notificationSearchStartDate'
+        - $ref: '#/components/parameters/notificationSearchEndDate'
+        - $ref: '#/components/parameters/notificationSearchRecipientId'
+        - $ref: '#/components/parameters/BffNotificationSearchStatus'
+        - $ref: '#/components/parameters/notificationSearchSubject'
+        - $ref: '#/components/parameters/notificationSearchIun'
+        - $ref: '#/components/parameters/notificationSearchPageSize'
+        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      summary: Richiesta invio notifica
+      description: >-
+        Operazione utilizzata dalla Pubblica Amministrazione per richiedere
+        l'invio di una notifica.
+
+
+        La restituzione di uno stato HTTP 202 significa solo che la richiesta è
+        sintatticamente
+
+        valida, non che la richiesta sia stata validata ed accettata.
+      tags:
+        - NotificationSent
+      operationId: newSentNotificationV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffNewNotificationRequest'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewNotificationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/notifications/sent API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
   /v1/notifications/sent/{iun}:
     get:
-      summary: 'Mittente: lettura dettagli notifica versione 1'
+      summary: 'Mittente: lettura dettagli notifica'
       description: >-
         Questa operazione permette di leggere tutti i dettagli di una notifica
         accettata.
       tags:
         - NotificationSent
-      operationId: retrieveSentNotificationV1
+      operationId: getSentNotificationV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -75,6 +208,438 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/notifications/sent/{iun}/documents/{documentType}:
+    get:
+      summary: >-
+        Questa operazione permette di scaricare qualsiasi documento legato alla
+        notifica.
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationDocumentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/BffPathDocumentType'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
+        - $ref: '#/components/parameters/BffQueryDocumentId'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents/{documentType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.documentType: method.request.path.documentType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/notifications/sent/{iun}/documents/{documentType} API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents/{documentType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.documentType: method.request.path.documentType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}:
+    get:
+      summary: Download allegato per pagamento
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationPaymentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/pathRecipientIdx'
+        - $ref: '#/components/parameters/pathAttachmentName'
+        - $ref: '#/components/parameters/attachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.recipientIdx: method.request.path.recipientIdx
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for
+        /v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.recipientIdx: method.request.path.recipientIdx
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/sent/{iun}/cancel:
+    put:
+      summary: 'Mittente: annullamento notifica'
+      description: Questa operazione permette di annullare una notifica inviata.
+      tags:
+        - NotificationSent
+      operationId: notificationCancellationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+      responses:
+        '202':
+          description: Accepted - Richiesta annullamento presa in carico
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestStatus'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/cancel
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/sent/{iun}/cancel API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/cancel
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/sent/documents/preload:
+    post:
+      summary: Richiesta di pre-caricamento dei documenti della notifica
+      description: >-
+        Operazione che richiede a Piattaforma Notifica le informazioni e le
+        autorizzazioni necessarie  a pre-caricare uno o più file da allegare a
+        una notifica.
+      tags:
+        - NotificationSent
+      operationId: preSignedUploadV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PreLoadRequest'
+              minItems: 1
+              maxItems: 15
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreLoadResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/documents/preload
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/notifications/sent/documents/preload API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/documents/preload
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received:
+    get:
+      summary: 'Destinatario: ricerca notifiche ricevute'
+      description: Questa operazione permette di ricercare le notifiche ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedNotificationsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/notificationSearchStartDate'
+        - $ref: '#/components/parameters/notificationSearchEndDate'
+        - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: '#/components/parameters/notificationSearchSenderId'
+        - $ref: '#/components/parameters/BffNotificationSearchStatus'
+        - $ref: '#/components/parameters/notificationSearchSubject'
+        - $ref: '#/components/parameters/notificationSearchIun'
+        - $ref: '#/components/parameters/notificationSearchPageSize'
+        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/received API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/delegated:
+    get:
+      summary: 'Destinatario: ricerca notifiche delegate ricevute'
+      description: Questa operazione permette di ricercare le notifiche delegate ricevute.
+      tags:
+        - NotificationReceived
+      operationId: searchReceivedDelegatedNotificationsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/notificationSearchStartDate'
+        - $ref: '#/components/parameters/notificationSearchEndDate'
+        - $ref: '#/components/parameters/notificationSearchSenderId'
+        - $ref: '#/components/parameters/notificationSearchRecipientId'
+        - $ref: '#/components/parameters/notificationSearchGroup'
+        - $ref: '#/components/parameters/BffNotificationSearchStatus'
+        - $ref: '#/components/parameters/notificationSearchIun'
+        - $ref: '#/components/parameters/notificationSearchPageSize'
+        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/delegated
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/received/delegated API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/delegated
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
   /v1/notifications/received/{iun}:
     get:
       summary: Accesso notifiche ricevute
@@ -102,10 +667,14 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '401':
-          description: Access token is missing or invalid
         '404':
           description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
           content:
             application/problem+json:
               schema:
@@ -138,6 +707,216 @@ paths:
         httpMethod: ANY
         requestParameters:
           integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/{iun}/documents/{documentType}:
+    get:
+      summary: >-
+        Questa operazione permette di scaricare qualsiasi documento legato alla
+        notifica.
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationDocumentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/BffPathDocumentType'
+        - $ref: '#/components/parameters/queryMandateId'
+        - $ref: '#/components/parameters/BffQueryDocumentIdx'
+        - $ref: '#/components/parameters/BffQueryDocumentId'
+        - $ref: '#/components/parameters/BffQueryDocumentCategory'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/documents/{documentType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.documentType: method.request.path.documentType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/notifications/received/{iun}/documents/{documentType}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/documents/{documentType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.documentType: method.request.path.documentType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/{iun}/payments/{attachmentName}:
+    get:
+      summary: Download allegato per pagamento
+      tags:
+        - NotificationReceived
+      operationId: getReceivedNotificationPaymentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/pathAttachmentName'
+        - $ref: '#/components/parameters/queryMandateId'
+        - $ref: '#/components/parameters/attachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/payments/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/notifications/received/{iun}/payments/{attachmentName}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/payments/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/check-aar-qr-code:
+    post:
+      summary: Servizio per la verifica del aar-qr-code
+      tags:
+        - NotificationReceived
+      operationId: checkAarQrCodeV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCheckAarMandateDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseCheckAarMandateDto'
+        '404':
+          description: QrCode reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/notifications/received/check-aar-qr-code API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -428,7 +1207,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
-        - InstitutionAndProduct
+        - InfoPa
       responses:
         '200':
           description: OK
@@ -489,7 +1268,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
-        - InstitutionAndProduct
+        - InfoPa
       responses:
         '200':
           description: OK
@@ -533,6 +1312,201 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pa/groups:
+    get:
+      summary: Get PA Groups list
+      description: This operation retrieves the groups from Self Care.
+      operationId: getPAGroupsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoPa
+      parameters:
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPaGroupList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pa/groups API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/groups:
+    get:
+      summary: Get PG Groups list
+      description: This operation retrieves the PG Groups from Self Care.
+      operationId: getPGGroupsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoRecipient
+      parameters:
+        - name: status
+          description: Se valorizzato indica di tornare solo i gruppi nello stato passato
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PgGroupStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPgGroupList'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pg/groups API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pa-list:
+    get:
+      summary: Get PA list
+      description: This operation retrieves the list of PA that use PN
+      operationId: getPAListV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoRecipient
+      parameters:
+        - name: paNameFilter
+          description: Se valorizzato indica il prefisso della denominazione della PA
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaNameFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaSummariesList'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa-list
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pa-list API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa-list
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -899,8 +1873,982 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/payments/info:
+    post:
+      summary: Retrieve payment information given a list of payments identifiers
+      tags:
+        - Payments
+      operationId: getPaymentsInfoV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInfoRequests'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPaymentInfoResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/info
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/payments/info API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/info
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/payments/cart:
+    post:
+      summary: Make a payment by calling the Checkout API
+      tags:
+        - Payments
+      operationId: paymentsCartV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/cart
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/payments/cart API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/cart
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/addresses:
+    get:
+      summary: Recapiti
+      description: Restituisce i recapiti dell'utente
+      tags:
+        - Addresses
+      operationId: getAddressesV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffUserAddresses'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/addresses API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/addresses/{addressType}/{senderId}/{channelType}:
+    post:
+      summary: Creazione/Aggiornamento Recapito
+      description: Creazione o aggiornamento di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: createOrUpdateAddressV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: '#/components/schemas/BffAddressType'
+        - $ref: '#/components/parameters/senderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: '#/components/schemas/BffChannelType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressVerification'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressVerificationResponse'
+          description: |
+            Nell'oggetto c'è la motivazione di quanto richiesto per procedere
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: >
+            This error is caused by one of this events: * Verification code
+            failure: error.detail equals to
+            PN_USERATTRIBUTES_INVALIDVERIFICATIONCODE * Verification code max
+            attempt reached: error.detail equals to
+            PN_USERATTRIBUTES_RETRYLIMITVERIFICATIONCODE * Verification code
+            expired/notfound: error.detail equals to
+            PN_USERATTRIBUTES_EXPIREDVERIFICATIONCODE
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    delete:
+      summary: Eliminazione Recapito
+      description: Eliminazione di un recapito legale o di cortesia
+      tags:
+        - Addresses
+      operationId: deleteAddressV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: addressType
+          in: path
+          description: Address type
+          required: true
+          schema:
+            $ref: '#/components/schemas/BffAddressType'
+        - $ref: '#/components/parameters/senderId'
+        - in: path
+          name: channelType
+          description: Communication Channel type
+          required: true
+          schema:
+            $ref: '#/components/schemas/BffChannelType'
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Digital Address not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/addresses/{addressType}/{senderId}/{channelType} API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.addressType: method.request.path.addressType
+          integration.request.path.senderId: method.request.path.senderId
+          integration.request.path.channelType: method.request.path.channelType
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/delegate/count:
+    get:
+      summary: >-
+        Ritorna il numero totale di deleghe in base al filtro stato (se
+        specificato). Se non è presente nessun filtro, sono ritornate tutte le
+        deleghe attive e pending
+      tags:
+        - Mandate
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      operationId: countMandatesByDelegateV1
+      parameters:
+        - $ref: '#/components/parameters/BffQueryStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCountsDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate/count
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/delegate/count API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate/count
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate:
+    post:
+      summary: Create a new mandate, returns the just created mandate if successful
+      tags:
+        - Mandate
+      operationId: createMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffNewMandateRequest'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/mandate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/accept:
+    patch:
+      summary: Accept a mandate
+      tags:
+        - Mandate
+      operationId: acceptMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/accept API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/update:
+    patch:
+      summary: Update a mandate
+      tags:
+        - Mandate
+      operationId: updateMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/update API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/reject:
+    patch:
+      summary: Reject a mandate
+      tags:
+        - Mandate
+      operationId: rejectMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/reject API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/{mandateId}/revoke:
+    patch:
+      summary: Revoke a mandate
+      tags:
+        - Mandate
+      operationId: revokeMandateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffPathMandateId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/revoke
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/{mandateId}/revoke API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/revoke
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/delegate:
+    get:
+      summary: >-
+        Ritorna la lista delle deleghe a carico in base al filtro per stato (se
+        specificato). Se non è presente nessun filtro, sono ritornate tutte le
+        deleghe attive e pending
+      tags:
+        - Mandate
+      operationId: getMandatesByDelegateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQueryStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      summary: >-
+        Ritorna la lista delle deleghe a carico in base ai filtri per stato,
+        gruppo/i e delegante (taxId)
+      tags:
+        - Mandate
+      operationId: searchMandatesByDelegateV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQuerySize'
+        - $ref: '#/components/parameters/BffQueryNextPageKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/mandate/delegate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/mandate/delegator:
+    get:
+      summary: Ritorna tutte le deleghe create
+      tags:
+        - Mandate
+      operationId: getMandatesByDelegatorV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegator
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/mandate/delegator API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegator
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}:
+    get:
+      summary: recupero dati per dashboard mittenti
+      description: servizio per il recupero dei dati per dashboard mittenti
+      tags:
+        - SenderDashboard
+      operationId: getDashboardDataV1
+      parameters:
+        - $ref: '#/components/parameters/BffSenderDashboardPathCxType'
+        - $ref: '#/components/parameters/BffSenderDashboardPathCxId'
+        - $ref: '#/components/parameters/BffSenderDashboardQueryStartDate'
+        - $ref: '#/components/parameters/BffSenderDashboardQueryEndDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffSenderDashboardDataResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.cxType: method.request.path.cxType
+          integration.request.path.cxId: method.request.path.cxId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/sender-dashboard/dashboard-data-request/{cxType}/{cxId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.cxType: method.request.path.cxType
+          integration.request.path.cxId: method.request.path.cxId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
+    notificationSearchStartDate:
+      name: startDate
+      in: query
+      required: true
+      description: data/ora di inizio dell'intervallo entro cui eseguire la ricerca
+      schema:
+        type: string
+        format: date-time
+    notificationSearchEndDate:
+      name: endDate
+      in: query
+      required: true
+      description: data/ora di fine dell'intervallo entro cui eseguire la ricerca
+      schema:
+        type: string
+        format: date-time
+    notificationSearchRecipientId:
+      name: recipientId
+      in: query
+      required: false
+      description: identificativo del destinatario
+      schema:
+        type: string
+        x-field-extra-annotation: '@lombok.ToString.Exclude'
+    BffNotificationSearchStatus:
+      name: status
+      in: query
+      required: false
+      description: stato della notifica
+      schema:
+        $ref: '#/components/schemas/NotificationStatus'
+    notificationSearchSubject:
+      name: subjectRegExp
+      description: >-
+        Regular expression usata, se presente, per filtrare i risultati in base
+        al subject  delle notifiche.
+      in: query
+      required: false
+      schema:
+        type: string
+    notificationSearchIun:
+      name: iunMatch
+      description: >-
+        Se presente indica che lo IUN dei risultati deve essere uguale al valore
+        di questo parametro.
+      in: query
+      required: false
+      schema:
+        type: string
+    notificationSearchPageSize:
+      name: size
+      description: dimensione della pagina di risultati
+      in: query
+      required: false
+      schema:
+        type: number
+        maximum: 50
+    notificationSearchNextPagesKey:
+      name: nextPagesKey
+      description: >-
+        Chiave indicante la pagina di risultati, da specificare solo se si vuole
+        una pagina  diversa dalla prima.
+      in: query
+      required: false
+      schema:
+        type: string
     pathIun:
       description: Identificativo Univoco Notifica
       name: iun
@@ -911,6 +2859,64 @@ components:
         minLength: 25
         maxLength: 25
         pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    BffPathDocumentType:
+      description: Tipo documento
+      name: documentType
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/BffDocumentType'
+    BffQueryDocumentIdx:
+      description: Indice del documento
+      name: documentIdx
+      in: query
+      required: false
+      schema:
+        type: number
+    BffQueryDocumentId:
+      description: Identificativo del documento
+      name: documentId
+      in: query
+      required: false
+      schema:
+        type: string
+        pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
+        maxLength: 1024
+    BffQueryDocumentCategory:
+      description: >-
+        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
+        disposizione dei suoi utenti.
+      name: documentCategory
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/LegalFactCategory'
+    pathRecipientIdx:
+      name: recipientIdx
+      description: indice del destinatario nella lista partendo da 0.
+      in: path
+      required: true
+      schema:
+        type: number
+    pathAttachmentName:
+      name: attachmentName
+      description: >-
+        Tipologia del pagamento allegato alla notifica. Valori possibili
+        PAGOPA|F24
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 6
+        pattern: PAGOPA|F24
+    attachmentIdx:
+      in: query
+      name: attachmentIdx
+      description: indice del documento di pagamento partendo da 0
+      required: false
+      schema:
+        type: number
     notificationSearchMandateId:
       name: mandateId
       in: query
@@ -918,6 +2924,27 @@ components:
       description: identificativo della delega
       schema:
         type: string
+    notificationSearchSenderId:
+      name: senderId
+      in: query
+      required: false
+      description: identificativo del mittente
+      schema:
+        type: string
+    notificationSearchGroup:
+      name: group
+      in: query
+      required: false
+      description: Gruppo da utilizzare nella query come filtro
+      schema:
+        type: string
+    queryMandateId:
+      name: mandateId
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
     pathApiKey:
       description: Identificativo univoco dell'api key
       name: id
@@ -955,7 +2982,253 @@ components:
       description: Size della pagina di risultati a cui il client è interessato
       schema:
         type: string
+    senderId:
+      in: path
+      name: senderId
+      description: sender Id or 'default' for general addresses not associated to a sender
+      example: default
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        pattern: ^[ -~ ]*$
+    BffQueryStatus:
+      description: Stato della delega
+      name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - pending
+          - active
+          - revoked
+          - rejected
+          - expired
+    BffPathMandateId:
+      name: mandateId
+      in: path
+      required: true
+      schema:
+        type: string
+        maxLength: 36
+        pattern: >-
+          ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+    BffQuerySize:
+      name: size
+      in: query
+      required: true
+      schema:
+        type: number
+        maximum: 50
+    BffQueryNextPageKey:
+      name: nextPageKey
+      in: query
+      schema:
+        type: string
+        maxLength: 4096
+        pattern: ^[ -~ ]*$
+    BffSenderDashboardPathCxType:
+      name: cxType
+      in: path
+      description: Customer/Receiver Type
+      required: true
+      schema:
+        type: string
+        enum:
+          - PA
+          - PF
+          - PG
+    BffSenderDashboardPathCxId:
+      name: cxId
+      in: path
+      description: Customer/Receiver Identifier
+      required: true
+      schema:
+        type: string
+        pattern: ^[ -~]*$
+        maxLength: 64
+    BffSenderDashboardQueryStartDate:
+      name: startDate
+      in: query
+      description: YYYY-MM-DD search start date
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
+    BffSenderDashboardQueryEndDate:
+      name: endDate
+      in: query
+      description: YYYY-MM-DD search end date (included)
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2023-12-06'
   schemas:
+    NotificationStatus:
+      type: string
+      description: |
+        stato di avanzamento del processo di notifica:
+          * `IN_VALIDATION` - notifica depositata in attesa di validazione
+          * `ACCEPTED` - L'ente ha depositato la notifica con successo
+          * `REFUSED` - Notifica rifiutata a seguito della validazione
+          * `DELIVERING` - L'invio della notifica è in corso
+          * `DELIVERED` - La notifica è stata consegnata a tutti i destinatari
+          * `VIEWED` - Il destinatario ha letto la notifica entro il termine stabilito
+          * `EFFECTIVE_DATE` - Il destinatario non ha letto la notifica entro il termine stabilito
+          * `PAID` - Uno dei destinatari ha pagato la notifica
+          * `UNREACHABLE` - Il destinatario non è reperibile
+          * `CANCELLED` - L'ente ha annullato l'invio della notifica
+      enum:
+        - IN_VALIDATION
+        - ACCEPTED
+        - REFUSED
+        - DELIVERING
+        - DELIVERED
+        - VIEWED
+        - EFFECTIVE_DATE
+        - PAID
+        - UNREACHABLE
+        - CANCELLED
+    IUN:
+      description: Identificativo Univoco Notifica
+      type: string
+      minLength: 25
+      maxLength: 25
+      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    NotificationSearchRow:
+      type: object
+      properties:
+        iun:
+          type: string
+          description: Identificativo Univoco Notifica
+          $ref: '#/components/schemas/IUN'
+        paProtocolNumber:
+          type: string
+          description: Numero protocollo associato alla notifica da parte della PA
+        sender:
+          type: string
+          description: Denominazione della PA che ha inviato l'atto.
+        sentAt:
+          type: string
+          description: Data spedizione notifica
+          format: date-time
+        subject:
+          type: string
+          description: Oggetto della notifica
+        notificationStatus:
+          $ref: '#/components/schemas/NotificationStatus'
+        recipients:
+          description: >-
+            Elenco delle denominazioni dei destinatari della notifica. <br/>
+            __N.B:__ campo da utilizzare solo per visualizzazione.
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            type: string
+        requestAcceptedAt:
+          description: Data accettazione notifica
+          type: string
+          format: date-time
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        mandateId:
+          type: string
+          description: Id delega (per notifiche delegate)
+    NotificationSearchResponse:
+      title: Elenco di notifiche
+      description: >-
+        Dto contenente i risultati di una ricerca di notifiche. Ogni risposta
+        conterrà solo  una pagina di risultati relativi a una ricerca e le
+        indicazioni per raggiungere alcune pagine successive.
+      type: object
+      properties:
+        resultsPage:
+          description: Una pagina di risultati della query
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationSearchRow'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/> Valorizzato
+            solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: >-
+            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
+            | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: >-
+            A human readable explanation specific to this occurrence of the
+            problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+        - code
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: >-
+            The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          type: number
+          example: 503
+          maximum: 600
+          minimum: 100
+          exclusiveMaximum: true
+        title:
+          description: >-
+            A short, summary of the problem type. Written in english and
+            readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+        - status
+        - errors
     TaxId:
       description: C.F. persona fisica o persona giuridica
       type: string
@@ -1267,12 +3540,101 @@ components:
       enum:
         - FLAT_RATE
         - DELIVERY_MODE
-    IUN:
-      description: Identificativo Univoco Notifica
-      type: string
-      minLength: 25
-      maxLength: 25
-      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    BffNewNotificationRequest:
+      description: I campi utilizzati per la creazione di una nuova Notifica.
+      type: object
+      required:
+        - paProtocolNumber
+        - subject
+        - recipients
+        - documents
+        - physicalCommunicationType
+        - notificationFeePolicy
+        - senderDenomination
+        - senderTaxId
+        - taxonomyCode
+      properties:
+        paProtocolNumber:
+          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        subject:
+          type: string
+          description: titolo della notifica
+          maxLength: 134
+          pattern: ^.*$
+        abstract:
+          type: string
+          description: descrizione sintetica della notifica
+          pattern: ^.*$
+          maxLength: 1024
+        recipients:
+          type: array
+          description: Informazioni sui destinatari
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV23'
+        documents:
+          type: array
+          description: Documenti notificati
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+          minItems: 1
+        notificationFeePolicy:
+          $ref: '#/components/schemas/NotificationFeePolicy'
+        cancelledIun:
+          $ref: '#/components/schemas/IUN'
+        physicalCommunicationType:
+          type: string
+          description: Tipologia comunicazione fisica
+          enum:
+            - AR_REGISTERED_LETTER
+            - REGISTERED_LETTER_890
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        senderTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        group:
+          type: string
+          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        taxonomyCode:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^([0-9]{6}[A-Z]{1})$
+          description: >-
+            Codice tassonomico della notifica basato sulla definizione presente
+            nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
+            PIATTAFORMA NOTIFICHE
+            DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+    NewNotificationResponse:
+      title: Identificativi della richiesta di notifica
+      description: >-
+        Contiene le informazioni per identificare una richiesta di invio
+        notifica che non è ancora stata accettata da Piattaforma notifiche.
+      type: object
+      required:
+        - notificationRequestId
+        - paProtocolNumber
+      properties:
+        notificationRequestId:
+          type: string
+          description: >-
+            identificativo univoco di una richiesta di invio notifica, non è lo
+            IUN
+          maxLength: 36
+          pattern: ^[A-Za-z0-9+/=]{36}$
+        paProtocolNumber:
+          type: string
+          description: Identificativo inviato dalla pubblica amministrazione
+        idempotenceToken:
+          description: >-
+            Ripetizione del token usato per disambiguare "richieste di
+            notificazione"  effettuate con lo stesso numero di protocollo (campo
+            _paProtocolNumber_).
+          type: string
     PaFeeV23:
       type: number
       description: >-
@@ -2719,72 +5081,191 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
-    ProblemError:
+    BffDocumentType:
+      type: string
+      enum:
+        - ATTACHMENT
+        - LEGAL_FACT
+        - AAR
+    LegalFactCategory:
+      title: Tipi di atti opponibili a terzi
+      description: >-
+        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
+        disposizione dei suoi utenti.
+          - _SENDER_ACK_: atto di "presa in carico" di una notifica
+          - _DIGITAL_DELIVERY_: ...
+      type: string
+      enum:
+        - SENDER_ACK
+        - DIGITAL_DELIVERY
+        - ANALOG_DELIVERY
+        - RECIPIENT_ACCESS
+        - PEC_RECEIPT
+        - ANALOG_FAILURE_DELIVERY
+    BffDocumentDownloadMetadataResponse:
+      type: object
+      required:
+        - filename
+        - contentLength
+      properties:
+        filename:
+          type: string
+        contentLength:
+          type: number
+          format: decimal32
+          description: dimensione, in byte, del contenuto.
+        url:
+          type: string
+          description: >-
+            URL pre-autorizzato a cui effettuare una richiesta GET per ottenere
+            il  contenuto del documento. Presente solo se il documento è pronto
+            per il download.
+        retryAfter:
+          type: number
+          format: decimal32
+          description: >-
+            Stima del numero di secondi da aspettare prima che il contenuto del 
+            documento sia scaricabile.
+    StatusDetail:
+      description: Detail of response to cancellation async call
+      type: object
+      required:
+        - code
       properties:
         code:
-          description: Internal code of the error, in human-readable format
-          example: >-
-            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
-            | etc...
+          description: Internal code of the error or warning, in human-readable format
+          example: NOTIFICATION_CANCELLATION_ACCEPTED, NOTIFICATION_ALREADY_CANCELLED
           type: string
-        element:
-          description: Parameter or request body field name for validation error
-          example: body.order.item[2].quantity
+        level:
+          description: |
+            informational level of status detail: INFO,WARN, ERR
+            ERR (error) by default
+          example: INFO
           type: string
         detail:
           description: >-
             A human readable explanation specific to this occurrence of the
             problem.
           example: Parameter not valid
-          maxLength: 1024
           type: string
-      required:
-        - code
-    Problem:
+    RequestStatus:
+      description: Response to cancellation async call
+      type: object
       properties:
-        type:
-          description: URI reference of type definition
-          type: string
         status:
-          description: >-
-            The HTTP status code generated by the origin server for this
-            occurrence of the problem.
-          type: number
-          example: 503
-          maximum: 600
-          minimum: 100
-          exclusiveMaximum: true
-        title:
-          description: >-
-            A short, summary of the problem type. Written in english and
-            readable
-          example: Service Unavailable
-          maxLength: 64
-          pattern: ^[ -~]{0,64}$
+          description: |
+            Cancellation request status:
+              - OK
           type: string
-        detail:
-          description: A human readable explanation of the problem.
-          example: Request took too long to complete.
-          maxLength: 4096
-          pattern: ^.{0,4096}$
-          type: string
-        traceId:
-          description: Internal support identifier associated to error
-          example: 123e4567-e89b-12d3-a456-426614174000
-          type: string
-        timestamp:
-          description: date and time referred to UTC
-          example: '2022-07-27T12:22:33.444Z'
-          type: string
-          format: date-time
-        errors:
+        details:
           type: array
-          minItems: 1
+          maxItems: 9999
           items:
-            $ref: '#/components/schemas/ProblemError'
+            $ref: '#/components/schemas/StatusDetail'
       required:
         - status
-        - errors
+    PreLoadRequest:
+      title: Richiesta di precaricamento di un File
+      type: object
+      required:
+        - sha256
+      properties:
+        preloadIdx:
+          title: Id della richiesta di precaricamento di un file
+          description: >-
+            Identificativo univoco all'interno della request HTTP, serve per
+            correlare la risposta. Stringa alfanumerica con caratteri
+            utilizzabili in un nome file.
+          type: string
+          minLength: 1
+          maxLength: 512
+          pattern: ^[a-zA-Z0-9._-]{1,512}$
+        contentType:
+          title: MIME type del file che verrà caricato
+          description: >-
+            Il MIME type dell'allegato che dovrà essere caricato. Attualmente
+            sono supportati
+              - application/pdf
+              - application/json
+          type: string
+          minLength: 15
+          maxLength: 16
+          pattern: ^application\/(pdf|json)$
+        sha256:
+          title: checksum sha256 del file che verrà caricato
+          description: >-
+            checksum sha256, codificato in base 64, del contenuto binario del
+            file che verrà caricato
+          type: string
+          example: jezIVxlG1M1woCSUngM6KipUN3/p8cG5RMIPnuEanlE=
+          minLength: 44
+          maxLength: 44
+          pattern: ^[A-Za-z0-9+\/]{43}=|[A-Za-z0-9+\/]{44}$
+    PreLoadResponse:
+      title: Informazioni per il caricamento file
+      description: >-
+        Per ogni richiesta che è stata fatta viene fornito un presigned URL e
+        le  informazioni per usarlo.
+      type: object
+      properties:
+        preloadIdx:
+          description: >-
+            per correlazione con la richiesta. Stringa alfanumerica con
+            caratteri utilizzabili in un file.
+          type: string
+          minLength: 1
+          maxLength: 512
+          pattern: ^[a-zA-Z0-9._-]{1,512}$
+        secret:
+          description: >-
+            Token aggiuntivo per far si che sia necessario intercettare anche
+            gli  header e non solo l'URL di upload del contenuto del documento.
+          example: AZ23RF12
+          type: string
+        httpMethod:
+          description: >-
+            Indica se per l'upload del contenuto file bisogna utilizzare il
+            metodo PUT o POST
+          type: string
+          example: PUT
+          enum:
+            - POST
+            - PUT
+        url:
+          description: URL a cui effettuare l'upload del contenuto del documento.
+          type: string
+          example: https://preloadpn.aws.amazon.......
+        key:
+          description: >-
+            la chiave restituita sarà globalmente unica e andrà utilizzata nella
+            richiesta  di notifica.
+          example: PN_NOTIFICATION_ATTACHMENTS-0001-301W-B9CB-9U72-WIKD
+          type: string
+    RequestCheckAarMandateDto:
+      description: Le informazioni fornite per verificare l'AAR-QR-CodeValue
+      type: object
+      required:
+        - aarQrCodeValue
+      properties:
+        aarQrCodeValue:
+          type: string
+          description: valore del token QR-Code presente sull'avviso di avvenuta ricezione
+          pattern: ^[A-Za-z0-9_-]*$
+          minLength: 106
+          maxLength: 136
+    ResponseCheckAarMandateDto:
+      description: >-
+        Le informazioni fornite in risposta alla verifica del AAR-QR-CodeValue
+        con possibile identificativo della delega attiva
+      type: object
+      required:
+        - iun
+      properties:
+        iun:
+          $ref: '#/components/schemas/IUN'
+        mandateId:
+          description: identificativo della delega
+          type: string
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object
@@ -2961,6 +5442,89 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffInstitutionProduct'
+    PaGroupStatus:
+      title: Status of group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: string
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - DELETED
+    BffPaGroup:
+      title: Group defined in Self Care
+      description: Contains the name list of groups defined in SelfCare
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    BffPaGroupList:
+      title: Groups defined in Self Care
+      description: Contains the list of groups defined in SelfCare
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPaGroup'
+    PgGroupStatus:
+      title: Status of group defined in Self Care PG (Notifiche digitali)
+      description: >-
+        Contains the status of groups defined in SelfCare PG (Notifiche
+        digitali)
+      type: string
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - DELETED
+    BffPgGroup:
+      title: Group defined in Self Care PG (Notifiche digitali)
+      description: >-
+        Contains the name list of groups defined in SelfCare PG (Notifiche
+        digitali)
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/PgGroupStatus'
+    BffPgGroupList:
+      title: Groups defined in Self Care PG (Notifiche digitali)
+      description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
+      type: array
+      items:
+        $ref: '#/components/schemas/BffPgGroup'
+    PaNameFilter:
+      title: Admitted character for PA denomination field
+      type: string
+      minLength: 3
+      maxLength: 250
+      pattern: ^([\x20-\xFF]{1,250})$
+    SelfCarePaId:
+      title: The PA id used by self care
+      description: An unique ID that identify a Public Administration
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: ^[ -~ ]*$
+    PaSummary:
+      title: PA in short
+      description: PA with minimal information
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/SelfCarePaId'
+        name:
+          type: string
+    PaSummariesList:
+      title: Brief list of PAs
+      description: Contains a list of PA with minimal information
+      type: array
+      items:
+        $ref: '#/components/schemas/PaSummary'
     ConsentType:
       type: string
       description: type of consent
@@ -3228,6 +5792,614 @@ components:
           type: string
           pattern: ^[ -~]*$
           maxLength: 64
+    PaymentInfoRequest:
+      title: Request for a payment info
+      description: Object containing sender and payment id
+      type: object
+      properties:
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+      required:
+        - creditorTaxId
+        - noticeCode
+    PaymentInfoRequests:
+      title: Requests for payment info
+      description: List of request payment info containing sender and payment id
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/PaymentInfoRequest'
+    PaymentStatus:
+      title: Payment status
+      example: REQUIRED
+      description: |
+        Payment status:
+          * `REQUIRED` - payment required
+          * `SUCCEEDED` - payment done
+          * `IN_PROGRESS` - waiting confirm
+          * `FAILURE` - error see errorType
+      type: string
+      enum:
+        - REQUIRED
+        - SUCCEEDED
+        - IN_PROGRESS
+        - FAILURE
+    Detail:
+      title: Error classification
+      description: |
+        Classification to help user address the issue
+          * `PAYMENT_UNAVAILABLE`: Technical Error.
+          * `PAYMENT_UNKNOWN`: Payment data error.
+          * `DOMAIN_UNKNOWN`: creditor institution error.
+          * `PAYMENT_ONGOING`: payment on going.
+          * `PAYMENT_EXPIRED`: payment expired.
+          * `PAYMENT_CANCELED`: payment cancelled.
+          * `PAYMENT_DUPLICATED`: payment duplicated.
+          * `GENERIC_ERROR`: generic error.
+      example: PAYMENT_UNAVAILABLE
+      type: string
+      enum:
+        - PAYMENT_UNAVAILABLE
+        - PAYMENT_UNKNOWN
+        - DOMAIN_UNKNOWN
+        - PAYMENT_ONGOING
+        - PAYMENT_EXPIRED
+        - PAYMENT_CANCELED
+        - PAYMENT_DUPLICATED
+        - GENERIC_ERROR
+    DetailV2:
+      title: Error classification detail
+      description: |
+        Classification detail to help user address the issue
+      example: PPT_PSP_SCONOSCIUTO
+      type: string
+    BffPaymentInfoItem:
+      title: Payment brief information
+      description: Payment minimal information
+      type: object
+      required:
+        - status
+        - creditorTaxId
+        - noticeCode
+      properties:
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        detail:
+          $ref: '#/components/schemas/Detail'
+        detail_v2:
+          $ref: '#/components/schemas/DetailV2'
+        errorCode:
+          description: error code to show at the user
+          type: string
+        amount:
+          description: Amount for required payment in euro-cents
+          type: number
+        causaleVersamento:
+          description: reason for payment
+          type: string
+        dueDate:
+          description: payment expiration date
+          type: string
+          pattern: ([0-9]{4})-(1[0-2]|0[1-9])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])
+    BffPaymentInfoResponse:
+      title: Response for payment info requests
+      description: List of payment info
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/BffPaymentInfoItem'
+    PaymentNotice:
+      title: Request for a Payment Notice
+      description: Information of a Payment Notice
+      type: object
+      required:
+        - noticeNumber
+        - fiscalCode
+        - amount
+        - companyName
+        - description
+      properties:
+        noticeNumber:
+          type: string
+          description: The payment notice number
+          minLength: 18
+          maxLength: 18
+          pattern: ^\d+$
+        fiscalCode:
+          type: string
+          description: Public Administration tax code
+          minLength: 11
+          maxLength: 11
+          pattern: ^\d+$
+        amount:
+          type: number
+          description: Amount ( in euro cents ) of the payment notice
+          minimum: 1
+        companyName:
+          type: string
+          description: Public Administration company name
+          maxLength: 250
+          pattern: ^([\x20-\xFF]{1,250})$
+        description:
+          type: string
+          description: Subject of payment
+          maxLength: 250
+          pattern: ^([\x20-\xFF]{1,250})$
+    PaymentRequest:
+      title: Request to make a payment on Checkout
+      type: object
+      required:
+        - paymentNotice
+        - returnUrl
+      properties:
+        paymentNotice:
+          $ref: '#/components/schemas/PaymentNotice'
+        returnUrl:
+          description: Checkout base url used to make payment
+          example: https://api.uat.platform.pagopa.it/checkout/auth/payments/v2
+          type: string
+          maxLength: 2048
+          pattern: ^[ -~ ]*$
+    PaymentResponse:
+      title: Response containing the Checkout callback URL
+      type: object
+      required:
+        - checkoutUrl
+      properties:
+        checkoutUrl:
+          type: string
+          description: The Checkout callback URL
+    BffChannelType:
+      type: string
+      enum:
+        - EMAIL
+        - SMS
+        - PEC
+        - APPIO
+    BffUserAddress:
+      type: object
+      required:
+        - addressType
+        - recipientId
+        - senderId
+        - channelType
+        - value
+      properties:
+        addressType:
+          type: string
+        senderId:
+          type: string
+          description: senderId or 'default'
+        senderName:
+          type: string
+          description: name of the sender
+        channelType:
+          $ref: '#/components/schemas/BffChannelType'
+        value:
+          type: string
+        pecValid:
+          type: boolean
+    BffUserAddresses:
+      type: array
+      items:
+        $ref: '#/components/schemas/BffUserAddress'
+    BffAddressType:
+      type: string
+      enum:
+        - LEGAL
+        - COURTESY
+    VerificationCode:
+      type: string
+      description: Verification Code
+      minLength: 5
+      maxLength: 5
+      pattern: ^\d{5}$
+      example: '12345'
+    AddressVerification:
+      type: object
+      description: richiede value oppure requestId di un indirizzo in corso di validazione
+      properties:
+        value:
+          type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          maxLength: 254
+          pattern: >-
+            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO))$
+        requestId:
+          type: string
+          maxLength: 64
+          pattern: ^[ -~ ]*$
+        verificationCode:
+          $ref: '#/components/schemas/VerificationCode'
+    AddressVerificationResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: >
+            Uno dei seguenti valori - CODE_VERIFICATION_REQUIRED: indica che è
+            richiesto il codice di verifica - PEC_VALIDATION_REQUIRED: indica
+            che il codice di verifica inserito è valido, ma che non è ancora
+            arrivata la conferma PEC (solo per la PEC)
+          enum:
+            - CODE_VERIFICATION_REQUIRED
+            - PEC_VALIDATION_REQUIRED
+    MandateCountsDto:
+      type: object
+      properties:
+        value:
+          type: number
+    UserDto:
+      description: Available only for request where requesting user is the delegator
+      oneOf:
+        - type: object
+          properties:
+            displayName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            firstName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            lastName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            companyName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 250
+              pattern: ^([\x20-\xFF]{1,250})$
+            fiscalCode:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 16
+              pattern: >-
+                ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
+            person:
+              type: boolean
+        - type: 'null'
+    OrganizationIdDto:
+      description: Available always, not required on mandate creation.
+      oneOf:
+        - type: object
+          properties:
+            name:
+              type: string
+              maxLength: 250
+              pattern: ^([\x20-\xFF]{1,250})$
+            uniqueIdentifier:
+              type: string
+              maxLength: 50
+              pattern: ^[ -~ ]*$
+        - type: 'null'
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          pattern: ^[ -~ ]*$
+        name:
+          type: string
+          maxLength: 80
+          pattern: ^[ -~ ]*$
+    BffNewMandateRequest:
+      type: object
+      required:
+        - delegate
+        - verificationCode
+        - dateto
+      properties:
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        visibilityIds:
+          description: Available always, not required on mandate creation.
+          oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/OrganizationIdDto'
+            - type: 'null'
+        verificationCode:
+          description: Available only for request where requesting user is the delegator
+          oneOf:
+            - type: string
+              maxLength: 5
+              pattern: ^[0-9]*$
+            - type: 'null'
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          description: Available always, not required on mandate creation.
+          oneOf:
+            - type: string
+              maxLength: 36
+              pattern: >-
+                ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+            - type: 'null'
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          description: Available always, not required on mandate creation.
+          oneOf:
+            - type: string
+              enum:
+                - pending
+                - active
+                - revoked
+                - rejected
+                - expired
+            - type: 'null'
+        visibilityIds:
+          description: Available always, not required on mandate creation.
+          oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/OrganizationIdDto'
+            - type: 'null'
+        verificationCode:
+          description: Available only for request where requesting user is the delegator
+          oneOf:
+            - type: string
+              maxLength: 5
+              pattern: ^[0-9]*$
+            - type: 'null'
+        datefrom:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          minLength: 11
+          maxLength: 16
+          pattern: >-
+            ^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/> Valorizzato
+            solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    BffSenderDashboardNotificationOverview:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        notification_request_status:
+          description: |-
+            Stato richiesta notifica:
+              - __'ACCEPTED'__
+              - __'REFUSED'__
+          type: string
+          example: ACCEPTED
+        notification_status:
+          description: |-
+            Ultimo stato della notifica:
+              - __'REFUSED'__
+              - __'ACCEPETED'__
+              - __'CANCELLED'__
+              - __'DELIVERED'__
+              - __'DELIVERING'__
+              - __'EFFECTIVE_DATE'__
+              - __'UNREACHABLE'__
+              - __'VIEWED'__
+          type: string
+          example: VIEWED
+        notification_type:
+          description: |-
+            Tipo di notifica:
+              - __'DIGITAL'__
+              - __'ANALOGIC'__
+              - __'-'__
+          type: string
+          example: DIGITAL
+        status_digital_delivery:
+          description: |-
+            Esito invio notifica digitale:
+              - __'OK'__
+              - __'KO'__
+              - __'IN CORSO'__
+              - __'-'__
+          type: string
+          example: OK
+        notification_delivered:
+          description: Notifica consegnata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        notification_viewed:
+          description: Notifica visionata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        notification_refined:
+          description: Notifica perfezionata __'SI'__ o __'NO'__
+          type: string
+          example: SI
+        attempt_count_per_digital_notification:
+          description: Numero di tentativi notifica digitale
+          type: number
+          minimum: 0
+          maximum: 8
+          example: 0
+        notifications_count:
+          description: Numero Notifiche
+          type: number
+          minimum: 0
+          example: 2
+        delivery_time:
+          description: Tempo di consegna in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 0.11
+        view_time:
+          description: Tempo di visualizzazione in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 2.76
+        refinement_time:
+          description: Tempo di perfezionamento in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 4.77
+        validation_time:
+          description: Tempo di validazione in ore
+          type: number
+          format: double
+          minimum: 0
+          example: 2.01
+    BffSenderDashboardDigitalNotificationFocus:
+      type: object
+      properties:
+        sender_id:
+          description: ID Ente
+          type: string
+        notification_send_date:
+          description: YYYY-MM-DD invio delle notifiche
+          type: string
+          format: date
+          example: '2023-12-06'
+        error_type:
+          description: |-
+            Tipo di errore:
+              - __'ERRORE DOMINIO PEC NON VALIDO'__
+              - __'ERRORE CONSEGNA'__
+              - __'NON ACCETTAZIONE'__
+              - __'-'__
+          type: string
+          example: ERRORE DOMINIO PEC NON VALIDO
+        failed_attempts_count:
+          type: number
+          example: 1
+        notifications_count:
+          type: number
+          minimum: 0
+          example: 4
+    BffSenderDashboardDataResponse:
+      type: object
+      properties:
+        senderId:
+          type: string
+          description: Unique identifier for the sender
+        genTimestamp:
+          description: Index generation date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        lastDate:
+          description: YYYY-MM-DD last date on DL files
+          type: string
+          format: date
+          example: '2023-12-06'
+        startDate:
+          description: YYYY-MM-DD start date
+          type: string
+          format: date
+          example: '2023-12-06'
+        endDate:
+          description: YYYY-MM-DD end date (included)
+          type: string
+          format: date
+          example: '2023-12-06'
+        notificationsOverview:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardNotificationOverview'
+        digitalNotificationFocus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -3252,8 +6424,12 @@ tags:
       notifiche a loro destinate.
   - name: ApiKeys
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
-  - name: InstitutionProducts
+  - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
+  - name: InfoRecipient
+    description: >-
+      Invocazioni per sapere i gruppi disponibili di un ente e le PA che usano
+      PN
   - name: UserConsents
     description: Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
   - name: Downtime
@@ -3262,6 +6438,16 @@ tags:
       dei servizi
   - name: TokenExchange
     description: Invocazioni per la token exchange
+  - name: Payments
+    description: >-
+      Invocazioni utilizzate per il recupero delle informazioni relativi ai
+      pagamenti.
+  - name: Addresses
+    description: Gestione dei recapiti
+  - name: Mandate
+    description: Invocazioni utilizzate per la gestione delle deleghe.
+  - name: SenderDashboard
+    description: Invocazioni per il recupero dei dati da mostrare nella dashboard mittenti.
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
