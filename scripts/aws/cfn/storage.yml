@@ -33,7 +33,7 @@ Parameters:
     Default: 14
 
   # DataIndexer params
-  IndexesBucketVersionExpiresAfterDays:
+  SenderDashboardIndexesVersionExpiresAfterDays:
     Type: Number
     Default: 365
     Description: Indexes expiration days.
@@ -48,7 +48,7 @@ Parameters:
     Default: 5
     Description: Radd Store Registry File non current version
 
-  IndexesBucketRaddStoreRegistryPrefix:
+  BffBucketRaddStoreRegistryPrefix:
     Type: String
     Description: Name of s3 bucket for generated csv
     Default: 'radd/store'
@@ -78,22 +78,22 @@ Resources:
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
 
-  IndexesBucket:
+  BffBucketBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${ProjectName}-bff-sender-dashboard-data-${AWS::Region}-${AWS::AccountId}
+      BucketName: !Sub ${ProjectName}-bff-data-${AWS::Region}-${AWS::AccountId}
       VersioningConfiguration:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: DeleteOldVersions
+          - Id: DeleteOldVersionsForSenderDashboardIndexes
             Status: Enabled
-            Prefix: indexes/
+            Prefix: sender-dashboard/indexes/
             NoncurrentVersionExpiration:
-              NoncurrentDays: !Ref IndexesBucketVersionExpiresAfterDays
+              NoncurrentDays: !Ref SenderDashboardIndexesVersionExpiresAfterDays
           - Id: DeleteOldVersionsForRaddStoreRegistry
             Status: Enabled
-            Prefix: !Ref IndexesBucketRaddStoreRegistryPrefix
+            Prefix: !Ref BffBucketRaddStoreRegistryPrefix
             NoncurrentVersionExpiration:
               NewerNoncurrentVersions: !Ref RaddStoreRegistryNonCurrentVersion
               NoncurrentDays: !Ref RaddStoreRegistryVersionExpiresAfterDays
@@ -106,11 +106,11 @@ Outputs:
   DataIndexerLambdaName:
     Value: SenderDashboardDataIndexer
   # Bucket exports
-  IndexesBucketArn:
-    Value: !GetAtt IndexesBucket.Arn
-  IndexesBucketName:
-    Value: !Ref IndexesBucket
-  IndexesBucketRegion:
+  BffBucketArn:
+    Value: !GetAtt BffBucketBucket.Arn
+  BffBucketName:
+    Value: !Ref BffBucketBucket
+  BffBucketRegion:
     Value: !Ref AWS::Region
-  IndexesBucketRaddStoreRegistryPrefix:
-    Value: !Ref IndexesBucketRaddStoreRegistryPrefix
+  BffBucketRaddStoreRegistryPrefix:
+    Value: !Ref BffBucketRaddStoreRegistryPrefix
