@@ -120,7 +120,7 @@ class InfoRecipientServiceTest {
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("Invalid request body")
+                        && ((PnBffException) throwable).getProblem().getDetail().equals("The request body is invalid")
                 )
                 .verify();
     }
