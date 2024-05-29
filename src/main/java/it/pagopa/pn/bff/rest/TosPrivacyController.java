@@ -34,12 +34,10 @@ public class TosPrivacyController implements UserConsentsApi {
     public Mono<ResponseEntity<BffTosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
                                                                       CxTypeAuthFleet xPagopaPnCxType,
                                                                       final ServerWebExchange exchange) {
-        log.logStartingProcess("getTosPrivacyV1");
 
         Mono<BffTosPrivacyConsent> serviceResponse = tosPrivacyService
                 .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType);
 
-        log.logEndingProcess("getTosPrivacyV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -58,12 +56,10 @@ public class TosPrivacyController implements UserConsentsApi {
                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                          Mono<BffTosPrivacyBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
-        log.logStartingProcess("putTosPrivacyV1");
 
         Mono<Void> serviceResponse = tosPrivacyService
                 .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
-
-        log.logEndingProcess("putTosPrivacyV1");
+        
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
