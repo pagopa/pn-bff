@@ -398,11 +398,11 @@ Resources:
         ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
         ContainerEnvEntry14: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
         # Sender dashboard
-        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${IndexesBucketName}'
-        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${IndexesBucketRegion}'
+        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${BffBucketName}'
+        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${BffBucketRegion}'
         ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
         ContainerEnvEntry18: !If [CreateFakeDLRole,
-            !Sub 'PN_BFF_DL_BUCKET_NAME=${IndexesBucketName}',
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${BffBucketName}',
             !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}']
         ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
         ContainerEnvEntry20: !If [CreateFakeDLRole,
@@ -443,7 +443,7 @@ Resources:
               - s3:GetObject
               - s3:GetObjectVersion
             Resource:
-              - !Sub '${IndexesBucketArn}/*'
+              - !Sub '${BffBucketArn}/*'
           # Allow assuming data lake role
           - Effect: Allow
             Action:
@@ -512,7 +512,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: AccessIndexesBucket
+        - PolicyName: AccessBffBucket
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -523,7 +523,7 @@ Resources:
                   - s3:GetObjectVersion
                   - s3:PutObject
                 Resource:
-                  - !Sub ${IndexesBucketArn}/*
+                  - !Sub ${BffBucketArn}/*
               # Allow assuming data lake role
               - Effect: Allow
                 Action:
@@ -563,7 +563,7 @@ Resources:
                   - s3:GetObject
                   - s3:GetObjectVersion
                 Resource:
-                  - !Sub ${IndexesBucketArn}/*
+                  - !Sub ${BffBucketArn}/*
 
   # Fires the alarm when a duration threshold is reached
   SenderDashboardDataIndexerDurationAlarm:
@@ -658,7 +658,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
       Policies:
-        - PolicyName: AccessIndexesBucket
+        - PolicyName: AccessBffBucketForRaddRegistry
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
