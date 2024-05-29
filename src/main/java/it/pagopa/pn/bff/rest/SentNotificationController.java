@@ -57,14 +57,12 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                     Integer size,
                                                                                     String nextPagesKey,
                                                                                     final ServerWebExchange exchange) {
-        log.logStartingProcess("searchSentNotificationsV1");
 
         Mono<BffNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
                 subjectRegExp, startDate, endDate, size, nextPagesKey
         );
 
-        log.logEndingProcess("searchSentNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -87,13 +85,11 @@ public class SentNotificationController implements NotificationSentApi {
                                                                              String iun,
                                                                              List<String> xPagopaPnCxGroups,
                                                                              final ServerWebExchange exchange) {
-        log.logStartingProcess("getSentNotificationV1");
 
         Mono<BffFullNotificationV1> serviceResponse = notificationsPAService.getSentNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         );
 
-        log.logEndingProcess("getSentNotificationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -123,14 +119,12 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                                    String documentId,
                                                                                                    LegalFactCategory documentCategory,
                                                                                                    final ServerWebExchange exchange) {
-        log.logStartingProcess("getSentNotificationDocumentV1");
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsPAService.getSentNotificationDocument(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
                 documentCategory, xPagopaPnCxGroups
         );
 
-        log.logEndingProcess("getSentNotificationDocumentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -154,13 +148,11 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                                   Integer recipientIdx, String attachmentName,
                                                                                                   List<String> xPagopaPnCxGroups, Integer attachmentIdx,
                                                                                                   final ServerWebExchange exchange) {
-        log.logStartingProcess("getSentNotificationPaymentV1");
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsPAService.getSentNotificationPayment(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, recipientIdx, attachmentName, xPagopaPnCxGroups, attachmentIdx
         );
 
-        log.logEndingProcess("getSentNotificationPaymentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -178,13 +170,11 @@ public class SentNotificationController implements NotificationSentApi {
      */
     @Override
     public Mono<ResponseEntity<BffRequestStatus>> notificationCancellationV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("notificationCancellationV1");
 
         Mono<BffRequestStatus> serviceResponse = notificationsPAService.notificationCancellation(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups
         );
 
-        log.logEndingProcess("notificationCancellationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
     }
 
@@ -201,13 +191,11 @@ public class SentNotificationController implements NotificationSentApi {
      */
     @Override
     public Mono<ResponseEntity<BffNewNotificationResponse>> newSentNotificationV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffNewNotificationRequest> newNotificationRequest, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("newSentNotificationV1");
 
         Mono<BffNewNotificationResponse> serviceResponse = notificationsPAService.newSentNotification(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, newNotificationRequest, xPagopaPnCxGroups
         );
 
-        log.logEndingProcess("newSentNotificationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.ACCEPTED).body(response));
     }
 
@@ -223,13 +211,11 @@ public class SentNotificationController implements NotificationSentApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffPreLoadResponse>>> preSignedUploadV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Flux<BffPreLoadRequest> bffPreLoadRequest, ServerWebExchange exchange) {
-        log.logStartingProcess("preSignedUploadV1");
 
         Flux<BffPreLoadResponse> serviceResponse = notificationsPAService.preSignedUpload(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffPreLoadRequest
         );
-
-        log.logEndingProcess("preSignedUploadV1");
+        
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

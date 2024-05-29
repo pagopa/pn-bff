@@ -39,6 +39,7 @@ public class DowntimeLogsService {
      */
     public Mono<BffPnStatusResponse> getCurrentStatus() {
         log.info("Get application status");
+
         Mono<PnStatusResponse> statusResponse = pnDowntimeLogsClient.getCurrentStatus()
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 

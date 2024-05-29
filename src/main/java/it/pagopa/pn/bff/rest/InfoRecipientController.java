@@ -37,11 +37,9 @@ public class InfoRecipientController implements InfoRecipientApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffPgGroup>>> getPGGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPgGroupStatus status, ServerWebExchange exchange) {
-        log.logStartingProcess("getPGGroupsV1");
 
         Flux<BffPgGroup> bffPgGroups = infoRecipientService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
 
-        log.logEndingProcess("getPGGroupsV1");
         return bffPgGroups.collectList().map(groups -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(groups)));
     }
 
@@ -59,11 +57,9 @@ public class InfoRecipientController implements InfoRecipientApi {
                                                              CxTypeAuthFleet xPagopaPnCxType,
                                                              String paNameFilter,
                                                              final ServerWebExchange exchange) {
-        log.logStartingProcess("getPAListV1");
 
         Flux<PaSummary> paSummaryFlux = infoRecipientService.getPaList(xPagopaPnCxId, xPagopaPnCxType, paNameFilter);
-
-        log.logEndingProcess("getPAListV1");
+        
         return paSummaryFlux.collectList().map(paSummaries -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(paSummaries)));
     }
 }
