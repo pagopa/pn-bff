@@ -27,8 +27,8 @@ import static org.mockito.Mockito.when;
 class InfoRecipientServiceTest {
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
-    private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private static InfoRecipientService infoRecipientService;
+    private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
 
     @BeforeAll
     public static void setup() {
