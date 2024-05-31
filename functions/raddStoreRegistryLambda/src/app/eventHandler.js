@@ -22,8 +22,8 @@ exports.handler = async (event) => {
   const csvConfiguration = retrieveCsvConfiguration();
   console.log('Configuration fetched:', csvConfiguration);
 
-  const bffBucketS3Key = generateS3Key(csvConfiguration.configurationVersion, true);
-  console.log('Generated S3 key:', raddBucketS3Key);
+  const bffBucketS3Key = generateS3Key(csvConfiguration.configurationVersion, false);
+  console.log('Generated S3 key:', bffBucketS3Key);
 
   const latestFile = await getLatestVersion(bffBucketS3Key);
   console.log('Latest file:', latestFile);
