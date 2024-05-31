@@ -2,7 +2,7 @@ const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
 
 const client = new SSMClient({ region: process.env.AWS_REGION });
 
-const retrieveGenerationConfigParameter = () => {
+const retrieveGenerationConfigParameter = async () => {
   const generationConfigName = process.env.RADD_STORE_GENERATION_CONFIG_PARAMETER;
   console.log('Fetching generation config parameter:', generationConfigName);
   try{
@@ -13,7 +13,7 @@ const retrieveGenerationConfigParameter = () => {
   }
 }
 
-const retrieveCsvConfiguration = () => {
+const retrieveCsvConfiguration = async() => {
   const csvConfigParamName = process.env.CSV_CONFIGURATION_PARAMETER;
   console.log('Fetching configuration parameter:', csvConfigParamName);
   try{
@@ -32,4 +32,4 @@ const getParameter = async (parameterName) => {
     return response.Parameter.Value;
 }
 
-module.exports = { getParameter, retrieveGenerationConfig };
+module.exports = { retrieveGenerationConfigParameter, retrieveCsvConfiguration };

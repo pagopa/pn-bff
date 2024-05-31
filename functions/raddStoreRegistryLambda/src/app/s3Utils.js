@@ -6,7 +6,6 @@ const client = new S3Client({
   forcePathStyle: true
 });
 
-const bffBucketName = process.env.BFF_BUCKET_NAME;
 const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
 
 const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
@@ -19,6 +18,7 @@ const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
       console.log('No versions found');
       return null;
     }
+    const latestVersion = response.Versions[0];
     console.log(`Latest version found: ${latestVersion.VersionId}`);
     return latestVersion;
   } catch (error) {
@@ -33,11 +33,12 @@ function generateS3Key(configVersion, toWebLandingBucket) {
     throw new Error('FILE_NAME environment variable is missing');
   }
 
+  let s3Key;
   if(!toWebLandingBucket){
-    const s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
+    s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
   } else {
       //TODO: Implement logic for NAME of file in web landing bucket
-      const s3Key = 'TODO';
+      s3Key = 'TODO';
   }
 
   console.log(`Generated S3 key: ${s3Key}`);

@@ -1,4 +1,4 @@
-const { getParameter } = require('./ssmParameter');
+const { retrieveGenerationConfigParameter, retrieveCsvConfiguration } = require('./ssmParameter');
 const { getLatestVersion, uploadFile, copyObject, generateS3Key } = require('./s3Utils');
 const { validateCsvConfiguration, createCSVContent} = require('./csvUtils');
 const { fetchApi } = require('./raddClient');
@@ -13,6 +13,7 @@ exports.handler = async (event) => {
   let sendToWebLanding = false
 
   const generationConfig = retrieveGenerationConfigParameter();
+
   if(generationConfig){
     console.log('Configuration fetched:', generationConfig);
     forceGenerate = generationConfig.forceGenerate;
