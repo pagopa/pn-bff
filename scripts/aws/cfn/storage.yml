@@ -104,7 +104,7 @@ Outputs:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
   # Lambda exports
   DataIndexerLambdaName:
-    Value: SenderDashboardDataIndexer
+    Value: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
   # Bucket exports
   BffBucketArn:
     Value: !GetAtt BffBucket.Arn
