@@ -8,28 +8,19 @@ const client = new S3Client({
 
 const bffBucketName = process.env.BFF_BUCKET_NAME;
 const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
+cons  webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
+const webLandingBucketPrefix = process.env.WEB_LANDING_BUCKET_PREFIX;
 
-const getLatestVersion = async (bffBucketName, fileName) => {
+const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
   try {
-    console.log(`Listing object versions for bucket: ${bffBucketName}, file: ${fileName}`);
-    const command = new ListObjectVersionsCommand({ Bucket: bffBucketName });
+    console.log(`Listing object versions for bucket: ${bffBucketName}, file: ${bffBucketS3Key}`);
+    const command = new ListObjectVersionsCommand({ Bucket: bffBucketName, Prefix: bffBucketS3Key, MaxKeys: 1});
     const response = await client.send(command);
 
     if (!response.Versions || response.Versions.length === 0) {
       console.log('No versions found');
       return null;
     }
-
-    const versions = response.Versions.filter(version => version.Key === fileName);
-    if (versions.length === 0) {
-      console.log('No matching versions found');
-      return null;
-    }
-
-    const latestVersion = versions.reduce((latest, current) => {
-      return current.LastModified > latest.LastModified ? current : latest;
-    }, versions[0]);
-
     console.log(`Latest version found: ${latestVersion.VersionId}`);
     return latestVersion;
   } catch (error) {
@@ -45,14 +36,24 @@ function generateS3Key(configVersion, toWebLandingBucket) {
   }
 
   if(!toWebLandingBucket){
-      const s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
+    const s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
   } else {
-      //TODO: Implement logic for NAME of file in web landing bucket
-      const s3Key = 'TODO';
+    const s3Key = `${webLandingBucketPrefix}/${fileName}.csv`;
   }
 
   console.log(`Generated S3 key: ${s3Key}`);
   return s3Key;
 }
 
-module.exports = { getLatestVersion, generateS3Key};
+async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, configurationVersion) {
+    await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
+    console.log('File uploaded to S3:', bffBucketS3Key);
+
+    if (sendToWebLanding)) {
+      const webLandingS3Key = generateS3Key(null, true);
+      await copyObject(bffBucketName, bffBucketS3Key, webLandingBucketName, webLandingS3Key);
+      console.log('File copied to site bucket:', webLandingS3Key);
+    }
+}
+
+module.exports = { getLatestVersion, uploadFile, copyObject, generateS3Key, uploadVersionedFile };

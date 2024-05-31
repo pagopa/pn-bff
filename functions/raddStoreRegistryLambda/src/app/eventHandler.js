@@ -9,26 +9,28 @@ exports.handler = async (event) => {
   console.log('Handler invoked with event:', event);
   validateEnvironmentVariables();
 
-  const generationConfigName = process.env.RADD_STORE_GENERATION_CONFIG_PARAMETER;
-  console.log('Fetching generation config parameter:', generationConfigName);
-  const generationConfig = JSON.parse(await getParameter(generationConfigName));
-  console.log('Configuration fetched:', generationConfig);
+  let forceGenerate = false
+  let sendToWebLanding = false
 
+  const generationConfig = retrieveGenerationConfigParameter();
+  if(generationConfig){
+    console.log('Configuration fetched:', generationConfig);
+    forceGenerate = generationConfig.forceGenerate;
+    sendToWebLanding = generationConfig.sendToWebLanding;
+  }
 
-  const csvConfigParamName = process.env.CSV_CONFIGURATION_PARAMETER;
-  console.log('Fetching configuration parameter:', csvConfigParamName);
-  const csvConfiguration = JSON.parse(await getParameter(csvConfigParamName));
+  const csvConfiguration = retrieveCsvConfiguration();
   console.log('Configuration fetched:', csvConfiguration);
 
-  const bffBucketS3Key = generateS3Key(csvConfiguration.configurationVersion, true);
-  console.log('Generated S3 key:', raddBucketS3Key);
+  const bffBucketS3Key = generateS3Key(csvConfiguration.configurationVersion, false);
+  console.log('Generated S3 key:', bffBucketS3Key);
 
   const latestFile = await getLatestVersion(bffBucketS3Key);
   console.log('Latest file:', latestFile);
 
   let generateFile = false;
 
-  if (generationConfig.forceGenerate || !latestFile || checkIfIntervalPassed(latestFile)) {
+  if (forceGenerate || !latestFile || checkIfIntervalPassed(latestFile)) {
     generateFile = true;
   }
 
@@ -50,7 +52,7 @@ exports.handler = async (event) => {
       console.log('Processed records, lastKey:', lastKey);
     } while (lastKey);
 
-    //TODO: ADD UPLOAD ON S3
+    uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, csvConfiguration.configurationVersion);
 
   } else {
     console.log("No need to generate file.");
