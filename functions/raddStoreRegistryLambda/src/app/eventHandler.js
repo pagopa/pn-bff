@@ -1,5 +1,5 @@
 const { getParameter } = require('./ssmParameter');
-const { getLatestVersion, uploadFile, copyObject, generateS3Key } = require('./s3Utils');
+const { getLatestVersion, generateS3Key, uploadVersionedFile } = require('./s3Utils');
 const { validateCsvConfiguration, createCSVContent} = require('./csvUtils');
 const { fetchApi } = require('./raddClient');
 const { checkIfIntervalPassed } = require('./utils');

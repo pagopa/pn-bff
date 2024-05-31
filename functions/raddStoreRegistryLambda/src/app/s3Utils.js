@@ -45,6 +45,23 @@ function generateS3Key(configVersion, toWebLandingBucket) {
   return s3Key;
 }
 
+const uploadFile = async (bffBucketName, key, fileContent) => {
+  try {
+    console.log(`Uploading file to bucket: ${bffBucketName}, key: ${key}`);
+    const command = new PutObjectCommand({
+      Bucket: bffBucketName,
+      Key: key,
+      Body: fileContent
+    });
+
+    const response = await client.send(command);
+    console.log('Successfully uploaded object:', response);
+  } catch (error) {
+    console.error('Error uploading object:', error);
+    throw error;
+  }
+};
+
 async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, configurationVersion) {
     await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
     console.log('File uploaded to S3:', bffBucketS3Key);
@@ -56,4 +73,4 @@ async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent,
     }
 }
 
-module.exports = { getLatestVersion, uploadFile, copyObject, generateS3Key, uploadVersionedFile };
+module.exports = { getLatestVersion, generateS3Key, uploadVersionedFile };
