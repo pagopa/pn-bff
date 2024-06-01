@@ -6,8 +6,7 @@ const retrieveGenerationConfigParameter = async () => {
   const generationConfigName = process.env.RADD_STORE_GENERATION_CONFIG_PARAMETER;
   console.log('Fetching generation config parameter:', generationConfigName);
   try{
-    const generationConfig = await getParameter(generationConfigName);
-    return JSON.parse(generationConfig);
+    return JSON.parse(await getParameter(generationConfigName));
   } catch (error) {
     console.error('Error retrieving SSM parameter:', error);
   }
@@ -17,7 +16,7 @@ const retrieveCsvConfiguration = async() => {
   const csvConfigParamName = process.env.CSV_CONFIGURATION_PARAMETER;
   console.log('Fetching configuration parameter:', csvConfigParamName);
   try{
-    return JSON.parse(await getParameter(csvConfigParamName, true));
+    return JSON.parse(await getParameter(csvConfigParamName));
   } catch (error) {
     console.error('Error retrieving SSM parameter:', error);
     throw error;
