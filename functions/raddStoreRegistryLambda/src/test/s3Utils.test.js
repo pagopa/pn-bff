@@ -21,7 +21,6 @@ describe('s3Utils tests', function () {
   describe('getLatestVersion', function () {
     it('should return the latest version', async () => {
       // Given
-      const bffBucketName = 'testBucket';
       const bffBucketS3Key = 'testKey';
       const latestVersion = [
         { Key: 'file1.txt', VersionId: '1', IsLatest: true }
@@ -30,7 +29,7 @@ describe('s3Utils tests', function () {
       s3Mock.on(ListObjectVersionsCommand).resolves({ Versions: latestVersion });
 
       // When
-      const result = await getLatestVersion(bffBucketName, bffBucketS3Key);
+      const result = await getLatestVersion(bffBucketS3Key);
 
       // Then
       expect(result.VersionId).to.be.equal('1');
@@ -41,14 +40,13 @@ describe('s3Utils tests', function () {
     
     it('should return null if no versions found', async () => {
       // Given
-      const bffBucketName = 'testBucket';
       const bffBucketS3Key = 'testKey';
       s3Mock.on(ListObjectVersionsCommand).resolves({
         Versions: []
       });
 
       // When
-      const result = await getLatestVersion(bffBucketName, bffBucketS3Key);
+      const result = await getLatestVersion(bffBucketS3Key);
 
       // Then
       expect(result).to.be.null;
@@ -56,13 +54,12 @@ describe('s3Utils tests', function () {
     
     it('should throw an error if listing object versions fails', async () => {
       // Given
-      const bffBucketName = 'testBucket';
       const bffBucketS3Key = 'testKey';
       const errorMessage = 'Failed to list object versions';
       s3Mock.on(ListObjectVersionsCommand).rejects(new Error(errorMessage));
 
       // When/Then
-      await expect(getLatestVersion(bffBucketName, bffBucketS3Key)).to.be.rejectedWith(errorMessage);
+      await expect(getLatestVersion(bffBucketS3Key)).to.be.rejectedWith(errorMessage);
     });
   });
 

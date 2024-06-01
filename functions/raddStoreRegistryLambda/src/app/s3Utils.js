@@ -2,12 +2,12 @@ const { S3Client, ListObjectVersionsCommand, CopyObjectCommand, PutObjectCommand
 
 const client = new S3Client({
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT_URL,
   forcePathStyle: true
 });
 
-const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
+const getLatestVersion = async (bffBucketS3Key) => {
   try {
+    const bffBucketName = process.env.BFF_BUCKET_NAME;
     console.log(`Listing object versions for bucket: ${bffBucketName}, file: ${bffBucketS3Key}`);
     const command = new ListObjectVersionsCommand({ Bucket: bffBucketName, Prefix: bffBucketS3Key, MaxKeys: 1});
     const response = await client.send(command);
@@ -79,8 +79,9 @@ const copyObject = async (sourceBucket, sourceKey, destinationBucket, destinatio
   }
 };
 
-async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, configurationVersion) {
-    const bffBucketName = process.env.BFF_BUCKET_NAME;
+async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent) {
+  	const bffBucketName = process.env.BFF_BUCKET_NAME;
+
     await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
     console.log('File uploaded to S3:', bffBucketS3Key);
 
