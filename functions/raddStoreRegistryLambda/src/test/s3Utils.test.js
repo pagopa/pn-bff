@@ -33,7 +33,9 @@ describe('s3Utils tests', function () {
       const result = await getLatestVersion(bffBucketName, bffBucketS3Key);
 
       // Then
-      expect(result).to.be.equal('1');
+      expect(result.VersionId).to.be.equal('1');
+      expect(result.Key).to.be.equal('file1.txt');
+      expect(result.IsLatest).to.be.equal(true);
     });
 
     

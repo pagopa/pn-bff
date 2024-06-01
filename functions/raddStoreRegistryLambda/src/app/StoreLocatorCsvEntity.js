@@ -127,8 +127,11 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
         storeLocatorCsvEntity.setZipCode(registry.address.cap);
         console.log('Set address:', registry.address);
     }
-    storeLocatorCsvEntity.setPhoneNumber(registry.phoneNumber.replace(/\//g, ' '));
-    console.log('Set phone number:', registry.phoneNumber);
+    if(registry.phoneNumber) {
+        storeLocatorCsvEntity.setPhoneNumber(registry.phoneNumber.replace(/\//g, ' '));
+        console.log('Set phone number:', registry.phoneNumber);
+    }
+
         
     if (registry.openingTime) {
         const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);

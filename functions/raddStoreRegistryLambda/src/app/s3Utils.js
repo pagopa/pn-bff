@@ -16,10 +16,9 @@ const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
       console.log('No versions found');
       return null;
     }
-
-    let latestVersion = response.Versions[0];
+    const latestVersion = response.Versions[0];
     console.log(`Latest version found: ${latestVersion.VersionId}`);
-    return latestVersion.VersionId;
+    return latestVersion;
 
   } catch (error) {
     console.error('Error listing object versions:', error);
@@ -32,9 +31,8 @@ function generateS3Key(configVersion, toWebLandingBucket) {
   if (!fileName) {
     throw new Error('FILE_NAME environment variable is missing');
   }
-  
-  let s3Key;
 
+  let s3Key;
   if(!toWebLandingBucket){
     const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
     s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
