@@ -1,9 +1,9 @@
-const { retrieveGenerationConfigParameter, retrieveCsvConfiguration } = require('./ssmParameter');
-const { getLatestVersion, uploadFile, copyObject, generateS3Key } = require('./s3Utils');
-const { validateCsvConfiguration, createCSVContent} = require('./csvUtils');
-const { fetchApi } = require('./raddClient');
-const { checkIfIntervalPassed } = require('./utils');
-const { mapApiResponseToStoreLocatorCsvEntities } = require('./StoreLocatorCsvEntity');
+const ssmUtils = require('./ssmParameter');
+const s3Utils = require('./s3Utils');
+const csvUtils = require('./csvUtils');
+const apiClient = require('./raddClient');
+const utils = require('./utils');
+const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
 
 exports.handler = async (event) => {
   console.log('Handler invoked with event:', event);
@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   let forceGenerate = false
   let sendToWebLanding = false
 
-  const generationConfig = retrieveGenerationConfigParameter();
+  const generationConfig = await ssmUtils.retrieveGenerationConfigParameter();
 
   if(generationConfig){
     console.log('Configuration fetched:', generationConfig);
@@ -20,35 +20,35 @@ exports.handler = async (event) => {
     sendToWebLanding = generationConfig.sendToWebLanding;
   }
 
-  const csvConfiguration = retrieveCsvConfiguration();
+  const csvConfiguration = await ssmUtils.retrieveCsvConfiguration();
   console.log('Configuration fetched:', csvConfiguration);
 
-  const bffBucketS3Key = generateS3Key(csvConfiguration.configurationVersion, false);
+  const bffBucketS3Key = s3Utils.generateS3Key(csvConfiguration.configurationVersion, false);
   console.log('Generated S3 key:', bffBucketS3Key);
 
-  const latestFile = await getLatestVersion(bffBucketS3Key);
+  const latestFile = await s3Utils.getLatestVersion(bffBucketS3Key);
   console.log('Latest file:', latestFile);
 
   let generateFile = false;
 
-  if (forceGenerate || !latestFile || checkIfIntervalPassed(latestFile)) {
+  if (forceGenerate || !latestFile || utils.checkIfIntervalPassed(latestFile)) {
     generateFile = true;
   }
 
   if (generateFile) {
     console.log('Generating new file...');
 
-    validateCsvConfiguration(csvConfiguration);
+    csvUtils.validateCsvConfiguration(csvConfiguration);
 
     const csvHeader = csvConfiguration.configs.map(conf => conf.header).join(',');
     let csvContent = csvHeader + '\n';
 
     let lastKey = null;
     do {
-      const apiResponse = await fetchApi(lastKey, null);
+      const apiResponse = await apiClient.fetchApi(lastKey, null);
       console.log('Fetched API registries response size:', apiResponse.registries.length);
-      const records = apiResponse.registries.map(registry => mapApiResponseToStoreLocatorCsvEntities(registry));
-      csvContent += createCSVContent(csvConfiguration.configs, records);
+      const records = apiResponse.registries.map(registry => storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry));
+      csvContent += csvUtils.createCSVContent(csvConfiguration.configs, records);
       lastKey = apiResponse.lastKey;
       console.log('Processed records, lastKey:', lastKey);
     } while (lastKey);

@@ -1,12 +1,10 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const AWS = require('aws-sdk-client-mock');
 const { mapApiResponseToStoreLocatorCsvEntities } = require('../app/StoreLocatorCsvEntity');
 const StoreLocatorCsvEntity = require('../app/StoreLocatorCsvEntity').StoreLocatorCsvEntity; // Assumendo che tu abbia esportato anche la classe StoreLocatorCsvEntity
  
 describe('StoreLocatorCsvEntity', () => {
     afterEach(() => {
-        AWS.restore();
         sinon.restore();
     });
  
@@ -42,6 +40,42 @@ describe('StoreLocatorCsvEntity', () => {
         expect(result.friday).to.equal("09:00-17:00");
         expect(result.saturday).to.equal("10:00-14:00");
         expect(result.sunday).to.equal("closed");
+        expect(result.latitude).to.equal("12.345678");
+        expect(result.longitude).to.equal("98.765432");
+    });
+
+    it('should map API response correctly when there is only one day in openingTime', () => {
+        const registry = {
+            description: "Test Store",
+            address: {
+                city: "Test City",
+                addressRow: "123 Test St",
+                pr: "Test Province",
+                cap: "12345"
+            },
+            phoneNumber: "123/456/7890",
+            openingTime: "MON 09:00-17:00#",
+            geoLocation: {
+                latitude: "12.345678",
+                longitude: "98.765432"
+            }
+        };
+ 
+        const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+ 
+        expect(result.description).to.equal("Test Store");
+        expect(result.city).to.equal("Test City");
+        expect(result.address).to.equal("123 Test St");
+        expect(result.province).to.equal("Test Province");
+        expect(result.zipCode).to.equal("12345");
+        expect(result.phoneNumber).to.equal("123 456 7890");
+        expect(result.monday).to.equal("09:00-17:00");
+        expect(result.tuesday).to.equal("");
+        expect(result.wednesday).to.equal("");
+        expect(result.thursday).to.equal("");
+        expect(result.friday).to.equal("");
+        expect(result.saturday).to.equal("");
+        expect(result.sunday).to.equal("");
         expect(result.latitude).to.equal("12.345678");
         expect(result.longitude).to.equal("98.765432");
     });
