@@ -6,11 +6,6 @@ const client = new S3Client({
   forcePathStyle: true
 });
 
-const bffBucketName = process.env.BFF_BUCKET_NAME;
-const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
-cons  webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
-const webLandingBucketPrefix = process.env.WEB_LANDING_BUCKET_PREFIX;
-
 const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
   try {
     console.log(`Listing object versions for bucket: ${bffBucketName}, file: ${bffBucketS3Key}`);
@@ -21,8 +16,11 @@ const getLatestVersion = async (bffBucketName, bffBucketS3Key) => {
       console.log('No versions found');
       return null;
     }
+
+    let latestVersion = response.Versions[0];
     console.log(`Latest version found: ${latestVersion.VersionId}`);
-    return latestVersion;
+    return latestVersion.VersionId;
+
   } catch (error) {
     console.error('Error listing object versions:', error);
     throw new Error('Failed to list object versions');
@@ -34,11 +32,15 @@ function generateS3Key(configVersion, toWebLandingBucket) {
   if (!fileName) {
     throw new Error('FILE_NAME environment variable is missing');
   }
+  
+  let s3Key;
 
   if(!toWebLandingBucket){
-    const s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
+    const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
+    s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
   } else {
-    const s3Key = `${webLandingBucketPrefix}/${fileName}.csv`;
+    const webLandingBucketPrefix = process.env.WEB_LANDING_BUCKET_PREFIX;
+    s3Key = `${webLandingBucketPrefix}/${fileName}.csv`;
   }
 
   console.log(`Generated S3 key: ${s3Key}`);
@@ -62,11 +64,30 @@ const uploadFile = async (bffBucketName, key, fileContent) => {
   }
 };
 
+const copyObject = async (sourceBucket, sourceKey, destinationBucket, destinationKey) => {
+  try {
+    console.log(`Copying object from ${sourceBucket}/${sourceKey} to ${destinationBucket}/${destinationKey}`);
+    const command = new CopyObjectCommand({
+      CopySource: `${sourceBucket}/${sourceKey}`,
+      Bucket: destinationBucket,
+      Key: destinationKey
+    });
+
+    const response = await client.send(command);
+    console.log('Successfully copied object:', response);
+  } catch (error) {
+    console.error('Error copying object:', error);
+    throw error;
+  }
+};
+
 async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, configurationVersion) {
+    const bffBucketName = process.env.BFF_BUCKET_NAME;
     await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
     console.log('File uploaded to S3:', bffBucketS3Key);
 
-    if (sendToWebLanding)) {
+    if (sendToWebLanding) {
+      const  webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
       const webLandingS3Key = generateS3Key(null, true);
       await copyObject(bffBucketName, bffBucketS3Key, webLandingBucketName, webLandingS3Key);
       console.log('File copied to site bucket:', webLandingS3Key);

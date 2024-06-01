@@ -52,7 +52,7 @@ exports.handler = async (event) => {
       console.log('Processed records, lastKey:', lastKey);
     } while (lastKey);
 
-    uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent, csvConfiguration.configurationVersion);
+    uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent);
 
   } else {
     console.log("No need to generate file.");
