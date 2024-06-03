@@ -711,7 +711,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
-      ScheduleExpression: !Sub rate(${RaddStoreRegistryLambdaCron})
+      ScheduleExpression: !Sub cron(${RaddStoreRegistryLambdaCron})
       State: ENABLED
       Targets:
         - Arn: !GetAtt RaddStoreRegistryLambda.Arn
