@@ -115,10 +115,10 @@ Outputs:
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
   RaddStoreRegistryLambdaName:
-    Value: !GetAtt RaddStoreRegistryLambdaLogGroup.Outputs.LogGroupName
+    Value: !Sub ${ProjectName}-bff-RaddStoreRegistryLambda
   # Lambda exports
   DataIndexerLambdaName:
-    Value: !GetAtt SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
+    Value: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
   # Bucket exports
   BffBucketArn:
     Value: !GetAtt BffBucket.Arn
