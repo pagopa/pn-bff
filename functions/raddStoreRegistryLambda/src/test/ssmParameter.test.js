@@ -3,7 +3,7 @@ const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
 const { retrieveCsvConfiguration, retrieveGenerationConfigParameter } = require('../app/ssmParameter');
 const { expect } = require('chai');
 const axios = require('axios');
-var MockAdapter = require("axios-mock-adapter");
+const MockAdapter = require("axios-mock-adapter");
 const assert = require('node:assert/strict');
 
 

@@ -7,7 +7,7 @@ describe('checkIfIntervalPassed', () => {
   });
 
   it('returns true when interval has passed', () => {
-    let date = new Date();
+    const date = new Date();
     date.setDate(date.getDate() - 2);
     console.log(date);
     const latestFile = { LastModified: new Date(date) };
