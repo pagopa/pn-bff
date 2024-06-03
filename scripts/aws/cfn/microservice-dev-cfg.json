@@ -12,7 +12,7 @@
     "PnBucketRegion": "eu-south-1",
     "PnIndexObjectKey": "sender-dashboard/indexes/senderDashboardIndex_test.json",
     "SenderDashboardDataIndexerCron": "0 16 * * ? *",
-    "RaddStoreRegistryLambdaRateExpression": "24 hours",
+    "RaddStoreRegistryLambdaCron": "0 0 * * *",
     "RaddStoreRegistryFileName": "radd-stores-registry",
     "RaddStoreRegistryCsvConfigurationParameter":  "/pn-radd-store-registry-lambda/csv-configuration",
     "RaddStoreRegistryGenerateInterval": 7,

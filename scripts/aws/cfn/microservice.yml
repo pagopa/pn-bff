@@ -351,6 +351,11 @@ Parameters:
     Type: String
     Description: name of parameter in parameter store to enable send to web landing
 
+  RaddStoreRegistryLambdaCron:
+    Type: String
+    Default: '0 0 * * *'
+    Description: Cron to schedule the Lambda (UTC).
+
 Conditions:
   CreateFakeDLRole:
     Fn::Or:
@@ -625,7 +630,7 @@ Resources:
       VpcConfig: # required for mock connection but useful also for the future addition of network firewall
         SecurityGroupIds:
           - !GetAtt RaddStoreRegistryLambdaSecGroup.GroupId
-        SubnetIds: !!Ref SubnetsIds
+        SubnetIds: !Ref SubnetsIds
       MemorySize: !Ref RaddStoreRegistryLambdaMemory
       Timeout: 900
       Environment:
@@ -698,3 +703,23 @@ Resources:
         - Name: FunctionName
           Value: !Ref RaddStoreRegistryLambdaName
       TreatMissingData: notBreaching
+
+  #Scheduled Event Bridge Rule that send event to target lambda
+  RaddStoreRegistryScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
+      ScheduleExpression: !Sub rate(${RaddStoreRegistryLambdaCron})
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt RaddStoreRegistryLambda.Arn
+          Id: RaddStoreRegistryLambdaTarget
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt RaddStoreRegistryLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        - Arn: !GetAtt RaddStoreRegistryScheduledRule.Arn
