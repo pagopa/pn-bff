@@ -83,9 +83,9 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
 
     const getOpeningTimeByDay = (fullOpeningTime) => {
         console.log('Parsing opening time:', fullOpeningTime);
-        let times = new Array(7).fill(null);
+        const times = new Array(7).fill(null);
         if (fullOpeningTime) {
-            let days = fullOpeningTime.split("#");
+            const days = fullOpeningTime.split("#");
             for (let day of days) {
                 switch (day.substring(0, 3).toUpperCase()) {
                     case "MON":
