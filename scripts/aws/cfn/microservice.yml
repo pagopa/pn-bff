@@ -351,10 +351,10 @@ Parameters:
     Type: String
     Description: name of parameter in parameter store to enable send to web landing
 
-  RaddStoreRegistryLambdaRate:
+  RaddStoreRegistryLambdaCron:
     Type: String
-    Description: Rate for RaddStoreRegistry Lambda
-    Default: '24 hours'
+    Default: '0 0 * * *'
+    Description: Cron to schedule the Lambda (UTC).
 
 Conditions:
   CreateFakeDLRole:
@@ -709,7 +709,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
-      ScheduleExpression: !Sub rate(${RaddStoreRegistryLambdaRate})
+      ScheduleExpression: !Sub rate(${RaddStoreRegistryLambdaCron})
       State: ENABLED
       Targets:
         - Arn: !GetAtt RaddStoreRegistryLambda.Arn
