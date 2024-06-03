@@ -14,11 +14,11 @@
     "SenderDashboardDataIndexerCron": "0 16 * * ? *",
     "RaddStoreRegistryLambdaCron": "0 0 * * ? *",
     "RaddStoreRegistryFileName": "radd-stores-registry",
-    "RaddStoreRegistryCsvConfigurationParameter":  "/pn-radd-store-registry-lambda/csv-configuration",
-    "RaddStoreRegistryGenerateInterval": 7,
+    "RaddStoreRegistryCsvConfigurationParameter": "/pn-radd-store-registry-lambda/csv-configuration",
+    "RaddStoreRegistryGenerateInterval": "7",
     "WebLandingBucketName": "web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
     "WebLandingBucketArn": "arn:aws:s3:::web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
     "WebLandingBucketPrefix": "public/static/documents",
-    "RaddStoreRegistryGenerationConfigParameter":  "/pn-radd-store-registry-lambda/generation-config"
+    "RaddStoreRegistryGenerationConfigParameter": "/pn-radd-store-registry-lambda/generation-config"
   }
 }
