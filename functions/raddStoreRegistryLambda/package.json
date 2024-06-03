@@ -10,8 +10,7 @@
     "build": "npm prune --production && rm -f ./function.zip && zip -r ./function.zip . -x './src/test/*' -x '*.md' -x '*.env'  -x './coverage/*' -x './.nyc_output/*' -x './.scannerwork/*' -x './testFiles/*'",
     "test": "nyc --reporter=html --reporter=text mocha './src/test/**/*.test.js' --recursive --timeout=3000 --exit -r dotenv/config",
     "coverage": "nyc report --reporter=lcov",
-    "sonar": "node sonarqube-scanner.js",
-    "integrazione": "mocha './app/test/integrazione.test.js' --timeout=300000 --exit -r dotenv/config"
+    "sonar": "node sonarqube-scanner.js"
   },
   "devDependencies": {
     "lambda-tester": "^4.0.1",
