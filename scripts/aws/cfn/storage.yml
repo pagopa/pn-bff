@@ -102,9 +102,11 @@ Outputs:
   # Log group exports
   EcsLogGroup:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
+  RaddStoreRegistryLambdaName:
+    Value: RaddStoreRegistryLambdaLogGroup.Outputs.LogGroupName
   # Lambda exports
   DataIndexerLambdaName:
-    Value: SenderDashboardDataIndexer
+    Value: SenderDashboardDataIndexerLogGroup.Outputs.LogGroupName
   # Bucket exports
   BffBucketArn:
     Value: !GetAtt BffBucket.Arn
