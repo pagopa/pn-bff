@@ -40,7 +40,7 @@ Parameters:
     Description: 'The name of the ECS cluster where the microservice is going to be deployed'
 
   SubnetsIds:
-    Type: String
+    Type: CommaDelimitedList
     Description: 'subnets ids comma separated list. Where to deploy the microservice'
 
   VpcId:
