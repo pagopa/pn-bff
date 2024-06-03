@@ -1,6 +1,6 @@
 const options = {
   "sonar.organization": "pagopa",
-  "sonar.projectKey": "pagopa_pn-bff-raddStoreRegistryLambda",
+  "sonar.projectKey": "pagopa-pn-bff-raddstoreregistrylambda",
 };
 
 if (process.env.PR_NUM) {
