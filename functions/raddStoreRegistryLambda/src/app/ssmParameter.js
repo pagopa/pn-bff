@@ -32,11 +32,11 @@ const getParameter = async (parameterName) => {
     return response.Parameter.Value;
 }
 
-async function getParameterFromLayer(secretName) {
+async function getParameterFromLayer(parameterName) {
   try {
     const response = await axios.get(
-      `http://localhost:2773/secretsmanager/get?secretId=${encodeURIComponent(
-          secretName
+      `http://localhost:2773/systemsmanager/parameters/get?name=${encodeURIComponent(
+        parameterName
       )}`,
       {
         headers: {
@@ -44,7 +44,7 @@ async function getParameterFromLayer(secretName) {
         },
       }
     );
-    return response.data.SecretString;
+    return response.data.Parameter.Value;
   } catch (err) {
     console.error("Unable to get secret ", err);
     throw new Error("Error retrieving SSM parameter");
