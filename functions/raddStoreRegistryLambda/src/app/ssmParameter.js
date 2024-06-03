@@ -46,7 +46,7 @@ async function getParameterFromLayer(parameterName) {
     );
     return response.data.Parameter.Value;
   } catch (err) {
-    console.error("Unable to get secret ", err);
+    console.error("Unable to get SSM parameter ", err);
     throw new Error("Error retrieving SSM parameter");
   }
 }
