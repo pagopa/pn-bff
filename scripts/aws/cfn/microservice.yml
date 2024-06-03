@@ -353,7 +353,7 @@ Parameters:
 
   RaddStoreRegistryLambdaCron:
     Type: String
-    Default: '0 0 * * *'
+    Default: '0 0 * * ? *'
     Description: Cron to schedule the Lambda (UTC).
 
 Conditions:
@@ -721,5 +721,4 @@ Resources:
       FunctionName: !GetAtt RaddStoreRegistryLambda.Arn
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn:
-        - Arn: !GetAtt RaddStoreRegistryScheduledRule.Arn
+      SourceArn: !GetAtt RaddStoreRegistryScheduledRule.Arn
