@@ -244,18 +244,17 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
- # Sender dashboard
-  IndexesBucketArn:
+  BffBucketArn:
     Type: String
-    Description: PN bucket Arn of indexes files.
+    Description: PN bff bucket ARN.
 
-  IndexesBucketName:
+  BffBucketName:
     Type: String
-    Description: PN bucket of index files.
+    Description: PN bff bucket name.
 
-  IndexesBucketRegion:
+  BffBucketRegion:
     Type: String
-    Description: PN bucket region of index files.
+    Description: PN bff bucket region.
 
   SenderDashboardDataIndexerAlarmThreshold:
     Type: Number
@@ -418,7 +417,7 @@ Resources:
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      FunctionName: !Ref DataIndexerLambdaName
       Runtime: !Ref DataIndexerLambdaRuntime
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
@@ -429,21 +428,21 @@ Resources:
       MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
         Variables:
-          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref BffBucketName, !Ref DlBucketName]
           DL_BUCKET_REGION: !Ref DlBucketRegion
           DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
             !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
             !Ref DlAssumeRoleArn]
           DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
-          PN_BUCKET_NAME: !Ref IndexesBucketName
-          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_BUCKET_NAME: !Ref BffBucketName
+          PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      RoleName: !Sub ${DataIndexerLambdaName}LambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -494,7 +493,7 @@ Resources:
               ArnEquals:
                 aws:PrincipalArn:
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${DataIndexerLambdaName}LambdaRole
       Path: /
       Policies:
         - PolicyName: DatalakeS3Policy
@@ -513,7 +512,7 @@ Resources:
   SenderDashboardDataIndexerDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
+      AlarmName: !Sub ${DataIndexerLambdaName}DurationAlarm
       AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
       MetricName: Duration
       Namespace: AWS/Lambda
@@ -526,7 +525,7 @@ Resources:
         - !Ref AlarmSNSTopicArn
       Dimensions:
         - Name: FunctionName
-          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+          Value: !Ref DataIndexerLambdaName
       TreatMissingData: notBreaching
 
   # EventBridge Rule to trigger the Lambda
