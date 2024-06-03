@@ -10,7 +10,6 @@
         "api-internal-pn-bff-recipient-info.yaml",
         "api-internal-pn-bff-tos-privacy.yaml",
         "api-internal-pn-bff-downtime-logs.yaml",
-        "api-internal-pn-bff-auth.yaml",
         "api-internal-pn-bff-payments.yaml",
         "api-internal-pn-bff-recipient-digital-addresses.yaml",
         "api-internal-pn-bff-recipient-mandate.yaml",

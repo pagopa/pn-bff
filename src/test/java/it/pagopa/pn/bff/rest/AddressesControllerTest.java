@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.eq;
 @Slf4j
 @WebFluxTest(controllers = AddressesController.class)
 class AddressesControllerTest {
-    private final UserMock userMock = new UserMock();
     private final AddressesMock addressesMock = new AddressesMock();
 
     @Autowired
