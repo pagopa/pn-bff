@@ -38,6 +38,21 @@ Parameters:
     Default: 365
     Description: Indexes expiration days.
 
+  RaddStoreRegistryVersionExpiresAfterDays:
+    Type: Number
+    Default: 365
+    Description: Radd Store Registry File Version expiration days.
+
+  RaddStoreRegistryNonCurrentVersion:
+    Type: Number
+    Default: 5
+    Description: Radd Store Registry File non current version
+
+  BffBucketRaddStoreRegistryPrefix:
+    Type: String
+    Description: Name of s3 bucket for generated csv
+    Default: 'radd/store'
+
 Resources:
 
   PnBffLogGroup:
@@ -76,6 +91,12 @@ Resources:
             Prefix: sender-dashboard/indexes/
             NoncurrentVersionExpiration:
               NoncurrentDays: !Ref SenderDashboardIndexesVersionExpiresAfterDays
+          - Id: DeleteOldVersionsForRaddStoreRegistry
+            Status: Enabled
+            Prefix: !Ref BffBucketRaddStoreRegistryPrefix
+            NoncurrentVersionExpiration:
+              NewerNoncurrentVersions: !Ref RaddStoreRegistryNonCurrentVersion
+              NoncurrentDays: !Ref RaddStoreRegistryVersionExpiresAfterDays
 
   # Lambda RaddStoreRegistry
   RaddStoreRegistryLambdaLogGroup:
@@ -105,3 +126,5 @@ Outputs:
     Value: !Ref BffBucket
   BffBucketRegion:
     Value: !Ref AWS::Region
+  BffBucketRaddStoreRegistryPrefix:
+    Value: !Ref BffBucketRaddStoreRegistryPrefix
