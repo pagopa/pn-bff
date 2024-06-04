@@ -1,3 +1,7 @@
-const { handleEvent } =  require('./src/app/eventHandler.js');
+const { handleEvent } = require("./src/app/eventHandler.js");
 
-exports.handler = handleEvent;
+async function handler(event) {
+  return handleEvent(event);
+}
+
+exports.handler = handler;

@@ -5,7 +5,7 @@ const apiClient = require('./raddClient');
 const utils = require('./utils');
 const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
 
-exports.handler = async (event) => {
+exports.handleEvent =  async (event) => {
   console.log('Handler invoked with event:', event);
   validateEnvironmentVariables();
 
