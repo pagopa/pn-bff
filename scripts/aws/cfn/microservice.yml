@@ -644,6 +644,8 @@ Resources:
           GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
           RADD_STORE_GENERATION_CONFIG_PARAMETER: !Ref RaddStoreRegistryGenerationConfigParameter
           RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
+      Layers:
+        - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
 
   # Lambda function role
   RaddStoreRegistryLambdaExecutionRole:
@@ -709,7 +711,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
-      ScheduleExpression: !Sub rate(${RaddStoreRegistryLambdaCron})
+      ScheduleExpression: !Sub cron(${RaddStoreRegistryLambdaCron})
       State: ENABLED
       Targets:
         - Arn: !GetAtt RaddStoreRegistryLambda.Arn
