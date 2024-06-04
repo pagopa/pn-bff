@@ -40,7 +40,7 @@ Parameters:
     Description: 'The name of the ECS cluster where the microservice is going to be deployed'
 
   SubnetsIds:
-    Type: String
+    Type: CommaDelimitedList
     Description: 'subnets ids comma separated list. Where to deploy the microservice'
 
   VpcId:
@@ -244,18 +244,17 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
- # Sender dashboard
-  IndexesBucketArn:
+  BffBucketArn:
     Type: String
-    Description: PN bucket Arn of indexes files.
+    Description: PN bff bucket ARN.
 
-  IndexesBucketName:
+  BffBucketName:
     Type: String
-    Description: PN bucket of index files.
+    Description: PN bff bucket name.
 
-  IndexesBucketRegion:
+  BffBucketRegion:
     Type: String
-    Description: PN bucket region of index files.
+    Description: PN bff bucket region.
 
   SenderDashboardDataIndexerAlarmThreshold:
     Type: Number
@@ -294,6 +293,68 @@ Parameters:
   PnIndexObjectKey:
     Type: String
     Description: S3 index object key.
+
+  RaddStoreRegistryLambdaName:
+    Type: String
+    Description: Name of the RaddStoreRegistry Lambda.
+
+  RaddStoreRegistryLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the RaddStoreRegistry Lambda.
+
+  RaddStoreRegistryLambdaRuntime:
+    Type: String
+    Default: nodejs20.x
+    Description: Runtime of the RaddStoreRegistry Lambda.
+
+  BffBucketRaddStoreRegistryPrefix:
+    Type: String
+    Description: s3 bucket prefix for generated csv
+
+  WebLandingBucketName:
+    Type: String
+    Description: name of bucket for web-landing
+
+  WebLandingBucketArn:
+    Type: String
+    Description: Arn of bucket for web-landing
+
+  WebLandingBucketPrefix:
+    Type: String
+    Description: Folder to upload store registry csv
+    Default: 'public/static/documents'
+
+  RaddStoreRegistryFileName:
+    Type: String
+    Description: Name of csv file for store locator
+    Default: 'radd-stores-registry'
+
+  RaddStoreRegistryCsvConfigurationParameter:
+    Type: String
+    Description: Name of parameter in parameter store containing store locator csv configuration
+
+  RaddStoreRegistryGenerateInterval:
+    Type: Number
+    Description: Time interval (days) for Store Locator generate csv
+    Default: 7
+
+  RaddStoreRegistryAlarmThreshold:
+    Type: Number
+    # 8 minutes
+    Default: 480000
+    Description: Threshold in minutes of DataIndexer Lambda.
+
+  RaddStoreRegistryGenerationConfigParameter:
+    Type: String
+    Description: name of parameter in parameter store to enable send to web landing
+
+  RaddStoreRegistryLambdaCron:
+    Type: String
+    Default: '0 0 * * ? *'
+    Description: Cron to schedule the Lambda (UTC).
 
 Conditions:
   CreateFakeDLRole:
@@ -342,11 +403,11 @@ Resources:
         ContainerEnvEntry13: !Sub 'PN_BFF_SELFCARE_BASE_URL=${SelfCareBaseURL}'
         ContainerEnvEntry14: !Sub 'PN_BFF_SELFCARE_SEND_PROD_ID=${SelfCareSendProdId}'
         # Sender dashboard
-        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${IndexesBucketName}'
-        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${IndexesBucketRegion}'
+        ContainerEnvEntry15: !Sub 'PN_BFF_PN_BUCKET_NAME=${BffBucketName}'
+        ContainerEnvEntry16: !Sub 'PN_BFF_PN_BUCKET_REGION=${BffBucketRegion}'
         ContainerEnvEntry17: !Sub 'PN_BFF_PN_INDEX_OBJECT_KEY=${PnIndexObjectKey}'
         ContainerEnvEntry18: !If [CreateFakeDLRole,
-            !Sub 'PN_BFF_DL_BUCKET_NAME=${IndexesBucketName}',
+            !Sub 'PN_BFF_DL_BUCKET_NAME=${BffBucketName}',
             !Sub 'PN_BFF_DL_BUCKET_NAME=${DlBucketName}']
         ContainerEnvEntry19: !Sub 'PN_BFF_DL_BUCKET_REGION=${DlBucketRegion}'
         ContainerEnvEntry20: !If [CreateFakeDLRole,
@@ -387,7 +448,7 @@ Resources:
               - s3:GetObject
               - s3:GetObjectVersion
             Resource:
-              - !Sub '${IndexesBucketArn}/*'
+              - !Sub '${BffBucketArn}/*'
           # Allow assuming data lake role
           - Effect: Allow
             Action:
@@ -418,7 +479,7 @@ Resources:
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+      FunctionName: !Ref DataIndexerLambdaName
       Runtime: !Ref DataIndexerLambdaRuntime
       Handler: index.handler
       Role: !GetAtt SenderDashboardDataIndexerExecutionRole.Arn
@@ -429,21 +490,21 @@ Resources:
       MemorySize: !Ref DataIndexerLambdaMemory
       Environment:
         Variables:
-          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref IndexesBucketName, !Ref DlBucketName]
+          DL_BUCKET_NAME: !If [CreateFakeDLRole, !Ref BffBucketName, !Ref DlBucketName]
           DL_BUCKET_REGION: !Ref DlBucketRegion
           DL_ASSUME_ROLE_ARN: !If [CreateFakeDLRole,
             !Sub 'arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-SenderDashboardFakeDLRole',
             !Ref DlAssumeRoleArn]
           DL_OVERVIEW_OBJECT_KEY: !Ref DlOverviewObjectKey
           DL_FOCUS_OBJECT_KEY: !Ref DlFocusObjectKey
-          PN_BUCKET_NAME: !Ref IndexesBucketName
-          PN_BUCKET_REGION: !Ref IndexesBucketRegion
+          PN_BUCKET_NAME: !Ref BffBucketName
+          PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+      RoleName: !Sub ${DataIndexerLambdaName}LambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -456,7 +517,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: AccessIndexesBucket
+        - PolicyName: AccessBffBucket
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -467,7 +528,7 @@ Resources:
                   - s3:GetObjectVersion
                   - s3:PutObject
                 Resource:
-                  - !Sub ${IndexesBucketArn}/*
+                  - !Sub ${BffBucketArn}/*
               # Allow assuming data lake role
               - Effect: Allow
                 Action:
@@ -494,7 +555,7 @@ Resources:
               ArnEquals:
                 aws:PrincipalArn:
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-TaskRole
-                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-bff-${DataIndexerLambdaName}LambdaRole
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${DataIndexerLambdaName}LambdaRole
       Path: /
       Policies:
         - PolicyName: DatalakeS3Policy
@@ -507,13 +568,13 @@ Resources:
                   - s3:GetObject
                   - s3:GetObjectVersion
                 Resource:
-                  - !Sub ${IndexesBucketArn}/*
+                  - !Sub ${BffBucketArn}/*
 
   # Fires the alarm when a duration threshold is reached
   SenderDashboardDataIndexerDurationAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}DurationAlarm
+      AlarmName: !Sub ${DataIndexerLambdaName}DurationAlarm
       AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${SenderDashboardDataIndexerAlarmThreshold} minutes"
       MetricName: Duration
       Namespace: AWS/Lambda
@@ -526,7 +587,7 @@ Resources:
         - !Ref AlarmSNSTopicArn
       Dimensions:
         - Name: FunctionName
-          Value: !Sub ${ProjectName}-bff-${DataIndexerLambdaName}
+          Value: !Ref DataIndexerLambdaName
       TreatMissingData: notBreaching
 
   # EventBridge Rule to trigger the Lambda
@@ -549,3 +610,117 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt SenderDashboardDataIndexerTrigger.Arn
+
+  RaddStoreRegistryLambdaSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${RaddStoreRegistryLambdaName}-sec-group'
+      VpcId: !Ref VpcId
+
+  RaddStoreRegistryLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref RaddStoreRegistryLambdaName
+      Runtime: !Ref RaddStoreRegistryLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt RaddStoreRegistryLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/raddStoreRegistryLambda.zip"
+      VpcConfig: # required for mock connection but useful also for the future addition of network firewall
+        SecurityGroupIds:
+          - !GetAtt RaddStoreRegistryLambdaSecGroup.GroupId
+        SubnetIds: !Ref SubnetsIds
+      MemorySize: !Ref RaddStoreRegistryLambdaMemory
+      Timeout: 900
+      Environment:
+        Variables:
+          BFF_BUCKET_NAME: !Ref BffBucketName
+          BFF_BUCKET_PREFIX: !Ref BffBucketRaddStoreRegistryPrefix
+          WEB_LANDING_BUCKET_NAME: !Ref WebLandingBucketName
+          WEB_LANDING_BUCKET_PREFIX: !Ref WebLandingBucketPrefix
+          FILE_NAME: !Ref RaddStoreRegistryFileName
+          CSV_CONFIGURATION_PARAMETER: !Ref RaddStoreRegistryCsvConfigurationParameter
+          GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
+          RADD_STORE_GENERATION_CONFIG_PARAMETER: !Ref RaddStoreRegistryGenerationConfigParameter
+          RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
+      Layers:
+        - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+
+  # Lambda function role
+  RaddStoreRegistryLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RaddStoreRegistryLambdaName}-ExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: AccessBffBucketForRaddRegistry
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucketVersions
+                Resource:
+                  - !Sub ${BffBucketArn}/${BffBucketRaddStoreRegistryPrefix}/*
+        - PolicyName: AccessWebLandingBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${WebLandingBucketArn}/${WebLandingBucketPrefix}/*
+
+  # Fires the alarm when a duration threshold is reached
+  RaddStoreRegistryLambdaAlarms:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${RaddStoreRegistryLambdaName}-DurationAlarm
+      AlarmDescription: !Sub "Alarm when Lambda function execution time exceeds ${RaddStoreRegistryAlarmThreshold} minutes"
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: !Ref RaddStoreRegistryAlarmThreshold
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref RaddStoreRegistryLambdaName
+      TreatMissingData: notBreaching
+
+  #Scheduled Event Bridge Rule that send event to target lambda
+  RaddStoreRegistryScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub '${ProjectName}-bff-raddStoreRegistryScheduleRule'
+      ScheduleExpression: !Sub cron(${RaddStoreRegistryLambdaCron})
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt RaddStoreRegistryLambda.Arn
+          Id: RaddStoreRegistryLambdaTarget
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt RaddStoreRegistryLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt RaddStoreRegistryScheduledRule.Arn
