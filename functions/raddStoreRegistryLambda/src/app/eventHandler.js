@@ -40,7 +40,7 @@ exports.handleEvent =  async () => {
     csvUtils.validateCsvConfiguration(csvConfiguration);
 
     const csvHeader = csvConfiguration.configs.map(conf => conf.header).join(';');
-    let csvContent = csvHeader + '\n';
+    let csvContent = csvHeader;
 
     let lastKey = null;
     do {
