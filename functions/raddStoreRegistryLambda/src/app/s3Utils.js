@@ -37,12 +37,60 @@ function generateS3Key(configVersion, toWebLandingBucket) {
     const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
     s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
   } else {
-      //TODO: Implement logic for NAME of file in web landing bucket
-      s3Key = 'TODO';
+    const webLandingBucketPrefix = process.env.WEB_LANDING_BUCKET_PREFIX;
+    s3Key = `${webLandingBucketPrefix}/${fileName}.csv`;
   }
 
   console.log(`Generated S3 key: ${s3Key}`);
   return s3Key;
 }
 
-module.exports = { getLatestVersion, generateS3Key};
+const uploadFile = async (bffBucketName, key, fileContent) => {
+  try {
+    console.log(`Uploading file to bucket: ${bffBucketName}, key: ${key}`);
+    const command = new PutObjectCommand({
+      Bucket: bffBucketName,
+      Key: key,
+      Body: fileContent
+    });
+
+    const response = await client.send(command);
+    console.log('Successfully uploaded object:', response);
+  } catch (error) {
+    console.error('Error uploading object:', error);
+    throw error;
+  }
+};
+
+const copyObject = async (sourceBucket, sourceKey, destinationBucket, destinationKey) => {
+  try {
+    console.log(`Copying object from ${sourceBucket}/${sourceKey} to ${destinationBucket}/${destinationKey}`);
+    const command = new CopyObjectCommand({
+      CopySource: `${sourceBucket}/${sourceKey}`,
+      Bucket: destinationBucket,
+      Key: destinationKey
+    });
+
+    const response = await client.send(command);
+    console.log('Successfully copied object:', response);
+  } catch (error) {
+    console.error('Error copying object:', error);
+    throw error;
+  }
+};
+
+async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent) {
+  	const bffBucketName = process.env.BFF_BUCKET_NAME;
+
+    await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
+    console.log('File uploaded to S3:', bffBucketS3Key);
+
+    if (sendToWebLanding) {
+      const  webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
+      const webLandingS3Key = generateS3Key(null, true);
+      await copyObject(bffBucketName, bffBucketS3Key, webLandingBucketName, webLandingS3Key);
+      console.log('File copied to site bucket:', webLandingS3Key);
+    }
+}
+
+module.exports = { getLatestVersion, generateS3Key, uploadVersionedFile };

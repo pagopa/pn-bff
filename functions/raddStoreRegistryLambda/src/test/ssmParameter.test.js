@@ -47,7 +47,7 @@ describe('ssmParameter', () => {
         const parameterName = process.env.CSV_CONFIGURATION_PARAMETER;
         const url = `http://localhost:2773/systemsmanager/parameters/get?name=${encodeURIComponent(parameterName)}`;
         mock.onGet(url).reply(200, {Parameter: { Value: JSON.stringify(mockResponse)}}, {"Content-Type": "application/json"})
-        
+
         ssmClientMock.on(GetParameterCommand).resolves(
             { Parameter: { 
                 Value: JSON.stringify(mockResponse) 
