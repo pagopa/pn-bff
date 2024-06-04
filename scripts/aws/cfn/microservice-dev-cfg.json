@@ -5,7 +5,6 @@
     "MountEfs": "false",
     "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
     "SelfCareSendProdId": "prod-pn-dev",
-    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it",
     "DlBucketRegion": "eu-south-1",
     "DlOverviewObjectKey": "export-notifications_overview_test.json",
     "DlFocusObjectKey": "export-digital_notifications_focus_test.json",
