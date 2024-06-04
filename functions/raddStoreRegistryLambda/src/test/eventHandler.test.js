@@ -6,12 +6,10 @@ const ssmUtils = require('../app/ssmParameter');
 const utils = require('../app/utils');
 const sinon = require('sinon');
 const assert = require('node:assert/strict');
-let originalEnv;
 
 function setupEnv() {
   // Mock the environment variables
   process.env = {
-    ...originalEnv,
     BFF_BUCKET_NAME: 'radd-store-locator',
     BFF_BUCKET_PREFIX: 'pn-store-locator',
     WEB_LANDING_BUCKET_NAME: 'web-landing-store-locator',
