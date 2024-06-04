@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.service.senderdashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 

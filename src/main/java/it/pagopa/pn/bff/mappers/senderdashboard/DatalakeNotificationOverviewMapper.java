@@ -26,12 +26,17 @@ public interface DatalakeNotificationOverviewMapper {
             DatalakeNotificationOverview datalakeNotificationOverview);
 
     @Named("normalizeInt")
-    static int normalizeInt(String value) {
-        return Integer.parseInt(value.replace(".", ""));
+    static Integer normalizeInt(String value) {
+        return value != null
+                ? Integer.parseInt(value.replace(".", ""))
+                : null;
     }
 
     @Named("normalizeDouble")
-    static double normalizeDouble(String value) {
-        return Double.parseDouble(value.replace(".", "").replace(",", "."));
+    static Double normalizeDouble(String value) {
+        return value != null
+                ? Double.parseDouble(value.replace(".", "")
+                    .replace(",", "."))
+                : null;
     }
 }

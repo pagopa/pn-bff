@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.exceptions.PnBffExceptionCodes;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
+import it.pagopa.pn.bff.mappers.senderdashboard.DataResponseMapper;
 import it.pagopa.pn.bff.service.senderdashboard.resources.DatalakeS3Resource;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,7 @@ public class SenderDashboardService {
 
         // Get data response
         return Mono.fromCallable(() -> datalakeResource.getDataResponse(cxId, startDate, endDate))
+                .map(DataResponseMapper.modelMapper::toBffSenderDashboardDataResponse)
                 .onErrorResume(SenderNotFoundException.class, e -> {
                     log.debug("SenderId [{}] not found", cxId);
                     return Mono.empty();

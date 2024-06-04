@@ -37,7 +37,7 @@ public class AddressesService {
                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                  List<String> xPagopaPnCxGroups,
                                                  String xPagopaPnCxRole) {
-        log.info("Get user addresses");
+        log.info("Get user addresses - recipientId: {} - type: {} - groups: {} - role: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
         Mono<UserAddresses> serviceRes = pnUserAttributesClient.getUserAddresses(xPagopaPnCxId,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                         xPagopaPnCxGroups,
@@ -72,7 +72,8 @@ public class AddressesService {
                                                                       Mono<BffAddressVerificationRequest> addressVerification,
                                                                       List<String> xPagopaPnCxGroups) {
 
-        log.info("Create or Update Address");
+        log.info("Create/Update user address - recipientId: {} - type: {} - groups: {} - role: {} - senderId: {} - addressType: {} - channelType: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, senderId, addressType, channelType);
 
         if (addressType.getValue().equals(BffAddressType.COURTESY.getValue())) {
             return addressVerification.flatMap(verification -> pnUserAttributesClient.createOrUpdateCourtesyAddress(
@@ -115,7 +116,8 @@ public class AddressesService {
     public Mono<Void> deleteDigitalAddress(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                            String xPagopaPnCxRole, BffAddressType addressType, String senderId, BffChannelType channelType,
                                            List<String> xPagopaPnCxGroups) {
-        log.info("Delete Digital Address");
+        log.info("Delete user address - recipientId: {} - type: {} - groups: {} - role: {} - senderId: {} - addressType: {} - channelType: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, senderId, addressType, channelType);
 
         if (addressType.getValue().equals(BffAddressType.COURTESY.getValue())) {
             return pnUserAttributesClient.deleteRecipientCourtesyAddress(

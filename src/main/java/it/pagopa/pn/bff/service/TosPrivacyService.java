@@ -36,7 +36,8 @@ public class TosPrivacyService {
      * @return an object containing the tos and privacy consents
      */
     public Mono<BffTosPrivacyConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
-        log.info("Get tos and privacy consents");
+        log.info("Get tos and privacy consents - type: {}", xPagopaPnCxType);
+
         Mono<BffConsent> tosConsent = pnUserAttributesClient.getTosConsent(
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
@@ -64,12 +65,14 @@ public class TosPrivacyService {
     public Mono<Void> acceptOrDeclineTosPrivacy(String xPagopaPnUid,
                                                 CxTypeAuthFleet xPagopaPnCxType,
                                                 Mono<BffTosPrivacyBody> tosPrivacyBody) {
-        log.info("Accept or decline tos and privacy consents");
+        log.info("Accept or decline tos and privacy consents - type: {}", xPagopaPnCxType);
+
         return tosPrivacyBody.flatMap(body -> {
             Mono<Void> tosMono = Mono.empty();
             Mono<Void> privacyMono = Mono.empty();
 
             if (body.getTos() == null && body.getPrivacy() == null) {
+                log.error("Request body missed");
                 return Mono.error(new PnBffException(
                         "Body not found",
                         "The body of the request is missed",

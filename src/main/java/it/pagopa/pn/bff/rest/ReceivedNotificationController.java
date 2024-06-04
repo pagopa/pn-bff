@@ -60,7 +60,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                         Integer size,
                                                                                         String nextPagesKey,
                                                                                         final ServerWebExchange exchange) {
-        log.logStartingProcess("searchReceivedNotificationsV1");
 
         Mono<BffNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedNotifications(
                 xPagopaPnUid,
@@ -78,7 +77,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 nextPagesKey
         );
 
-        log.logEndingProcess("searchReceivedNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -117,7 +115,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                  Integer size,
                                                                                                  String nextPagesKey,
                                                                                                  final ServerWebExchange exchange) {
-        log.logStartingProcess("searchReceivedDelegatedNotificationsV1");
 
         Mono<BffNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedDelegatedNotifications(
                 xPagopaPnUid,
@@ -135,7 +132,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 nextPagesKey
         );
 
-        log.logEndingProcess("searchReceivedDelegatedNotificationsV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -160,14 +156,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                  List<String> xPagopaPnCxGroups,
                                                                                  String mandateId,
                                                                                  final ServerWebExchange exchange) {
-        log.logStartingProcess("getReceivedNotificationV1");
 
         Mono<BffFullNotificationV1> serviceResponse = notificationsRecipientService.getNotificationDetail(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups, mandateId
         );
 
-
-        log.logEndingProcess("getReceivedNotificationV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -198,14 +191,12 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                        String documentId,
                                                                                                        LegalFactCategory documentCategory,
                                                                                                        final ServerWebExchange exchange) {
-        log.logStartingProcess("getReceivedNotificationDocumentV1");
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
                 documentCategory, xPagopaPnCxGroups, mandateId
         );
 
-        log.logEndingProcess("getReceivedNotificationDocumentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -229,13 +220,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                       String attachmentName, List<String> xPagopaPnCxGroups,
                                                                                                       UUID mandateId, Integer attachmentIdx,
                                                                                                       final ServerWebExchange exchange) {
-        log.logStartingProcess("getReceivedNotificationPaymentV1");
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationPayment(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, attachmentName, xPagopaPnCxGroups, mandateId, attachmentIdx
         );
 
-        log.logEndingProcess("getReceivedNotificationPaymentV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -243,21 +232,19 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * POST bff/v1/notifications/received/check-aar-qr-code: Check AAR QR Code
      * Check the AAR QR Code
      *
-     * @param xPagopaPnUid      User Identifier
-     * @param xPagopaPnCxType   Receiver Type
-     * @param xPagopaPnCxId     Receiver id
+     * @param xPagopaPnUid       User Identifier
+     * @param xPagopaPnCxType    Receiver Type
+     * @param xPagopaPnCxId      Receiver id
      * @param bffCheckAarRequest Request to check AAR mandate
-     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param xPagopaPnCxGroups  Receiver Group id List
      * @param exchange
      * @return the response of the check AAR mandate
      */
     @Override
     public Mono<ResponseEntity<BffCheckAarResponse>> checkAarQrCodeV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Mono<BffCheckAarRequest> bffCheckAarRequest, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
-        log.logStartingProcess("checkAarQrCodeV1");
 
         Mono<BffCheckAarResponse> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffCheckAarRequest, xPagopaPnCxGroups);
 
-        log.logEndingProcess("checkAarQrCodeV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

@@ -5,11 +5,19 @@
     "MountEfs": "false",
     "SelfCareBaseURL": "https://uat.selfcare.pagopa.it",
     "SelfCareSendProdId": "prod-pn-dev",
-    "AuthFleetBaseUrl": "https://webapi.dev.notifichedigitali.it",
     "DlBucketRegion": "eu-south-1",
     "DlOverviewObjectKey": "export-notifications_overview_test.json",
     "DlFocusObjectKey": "export-digital_notifications_focus_test.json",
     "PnBucketRegion": "eu-south-1",
-    "PnIndexObjectKey": "indexes/senderDashboardIndex_test.json"
+    "PnIndexObjectKey": "sender-dashboard/indexes/senderDashboardIndex_test.json",
+    "SenderDashboardDataIndexerCron": "0 16 * * ? *",
+    "RaddStoreRegistryLambdaCron": "0 0 * * ? *",
+    "RaddStoreRegistryFileName": "radd-stores-registry",
+    "RaddStoreRegistryCsvConfigurationParameter": "/pn-radd-store-registry-lambda/csv-configuration",
+    "RaddStoreRegistryGenerateInterval": "7",
+    "WebLandingBucketName": "web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
+    "WebLandingBucketArn": "arn:aws:s3:::web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
+    "WebLandingBucketPrefix": "public/static/documents",
+    "RaddStoreRegistryGenerationConfigParameter": "/pn-radd-store-registry-lambda/generation-config"
   }
 }

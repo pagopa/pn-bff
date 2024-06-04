@@ -34,12 +34,8 @@ public class PaymentsController implements PaymentsApi {
     @Override
     public Mono<ResponseEntity<Flux<BffPaymentInfoItem>>> getPaymentsInfoV1(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId,
                                                                             Flux<PaymentInfoRequest> paymentInfoRequest, final ServerWebExchange exchange) {
-        log.logStartingProcess("getPaymentsInfoV1");
-
 
         Mono<List<BffPaymentInfoItem>> serviceResponse = paymentsService.getPaymentsInfo(xPagopaPnCxType, xPagopaPnCxId, paymentInfoRequest);
-
-        log.logEndingProcess("getPaymentsInfoV1");
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
     }
@@ -54,12 +50,8 @@ public class PaymentsController implements PaymentsApi {
     @Override
     public Mono<ResponseEntity<BffPaymentResponse>> paymentsCartV1(Mono<BffPaymentRequest> paymentRequest,
                                                                    final ServerWebExchange exchange) {
-        log.logStartingProcess("paymentsCartV1");
-
 
         Mono<BffPaymentResponse> serviceResponse = paymentsService.paymentsCart(paymentRequest);
-
-        log.logEndingProcess("paymentsCartV1");
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }

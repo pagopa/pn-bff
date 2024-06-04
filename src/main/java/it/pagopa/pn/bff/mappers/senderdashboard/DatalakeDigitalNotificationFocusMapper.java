@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.util.Objects;
+
 /**
  * Mapstruct mapper interface, used to map the DatalakeDigitalNotificationFocus to
  * BffSenderDashboardDigitalNotificationFocus
@@ -21,7 +23,9 @@ public interface DatalakeDigitalNotificationFocusMapper {
             DatalakeDigitalNotificationFocus datalakeDigitalNotificationFocus);
 
     @Named("normalizeInt")
-    static int normalizeInt(String value) {
-        return Integer.parseInt(value.replace(".", ""));
+    static Integer normalizeInt(String value) {
+        return value != null
+                ? Integer.parseInt(value.replace(".", ""))
+                : null;
     }
 }
