@@ -5,8 +5,8 @@ const apiClient = require('./raddClient');
 const utils = require('./utils');
 const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
 
-exports.handleEvent =  async (event) => {
-  console.log('Handler invoked with event:', event);
+exports.handleEvent =  async () => {
+  console.log('Handler invoked');
   validateEnvironmentVariables();
 
   let forceGenerate = false
@@ -27,7 +27,6 @@ exports.handleEvent =  async (event) => {
   console.log('Generated S3 key:', bffBucketS3Key);
 
   const latestFile = await s3Utils.getLatestVersion(bffBucketS3Key);
-  console.log('Latest file:', latestFile);
 
   let generateFile = false;
 
