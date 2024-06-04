@@ -15,7 +15,7 @@ function validateCsvConfiguration(csvConfiguration) {
   if (!Array.isArray(csvConfiguration.configs)) throw new Error('configs should be an array');
   csvConfiguration.configs.forEach((conf, index) => {
     if (!conf.header) throw new Error(`Header is missing in csvConfiguration at index ${index}`);
-    if (!validFieldValue.includes(conf.field)) throw new Error(`Invalid field "${conf.field}" at index ${index}`);
+    if (!validFieldValue.includes(conf.field)) console.warn(`Invalid field "${conf.field}" for header "${conf.header}"`);
   });
 
   console.log('Configuration is valid');
