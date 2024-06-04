@@ -79,10 +79,7 @@ class StoreLocatorCsvEntity {
 }
 
 const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
-    console.log('Mapping API response to StoreLocatorCsvEntity:', registry);
-
     const getOpeningTimeByDay = (fullOpeningTime) => {
-        console.log('Parsing opening time:', fullOpeningTime);
         const times = new Array(7).fill(null);
         if (fullOpeningTime) {
             const days = fullOpeningTime.split("#");
@@ -112,7 +109,6 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
                 }
             }
         }
-        console.log('Parsed times:', times);
         return times;
     }
 
