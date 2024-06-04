@@ -1,0 +1,40 @@
+{
+  "name": "radd-store-registry-lambda",
+  "version": "1.0.0",
+  "description": "AWS Lambda function to handle S3 object retrieval and generation based on SSM Parameter Store configuration.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test-build": "npm run-script test && npm run-script coverage && npm run-script sonar && npm run-script build",
+    "build": "npm prune --production && rm -f ./function.zip && zip -r ./function.zip . -x './src/test/*' -x '*.md' -x '*.env'  -x './coverage/*' -x './.nyc_output/*' -x './.scannerwork/*' -x './testFiles/*'",
+    "test": "nyc --reporter=html --reporter=text mocha './src/test/**/*.test.js' --recursive --timeout=3000 --exit -r dotenv/config",
+    "coverage": "nyc report --reporter=lcov",
+    "sonar": "node sonarqube-scanner.js"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.583.0",
+    "@aws-sdk/client-ssm": "^3.583.0",
+    "@aws-sdk/client-sts": "^3.567.0",
+    "@smithy/util-stream": "^2.2.0",
+    "aws-sdk-client-mock": "^4.0.0",
+    "axios": "^1.7.2",
+    "axios-mock-adapter": "^1.22.0",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.2",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "lambda-tester": "^4.0.1",
+    "mocha": "^10.4.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^15.1.0",
+    "proxyquire": "^2.1.3",
+    "sonarqube-scanner": "^3.5.0",
+    "sinon": "^18.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "mocha": {
+    "spec": "src/test/**/*.test.js"
+  }
+}
