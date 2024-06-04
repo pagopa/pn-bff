@@ -46,6 +46,7 @@ describe('handler generates new file', () => {
     
     sinon.stub(csvUtils, 'validateCsvConfiguration').returns();
     sinon.stub(csvUtils, 'createCSVContent').returns('');
+    sinon.stub(s3Utils, 'uploadVersionedFile').returns();
   });
 
 	afterEach(() => {
