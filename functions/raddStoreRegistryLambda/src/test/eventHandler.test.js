@@ -1,4 +1,4 @@
-const { handler } = require('../app/eventHandler');
+const { handleEvent } = require('../app/eventHandler');
 const s3Utils = require('../app/s3Utils');
 const api = require('../app/raddClient');
 const csvUtils = require('../app/csvUtils');
@@ -63,7 +63,7 @@ describe('handler generates new file', () => {
 
     sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
 
-    await handler({});
+    await handleEvent({});
 
     sinon.assert.calledOnce(ssmUtils.retrieveCsvConfiguration);
     sinon.assert.calledOnce(ssmUtils.retrieveGenerationConfigParameter);
@@ -81,7 +81,7 @@ describe('handler generates new file', () => {
 
     sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
 
-    await handler({});
+    await handleEvent({});
 
     sinon.assert.calledOnce(ssmUtils.retrieveCsvConfiguration);
     sinon.assert.calledOnce(ssmUtils.retrieveGenerationConfigParameter);
@@ -110,7 +110,7 @@ describe('handler generates new file', () => {
     
     sinon.stub(utils, 'checkIfIntervalPassed').returns(true);
 
-    await handler({});
+    await handleEvent({});
 
     sinon.assert.calledOnce(ssmUtils.retrieveCsvConfiguration);
     sinon.assert.calledOnce(ssmUtils.retrieveGenerationConfigParameter);
@@ -163,7 +163,7 @@ describe('handler doesnt generate new file', () => {
 
     sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
 
-    await handler({});
+    await handleEvent({});
 
     sinon.assert.calledOnce(ssmUtils.retrieveCsvConfiguration);
     sinon.assert.calledOnce(ssmUtils.retrieveGenerationConfigParameter);
@@ -179,7 +179,7 @@ describe('handler doesnt generate new file', () => {
 describe('handler throws error for missing required env', () => {
   it('throws error when BFF_BUCKET_NAME is missing', async () => {
     process.env = {};
-    await assert.rejects(handler({}), { message: 'Missing required environment variable: BFF_BUCKET_NAME' });
+    await assert.rejects(handleEvent({}), { message: 'Missing required environment variable: BFF_BUCKET_NAME' });
   });
 
 });

@@ -667,9 +667,15 @@ Resources:
                 Action:
                   - s3:GetObject
                   - s3:PutObject
-                  - s3:ListBucketVersions
                 Resource:
                   - !Sub ${BffBucketArn}/${BffBucketRaddStoreRegistryPrefix}/*
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:ListBucketVersions
+                Resource:
+                  - !Sub ${BffBucketArn}
+                  - !Sub ${BffBucketArn}/*
         - PolicyName: AccessWebLandingBucket
           PolicyDocument:
             Version: '2012-10-17'
@@ -679,6 +685,16 @@ Resources:
                   - s3:PutObject
                 Resource:
                   - !Sub ${WebLandingBucketArn}/${WebLandingBucketPrefix}/*
+        - PolicyName: AccessSsmParameterStore
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource:
+                    - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryCsvConfigurationParameter}'
+                    - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryGenerationConfigParameter}'
 
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:

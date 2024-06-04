@@ -25,9 +25,8 @@ function createCSVContent(configs, data) {
   console.log('Creating CSV content');
   let csvContent = '';
   data.forEach((record, index) => {
-    const row = configs.map(conf => conf.field ? record[conf.field] || '' : '').join(',');
+    const row = configs.map(conf => conf.field ? record[conf.field] || '' : '').join(';');
     csvContent += row + '\n';
-    console.log(`Processed record ${index + 1}`);
   });
   console.log('CSV content created successfully');
   return csvContent;
