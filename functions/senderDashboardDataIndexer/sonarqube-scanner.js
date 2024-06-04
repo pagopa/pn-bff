@@ -1,6 +1,6 @@
 const options = {
   "sonar.organization": "pagopa",
-  "sonar.projectKey": "pagopa_pn-",
+  "sonar.projectKey": "pagopa_pn-bff-senderdashboarddataindexerlambda",
 };
 
 if (process.env.PR_NUM) {
