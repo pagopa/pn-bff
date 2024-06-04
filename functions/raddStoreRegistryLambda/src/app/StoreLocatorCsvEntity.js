@@ -119,17 +119,14 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
     storeLocatorCsvEntity.setDescription(registry.description);
-    console.log('Set description:', registry.description);
     if (registry.address) {
         storeLocatorCsvEntity.setCity(registry.address.city);
         storeLocatorCsvEntity.setAddress(registry.address.addressRow);
         storeLocatorCsvEntity.setProvince(registry.address.pr);
         storeLocatorCsvEntity.setZipCode(registry.address.cap);
-        console.log('Set address:', registry.address);
     }
     if(registry.phoneNumber) {
         storeLocatorCsvEntity.setPhoneNumber(registry.phoneNumber.replace(/\//g, ' '));
-        console.log('Set phone number:', registry.phoneNumber);
     }
 
         
@@ -142,16 +139,13 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
         storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
         storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
         storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
-        console.log('Set opening times:', formattedOpeningTime);
     }
 
     if (registry.geoLocation) {
         storeLocatorCsvEntity.setLatitude(registry.geoLocation.latitude);
         storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
-        console.log('Set geolocation:', registry.geoLocation);
     }
 
-    console.log('Mapped entity:', storeLocatorCsvEntity);
     return storeLocatorCsvEntity;
 }
 

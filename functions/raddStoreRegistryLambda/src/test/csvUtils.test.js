@@ -37,14 +37,14 @@ describe('createCSVContent', () => {
   it('creates CSV content correctly', () => {
     const configs = [{ field: 'description' }, { field: 'city' }];
     const data = [{ description: 'desc1', city: 'city1' }, { description: 'desc2', city: 'city2' }];
-    const expectedContent = 'desc1,city1\ndesc2,city2\n';
+    const expectedContent = 'desc1;city1\ndesc2;city2\n';
     expect(createCSVContent(configs, data)).equal(expectedContent);
   });
 
   it('handles missing fields in data correctly', () => {
     const configs = [{ field: 'description' }, { field: 'city' }];
     const data = [{ description: 'desc1' }, { description: 'desc2', city: 'city2' }];
-    const expectedContent = 'desc1,\ndesc2,city2\n';
+    const expectedContent = 'desc1;\ndesc2;city2\n';
     expect(createCSVContent(configs, data)).equal(expectedContent);
   });
 });
