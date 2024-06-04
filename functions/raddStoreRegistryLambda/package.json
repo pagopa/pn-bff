@@ -16,7 +16,6 @@
     "@aws-sdk/client-ssm": "^3.583.0",
     "@aws-sdk/client-sts": "^3.567.0",
     "@smithy/util-stream": "^2.2.0",
-    "aws-sdk": "^2.1628.0",
     "aws-sdk-client-mock": "^4.0.0",
     "axios": "^1.7.2",
     "axios-mock-adapter": "^1.22.0",
