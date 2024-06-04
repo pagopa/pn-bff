@@ -34,7 +34,7 @@ public class PaymentsService {
      * @return the detailed list of payments
      */
     public Mono<List<BffPaymentInfoItem>> getPaymentsInfo(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, Flux<PaymentInfoRequest> paymentInfoRequest) {
-        log.info("Get payments info");
+        log.info("Get payment info - recipientId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
 
         return paymentInfoRequest.collectList().flatMap(request -> {
             Flux<PaymentInfoV21> paymentsInfo = pnExternalRegistriesClient.getPaymentsInfo(
@@ -53,7 +53,7 @@ public class PaymentsService {
      * @return the cart url
      */
     public Mono<BffPaymentResponse> paymentsCart(Mono<BffPaymentRequest> paymentRequest) {
-        log.info("Payments cart");
+        log.info("Get payment cart url");
 
         return paymentRequest.flatMap(request -> {
             Mono<PaymentResponse> paymentResponse = pnExternalRegistriesClient.paymentsCart(

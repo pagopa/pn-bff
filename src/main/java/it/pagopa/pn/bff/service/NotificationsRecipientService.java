@@ -67,7 +67,9 @@ public class NotificationsRecipientService {
                                                                       String subjectRegExp,
                                                                       Integer size,
                                                                       String nextPagesKey) {
-        log.info("searchReceivedNotifications");
+        log.info("Search notifications - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedNotifications(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
@@ -118,7 +120,9 @@ public class NotificationsRecipientService {
                                                                                OffsetDateTime endDate,
                                                                                Integer size,
                                                                                String nextPagesKey) {
-        log.info("searchReceivedDelegatedNotifications");
+        log.info("Search delegated notifications - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchReceivedDelegatedNotifications(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
@@ -152,7 +156,8 @@ public class NotificationsRecipientService {
     public Mono<BffFullNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
                                                              String mandateId) {
-        log.info("Get notification detail for iun {} and mandateId: {}", iun, mandateId);
+        log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         Mono<FullReceivedNotificationV23> notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
@@ -191,10 +196,12 @@ public class NotificationsRecipientService {
                                                                                      List<String> xPagopaPnCxGroups,
                                                                                      UUID mandateId
     ) {
-        log.info("Get notification {} for iun {}", documentType, iun);
+        log.info("Get notification document - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
         if (documentType == BffDocumentType.ATTACHMENT) {
             if (documentIdx == null) {
+                log.error("Attachment idx not found");
                 return Mono.error(new PnBffException(
                         "Attachment idx not found",
                         "The attachment idx is missed",
@@ -214,6 +221,7 @@ public class NotificationsRecipientService {
             return attachment.map(NotificationDownloadDocumentMapper.modelMapper::mapReceivedAttachmentDownloadResponse);
         } else if (documentType == BffDocumentType.AAR) {
             if (documentId == null) {
+                log.error("AAR id not found");
                 return Mono.error(new PnBffException(
                         "AAR id not found",
                         "The AAR id is missed",
@@ -234,6 +242,7 @@ public class NotificationsRecipientService {
             return document.map(NotificationDownloadDocumentMapper.modelMapper::mapDocumentDownloadResponse);
         } else {
             if (documentId == null) {
+                log.error("Legal fact id not found");
                 return Mono.error(new PnBffException(
                         "Legal fact id not found",
                         "The legal fact id is missed",
@@ -242,6 +251,7 @@ public class NotificationsRecipientService {
                 ));
             }
             if (documentCategory == null) {
+                log.error("Legal fact category not found");
                 return Mono.error(new PnBffException(
                         "Legal fact category not found",
                         "The legal fact category is missed",
@@ -282,7 +292,9 @@ public class NotificationsRecipientService {
                                                                                     List<String> xPagopaPnCxGroups, UUID mandateId,
                                                                                     Integer attachmentIdx
     ) {
-        log.info("Get notification payment {} number {} for iun {}", attachmentName, attachmentIdx, iun);
+        log.info("Get notification payment - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
+
         Mono<NotificationAttachmentDownloadMetadataResponse> notificationDetail = pnDeliveryClient.getReceivedNotificationPayment(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
@@ -300,19 +312,20 @@ public class NotificationsRecipientService {
     /**
      * Check the AAR QR code.
      *
-     * @param xPagopaPnUid                User Identifier
-     * @param xPagopaPnCxType             Receiver Type
-     * @param xPagopaPnCxId               Receiver id
+     * @param xPagopaPnUid       User Identifier
+     * @param xPagopaPnCxType    Receiver Type
+     * @param xPagopaPnCxId      Receiver id
      * @param bffCheckAarMandate the request to check the AAR QR code
-     * @param xPagopaPnCxGroups           Receiver Group id List
+     * @param xPagopaPnCxGroups  Receiver Group id List
      * @return the response of the check
      */
     public Mono<BffCheckAarResponse> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                              String xPagopaPnCxId,
-                                                              Mono<BffCheckAarRequest> bffCheckAarMandate,
-                                                              List<String> xPagopaPnCxGroups
+                                                    String xPagopaPnCxId,
+                                                    Mono<BffCheckAarRequest> bffCheckAarMandate,
+                                                    List<String> xPagopaPnCxGroups
     ) {
-    log.info("checkAarQrCode");
+        log.info("Exchange aar from qr code - senderId: {} - type: {} - groups: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return bffCheckAarMandate.flatMap(requestDto ->
                 pnDeliveryClient.checkAarQrCode(

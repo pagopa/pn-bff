@@ -43,14 +43,11 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxRole,
             String status,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("countMandatesByDelegateV1");
 
         Mono<BffMandatesCount> serviceResponse = mandateRecipientService.countMandatesByDelegate(
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, status
         );
 
-
-        log.logEndingProcess("countMandatesByDelegateV1");
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -75,14 +72,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("createMandateV1");
 
         Mono<Void> serviceResponse = mandateRecipientService.createMandate(
                 xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, newMandateRequest
         );
 
-
-        log.logEndingProcess("createMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
@@ -109,14 +103,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("acceptMandateV1");
 
         Mono<Void> serviceResponse = mandateRecipientService.acceptMandate(
                 xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, acceptRequest
         );
 
-
-        log.logEndingProcess("acceptMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
@@ -143,14 +134,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("updateMandateV1");
 
         Mono<Void> serviceResponse = mandateRecipientService.updateMandate(
                 xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, updateRequest
         );
 
-
-        log.logEndingProcess("updateMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
@@ -175,14 +163,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("rejectMandateV1");
 
         Mono<Void> serviceResponse = mandateRecipientService.rejectMandate(
                 xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole
         );
 
-
-        log.logEndingProcess("rejectMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
@@ -207,14 +192,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("revokeMandateV1");
 
         Mono<Void> serviceResponse = mandateRecipientService.revokeMandate(
                 xPagopaPnCxId, xPagopaPnCxType, mandateId, xPagopaPnCxGroups, xPagopaPnCxRole
         );
 
-
-        log.logEndingProcess("revokeMandateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
@@ -241,14 +223,11 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxRole,
             String status,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("getMandatesByDelegateV1");
 
         Flux<BffMandate> serviceResponse = mandateRecipientService.getMandatesByDelegate(
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, status
         );
 
-
-        log.logEndingProcess("getMandatesByDelegateV1");
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
@@ -278,13 +257,11 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnCxRole,
             String nextPageKey,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("searchMandatesByDelegateV1");
 
         Mono<BffSearchMandateResponse> serviceResponse = mandateRecipientService.searchMandatesByDelegate(
                 xPagopaPnCxId, xPagopaPnCxType, size, xPagopaPnCxGroups, xPagopaPnCxRole, nextPageKey, searchMandateRequest
         );
 
-        log.logEndingProcess("searchMandatesByDelegateV1");
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
@@ -306,14 +283,11 @@ public class MandateRecipientController implements MandateApi {
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
-        log.logStartingProcess("getMandatesByDelegatorV1");
 
         Flux<BffMandate> serviceResponse = mandateRecipientService.getMandatesByDelegator(
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole
         );
-
-
-        log.logEndingProcess("getMandatesByDelegatorV1");
+        
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

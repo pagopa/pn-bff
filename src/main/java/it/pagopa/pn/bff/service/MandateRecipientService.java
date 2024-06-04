@@ -35,7 +35,9 @@ public class MandateRecipientService {
     public Mono<BffMandatesCount> countMandatesByDelegate(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                                           List<String> xPagopaPnCxGroups, String xPagopaPnCxRole,
                                                           String status) {
-        log.info("countMandatesByDelegate");
+        log.info("Count mandates by delegate - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
+
         return pnMandateClientRecipient
                 .countMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, status)
                 .map(MandateCountMapper.modelMapper::mapCount)
@@ -59,7 +61,9 @@ public class MandateRecipientService {
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole,
                                     Mono<BffNewMandateRequest> newMandateRequest) {
-        log.info("createMandate");
+        log.info("Create mandate - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
+
         return newMandateRequest.flatMap(req -> pnMandateClientRecipient
                 .createMandate(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, NewMandateMapper.modelMapper.mapRequest(req))
                 .then()
@@ -83,7 +87,9 @@ public class MandateRecipientService {
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole,
                                     Mono<BffAcceptRequest> acceptRequest) {
-        log.info("acceptMandate");
+        log.info("Accept mandate - recipientId: {} - type: {} - groups: {} - role: {} - mandateId: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, mandateId);
+
         return acceptRequest.flatMap(req -> pnMandateClientRecipient
                 .acceptMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, AcceptMandateMapper.modelMapper.mapRequest(req))
                 .then()
@@ -107,7 +113,9 @@ public class MandateRecipientService {
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole,
                                     Mono<BffUpdateRequest> updateRequest) {
-        log.info("updateMandate");
+        log.info("Update mandate - recipientId: {} - type: {} - groups: {} - role: {} - mandateId: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, mandateId);
+
         return updateRequest.flatMap(req -> pnMandateClientRecipient
                 .updateMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole, UpdateMandateMapper.modelMapper.mapRequest(req))
                 .then()
@@ -129,7 +137,9 @@ public class MandateRecipientService {
                                     String mandateId,
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole) {
-        log.info("rejectMandate");
+        log.info("Reject mandate - recipientId: {} - type: {} - groups: {} - role: {} - mandateId: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, mandateId);
+
         return pnMandateClientRecipient
                 .rejectMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole)
                 .then()
@@ -151,7 +161,9 @@ public class MandateRecipientService {
                                     String mandateId,
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole) {
-        log.info("revokeMandate");
+        log.info("Revoke mandate - recipientId: {} - type: {} - groups: {} - role: {} - mandateId: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, mandateId);
+
         return pnMandateClientRecipient
                 .revokeMandate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), mandateId, xPagopaPnCxGroups, xPagopaPnCxRole)
                 .then()
@@ -174,7 +186,9 @@ public class MandateRecipientService {
                                                   List<String> xPagopaPnCxGroups,
                                                   String xPagopaPnCxRole,
                                                   String status) {
-        log.info("getMandatesByDelegate");
+        log.info("Get mandates by delegate - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
+
         return pnMandateClientRecipient
                 .getMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, status)
                 .map(MandatesMapper.modelMapper::mapMandateByDelegate)
@@ -200,7 +214,9 @@ public class MandateRecipientService {
                                                                    String xPagopaPnCxRole,
                                                                    String nextPageKey,
                                                                    Mono<BffSearchMandateRequest> searchMandateRequest) {
-        log.info("searchMandatesByDelegate");
+        log.info("Search mandates by delegate - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
+
         return searchMandateRequest.flatMap(request ->
                 pnMandateClientRecipient
                         .searchMandatesByDelegate(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), size, xPagopaPnCxGroups, xPagopaPnCxRole, nextPageKey, SearchMandateByDelegateMapper.modelMapper.mapRequest(request))
@@ -222,7 +238,9 @@ public class MandateRecipientService {
                                                    CxTypeAuthFleet xPagopaPnCxType,
                                                    List<String> xPagopaPnCxGroups,
                                                    String xPagopaPnCxRole) {
-        log.info("getMandatesByDelegator");
+        log.info("Get mandates by delegator - recipientId: {} - type: {} - groups: {} - role: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
+        
         return pnMandateClientRecipient
                 .getMandatesByDelegator(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole)
                 .map(MandatesMapper.modelMapper::mapMandateByDelegator)
