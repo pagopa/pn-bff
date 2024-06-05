@@ -68,6 +68,7 @@ public class PnS3IndexResource {
     public void destroy() {
         if (s3Client != null) {
             s3Client.close();
+            s3Client = null;
         }
     }
 
