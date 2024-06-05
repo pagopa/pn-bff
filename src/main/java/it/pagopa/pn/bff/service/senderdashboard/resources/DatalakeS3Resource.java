@@ -83,12 +83,14 @@ public class DatalakeS3Resource {
         try {
             if (s3Client != null) {
                 s3Client.close();
+                s3Client = null;
             }
         } finally {
             lock.writeLock().unlock();
         }
         if (stsClient != null) {
             stsClient.close();
+            stsClient = null;
         }
     }
 
@@ -124,28 +126,31 @@ public class DatalakeS3Resource {
         try {
             // Assume that overviewListJson and focusListJson are ordered by notification_send_date
             // in descending order [ "2024-05-08", "2024-05-07", "2024-03-02", ...]
-            overviewList = getObjectsAsStream(
+            try( Stream<DatalakeNotificationOverview> overviewStream = getObjectsAsStream(
                     overviewIndex.getStart(),
                     overviewIndex.getEnd(),
                     overviewObjectKey,
                     overviewVersionId,
-                    DatalakeNotificationOverview.class)
-                    .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
-                    .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
-                    .collect(Collectors.toList());
-
+                    DatalakeNotificationOverview.class)) {
+                        overviewList = overviewStream
+                            .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
+                            .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
+                            .collect(Collectors.toList());
+            }
 
             if(focusIndex != null) {
                 // Found senderId in focus
-                focusList = getObjectsAsStream(
+                try( Stream<DatalakeDigitalNotificationFocus> focusStream = getObjectsAsStream(
                         focusIndex.getStart(),
                         focusIndex.getEnd(),
                         focusObjectKey,
                         focusVersionId,
-                        DatalakeDigitalNotificationFocus.class)
-                        .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
-                        .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
-                        .collect(Collectors.toList());
+                        DatalakeDigitalNotificationFocus.class)) {
+                            focusList = focusStream
+                                .takeWhile(o -> startDate == null || !o.getNotificationSendDate().isBefore(startDate))
+                                .filter(o -> endDate == null || !o.getNotificationSendDate().isAfter(endDate))
+                                .collect(Collectors.toList());
+                }
             } else {
                 focusList = new ArrayList<>();
             }
