@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 9hKB8TJSY0oWaVR9KaE3bqTb4p0mER9Qdrw/20UI3GI=
+  version: f77GMx7m47HtzEWVb90bXPuA7TZRrF8IRx+l0bAc58I=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5837,6 +5837,8 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
+        codeValid:
+          type: boolean
         pecValid:
           type: boolean
     BffUserAddresses:
