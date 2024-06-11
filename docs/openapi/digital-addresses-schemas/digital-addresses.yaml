@@ -31,6 +31,8 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
+        codeValid:
+          type: boolean
         pecValid:
           type: boolean
 

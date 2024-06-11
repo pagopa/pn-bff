@@ -8,7 +8,6 @@
     "DlBucketRegion": "eu-south-1",
     "DlOverviewObjectKey": "sender-dashboard/export-notifications_overview_test.json",
     "DlFocusObjectKey": "sender-dashboard/export-digital_notifications_focus_test.json",
-    "PnBucketRegion": "eu-south-1",
     "PnIndexObjectKey": "sender-dashboard/indexes/senderDashboardIndex_test.json",
     "SenderDashboardDataIndexerCron": "0 16 * * ? *",
     "RaddStoreRegistryLambdaCron": "0 0 * * ? *",
