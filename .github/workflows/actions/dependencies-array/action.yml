@@ -1,0 +1,13 @@
+name: 'Dependencies array'
+description: 'Get the list of the dependencies as input and returns an array'
+inputs:
+  pn-auth-fleet:
+    description: Update pn-auth-fleet dependency?
+    required: true
+    default: 'false'
+outputs:
+  dependencies: # list of chosen dependencies
+    description: 'The list of chosen dependencies'
+runs:
+  using: 'node20'
+  main: 'index.js'

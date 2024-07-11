@@ -1,0 +1,66 @@
+name: Update Microservices Dependencies Action
+
+on:
+  workflow_dispatch:
+    inputs:
+      pn-auth-fleet:
+        description: Update pn-auth-fleet dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-commons:
+        description: Update pn-commons dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-delivery:
+        description: Update pn-delivery dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-apikey-manager:
+        description: Update pn-apikey-manager dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-external-registries:
+        description: Update pn-external-registries dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-user-attributes:
+        description: Update pn-user-attributes dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-downtime-logs:
+        description: Update pn-downtime-logs dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-delivery-push:
+        description: Update pn-delivery-push dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-mandate:
+        description: Update pn-mandate dependency?
+        required: true
+        type: boolean
+        default: false
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dependencies
+        uses: ./.github/workflows/actions/dependencies-array
+        with:
+          pn-auth-fleet: inputs.pn-auth-fleet
