@@ -84,8 +84,8 @@ components:
           description: nome dell'utente che ha effettuato il cambio di stato
     
     BffRequestNewApiKey:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/5e04724701a3650d54a616f24d74365fdfe7ce21/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestNewApiKey'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/230402e5fc1041c15004f45d8c919ae0db24db6a/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestNewApiKey'
     BffResponseNewApiKey:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/5e04724701a3650d54a616f24d74365fdfe7ce21/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/ResponseNewApiKey'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/230402e5fc1041c15004f45d8c919ae0db24db6a/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/ResponseNewApiKey'
     BffRequestApiKeyStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/5e04724701a3650d54a616f24d74365fdfe7ce21/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestApiKeyStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/230402e5fc1041c15004f45d8c919ae0db24db6a/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestApiKeyStatus'
