@@ -75,6 +75,7 @@ paths:
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'       # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxGroupsAuthFleet'   # NO EXTERNAL
+        - $ref: './info-pa-schemas/info-pa.yaml#/components/parameters/BffLanguageParam'
       responses:
         '200':
           description: OK

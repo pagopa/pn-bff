@@ -1,4 +1,19 @@
 components:
+  parameters:
+    BffLanguageParam:
+      name: lang
+      in: query
+      required: true
+      description: The language of the user
+      schema:
+        type: string
+        enum:
+          - it
+          - en
+          - de
+          - fr
+          - sl
+
   schemas:
     BffInstitutionList:
       description: The list of institutions

@@ -26,12 +26,12 @@ public class ProductMapperTest {
     void testInstitutionProductMapper() {
         ProductResourcePN productResourcePN = paInfoMock.getProductResourcePNMock().get(0);
 
-        BffInstitutionProduct bffInstitutionProduct = ProductMapper.modelMapper.toBffInstitutionProduct(productResourcePN, pnBffConfigs, UserMock.PN_CX_ID);
+        BffInstitutionProduct bffInstitutionProduct = ProductMapper.modelMapper.toBffInstitutionProduct(productResourcePN, pnBffConfigs, new ProductMapperContext(UserMock.PN_CX_ID, UserMock.LANG));
         assertNotNull(bffInstitutionProduct);
         assertEquals(bffInstitutionProduct.getId(), productResourcePN.getId());
         assertEquals(bffInstitutionProduct.getTitle(), productResourcePN.getTitle());
 
-        BffInstitutionProduct bffInstitutionProductNull = ProductMapper.modelMapper.toBffInstitutionProduct(null, pnBffConfigs, UserMock.PN_CX_ID);
+        BffInstitutionProduct bffInstitutionProductNull = ProductMapper.modelMapper.toBffInstitutionProduct(null, pnBffConfigs, new ProductMapperContext(UserMock.PN_CX_ID, UserMock.LANG));
         assertNull(bffInstitutionProductNull);
     }
 }

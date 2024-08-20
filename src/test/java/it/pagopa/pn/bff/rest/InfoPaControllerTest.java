@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapperContext;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.InfoPaService;
@@ -94,14 +95,15 @@ class InfoPaControllerTest {
     void getInstitutionProductV1() {
         List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
                 .stream()
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, new ProductMapperContext(UserMock.PN_CX_ID, UserMock.LANG)))
                 .toList();
         Mockito
                 .when(infoPaService.getInstitutionProducts(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.nullable(List.class)))
+                        Mockito.nullable(List.class),
+                        Mockito.anyString()))
                 .thenReturn(Flux.fromIterable(bffInstitutionProducts));
 
         webTestClient
@@ -125,7 +127,9 @@ class InfoPaControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.nullable(List.class));
+                        Mockito.nullable(List.class),
+                        Mockito.anyString()
+                );
 
         webTestClient
                 .get()
