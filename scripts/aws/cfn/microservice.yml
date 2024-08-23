@@ -497,7 +497,7 @@ Resources:
           PN_BUCKET_NAME: !Ref BffBucketName
           PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
-          PN_ALARM_N_DAYS: !Ref DataIndexerLambdaAlarmNDays
+          ALARM_N_DAYS: !Ref DataIndexerLambdaAlarmNDays
 
   SenderDashboardDataIndexerLambdaAlarms:
     Type: AWS::CloudFormation::Stack
