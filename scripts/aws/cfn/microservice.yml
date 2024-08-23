@@ -239,6 +239,11 @@ Parameters:
     Default: nodejs20.x
     Description: Runtime of the DataIndexer Lambda.
 
+  DataIndexerLambdaAlarmNDays:
+    Type: Number
+    Default: 5
+    Description: Number of days to trigger the alarm.
+
   BffBucketArn:
     Type: String
     Description: PN bff bucket ARN.
@@ -353,10 +358,8 @@ Parameters:
 
 Conditions:
   CreateFakeDLRole:
-    Fn::Or:
-      - Fn::Equals: [!Ref EnvironmentType, dev]
-      - Fn::Equals: [!Ref EnvironmentType, test]
-      - Fn::Equals: [!Ref EnvironmentType, uat]
+    Fn::Not:
+      - Fn::Equals: [!Ref EnvironmentType, prod]
 
 Resources:
 
@@ -494,6 +497,15 @@ Resources:
           PN_BUCKET_NAME: !Ref BffBucketName
           PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
+          PN_ALARM_N_DAYS: !Ref DataIndexerLambdaAlarmNDays
+
+  SenderDashboardDataIndexerLambdaAlarms:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/lambda-alarms.yaml"
+      Parameters:
+        FunctionName: !Ref DataIndexerLambdaName
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
 
   SenderDashboardDataIndexerExecutionRole:
     Type: AWS::IAM::Role

@@ -11,6 +11,7 @@ const {
   getPnBucketName,
   getPnBucketRegion,
   getPnIndexObjectKey,
+  getNAlarmDays,
 } = require('./config.js');
 
 const dlBucketName = getDlBucketName();
@@ -22,15 +23,38 @@ const dlFocusObjectKey = getDlFocusObjectKey();
 const pnBucketName = getPnBucketName();
 const pnBucketRegion = getPnBucketRegion();
 const pnIndexObjectKey = getPnIndexObjectKey();
+const pnNAlarmDays = getNAlarmDays();
 
 const pnS3Client = new S3Client({ region: pnBucketRegion });
 
-const dlCredentials = getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND');
+const dlCredentials = getAssumeRoleCredentials(
+  dlAssumeRoleArn,
+  'AssumeRoleSEND'
+);
 
 const dlS3Client = new S3Client({
   region: dlBucketRegion,
   credentials: dlCredentials,
 });
+
+/**
+ * Check if the last data date is older than the alarm days
+ * @param index - Index object
+ * @param pnNAlarmDays - Number of alarm days
+ */
+const checkLastDataDate = (index, pnNAlarmDays) => {
+  const referenceDate = new Date();
+  const lastDate = new Date(index.lastDate);
+  const nAlarmDays = parseInt(pnNAlarmDays, 10);
+
+  referenceDate.setDate(referenceDate.getDate() - nAlarmDays);
+
+  if (lastDate < referenceDate) {
+    console.error(
+      `No data in the last ${nAlarmDays} days. Last data date: ${index.lastDate}`
+    );
+  }
+};
 
 const handleEvent = async () => {
   const index = await createIndexObject(
@@ -39,6 +63,8 @@ const handleEvent = async () => {
     dlOverviewObjectKey,
     dlFocusObjectKey
   );
+
+  checkLastDataDate(index, pnNAlarmDays);
 
   await writeObject(
     pnS3Client,
@@ -53,4 +79,4 @@ const handleEvent = async () => {
   };
 };
 
-module.exports = { handleEvent };
+module.exports = { handleEvent, checkLastDataDate };
