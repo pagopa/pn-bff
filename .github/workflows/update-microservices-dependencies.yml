@@ -1,7 +1,7 @@
 name: Update Microservices Dependencies Action
 
 on:
-  workflow_dispatch:
+  push:
     inputs:
       pn-auth-fleet:
         description: Update pn-auth-fleet dependency?
@@ -48,7 +48,6 @@ on:
         required: true
         type: boolean
         default: false
-    push:
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
