@@ -2,6 +2,7 @@ const { S3Client } = require('@aws-sdk/client-s3');
 const { getAssumeRoleCredentials } = require('./sts.js');
 const { writeObject } = require('./s3.js');
 const { createIndexObject } = require('./indexer.js');
+const { checkLastDataDate } = require('./checkLastDate.js');
 const {
   getDlBucketName,
   getDlBucketRegion,
@@ -11,6 +12,7 @@ const {
   getPnBucketName,
   getPnBucketRegion,
   getPnIndexObjectKey,
+  getAlarmNDays,
 } = require('./config.js');
 
 const dlBucketName = getDlBucketName();
@@ -22,10 +24,14 @@ const dlFocusObjectKey = getDlFocusObjectKey();
 const pnBucketName = getPnBucketName();
 const pnBucketRegion = getPnBucketRegion();
 const pnIndexObjectKey = getPnIndexObjectKey();
+const alarmNDays = getAlarmNDays();
 
 const pnS3Client = new S3Client({ region: pnBucketRegion });
 
-const dlCredentials = getAssumeRoleCredentials(dlAssumeRoleArn, 'AssumeRoleSEND');
+const dlCredentials = getAssumeRoleCredentials(
+  dlAssumeRoleArn,
+  'AssumeRoleSEND'
+);
 
 const dlS3Client = new S3Client({
   region: dlBucketRegion,
@@ -39,6 +45,8 @@ const handleEvent = async () => {
     dlOverviewObjectKey,
     dlFocusObjectKey
   );
+
+  checkLastDataDate(index, alarmNDays);
 
   await writeObject(
     pnS3Client,

@@ -39,6 +39,8 @@ const getPnBucketRegion = () =>
 
 const getPnIndexObjectKey = () => getEnvironmentVariable('PN_INDEX_OBJECT_KEY');
 
+const getAlarmNDays = () => getEnvironmentVariable('ALARM_N_DAYS');
+
 module.exports = {
   getDlBucketName,
   getDlBucketRegion,
@@ -48,4 +50,5 @@ module.exports = {
   getPnBucketName,
   getPnBucketRegion,
   getPnIndexObjectKey,
+  getAlarmNDays,
 };
