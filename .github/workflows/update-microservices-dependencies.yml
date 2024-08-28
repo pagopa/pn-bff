@@ -60,6 +60,8 @@ jobs:
   update-dependencies:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Dependencies
         uses: ./.github/workflows/actions/dependencies-array
         with:
