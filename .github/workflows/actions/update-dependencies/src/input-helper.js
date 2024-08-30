@@ -26,5 +26,5 @@ function getDependencies() {
 }
 
 module.exports = {
-    getInputs
+    getDependencies
 }
