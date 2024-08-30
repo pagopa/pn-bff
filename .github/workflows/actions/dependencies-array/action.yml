@@ -4,7 +4,7 @@ inputs:
   pn-auth-fleet:
     description: Update pn-auth-fleet dependency?
     required: true
-    default: 'false'
+    default: false
 outputs:
   dependencies: # list of chosen dependencies
     description: 'The list of chosen dependencies'
