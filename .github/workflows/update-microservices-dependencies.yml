@@ -63,7 +63,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Dependencies
-        uses: ./.github/workflows/actions/dependencies-array
+      - name: Update dependencies
+        uses: ./.github/workflows/actions/update-dependencies
         with:
           pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
+          pn-commons: ${{ inputs.pn-commons }}
+          pn-delivery: ${{ inputs.pn-delivery }}
+          pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
+          pn-external-registries: ${{ inputs.pn-external-registries }}
+          pn-user-attributes: ${{ inputs.pn-user-attributes }}
+          pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
+          pn-delivery-push: ${{ inputs.pn-delivery-push }}
+          pn-mandate: ${{ inputs.pn-mandate }}

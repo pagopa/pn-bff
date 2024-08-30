@@ -1,10 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const {getInputs} = require('./input-helper');
+
 try {
   // read inputs
-  const authFleet = core.getInput('pn-auth-fleet');
-  console.log(authFleet);
+  const inputs = getInputs();
   // output
   core.setOutput("dependencies", []);
 } catch (error) {
