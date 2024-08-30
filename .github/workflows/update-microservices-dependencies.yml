@@ -1,8 +1,7 @@
 name: Update Microservices Dependencies
 
 on:
-  # workflow_dispatch:
-  push:
+  workflow_dispatch:
     inputs:
       pn-auth-fleet:
         description: Update pn-auth-fleet dependency?
@@ -49,7 +48,7 @@ on:
         required: true
         type: boolean
         default: false
-
+  push:
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -68,12 +67,21 @@ jobs:
       - name: Update dependencies
         uses: ./.github/workflows/actions/update-dependencies
         with:
-          pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
-          pn-commons: ${{ inputs.pn-commons }}
-          pn-delivery: ${{ inputs.pn-delivery }}
-          pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
-          pn-external-registries: ${{ inputs.pn-external-registries }}
-          pn-user-attributes: ${{ inputs.pn-user-attributes }}
-          pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
-          pn-delivery-push: ${{ inputs.pn-delivery-push }}
-          pn-mandate: ${{ inputs.pn-mandate }}
+          # pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
+          # pn-commons: ${{ inputs.pn-commons }}
+          # pn-delivery: ${{ inputs.pn-delivery }}
+          # pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
+          # pn-external-registries: ${{ inputs.pn-external-registries }}
+          # pn-user-attributes: ${{ inputs.pn-user-attributes }}
+          # pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
+          # pn-delivery-push: ${{ inputs.pn-delivery-push }}
+          # pn-mandate: ${{ inputs.pn-mandate }}
+          pn-auth-fleet: false
+          pn-commons: false
+          pn-delivery: true
+          pn-apikey-manager: false
+          pn-external-registries: false
+          pn-user-attributes: false
+          pn-downtime-logs: false
+          pn-delivery-push: true
+          pn-mandate: false

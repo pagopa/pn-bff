@@ -6,7 +6,11 @@ const {getDependencies} = require('./input-helper');
 try {
   // read inputs
   const dependencies = getDependencies();
-  core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
+  if (dependencies.length > 0) {
+    core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
+    return;
+  }
+  throw new Error(`No dependencies chosen`);
 } catch (error) {
   core.setFailed(error.message);
 }
