@@ -1,13 +1,12 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const {getInputs} = require('./input-helper');
+const {getDependencies} = require('./input-helper');
 
 try {
   // read inputs
-  const inputs = getInputs();
-  // output
-  core.setOutput("dependencies", []);
+  const dependencies = getDependencies();
+  core.debug(`Chosen dependencies to update = ${dependencies.join(', ')}`);
 } catch (error) {
   core.setFailed(error.message);
 }
