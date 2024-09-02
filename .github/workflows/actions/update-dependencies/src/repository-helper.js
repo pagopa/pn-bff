@@ -22,7 +22,7 @@ async function getLastTagCommitId(repositoryName) {
           per_page: 1
         });
         if (tags.length > 0) {
-            core.info(`Retrieved tag info for repository ${repositoryName}: version - tags[0].name and commitId - tags[0].commit.sha`)
+            core.info(`Retrieved tag info for repository ${repositoryName}: version - ${tags[0].name} and commitId - ${tags[0].commit.sha}`);
             return tags[0].commit.sha;
         }
         throw new Error(`No tag found for repository ${repositoryName}`);
