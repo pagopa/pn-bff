@@ -21,7 +21,7 @@ async function getLastTagCommitId(repositoryName) {
           repository: `pagopa/${repositoryName}`,
         });
         return repositoryName;
-    } catch(e) {
+    } catch(error) {
         throw new Error(`Error during tag retrieving: ${error}`);
     }
 }
