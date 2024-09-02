@@ -6,7 +6,10 @@ function initOctokitClient() {
     // initialize Octokit client
     const token = core.getInput('token');
     if (token) {
-        return github.getOctokit(token);
+        const octokit = github.getOctokit(token);
+        core.info('---------------------');
+        console.log(octokit);
+        return octokit;
     }
     throw new Error(`No GitHub token specified`);
 }
