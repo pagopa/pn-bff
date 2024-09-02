@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {getDependencies} = require('./input-helper');
-const {getDependencies} = require('./repository-helper');
+const {getLastTagCommitId} = require('./repository-helper');
 
 try {
   // read dependencies to update
