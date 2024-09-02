@@ -15,13 +15,16 @@ function initOctokitClient() {
 async function getLastTagCommitId(repositoryName) {
     core.debug(`Fetch list of tags for repository ${repositoryName}`);
     const octokit = initOctokitClient();
-    core.info(github.context.repo.owner);
     try {
         const tags = await octokit.rest.repos.listTags({
           owner: github.context.repo.owner,
-          repository: `pagopa/${repositoryName}`,
+          repository: repositoryName,
+          per_page: 1
         });
-        return repositoryName;
+        if (tags.length > 0) {
+            return tags[0].commit.sha;
+        }
+        throw new Error(`No tag found for repository ${repositoryName}`);
     } catch(error) {
         throw new Error(`Error during tag retrieving: ${error}`);
     }
