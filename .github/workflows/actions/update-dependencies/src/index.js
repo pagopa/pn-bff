@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {getDependencies} = require('./input-helper');
-const {getLastTagCommitId} = require('./repository-helper');
+const {getLastTagCommitId, initOctokitClient} = require('./repository-helper');
 
 try {
   // read dependencies to update
@@ -11,16 +11,11 @@ try {
     core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
     // for those dependencies chosen get the commit id of the last tag
     const commitIds = {};
-    // initialize Octokit client
-    const token = core.getInput('token', { required: true });
-    if (token) {
-        // const octokit = github.getOctokit(myToken)
-        for (const dependency of dependencies) {
-            commitIds[dependency] = getLastTagCommitId(dependency);
-        }
-        return;
+    initOctokitClient();
+    for (const dependency of dependencies) {
+        commitIds[dependency] = await getLastTagCommitId(octokit, dependency);
     }
-    throw new Error(`No GitHub token specified`);
+    return;
   }
   throw new Error(`No dependencies chosen`);
 } catch (error) {

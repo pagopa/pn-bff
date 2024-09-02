@@ -67,7 +67,7 @@ jobs:
       - name: Update dependencies
         uses: ./.github/workflows/actions/update-dependencies
         with:
-          token: ${{ secrets.GITBOT_TOKEN_FOR_UPDATE_DEPENDECIES }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           # pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
           # pn-commons: ${{ inputs.pn-commons }}
           # pn-delivery: ${{ inputs.pn-delivery }}
