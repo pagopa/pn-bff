@@ -18,11 +18,11 @@ async function getLastTagCommitId(repositoryName) {
     try {
         const tags = await octokit.rest.repos.listTags({
           owner: github.context.repo.owner,
-          repository: repositoryName,
+          repository: `pagopa/${repositoryName}`,
         });
         return repositoryName;
     } catch(e) {
-        throw new Error(`Error during tag retrieving`, e);
+        throw new Error(`Error during tag retrieving: ${error}`);
     }
 }
 
