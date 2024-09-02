@@ -1,6 +1,9 @@
 name: 'Update dependencies'
 description: 'Updates the commitId of the dependencies chosen'
 inputs:
+  token:
+    description: GitHub token
+    required: true
   pn-auth-fleet:
     description: Update pn-auth-fleet dependency?
     required: true
