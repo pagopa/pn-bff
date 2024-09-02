@@ -1,21 +1,19 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-let octokit;
-
 function initOctokitClient() {
     core.debug(`Init octokit client`);
     // initialize Octokit client
     const token = core.getInput('token');
     if (token) {
-        octokit = github.getOctokit(token);
-        return;
+        return github.getOctokit(token);
     }
     throw new Error(`No GitHub token specified`);
 }
 
 async function getLastTagCommitId(repositoryName) {
     core.debug(`Fetch list of tags for repository ${repositoryName}`);
+    const octokit = initOctokitClient();
     try {
         const tags = await octokit.rest.repos.listTags({
           owner: github.context.repo.owner,

@@ -12,7 +12,6 @@ async function run() {
         core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
         // for those dependencies chosen get the commit id of the last tag
         const commitIds = {};
-        initOctokitClient();
         for (const dependency of dependencies) {
             commitIds[dependency] = await getLastTagCommitId(octokit, dependency);
         }
