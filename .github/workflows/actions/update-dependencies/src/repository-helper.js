@@ -6,7 +6,7 @@ let octokit;
 function initOctokitClient() {
     core.debug(`Init octokit client`);
     // initialize Octokit client
-    const token = core.getInput('myToken');
+    const token = core.getInput('token');
     if (token) {
         octokit = github.getOctokit(token);
         return;
