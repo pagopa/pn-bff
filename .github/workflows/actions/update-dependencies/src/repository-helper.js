@@ -18,7 +18,7 @@ async function getLastTagCommitId(repositoryName) {
     try {
         const tags = await octokit.rest.repos.listTags({
           owner: github.context.repo.owner,
-          repository: repositoryName,
+          repo: repositoryName,
           per_page: 1
         });
         if (tags.length > 0) {
