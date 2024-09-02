@@ -13,7 +13,7 @@ async function run() {
         // for those dependencies chosen get the commit id of the last tag
         const commitIds = {};
         dependencies.forEach(async (dependency) => {
-            commitIds[dependency] = await getLastTagCommitId(octokit, dependency);
+            commitIds[dependency] = await getLastTagCommitId(dependency);
         });
         return;
       }
