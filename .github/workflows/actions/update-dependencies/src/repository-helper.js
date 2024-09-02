@@ -16,7 +16,7 @@ async function getLastTagCommitId(repositoryName) {
     core.debug(`Fetch list of tags for repository ${repositoryName}`);
     const octokit = initOctokitClient();
     try {
-        const tags = await octokit.rest.repos.listTags({
+        const {data: tags} = await octokit.rest.repos.listTags({
           owner: github.context.repo.owner,
           repo: repositoryName,
           per_page: 1
