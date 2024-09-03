@@ -13,13 +13,13 @@ function updatePom(commitIds) {
         core.debug(`Updating pom`);
         const dependencies = Object.keys(commitIds);
         const dependenciesMatchingGroup = dependencies.reduce((matchingString, dependency, index) => {
-            matchingString += `(?<${dependency.replaceAll('-', '_')}>${dependency}/(.+))`
+            matchingString += `(?<${dependency.replaceAll('-', '_')}>${dependency}/.+)`
             if (index < dependencies.length - 1) {
                 matchingString += '|';
             }
             return matchingString;
         }, '');
-        const regexp = new RegExp(`${GITHUB_ROOT_PATH}/${github.context.repo.owner}/${dependenciesMatchingGroup}/${GITHUB_OPENAPI_FILE_PATH}/.+.yaml`, 'g');
+        const regexp = new RegExp(`${GITHUB_ROOT_PATH}/${github.context.repo.owner}/(?:${dependenciesMatchingGroup})/${GITHUB_OPENAPI_FILE_PATH}/.+.yaml`, 'g');
         core.debug(`Computed regular expression ${regexp.toString()}`);
         content.replace(regexp, (...args) => {
             core.info(...args);
