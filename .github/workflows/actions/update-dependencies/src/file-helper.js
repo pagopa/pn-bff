@@ -9,11 +9,11 @@ const GITHUB_OPENAPI_FILE_PATH = 'docs/openapi';
 function updatePom(commitIds) {
     core.debug(`Reading pom at path ${POM_PATH}`);
     try {
-        const content = fs.readFileSync(POM_PATH, 'utf8');
+        let content = fs.readFileSync(POM_PATH, 'utf8');
         core.debug(`Updating pom`);
         const dependencies = Object.keys(commitIds);
         const dependenciesMatchingGroup = dependencies.reduce((matchingString, dependency, index) => {
-            matchingString += `(?<${dependency}>${dependency}/(.+))`
+            matchingString += `(?<${dependency.replace('-', '_')}>${dependency}/(.+))`
             if (index < dependencies.length - 1) {
                 matchingString += '|';
             }
