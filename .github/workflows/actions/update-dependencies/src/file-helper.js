@@ -21,8 +21,8 @@ function updatePom(commitIds) {
         }, '');
         const regexp = new RegExp(`${GITHUB_ROOT_PATH}/${github.context.repo.owner}/${dependenciesMatchingGroup}/${GITHUB_OPENAPI_FILE_PATH}/.+.yaml`, 'g');
         core.debug(`Computed regular expression ${regexp.toString()}`);
-        content.replace(regexp, (..args) => {
-            core.info(..args);
+        content.replace(regexp, (...args) => {
+            core.info(...args);
         })
     } catch (error) {
         throw new Error(`Error reading pom: ${error}`);
