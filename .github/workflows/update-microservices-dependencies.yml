@@ -65,7 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'develop'
+          # ref: 'develop'
           fetch-depth: 0
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
