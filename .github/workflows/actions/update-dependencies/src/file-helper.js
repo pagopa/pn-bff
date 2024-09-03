@@ -21,7 +21,6 @@ function updatePom(commitIds) {
         }, '');
         const regexp = new RegExp(`${GITHUB_ROOT_PATH}/${github.context.repo.owner}/${dependenciesMatchingGroup}/${GITHUB_OPENAPI_FILE_PATH}/.+.yaml`, 'g');
         content.replace(regexp, (a, b) => {
-            core.info(a);
             core.info(b);
         })
     } catch (error) {
