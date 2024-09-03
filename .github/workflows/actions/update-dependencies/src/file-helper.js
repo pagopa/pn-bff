@@ -13,7 +13,7 @@ function updatePom(commitIds) {
         core.debug(`Updating pom`);
         const dependencies = Object.keys(commitIds);
         const dependenciesMatchingGroup = dependencies.reduce((matchingString, dependency, index) => {
-            matchingString += `(?<${dependency.replace('-', '_')}>${dependency}/(.+))`
+            matchingString += `(?<${dependency.replaceAll('-', '_')}>${dependency}/(.+))`
             if (index < dependencies.length - 1) {
                 matchingString += '|';
             }
