@@ -34,7 +34,7 @@ async function getLastTagCommitId(repositoryName) {
 async function createBranch() {
     const defaultBranch = core.getInput('ref', { required: true });
     core.debug(`Default branch: ${defaultBranch}`);
-    core.info(`${github.context.repo}`);
+    core.info(`${JSON.stringify(github.context.repo)}`);
     // Create a new branch based on the default branch
     /*
     await octokit.rest.git.createRef({
