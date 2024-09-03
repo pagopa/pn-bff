@@ -13,12 +13,12 @@ async function run() {
         core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
         // for those dependencies chosen get the commit id of the last tag
         const commitIds = {};
-        dependencies.forEach(async (dependency) => {
+        for (const dependency of dependencies) {
             core.info(`-------------------- ${dependency} --------------------`);
             commitIds[dependency] = await getLastTagCommitId(dependency);
-        });
+        };
         // update pom
-        updatePom('./pom.xml');
+        updatePom(commitIds);
 
         return;
       }
