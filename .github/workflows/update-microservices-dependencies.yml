@@ -56,7 +56,8 @@ concurrency:
 
 permissions:
   actions: write
-  contents: read
+  contents: write
+  workflows: write
 
 jobs:
   update-dependencies:
@@ -67,10 +68,6 @@ jobs:
         with:
           ref: 'develop'
           fetch-depth: 0
-      - name: setup git config
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
       - name: Update dependencies
