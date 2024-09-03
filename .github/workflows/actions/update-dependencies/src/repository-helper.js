@@ -32,6 +32,5 @@ async function getLastTagCommitId(repositoryName) {
 }
 
 module.exports = {
-    initOctokitClient,
     getLastTagCommitId
 }
