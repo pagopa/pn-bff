@@ -18,7 +18,7 @@ async function run() {
             commitIds[dependency] = await getLastTagCommitId(dependency);
         });
         // update pom
-        await updatePom('./pom.xml');
+        updatePom('./pom.xml');
 
         return;
       }
