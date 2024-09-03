@@ -26,7 +26,8 @@ function updatePom(commitIds) {
             core.debug(`commitId ${commitId}`);
             return `${GITHUB_ROOT_PATH}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${GITHUB_OPENAPI_FILE_PATH}/${openapiFile}.yaml`
         });
-        core.info(content);
+        // save the content
+        fs.writeFileSync(POM_PATH, content);
     } catch (error) {
         throw new Error(`Error reading pom: ${error}`);
     }

@@ -4,6 +4,9 @@ inputs:
   token:
     description: GitHub token
     required: true
+  ref:
+    description: Default branch from witch create the pull request
+    required: true
   pn-auth-fleet:
     description: Update pn-auth-fleet dependency?
     required: true

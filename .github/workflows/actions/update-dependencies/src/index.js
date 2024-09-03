@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {getDependencies} = require('./input-helper');
-const {getLastTagCommitId} = require('./repository-helper');
+const {getLastTagCommitId, createBranch} = require('./repository-helper');
 const {updatePom} = require('./file-helper');
 
 async function run() {
@@ -18,8 +18,11 @@ async function run() {
             commitIds[dependency] = await getLastTagCommitId(dependency);
         };
         // update pom
+        core.info('Updating POM')
         updatePom(commitIds);
-
+        // create branch
+        core.info('Creating branch')
+        await createBranch();
         return;
       }
       throw new Error(`No dependencies chosen`);

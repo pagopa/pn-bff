@@ -62,14 +62,22 @@ jobs:
   update-dependencies:
     runs-on: ubuntu-latest
     steps:
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: 'develop'
+          fetch-depth: 0
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
       - name: Update dependencies
         uses: ./.github/workflows/actions/update-dependencies
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: 'develop'
           # pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
           # pn-commons: ${{ inputs.pn-commons }}
           # pn-delivery: ${{ inputs.pn-delivery }}
