@@ -136,6 +136,7 @@ class RepositoryHelper {
         try {
             // get branch tree
             const branchTree = await this.#getBranchTree(this.#branchSha);
+            core.debug(`branch tree sha ${branchTree.sha}`);
             const {data: commit}  = await this.#octokit.rest.git.createCommit({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
