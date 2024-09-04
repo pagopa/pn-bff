@@ -22,9 +22,9 @@ async function run() {
         // create branch
         await repositoryHelper.createBranch();
         // update pom
-        const {POM_FILE: pomPath, content: pomContent} = updatePom(commitIds);
+        const pomContent = updatePom(commitIds);
         // commit changes
-        await repositoryHelper.commitChanges([{path: pomPath, content: pomContent}]);
+        await repositoryHelper.commitChanges([{path: 'pom.xml', content: pomContent}]);
         return;
       }
       throw new Error(`No dependencies chosen`);

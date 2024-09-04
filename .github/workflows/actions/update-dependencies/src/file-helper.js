@@ -1,13 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
-const path = require('path');
 const xml2js = require('xml2js');
 
 const {getDependencies, getEnvVariable} = require('./input-helper');
 
-const POM_FILE = 'pom.xml';
-const POM_PATH = path.join(__dirname, POM_FILE);
+const POM_PATH = './pom.xml';
 const OPENAPI_FILE_PATH = 'docs/openapi';
 
 function getGitHubOpenapiRegexp(commitIds) {
@@ -47,7 +45,7 @@ function updatePom(commitIds) {
         // save the content
         // fs.writeFileSync(POM_PATH, content);
         core.info('POM updated successfully');
-        return {content, POM_FILE};
+        return content
     } catch (error) {
         throw new Error(`Error reading pom: ${error}`);
     }
