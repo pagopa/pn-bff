@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
-import xml2js from 'xml2js';
+const xml2js = require('xml2js');
 
 const {getDependencies} = require('./input-helper');
 
