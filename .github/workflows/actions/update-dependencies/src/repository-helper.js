@@ -12,7 +12,7 @@ class RepositoryHelper {
         // initialize Octokit client
         const token = core.getInput('token');
         if (token) {
-            octokit = github.getOctokit(token);
+            this.octokit = github.getOctokit(token);
         }
         throw new Error(`No GitHub token specified`);
     }
