@@ -58,12 +58,11 @@ async function getBranch(branchName) {
     const octokit = initOctokitClient();
     core.debug(`getting branch ${branchName}`);
     try {
-       const branch = await octokit.rest.repos.getBranch({
+       const {data: branch} = await octokit.rest.repos.getBranch({
          owner: github.context.repo.owner,
          repo: github.context.repo.repo,
          branch: branchName,
        });
-       core.info(JSON.stringify(branch));
        core.debug(`branch ${branchName} retrieved`);
        return branch;
     } catch (error) {
@@ -71,19 +70,19 @@ async function getBranch(branchName) {
     }
 }
 
-async function getBaseBranchTree(baseBranchSha) {
+async function getBranchTree(branchSha) {
     const octokit = initOctokitClient();
-    core.debug(`getting base branch tree`);
+    core.debug(`getting branch tree`);
     try {
-        const baseBranchTree = await octokit.rest.git.getTree({
+        const {data: branchTree} = await octokit.rest.git.getTree({
           owner,
           repo,
-          tree_sha: baseBranchSha
+          tree_sha: branchSha
         });
-        core.debug(`base branch tree retrieved`);
-        return baseBranchTree;
+        core.debug(`branch tree retrieved`);
+        return branchTree;
    } catch (error) {
-     throw new Error(`Error during base branch tree retrieving: ${error}`);
+     throw new Error(`Error during branch tree retrieving: ${error}`);
     }
 }
 
