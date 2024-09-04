@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const fs = require('fs');
 
 const POM_PATH = './pom.xml';
-const GITHUB_ROOT_PATH = 'https://raw.githubusercontent.com';
+const GITHUB_ROOT_PATH = 'https://raw\\.githubusercontent\\.com';
 const GITHUB_OPENAPI_FILE_PATH = 'docs/openapi';
 
 function getGitHubOpenapiRegexp(commitIds) {
@@ -14,6 +14,7 @@ function getGitHubOpenapiRegexp(commitIds) {
 }
 
 function updatePom(commitIds) {
+    core.info('Updating POM');
     core.debug(`Reading pom at path ${POM_PATH}`);
     try {
         // read content
@@ -28,6 +29,7 @@ function updatePom(commitIds) {
         });
         // save the content
         fs.writeFileSync(POM_PATH, content);
+        core.info('POM updated successfully');
     } catch (error) {
         throw new Error(`Error reading pom: ${error}`);
     }

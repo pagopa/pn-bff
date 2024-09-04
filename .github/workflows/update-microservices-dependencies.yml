@@ -67,6 +67,15 @@ jobs:
         with:
           # ref: 'develop'
           fetch-depth: 0
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Get POM version
+        run: |
+          VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
+          echo "::set-output name=version::$VERSION"
+        id: get_pom_version
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
       - name: Update dependencies
@@ -74,6 +83,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'develop'
+          pom-version: ${{ steps.project.outputs.get_pom_version }}
           # pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
           # pn-commons: ${{ inputs.pn-commons }}
           # pn-delivery: ${{ inputs.pn-delivery }}

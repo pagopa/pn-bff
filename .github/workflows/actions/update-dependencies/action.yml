@@ -7,6 +7,9 @@ inputs:
   ref:
     description: Default branch from witch create the pull request
     required: true
+  pom-version:
+    description: Current version in POM file
+    required: true
   pn-auth-fleet:
     description: Update pn-auth-fleet dependency?
     required: true

@@ -17,12 +17,10 @@ async function run() {
             core.info(`-------------------- ${dependency} --------------------`);
             commitIds[dependency] = await getLastTagCommitId(dependency);
         };
-        // update pom
-        core.info('Updating POM')
-        updatePom(commitIds);
         // create branch
-        core.info('Creating branch')
         await createBranch();
+        // update pom
+        updatePom(commitIds);
         return;
       }
       throw new Error(`No dependencies chosen`);

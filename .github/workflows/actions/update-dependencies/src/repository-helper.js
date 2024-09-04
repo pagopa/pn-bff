@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const BRANCH_NAME_ROOT = 'update-dependencies';
+
 function initOctokitClient() {
     core.debug(`Init octokit client`);
     // initialize Octokit client
@@ -31,19 +33,45 @@ async function getLastTagCommitId(repositoryName) {
     }
 }
 
+async function checkIfBranchExists() {
+    try {
+        const pomVersion = core.getInput('pom-version', { required: true });
+        core.debug(`POM version ${pomVersion}`);
+        const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
+        core.debug(`checking if branch ${branchName} exists`);
+        const branch = await octokit.rest.repos.getBranch({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          branch: branchName,
+        });
+        core.debug(`branch already ${branchName} exists`);
+        return true;
+    } catch (error) {
+        core.info(error);
+        return false;
+    }
+}
+
 async function createBranch() {
-    const defaultBranch = core.getInput('ref', { required: true });
-    core.debug(`Default branch: ${defaultBranch}`);
-    core.info(`${JSON.stringify(github.context.repo)}`);
-    // Create a new branch based on the default branch
-    /*
-    await octokit.rest.git.createRef({
-      owner: github.context.repo.owner,
-      repo: repository,
-      ref: `refs/heads/${newBranchName}`,
-      sha: baseBranchSha
-    });
-    */
+    const octokit = initOctokitClient();
+    try {
+        // first check if branch already exists
+        const branchExists = checkIfBranchExists();
+        core.info(branchExists);
+        const defaultBranch = core.getInput('ref', { required: true });
+        core.debug(`Default branch: ${defaultBranch}`);
+        /*
+        // Create a new branch based on the default branch
+        await octokit.rest.git.createRef({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          ref: `refs/heads/${newBranchName}`,
+          sha: baseBranchSha
+        });
+        */
+    } catch(error) {
+      throw new Error(`Error during branch creation: ${error}`);
+    }
 }
 
 module.exports = {
