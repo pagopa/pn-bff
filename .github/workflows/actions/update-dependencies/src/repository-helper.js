@@ -39,18 +39,18 @@ class RepositoryHelper {
     }
 
     async #checkIfBranchExists(branchName) {
-        core.debug(`checking if branch ${branchName} exists`);
+        core.debug(`Checking if branch ${branchName} exists`);
         try {
             const branch = await this.#octokit.rest.git.getRef({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               ref: `heads/${branchName}`,
             });
-            core.debug(`branch ${branchName} already exists`);
+            core.debug(`Branch ${branchName} already exists`);
             return true;
         } catch (error) {
             if (error.status === 404) {
-                core.debug(`branch ${branchName} does not exist`);
+                core.debug(`Branch ${branchName} does not exist`);
                 return false;
             }
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
@@ -58,32 +58,17 @@ class RepositoryHelper {
     }
 
     async #getBranchRef(branchName) {
-        core.debug(`getting branch ${branchName} reference`);
+        core.debug(`Getting branch ${branchName} reference`);
         try {
            const {data: branchRef} = await this.#octokit.rest.git.getRef({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
              ref: `heads/${branchName}`,
            });
-           core.debug(`branch ${branchName} reference retrieved`);
+           core.debug(`Branch ${branchName} reference retrieved`);
            return branchRef;
         } catch (error) {
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
-        }
-    }
-
-    async #getBranchTree(branchSha) {
-        core.debug(`getting branch tree`);
-        try {
-            const {data: branchTree} = await this.#octokit.rest.git.getTree({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              tree_sha: branchSha
-            });
-            core.debug(`branch tree retrieved`);
-            return branchTree;
-       } catch (error) {
-         throw new Error(`Error during branch tree retrieving: ${error}`);
         }
     }
 
@@ -116,8 +101,29 @@ class RepositoryHelper {
         core.debug(`Branch sha ${this.#branchSha}`);
     }
 
+    async #createBranchTree(branchSha, files) {
+        core.debug(`Creating branch tree`);
+        try {
+            const {data: branchTree} = await this.#octokit.rest.git.createTree({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              tree: files.map((file) => ({
+                  path: file.path,
+                  mode: '100644',
+                  type: 'blob',
+                  content: file.content
+              })),
+              base_tree: branchSha
+            });
+            core.debug(`Branch tree created`);
+            return branchTree;
+       } catch (error) {
+         throw new Error(`Error during branch tree creation: ${error}`);
+        }
+    }
+
     async #updateRef(branchName, commitSha) {
-        core.debug(`updating branch ${branchName} reference`);
+        core.debug(`Updating branch ${branchName} reference`);
         try {
             await this.#octokit.rest.git.updateRef({
               owner: github.context.repo.owner,
@@ -125,18 +131,18 @@ class RepositoryHelper {
               ref: `heads/${branchName}`,
               sha: commitSha,
             });
-            core.debug(`branch ${branchName} reference updated`);
+            core.debug(`Branch ${branchName} reference updated`);
         } catch (error) {
             throw new Error(`Error during branch ${branchName} reference updating: ${error}`);
         }
     }
 
-    async commitChanges() {
-        core.info(`committing changes`);
+    async commitChanges(files) {
+        core.info(`Committing changes`);
         try {
             // get branch tree
-            const branchTree = await this.#getBranchTree(this.#branchSha);
-            core.debug(`branch tree sha ${branchTree.sha}`);
+            const branchTree = await this.#createBranchTree(this.#branchSha, files);
+            core.debug(`Branch tree sha ${branchTree.sha}`);
             const {data: commit}  = await this.#octokit.rest.git.createCommit({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
@@ -145,7 +151,7 @@ class RepositoryHelper {
               parents: [this.#branchSha]
             });
             await this.#updateRef(this.#branchName, commit.sha)
-            core.debug(`changes committed`);
+            core.info(`Changes committed`);
         } catch (error) {
             throw new Error(`Error during commit creation: ${error}`);
         }

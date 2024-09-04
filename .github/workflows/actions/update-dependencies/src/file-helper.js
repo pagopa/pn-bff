@@ -10,7 +10,7 @@ const OPENAPI_FILE_PATH = 'docs/openapi';
 
 function getGitHubOpenapiRegexp(commitIds) {
     const dependencies = Object.keys(commitIds);
-    const regexp = new RegExp(`^${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml$`, 'g');
+    const regexp = new RegExp(`${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml`, 'g');
     core.debug(`Computed regular expression ${regexp.toString()}`);
     return regexp;
 }
@@ -37,14 +37,15 @@ function updatePom(commitIds) {
         core.debug(`Updating pom`);
         // change content
         content = content.replace(getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
-            core.debug(`match ${match}`);
-            core.debug(`repository ${repository}`);
-            core.debug(`commitId ${commitId}`);
+            core.debug(`Match ${match}`);
+            core.debug(`Repository ${repository}`);
+            core.debug(`CommitId ${commitId}`);
             return `${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${OPENAPI_FILE_PATH}/${openapiFile}.yaml`
         });
         // save the content
-        fs.writeFileSync(POM_PATH, content);
+        // fs.writeFileSync(POM_PATH, content);
         core.info('POM updated successfully');
+        return {content, POM_PATH};
     } catch (error) {
         throw new Error(`Error reading pom: ${error}`);
     }
