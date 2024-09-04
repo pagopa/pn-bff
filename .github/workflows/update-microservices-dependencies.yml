@@ -80,7 +80,7 @@ jobs:
       - name: Get POM version
         id: get_pom_version
         run: |
-          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          ./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
       - name: Update dependencies
