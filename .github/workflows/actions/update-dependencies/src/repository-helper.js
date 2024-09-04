@@ -88,12 +88,12 @@ class RepositoryHelper {
         // first check if branch already exists
         const pomVersion = await getPomVersion();
         const branchName = `${this.BRANCH_NAME_ROOT}/${pomVersion}`
-        const branchExists = await this.checkIfBranchExists(branchName);
+        const branchExists = await this.#checkIfBranchExists(branchName);
         if (!branchExists) {
             // Create a new branch based on the base branch
             const baseBranchName = core.getInput('ref', { required: true });
             core.debug(`Base branch: ${baseBranchName}`);
-            const baseBranch = await this.getBranchRef(baseBranchName);
+            const baseBranch = await this.#getBranchRef(baseBranchName);
             try {
              await this.octokit.rest.git.createRef({
                owner: github.context.repo.owner,
