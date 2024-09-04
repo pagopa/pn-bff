@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const fs = require('fs');
 const xml2js = require('xml2js');
 
-const {getDependencies} = require('./input-helper');
+const {getDependencies, getEnvVariable} = require('./input-helper');
 
 const POM_PATH = './pom.xml';
 const OPENAPI_FILE_PATH = 'docs/openapi';
@@ -50,5 +50,6 @@ function updatePom(commitIds) {
 }
 
 module.exports = {
+    getPomVersion,
     updatePom
 }
