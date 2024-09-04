@@ -49,7 +49,7 @@ async function checkIfBranchExists() {
         core.debug(`branch already ${branchName} exists`);
         return true;
     } catch (error) {
-        core.info(error);
+        core.info(JSON.stringify(error));
         return false;
     }
 }
