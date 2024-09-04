@@ -22,7 +22,7 @@ async function run() {
         // create branch
         await repositoryHelper.createBranch();
         // update pom
-        const {POM_PATH: pomPath, content: pomContent} = updatePom(commitIds);
+        const {POM_FILE: pomPath, content: pomContent} = updatePom(commitIds);
         // commit changes
         await repositoryHelper.commitChanges([{path: pomPath, content: pomContent}]);
         return;
