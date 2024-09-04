@@ -81,7 +81,6 @@ jobs:
         id: get_pom_version
         run: |
           VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Install Packages
         run: cd ./.github/workflows/actions/update-dependencies && npm install
       - name: Update dependencies
