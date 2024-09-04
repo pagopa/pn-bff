@@ -22,6 +22,7 @@ async function getPomVersion() {
         const pomObject = await xml2js.parseStringPromise(content);
         const pomVersion = pomObject.project.version;
         core.debug(`POM version ${pomVersion}`);
+        return pomVersion;
     } catch (error) {
       throw new Error(`Error reading pom: ${error}`);
     }

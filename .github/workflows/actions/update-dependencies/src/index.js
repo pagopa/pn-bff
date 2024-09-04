@@ -2,10 +2,12 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const {getDependencies} = require('./input-helper');
-const {getLastTagCommitId, createBranch} = require('./repository-helper');
+const {RepositoryHelper} = require('./repository-helper');
 const {updatePom} = require('./file-helper');
 
 async function run() {
+    // init helpers
+    const repositoryHelper = new RepositoryHelper();
     try {
       // read dependencies to update
       const dependencies = getDependencies();
@@ -15,12 +17,14 @@ async function run() {
         const commitIds = {};
         for (const dependency of dependencies) {
             core.info(`-------------------- ${dependency} --------------------`);
-            commitIds[dependency] = await getLastTagCommitId(dependency);
+            commitIds[dependency] = await repositoryHelper.getLastTagCommitId(dependency);
         };
         // create branch
-        await createBranch();
+        await repositoryHelper.createBranch();
         // update pom
         updatePom(commitIds);
+        // commit changes
+        await repositoryHelper.commitChanges();
         return;
       }
       throw new Error(`No dependencies chosen`);
