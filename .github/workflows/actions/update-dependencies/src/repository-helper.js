@@ -46,10 +46,11 @@ class RepositoryHelper {
               repo: github.context.repo.repo,
               ref: `heads/${branchName}`,
             });
-            core.debug(`branch already ${branchName} exists`);
+            core.debug(`branch ${branchName} already exists`);
             return true;
         } catch (error) {
             if (error.status === 404) {
+                core.debug(`branch ${branchName} does not exist`);
                 return false;
             }
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
@@ -59,13 +60,13 @@ class RepositoryHelper {
     async #getBranchRef(branchName) {
         core.debug(`getting branch ${branchName} reference`);
         try {
-           const {data: branch} = await this.#octokit.rest.git.getRef({
+           const {data: branchRef} = await this.#octokit.rest.git.getRef({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
              ref: `heads/${branchName}`,
            });
            core.debug(`branch ${branchName} reference retrieved`);
-           return branch;
+           return branchRef;
         } catch (error) {
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
         }
@@ -95,23 +96,24 @@ class RepositoryHelper {
         core.debug(`Base branch: ${baseBranchName}`);
         if (!branchExists) {
             // Create a new branch based on the base branch
-            const baseBranch = await this.#getBranchRef(baseBranchName);
+            const baseBranchRef = await this.#getBranchRef(baseBranchName);
             try {
                  const {data: branchRef} = await this.#octokit.rest.git.createRef({
                    owner: github.context.repo.owner,
                    repo: github.context.repo.repo,
                    ref: `refs/heads/${this.#branchName}`,
-                   sha: baseBranch.object.sha
+                   sha: baseBranchRef.object.sha
                  });
                  this.#branchSha = branchRef.object.sha;
+                 core.debug(`Branch sha ${this.#branchSha}`);
             } catch(error) {
                 throw new Error(`Error during branch creation: ${error}`);
             }
             return;
         }
-        const baseBranch = await this.#getBranchRef(baseBranchName);
         const branchRef = this.#getBranchRef(this.#branchName);
         this.#branchSha = branchRef.object.sha;
+        core.debug(`Branch sha ${this.#branchSha}`);
     }
 
     async #updateRef(branchName, commitSha) {
