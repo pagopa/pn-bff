@@ -87,7 +87,7 @@ class RepositoryHelper {
     async createBranch() {
         // first check if branch already exists
         const pomVersion = await getPomVersion();
-        const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
+        const branchName = `${this.BRANCH_NAME_ROOT}/${pomVersion}`
         const branchExists = await this.checkIfBranchExists(branchName);
         if (!branchExists) {
             // Create a new branch based on the base branch
