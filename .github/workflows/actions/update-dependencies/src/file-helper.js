@@ -2,20 +2,14 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
 
-const POM_PATH = './pom.xml';
-const GITHUB_ROOT_PATH = 'https://raw.githubusercontent.com';
-const GITHUB_OPENAPI_FILE_PATH = 'docs/openapi';
+const {getDependencies} = require('./input-helper');
 
-function checkUrlParam() {
-    if (GITHUB_ROOT_PATH.match(/^https:\/\/raw\.githubusercontent\.com$/)) {
-        return GITHUB_ROOT_PATH;
-    }
-    throw new Error(`GitHub malformed url`);
-}
+const POM_PATH = './pom.xml';
+const OPENAPI_FILE_PATH = 'docs/openapi';
 
 function getGitHubOpenapiRegexp(commitIds) {
     const dependencies = Object.keys(commitIds);
-    const regexp = new RegExp(`^${checkUrlParam()}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${GITHUB_OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml$`, 'g');
+    const regexp = new RegExp(`^${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml$`, 'g');
     core.debug(`Computed regular expression ${regexp.toString()}`);
     return regexp;
 }
@@ -32,7 +26,7 @@ function updatePom(commitIds) {
             core.debug(`match ${match}`);
             core.debug(`repository ${repository}`);
             core.debug(`commitId ${commitId}`);
-            return `${checkUrlParam()}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${GITHUB_OPENAPI_FILE_PATH}/${openapiFile}.yaml`
+            return `${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${OPENAPI_FILE_PATH}/${openapiFile}.yaml`
         });
         // save the content
         fs.writeFileSync(POM_PATH, content);

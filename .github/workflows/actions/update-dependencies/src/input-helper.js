@@ -50,6 +50,12 @@ function getDependencies() {
     return dependencies;
 }
 
+function getEnvVariable(name) {
+  const val = process.env[name.toUpperCase()] || ''
+  return val.trim()
+}
+
 module.exports = {
-    getDependencies
+    getDependencies,
+    getEnvVariable
 }
