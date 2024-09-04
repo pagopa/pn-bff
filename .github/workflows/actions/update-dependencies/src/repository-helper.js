@@ -63,6 +63,7 @@ async function getBranch(branchName) {
          repo: github.context.repo.repo,
          branch: branchName,
        });
+       core.info(JSON.stringify(branch));
        core.debug(`branch ${branchName} retrieved`);
        return branch;
     } catch (error) {
