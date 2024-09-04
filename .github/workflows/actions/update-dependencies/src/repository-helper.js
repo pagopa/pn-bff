@@ -66,7 +66,6 @@ class RepositoryHelper {
              ref: `heads/${branchName}`,
            });
            core.debug(`branch ${branchName} reference retrieved`);
-           core.info(JSON.stringify(branchRef));
            return branchRef;
         } catch (error) {
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
@@ -112,7 +111,7 @@ class RepositoryHelper {
             }
             return;
         }
-        const branchRef = this.#getBranchRef(this.#branchName);
+        const branchRef = await this.#getBranchRef(this.#branchName);
         this.#branchSha = branchRef.object.sha;
         core.debug(`Branch sha ${this.#branchSha}`);
     }
