@@ -35,10 +35,8 @@ async function getLastTagCommitId(repositoryName) {
     }
 }
 
-async function checkIfBranchExists() {
+async function checkIfBranchExists(branchName) {
     const octokit = initOctokitClient();
-    const pomVersion = await getPomVersion();
-    const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
     core.debug(`checking if branch ${branchName} exists`);
     try {
         const branch = await octokit.rest.repos.getBranch({
@@ -49,30 +47,67 @@ async function checkIfBranchExists() {
         core.debug(`branch already ${branchName} exists`);
         return true;
     } catch (error) {
-        core.info(JSON.stringify(error));
-        return false;
+        if (error.status === 404) {
+            return false;
+        }
+        throw new Error(`Error during branch ${branchName} retrieving: ${error}`);
+    }
+}
+
+async function getBranch(branchName) {
+    const octokit = initOctokitClient();
+    core.debug(`getting branch ${branchName}`);
+    try {
+       const branch = await octokit.rest.repos.getBranch({
+         owner: github.context.repo.owner,
+         repo: github.context.repo.repo,
+         branch: branchName,
+       });
+       core.debug(`branch ${branchName} retrieved`);
+       return branch;
+    } catch (error) {
+        throw new Error(`Error during branch ${branchName} retrieving: ${error}`);
+    }
+}
+
+async function getBaseBranchTree(baseBranchSha) {
+    const octokit = initOctokitClient();
+    core.debug(`getting base branch tree`);
+    try {
+        const baseBranchTree = await octokit.rest.git.getTree({
+          owner,
+          repo,
+          tree_sha: baseBranchSha
+        });
+        core.debug(`base branch tree retrieved`);
+        return baseBranchTree;
+   } catch (error) {
+     throw new Error(`Error during base branch tree retrieving: ${error}`);
     }
 }
 
 async function createBranch() {
     const octokit = initOctokitClient();
-    try {
-        // first check if branch already exists
-        const branchExists = checkIfBranchExists();
-        core.info(branchExists);
-        const defaultBranch = core.getInput('ref', { required: true });
-        core.debug(`Default branch: ${defaultBranch}`);
-        /*
-        // Create a new branch based on the default branch
-        await octokit.rest.git.createRef({
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo,
-          ref: `refs/heads/${newBranchName}`,
-          sha: baseBranchSha
-        });
-        */
-    } catch(error) {
-      throw new Error(`Error during branch creation: ${error}`);
+    // first check if branch already exists
+    const pomVersion = await getPomVersion();
+    const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
+    const branchExists = await checkIfBranchExists(branchName);
+    if (!branchExists) {
+        // Create a new branch based on the base branch
+        const baseBranchName = core.getInput('ref', { required: true });
+        core.debug(`Base branch: ${baseBranchName}`);
+        const baseBranch = await getBranch(baseBranchName);
+        try {
+         await octokit.rest.git.createRef({
+           owner: github.context.repo.owner,
+           repo: github.context.repo.repo,
+           ref: `refs/heads/${branchName}`,
+           sha: baseBranch.commit.sha
+         });
+        } catch(error) {
+          throw new Error(`Error during branch creation: ${error}`);
+        }
+        return;
     }
 }
 
