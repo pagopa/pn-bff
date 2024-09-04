@@ -12,7 +12,7 @@ class RepositoryHelper {
         // initialize Octokit client
         const token = core.getInput('token');
         if (token) {
-            this.octokit = github.getOctokit(token);
+            this.#octokit = github.getOctokit(token);
             return;
         }
         throw new Error(`No GitHub token specified`);
@@ -21,7 +21,7 @@ class RepositoryHelper {
     async getLastTagCommitId(repositoryName) {
         core.debug(`Fetch list of tags for repository ${repositoryName}`);
         try {
-            const {data: tags} = await this.octokit.rest.repos.listTags({
+            const {data: tags} = await this.#octokit.rest.repos.listTags({
               owner: github.context.repo.owner,
               repo: repositoryName,
               per_page: 1
@@ -39,7 +39,7 @@ class RepositoryHelper {
     async #checkIfBranchExists(branchName) {
         core.debug(`checking if branch ${branchName} exists`);
         try {
-            const branch = await this.octokit.rest.repos.getRef({
+            const branch = await this.#octokit.rest.git.getRef({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               ref: `heads/${branchName}`,
@@ -57,7 +57,7 @@ class RepositoryHelper {
     async #getBranchRef(branchName) {
         core.debug(`getting branch ${branchName} reference`);
         try {
-           const {data: branch} = await this.octokit.rest.repos.getRef({
+           const {data: branch} = await this.#octokit.rest.git.getRef({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
              ref: `heads/${branchName}`,
@@ -72,7 +72,7 @@ class RepositoryHelper {
     async #getBranchTree(branchSha) {
         core.debug(`getting branch tree`);
         try {
-            const {data: branchTree} = await this.octokit.rest.git.getTree({
+            const {data: branchTree} = await this.#octokit.rest.git.getTree({
               owner,
               repo,
               tree_sha: branchSha
@@ -87,7 +87,7 @@ class RepositoryHelper {
     async createBranch() {
         // first check if branch already exists
         const pomVersion = await getPomVersion();
-        const branchName = `${this.BRANCH_NAME_ROOT}/${pomVersion}`
+        const branchName = `${this.#BRANCH_NAME_ROOT}/${pomVersion}`
         const branchExists = await this.#checkIfBranchExists(branchName);
         if (!branchExists) {
             // Create a new branch based on the base branch
@@ -95,7 +95,7 @@ class RepositoryHelper {
             core.debug(`Base branch: ${baseBranchName}`);
             const baseBranch = await this.#getBranchRef(baseBranchName);
             try {
-             await this.octokit.rest.git.createRef({
+             await this.#octokit.rest.git.createRef({
                owner: github.context.repo.owner,
                repo: github.context.repo.repo,
                ref: `refs/heads/${branchName}`,
