@@ -66,6 +66,7 @@ class RepositoryHelper {
              ref: `heads/${branchName}`,
            });
            core.debug(`branch ${branchName} reference retrieved`);
+           core.info(JSON.stringify(branchRef));
            return branchRef;
         } catch (error) {
             throw new Error(`Error during branch ${branchName} reference retrieving: ${error}`);
