@@ -8,10 +8,6 @@ class RepositoryHelper {
     #octokit;
 
     constructor() {
-        this.initOctokitClient();
-    }
-
-    #initOctokitClient() {
         core.debug(`Init octokit client`);
         // initialize Octokit client
         const token = core.getInput('token');
