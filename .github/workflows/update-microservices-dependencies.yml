@@ -73,7 +73,7 @@ jobs:
           git config user.email "<>"
       - name: Get POM version
         run: |
-          VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "::set-output name=version::$VERSION"
         id: get_pom_version
       - name: Install Packages
