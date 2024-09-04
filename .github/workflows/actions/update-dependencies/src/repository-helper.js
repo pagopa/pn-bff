@@ -6,6 +6,8 @@ const {getPomVersion} = require('./file-helper');
 class RepositoryHelper {
     #BRANCH_NAME_ROOT = 'update-dependencies';
     #octokit;
+    #branchSha;
+    #branchName;
 
     constructor() {
         core.debug(`Init octokit client`);
@@ -73,8 +75,8 @@ class RepositoryHelper {
         core.debug(`getting branch tree`);
         try {
             const {data: branchTree} = await this.#octokit.rest.git.getTree({
-              owner,
-              repo,
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
               tree_sha: branchSha
             });
             core.debug(`branch tree retrieved`);
@@ -87,29 +89,63 @@ class RepositoryHelper {
     async createBranch() {
         // first check if branch already exists
         const pomVersion = await getPomVersion();
-        const branchName = `${this.#BRANCH_NAME_ROOT}/${pomVersion}`
+        this.#branchName = `${this.#BRANCH_NAME_ROOT}/${pomVersion}`;
         const branchExists = await this.#checkIfBranchExists(branchName);
+        const baseBranchName = core.getInput('ref', { required: true });
+        core.debug(`Base branch: ${baseBranchName}`);
         if (!branchExists) {
             // Create a new branch based on the base branch
-            const baseBranchName = core.getInput('ref', { required: true });
-            core.debug(`Base branch: ${baseBranchName}`);
             const baseBranch = await this.#getBranchRef(baseBranchName);
             try {
-             await this.#octokit.rest.git.createRef({
-               owner: github.context.repo.owner,
-               repo: github.context.repo.repo,
-               ref: `refs/heads/${branchName}`,
-               sha: baseBranch.object.sha
-             });
+                 const {data: branchRef} = await this.#octokit.rest.git.createRef({
+                   owner: github.context.repo.owner,
+                   repo: github.context.repo.repo,
+                   ref: `refs/heads/${branchName}`,
+                   sha: baseBranch.object.sha
+                 });
+                 this.#branchSha = branchRef.object.sha;
             } catch(error) {
-              throw new Error(`Error during branch creation: ${error}`);
+                throw new Error(`Error during branch creation: ${error}`);
             }
             return;
+        }
+        const baseBranch = await this.#getBranchRef(baseBranchName);
+        const branchRef = this.#getBranchRef(branchName);
+        this.#branchSha = branchRef.object.sha;
+    }
+
+    async #updateRef(branchName, commitSha) {
+        core.debug(`updating branch ${branchName} reference`);
+        try {
+            await this.#octokit.rest.git.updateRef({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              ref: `heads/${branchName}`,
+              sha: commitSha,
+            });
+            core.debug(`branch ${branchName} reference updated`);
+        } catch (error) {
+            throw new Error(`Error during branch ${branchName} reference updating: ${error}`);
         }
     }
 
     async commitChanges() {
-
+        core.info(`committing changes`);
+        try {
+            // get branch tree
+            const branchTree = getBranchTree(this.#branchSha);
+            const {data: commit}  = await this.#octokit.rest.git.createCommit({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              message: 'Update micro-service dependencies',
+              tree: branchTree.sha,
+              parents: [this.#branchSha]
+            });
+            await this.#updateRef(this.#branchName, commit.sha)
+            core.debug(`changes committed`);
+        } catch (error) {
+            throw new Error(`Error during commit creation: ${error}`);
+        }
     }
 }
 
