@@ -37,8 +37,7 @@ async function getLastTagCommitId(repositoryName) {
 
 async function checkIfBranchExists() {
     try {
-        const pomVersion = getPomVersion();
-
+        const pomVersion = await getPomVersion();
         const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
         core.debug(`checking if branch ${branchName} exists`);
         const branch = await octokit.rest.repos.getBranch({

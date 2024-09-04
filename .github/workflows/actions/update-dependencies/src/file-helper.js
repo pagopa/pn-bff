@@ -15,7 +15,7 @@ function getGitHubOpenapiRegexp(commitIds) {
     return regexp;
 }
 
-function getPomVersion() {
+async function getPomVersion() {
     core.debug('Getting POM version')
     try {
         const content = fs.readFileSync(POM_PATH, 'utf8');
