@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const {getPomVersion} = require('./file-helper');
+
 const BRANCH_NAME_ROOT = 'update-dependencies';
 
 function initOctokitClient() {
@@ -35,8 +37,8 @@ async function getLastTagCommitId(repositoryName) {
 
 async function checkIfBranchExists() {
     try {
-        const pomVersion = core.getInput('pom-version', { required: true });
-        core.debug(`POM version ${pomVersion}`);
+        const pomVersion = getPomVersion();
+
         const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`
         core.debug(`checking if branch ${branchName} exists`);
         const branch = await octokit.rest.repos.getBranch({

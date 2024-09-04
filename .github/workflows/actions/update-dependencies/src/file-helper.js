@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
+import xml2js from 'xml2js';
 
 const {getDependencies} = require('./input-helper');
 
@@ -12,6 +13,18 @@ function getGitHubOpenapiRegexp(commitIds) {
     const regexp = new RegExp(`^${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml$`, 'g');
     core.debug(`Computed regular expression ${regexp.toString()}`);
     return regexp;
+}
+
+function getPomVersion() {
+    core.debug('Getting POM version')
+    try {
+        const content = fs.readFileSync(POM_PATH, 'utf8');
+        const pomObject = await xml2js.parseStringPromise(xmlContent);
+        core.info(JSON.stringify(pomObject));
+        // core.debug(`POM version ${pomVersion}`);
+    } catch (error) {
+      throw new Error(`Error reading pom: ${error}`);
+    }
 }
 
 function updatePom(commitIds) {
