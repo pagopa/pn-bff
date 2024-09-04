@@ -19,7 +19,7 @@ async function getPomVersion() {
     core.debug('Getting POM version')
     try {
         const content = fs.readFileSync(POM_PATH, 'utf8');
-        const pomObject = await xml2js.parseStringPromise(xmlContent);
+        const pomObject = await xml2js.parseStringPromise(content);
         core.info(JSON.stringify(pomObject));
         // core.debug(`POM version ${pomVersion}`);
     } catch (error) {
