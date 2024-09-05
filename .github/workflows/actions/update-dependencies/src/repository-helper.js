@@ -109,7 +109,7 @@ class RepositoryHelper {
             core.debug(`Blob created with sha ${blob.sha}`);
             return blob;
         } catch (error) {
-            throw new Error(`Error during blob creation`);
+            throw new Error(`Error during blob creation: ${error}`);
         }
     }
 
@@ -117,7 +117,7 @@ class RepositoryHelper {
         core.debug(`Creating branch tree`);
         const shaFiles = [];
         for (const file in files) {
-            const blob = await this.#createBlob(file.content)
+            const blob = await this.#createBlob(file.content);
             shaFiles.push({
                 path: file.path,
                 sha: blob.sha
