@@ -3,11 +3,14 @@ const github = require('@actions/github');
 
 const {getDependencies} = require('./input-helper');
 const {RepositoryHelper} = require('./repository-helper');
-const {updatePom} = require('./file-helper');
+const {FileHelper} = require('./file-helper');
+
+const BRANCH_NAME_ROOT = 'update-dependencies';
 
 async function run() {
     // init helpers
     const repositoryHelper = new RepositoryHelper();
+    const fileHelper = new FileHelper();
     try {
       // read dependencies to update
       const dependencies = getDependencies();
@@ -20,11 +23,13 @@ async function run() {
             commitIds[dependency] = await repositoryHelper.getLastTagCommitId(dependency);
         };
         // create branch
-        await repositoryHelper.createBranch();
+        const pomVersion = await fileHelper.getPomVersion();
+        const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`;
+        await repositoryHelper.createBranch(branchName);
         // update pom
-        const pomContent = updatePom(commitIds);
+        const pomContent = fileHelper.updatePom(commitIds);
         // commit changes
-        await repositoryHelper.commitChanges([{path: 'pom.xml', content: pomContent}]);
+        await repositoryHelper.commitChanges(branchName, [{path: 'pom.xml', content: pomContent}]);
         return;
       }
       throw new Error(`No dependencies chosen`);

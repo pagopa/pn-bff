@@ -1,13 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const {getPomVersion} = require('./file-helper');
-
 class RepositoryHelper {
-    #BRANCH_NAME_ROOT = 'update-dependencies';
     #octokit;
     #branchSha;
-    #branchName;
 
     constructor() {
         core.debug(`Init octokit client`);
@@ -72,11 +68,10 @@ class RepositoryHelper {
         }
     }
 
-    async createBranch() {
+    async createBranch(branchName) {
+        core.info(`Creating branch ${branchName}`);
         // first check if branch already exists
-        const pomVersion = await getPomVersion();
-        this.#branchName = `${this.#BRANCH_NAME_ROOT}/${pomVersion}`;
-        const branchExists = await this.#checkIfBranchExists(this.#branchName);
+        const branchExists = await this.#checkIfBranchExists(branchName);
         const baseBranchName = core.getInput('ref', { required: true });
         core.debug(`Base branch: ${baseBranchName}`);
         if (!branchExists) {
@@ -86,19 +81,21 @@ class RepositoryHelper {
                  const {data: branchRef} = await this.#octokit.rest.git.createRef({
                    owner: github.context.repo.owner,
                    repo: github.context.repo.repo,
-                   ref: `refs/heads/${this.#branchName}`,
+                   ref: `refs/heads/${branchName}`,
                    sha: baseBranchRef.object.sha
                  });
                  this.#branchSha = branchRef.object.sha;
                  core.debug(`Branch sha ${this.#branchSha}`);
+                 core.info(`Branch ${branchName} created`);
             } catch(error) {
                 throw new Error(`Error during branch creation: ${error}`);
             }
             return;
         }
-        const branchRef = await this.#getBranchRef(this.#branchName);
+        const branchRef = await this.#getBranchRef(branchName);
         this.#branchSha = branchRef.object.sha;
         core.debug(`Branch sha ${this.#branchSha}`);
+        core.info(`Branch ${branchName} already exists`);
     }
 
     async #createBranchTree(branchSha, files) {
@@ -137,8 +134,8 @@ class RepositoryHelper {
         }
     }
 
-    async commitChanges(files) {
-        core.info(`Committing changes`);
+    async commitChanges(branchName, files) {
+        core.info(`Committing changes on branch ${branchName}`);
         try {
             // get branch tree
             const branchTree = await this.#createBranchTree(this.#branchSha, files);
@@ -150,8 +147,10 @@ class RepositoryHelper {
               tree: branchTree.sha,
               parents: [this.#branchSha]
             });
-            await this.#updateRef(this.#branchName, commit.sha)
-            core.info(`Changes committed`);
+            core.info(`Changes on branch ${branchName} committed`);
+            core.info(`Pushing changes on branch ${branchName}`);
+            await this.#updateRef(branchName, commit.sha)
+            core.info(`Changes on branch ${branchName} pushed`);
         } catch (error) {
             throw new Error(`Error during commit creation: ${error}`);
         }
