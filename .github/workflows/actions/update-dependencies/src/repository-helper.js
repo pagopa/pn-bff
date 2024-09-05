@@ -162,8 +162,9 @@ class RepositoryHelper {
         // get branch tree
         const branchTree = await this.#createBranchTree(this.#branchSha, files);
         core.debug(`Branch tree sha ${branchTree.sha}`);
+        let commit;
         try {
-            const {data: commit}  = await this.#octokit.rest.git.createCommit({
+            const response = await this.#octokit.rest.git.createCommit({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               message: 'Update micro-service dependencies',
@@ -171,6 +172,7 @@ class RepositoryHelper {
               parents: [this.#branchSha]
             });
             core.info(`Changes on branch ${branchName} committed`);
+            commit = response.data;
         } catch (error) {
             throw new Error(`Error during commit creation: ${error}`);
         }
