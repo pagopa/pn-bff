@@ -116,7 +116,7 @@ class RepositoryHelper {
     async #createBranchTree(branchSha, files) {
         core.debug(`Creating branch tree`);
         const shaFiles = [];
-        for (const file in files) {
+        for (const file of files) {
             const blob = await this.#createBlob(file.content);
             shaFiles.push({
                 path: file.path,
