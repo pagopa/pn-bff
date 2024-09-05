@@ -98,6 +98,20 @@ class RepositoryHelper {
         core.info(`Branch ${branchName} already exists`);
     }
 
+    async #createBlob(fileContent) {
+        core.debug(`Creating blob from file content`);
+        try {
+            const {data: blob} = await this.#octokit.rest.git.createBlob({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              content: fileContent,
+            });
+            return blob;
+        } catch (error) {
+            throw new Error(`Error during blob creation`);
+        }
+    }
+
     async #createBranchTree(branchSha, files) {
         core.debug(`Creating branch tree`);
         try {
@@ -108,7 +122,7 @@ class RepositoryHelper {
                   path: file.path,
                   mode: '100644',
                   type: 'blob',
-                  content: file.content
+                  sha: this.#createBlob(file.content).sha
               })),
               base_tree: branchSha
             });
@@ -119,7 +133,7 @@ class RepositoryHelper {
         }
     }
 
-    async #updateRef(branchName, commitSha) {
+    async #updateBranchRef(branchName, commitSha) {
         core.debug(`Updating branch ${branchName} reference`);
         try {
             await this.#octokit.rest.git.updateRef({
@@ -149,7 +163,7 @@ class RepositoryHelper {
             });
             core.info(`Changes on branch ${branchName} committed`);
             core.info(`Pushing changes on branch ${branchName}`);
-            await this.#updateRef(branchName, commit.sha)
+            await this.#updateBranchRef(branchName, commit.sha)
             core.info(`Changes on branch ${branchName} pushed`);
         } catch (error) {
             throw new Error(`Error during commit creation: ${error}`);
