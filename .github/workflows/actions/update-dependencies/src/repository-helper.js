@@ -115,15 +115,23 @@ class RepositoryHelper {
 
     async #createBranchTree(branchSha, files) {
         core.debug(`Creating branch tree`);
+        const shaFiles = [];
+        for (const file in files) {
+            const blob = await this.#createBlob(file.content)
+            shaFiles.push({
+                path: file.path,
+                sha: blob.sha
+            })
+        }
         try {
             const {data: branchTree} = await this.#octokit.rest.git.createTree({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
-              tree: files.map(async (file) => ({
+              tree: shaFiles.map((file) => ({
                   path: file.path,
                   mode: '100644',
                   type: 'blob',
-                  sha: await this.#createBlob(file.content).sha
+                  sha: file.sha
               })),
               base_tree: branchSha
             });
