@@ -106,6 +106,7 @@ class RepositoryHelper {
               repo: github.context.repo.repo,
               content: fileContent,
             });
+            core.debug(`Blob created with sha ${blob.sha}`);
             return blob;
         } catch (error) {
             throw new Error(`Error during blob creation`);
@@ -150,10 +151,10 @@ class RepositoryHelper {
 
     async commitChanges(branchName, files) {
         core.info(`Committing changes on branch ${branchName}`);
+        // get branch tree
+        const branchTree = await this.#createBranchTree(this.#branchSha, files);
+        core.debug(`Branch tree sha ${branchTree.sha}`);
         try {
-            // get branch tree
-            const branchTree = await this.#createBranchTree(this.#branchSha, files);
-            core.debug(`Branch tree sha ${branchTree.sha}`);
             const {data: commit}  = await this.#octokit.rest.git.createCommit({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
@@ -162,12 +163,12 @@ class RepositoryHelper {
               parents: [this.#branchSha]
             });
             core.info(`Changes on branch ${branchName} committed`);
-            core.info(`Pushing changes on branch ${branchName}`);
-            await this.#updateBranchRef(branchName, commit.sha)
-            core.info(`Changes on branch ${branchName} pushed`);
         } catch (error) {
             throw new Error(`Error during commit creation: ${error}`);
         }
+        core.info(`Pushing changes on branch ${branchName}`);
+        await this.#updateBranchRef(branchName, commit.sha)
+        core.info(`Changes on branch ${branchName} pushed`);
     }
 }
 
