@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const fs = require('fs');
 const xml2js = require('xml2js');
 
-const {getEnvVariable} = require('./input-helper');
+const {InputHelper} = require('./input-helper');
 
 class FileHelper {
 
@@ -12,7 +12,7 @@ class FileHelper {
 
     #getGitHubOpenapiRegexp(commitIds) {
          const dependencies = Object.keys(commitIds);
-         const regexp = new RegExp(`${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${this.#OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml`, 'g');
+         const regexp = new RegExp(`${InputHelper.getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${this.#OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml`, 'g');
          core.debug(`Computed regular expression ${regexp.toString()}`);
          return regexp;
     }
@@ -42,7 +42,7 @@ class FileHelper {
                  core.debug(`Match ${match}`);
                  core.debug(`Repository ${repository}`);
                  core.debug(`CommitId ${commitId}`);
-                 return `${getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`
+                 return `${InputHelper.getEnvVariable('OPENAPI_ROOT_PATH')}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`
              });
              core.info('POM updated successfully');
              return content

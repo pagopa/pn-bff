@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const {getDependencies} = require('./input-helper');
+const {InputHelper} = require('./input-helper');
 const {RepositoryHelper} = require('./repository-helper');
 const {FileHelper} = require('./file-helper');
 
@@ -13,7 +13,7 @@ async function run() {
     const fileHelper = new FileHelper();
     try {
       // read dependencies to update
-      const dependencies = getDependencies();
+      const dependencies = InputHelper.getDependencies();
       if (dependencies.length > 0) {
         core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
         // for those dependencies chosen get the commit id of the last tag
