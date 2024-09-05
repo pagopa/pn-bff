@@ -158,6 +158,10 @@ class RepositoryHelper {
     }
 
     async commitChanges(branchName, files) {
+        if (files.length === 0) {
+            core.info(`Nothing to commit on branch ${branchName}`);
+            return;
+        }
         core.info(`Committing changes on branch ${branchName}`);
         // get branch tree
         const branchTree = await this.#createBranchTree(this.#branchSha, files);
