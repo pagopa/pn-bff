@@ -119,11 +119,11 @@ class RepositoryHelper {
             const {data: branchTree} = await this.#octokit.rest.git.createTree({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
-              tree: files.map((file) => ({
+              tree: files.map(async (file) => ({
                   path: file.path,
                   mode: '100644',
                   type: 'blob',
-                  sha: this.#createBlob(file.content).sha
+                  sha: await this.#createBlob(file.content).sha
               })),
               base_tree: branchSha
             });
