@@ -58,9 +58,9 @@ public class PnExternalRegistriesClientImpl {
     }
 
     public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutions");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getUserInstitutions");
         return infoPaApi
-                .getInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, null);
+                .getUserInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, null);
     }
 
     public Flux<ProductResourcePN> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
