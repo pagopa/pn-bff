@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapperContext;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +52,12 @@ public class InfoPaService {
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the list of the products or error
      */
-    public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
+    public Flux<BffInstitutionProduct> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, String lang) {
         log.info("Get institution products - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return pnExternalRegistriesClient
                 .getInstitutionProducts(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxGroups)
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, xPagopaPnCxId))
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, new ProductMapperContext(xPagopaPnCxId, lang)))
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 

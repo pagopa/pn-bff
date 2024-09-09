@@ -9,4 +9,5 @@ public class UserMock {
     public static final String PN_CX_ID = "CX_ID";
     public static final List<String> PN_CX_GROUPS = Collections.singletonList("group");
     public static final String PN_CX_ROLE = "role";
+    public static final String LANG = "it";
 }

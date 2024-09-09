@@ -55,10 +55,10 @@ public class InfoPaController implements InfoPaApi {
      * @return The list of products of an institution
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffInstitutionProduct>>> getInstitutionProductsV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String lang, List<String> xPagopaPnCxGroups, ServerWebExchange exchange) {
 
         Flux<BffInstitutionProduct> bffInstitutionProducts = infoPaService
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups);
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, lang);
 
         return bffInstitutionProducts
                 .collectList()
@@ -80,7 +80,7 @@ public class InfoPaController implements InfoPaApi {
     public Mono<ResponseEntity<Flux<BffPaGroup>>> getPAGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status, ServerWebExchange exchange) {
 
         Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
-        
+
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

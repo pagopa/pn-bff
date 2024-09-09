@@ -11,6 +11,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaGroup;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
+import it.pagopa.pn.bff.mappers.infopa.ProductMapperContext;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
@@ -95,7 +96,7 @@ class InfoPaServiceTest {
     void getInstitutionProduct() {
         List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
                 .stream()
-                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, new ProductMapperContext(UserMock.PN_CX_ID, UserMock.LANG)))
                 .toList();
         when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.fromIterable(paInfoMock.getProductResourcePNMock()));
@@ -104,7 +105,8 @@ class InfoPaServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_GROUPS);
+                UserMock.PN_CX_GROUPS,
+                UserMock.LANG);
 
         StepVerifier
                 .create(result.collectList())
@@ -121,7 +123,8 @@ class InfoPaServiceTest {
                 .create(infoPaService.getInstitutionProducts(UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
-                        UserMock.PN_CX_GROUPS))
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.LANG))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
