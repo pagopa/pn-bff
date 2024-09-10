@@ -239,7 +239,37 @@ class RepositoryHelper {
         return body;
     }
 
+    async #checkIfPullRequestExists(branchName) {
+        core.info(`Check if an opened pull request already exists`);
+        try {
+           const baseBranchName = core.getInput('ref', { required: true });
+           const {data: pullRequest} = await this.#octokit.rest.pulls.list({
+             owner: github.context.repo.owner,
+             repo: github.context.repo.repo,
+             head: branchName,
+             base: baseBranchName,
+             per_page: 1
+           });
+           if (pullRequest.length === 0) {
+            core.info("Opened pull request doesn't exists");
+            return false;
+           }
+           core.info(`An opened pull request already exists`);
+           return true;
+        } catch (error) {
+            throw new Error(`Error during pull request retrieving: ${error}`);
+        }
+    }
+
     async createPullRequest(branchName, changesToCommit) {
+        if (changesToCommit.length === 0) {
+            return;
+        }
+        // check if pull request already exists
+        const exists = await this.#checkIfPullRequestExists(branchName);
+        if (exists) {
+            return;
+        }
         core.info(`Creating pull request`);
         try {
            const baseBranchName = core.getInput('ref', { required: true });
