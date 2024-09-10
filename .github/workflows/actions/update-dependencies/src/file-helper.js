@@ -12,7 +12,7 @@ class FileHelper {
     #OPENAPI_ROOT_PATH = 'https://raw.githubusercontent.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
 
-    construct(repositoryHelper) {
+    constructor(repositoryHelper) {
         this.#repositoryHelper = repositoryHelper;
     }
 
