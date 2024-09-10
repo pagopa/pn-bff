@@ -115,7 +115,7 @@ class RepositoryHelper {
     }
 
     async getDirContent(branchName, dirPath, excluded = []) {
-        core.info(`Reading dir at path ${dirPath}`);
+        core.info(`Reading content of dir at path ${dirPath}`);
         try {
             let files = [];
             const {data: directory} = await this.#octokit.rest.repos.getContent({
@@ -124,7 +124,8 @@ class RepositoryHelper {
               ref: `heads/${branchName}`,
               path: dirPath,
             });
-            core.info(`Dir at path ${dirPath} read`);
+            core.info(`Content of dir at path ${dirPath} read`);
+            core.info(JSON.stringify(directory));
             for (const elem of directory.entries) {
                 if (excluded.some(excl => elem.name.includes(excl))) {
                     continue;
@@ -138,7 +139,7 @@ class RepositoryHelper {
             }
             return files;
         } catch (error) {
-            throw new Error(`Error reading file at path ${dirPath}: ${error}`);
+            throw new Error(`Error reading content of dir at path ${dirPath}: ${error}`);
         }
     }
 
