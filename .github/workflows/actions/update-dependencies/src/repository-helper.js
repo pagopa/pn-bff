@@ -130,7 +130,7 @@ class RepositoryHelper {
                     continue;
                 }
                 if (elem.type === 'file') {
-                    const fileContent = await this.getFileContent(branchName, file.path);
+                    const fileContent = await this.getFileContent(branchName, elem.path);
                     files.push({path: elem.path, content: fileContent});
                 } else if (elem.type === 'dir') {
                     const dirContent = await this.getDirContent(branchName, elem.path, excluded);
