@@ -796,7 +796,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-external-registries/21000e4dd56458cf3828bdea153f4cbaf385be53/docs/openapi/pn-selfcare-internal-v1.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/95b9b6f9f6a35d4c4a88c2574627d6a744a7f47a/docs/openapi/pn-selfcare-internal-v1.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -834,7 +834,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-external-registries/21000e4dd56458cf3828bdea153f4cbaf385be53/docs/openapi/pn-payment-info-internal-v1.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/95b9b6f9f6a35d4c4a88c2574627d6a744a7f47a/docs/openapi/pn-payment-info-internal-v1.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
