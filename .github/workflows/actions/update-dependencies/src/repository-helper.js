@@ -98,6 +98,23 @@ class RepositoryHelper {
         core.info(`Branch ${branchName} already exists`);
     }
 
+    async getFileContent(branchName, filePath) {
+        core.info(`Reading file at path ${filePath}`);
+        try {
+            const {data: file} = await this.#octokit.rest.repos.getContent({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              ref: `heads/${branchName}`,
+              path: filePath,
+            });
+            core.info(`File at path ${filePath} read`);
+            core.info(Buffer.from(file.content, 'base64'));
+            return Buffer.from(file.content, 'base64');
+        } catch (error) {
+            throw new Error(`Error reading file at path ${filePath}: ${error}`);
+        }
+    }
+
     async #createBlob(fileContent) {
         core.debug(`Creating blob from file content`);
         try {

@@ -7,9 +7,14 @@ const {InputHelper} = require('./input-helper');
 
 class FileHelper {
 
+    #repositoryHelper;
     #POM_PATH = './pom.xml';
     #OPENAPI_ROOT_PATH = 'https://raw.githubusercontent.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
+
+    construct(repositoryHelper) {
+        this.#repositoryHelper = repositoryHelper;
+    }
 
     #getGitHubOpenapiRegexp(commitIds) {
          const dependencies = Object.keys(commitIds);
@@ -31,12 +36,13 @@ class FileHelper {
          }
      }
 
-     updatePom(commitIds) {
+     async updatePom(branchName, commitIds) {
          core.info('Updating POM');
          core.debug(`Reading pom at path ${this.#POM_PATH}`);
          try {
              core.debug(`Reading POM content`);
              // read content
+             await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
              let content = fs.readFileSync(this.#POM_PATH, 'utf8');
              core.debug(`Updating POM content`);
              // change content

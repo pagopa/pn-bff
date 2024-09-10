@@ -10,7 +10,7 @@ const BRANCH_NAME_ROOT = 'update-dependencies';
 async function run() {
     // init helpers
     const repositoryHelper = new RepositoryHelper();
-    const fileHelper = new FileHelper();
+    const fileHelper = new FileHelper(repositoryHelper);
     try {
       // read dependencies to update
       const dependencies = InputHelper.getDependencies();
@@ -27,7 +27,7 @@ async function run() {
         const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`;
         await repositoryHelper.createBranch(branchName);
         // update pom
-        const pomContent = fileHelper.updatePom(commitIds);
+        const pomContent = await fileHelper.updatePom(branchName, commitIds);
         // update openapi files
         const openapiFiles = fileHelper.updateOpenapi(commitIds);
         // commit changes
