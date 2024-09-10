@@ -92,7 +92,7 @@ jobs:
           pn-commons: false
           pn-delivery: true
           pn-apikey-manager: false
-          pn-external-registries: false
+          pn-external-registries: true
           pn-user-attributes: false
           pn-downtime-logs: false
           pn-delivery-push: true
