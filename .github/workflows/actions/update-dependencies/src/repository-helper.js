@@ -138,7 +138,7 @@ class RepositoryHelper {
             }
             return files;
         } catch (error) {
-            throw new Error(`Error reading file at path ${filePath}: ${error}`);
+            throw new Error(`Error reading file at path ${dirPath}: ${error}`);
         }
     }
 
