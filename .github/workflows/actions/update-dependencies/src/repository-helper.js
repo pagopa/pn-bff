@@ -126,6 +126,7 @@ class RepositoryHelper {
             });
             core.info(`Content of dir at path ${dirPath} read`);
             for (const elem of directory) {
+                core.info(JSON.stringify(elem));
                 if (excluded.some(excl => elem.name.includes(excl))) {
                     continue;
                 }
