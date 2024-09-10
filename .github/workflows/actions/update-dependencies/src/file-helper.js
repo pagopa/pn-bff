@@ -10,7 +10,6 @@ class FileHelper {
     #POM_PATH = './pom.xml';
     #OPENAPI_ROOT_PATH = 'https:\\raw.githubusercontent.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
-    #OPENAPI_DIRECTORY_PATH = './docs/openapi';
 
     #getGitHubOpenapiRegexp(commitIds) {
          const dependencies = Object.keys(commitIds);
@@ -43,9 +42,7 @@ class FileHelper {
              // change content
              let pomUpdated = false;
              content = content.replace(this.#getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
-                 core.debug(`Match ${match}`);
-                 core.debug(`Repository ${repository}`);
-                 core.debug(`CommitId ${commitId}`);
+                 core.debug(`Match ${match}, Repository ${repository} and CommitId ${commitId}`);
                  if (commitId !== commitIds[repository]) {
                     pomUpdated = true;
                     return `${this.#OPENAPI_ROOT_PATH}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
@@ -88,9 +85,45 @@ class FileHelper {
 
      updateOpenapi(commitIds) {
         core.info('Updating openapi files');
-        core.debug(`Reading openapi files at path ${this.#OPENAPI_DIRECTORY_PATH}`);
-        const files = this.#getFilesInADirectory(this.#OPENAPI_DIRECTORY_PATH, ['aws', 'api-external']);
-        core.info(`Files found at path ${this.#OPENAPI_DIRECTORY_PATH}: ${files.join(', ')}`)
+        core.debug(`Reading openapi files at path ./${this.#OPENAPI_DIRECTORY_PATH}`);
+        const files = this.#getFilesInADirectory(`./${this.#OPENAPI_DIRECTORY_PATH}`, ['aws', 'api-external']);
+        core.debug(`Files found at path ./${this.#OPENAPI_DIRECTORY_PATH}: ${files.join(', ')}`);
+        if (files.length === 0) {
+            core.info('No openapi file to update');
+            return;
+        }
+        const filesToUpdate = [];
+        for (const file of files) {
+            try {
+                core.info(`Updating openapi file at path ${file}`);
+                // read content
+                let content = fs.readFileSync(file, 'utf8');
+                // change content
+                let fileUpdated = false;
+                content = content.replace(this.#getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
+                    core.debug(`Match ${match}, Repository ${repository} and CommitId ${commitId}`);
+                    if (commitId !== commitIds[repository]) {
+                        fileUpdated = true;
+                        return `${this.#OPENAPI_ROOT_PATH}/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
+                    }
+                    return match;
+                });
+                if (fileUpdated) {
+                    core.info(`Openapi file at path ${file} updated successfully`);
+                    filesToUpdate.push({path: file.replace('./', ''), content})
+                    continue;
+                }
+                core.info(`Openapi file at path ${file} already updated`);
+            } catch (error) {
+                throw new Error(`Error reading openapi file at path ${file}: ${error}`);
+            }
+        }
+        if (filesToUpdate.length > 0) {
+            core.info('Openapi files updated successfully');
+            return filesToUpdate;
+        }
+        core.info('Openapi files already updated');
+        return null;
      }
 }
 

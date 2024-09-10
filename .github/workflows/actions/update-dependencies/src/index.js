@@ -28,12 +28,14 @@ async function run() {
         await repositoryHelper.createBranch(branchName);
         // update pom
         const pomContent = fileHelper.updatePom(commitIds);
-        fileHelper.updateOpenapi(commitIds);
         // commit changes
-        const changesToCommit = [];
+        let changesToCommit = [];
         if (pomContent) {
             changesToCommit.push({path: 'pom.xml', content: pomContent});
         }
+        // update openapi files
+        const openapiFiles = fileHelper.updateOpenapi(commitIds);
+        changesToCommit = changesToCommit.concat(openapiFiles);
         await repositoryHelper.commitChanges(branchName, changesToCommit);
         return;
       }
