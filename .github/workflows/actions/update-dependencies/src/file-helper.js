@@ -8,7 +8,7 @@ const {InputHelper} = require('./input-helper');
 class FileHelper {
 
     #POM_PATH = './pom.xml';
-    #OPENAPI_ROOT_PATH = 'https:\\raw.githubusercontent.com';
+    #OPENAPI_ROOT_PATH = 'https://raw.githubusercontent.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
 
     #getGitHubOpenapiRegexp(commitIds) {
@@ -123,7 +123,7 @@ class FileHelper {
             return filesToUpdate;
         }
         core.info('Openapi files already updated');
-        return null;
+        return filesToUpdate;
      }
 }
 
