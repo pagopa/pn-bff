@@ -1,0 +1,111 @@
+info:
+  version: v1.0
+components:
+  schemas:
+    BffVirtualKeysResponse:
+      title: Elenco di virtual keys
+      description: >-
+        Dto contenente la lista delle virtual keys associate ad un utente.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffVirtualKey'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: integer
+    BffVirtualKey:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id della virtual key
+        name:
+          type: string
+          description: Nome della virtual key
+        value:
+          type: string
+          description: Valore della virtual key
+        lastUpdate:
+          type: string
+          description: Data ultima modifica
+          format: date-time
+        user:
+          type: object
+          $ref: '#/components/schemas/BffUserDto'
+        groups:
+          type: array
+          description: Gruppi a cui appartiene la virtual key
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/BffVirtualKeyStatus'
+    BffUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        lastName:
+          type: string
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        fiscalCode:
+          type: string
+          maxLength: 16
+          pattern: '^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$'
+    BffVirtualKeyStatus:
+      description: Stato della virtual key
+      type: string
+      enum: [ 'CREATED', 'ENABLED', 'BLOCKED', 'ROTATED' ]
+    BffNewVirtualKeyRequest:
+      title: Request creazione virtual key
+      description: >-
+        Request per la creazione di una nuova virtual key
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: '^(?!\s).+(?<!\s)$'
+          description: nome della virtual key
+    BffNewVirtualKeyResponse:
+      title: Response creazione virtual key
+      description: >-
+        Response per la creazione di una nuova virtual key
+      type: object
+      required:
+        - id
+        - virtualKey
+      properties:
+        id:
+          type: string
+          description: id della virtual key appena generata
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+        virtualKey:
+          type: string
+          description: Valore della virtual key appena generata
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+    BffVirtualKeyStatusRequest:
+      title: Richiesta di cambio stato per una virtual key
+      description: >-
+        Richiesta di cambio stato per una virtual key
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Action per il cambio stato di una virtual key
+          enum:
+            - 'BLOCK'
+            - 'ENABLE'
+            - 'ROTATE'
