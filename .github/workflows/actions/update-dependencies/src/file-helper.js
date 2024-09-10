@@ -67,7 +67,7 @@ class FileHelper {
        const fileList = fs.readdirSync(dirPath);
        // Create the full path of the file/directory by concatenating the passed directory and file/directory name
        for (const file of fileList) {
-         const name = `${dirPath}/${file}`
+         const name = `${dirPath}/${file}`;
          if (excluded.some(excl => name.includes(excl))) {
             continue;
          }
