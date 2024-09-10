@@ -108,7 +108,7 @@ class RepositoryHelper {
               path: filePath,
             });
             core.info(`File at path ${filePath} read`);
-            return Buffer.from(file.content, 'base64');
+            return Buffer.from(file.content, 'base64').toString('utf-8');
         } catch (error) {
             throw new Error(`Error reading file at path ${filePath}: ${error}`);
         }
@@ -130,7 +130,7 @@ class RepositoryHelper {
                     continue;
                 }
                 if (elem.type === 'file') {
-                    files.push({path: elem.path, content: Buffer.from(elem.content, 'base64')});
+                    files.push({path: elem.path, content: Buffer.from(elem.content, 'base64').toString('utf-8')});
                 } else if (elem.type === 'dir') {
                     const dirContent = await this.getDirContent(branchName, elem.path, excluded);
                     files = files.concat(dirContent);
