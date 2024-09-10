@@ -8,7 +8,6 @@ const {InputHelper} = require('./input-helper');
 class FileHelper {
 
     #repositoryHelper;
-    #POM_PATH = './pom.xml';
     #OPENAPI_ROOT_PATH = 'https://raw.githubusercontent.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
 
@@ -26,7 +25,8 @@ class FileHelper {
      async getPomVersion() {
          core.debug('Getting POM version')
          try {
-             const content = fs.readFileSync(this.#POM_PATH, 'utf8');
+             const baseBranchName = core.getInput('ref', { required: true });
+             const content = await this.#repositoryHelper.getFileContent(baseBranchName, 'pom.xml');
              const pomObject = await xml2js.parseStringPromise(content);
              const pomVersion = pomObject.project.version;
              core.debug(`POM version ${pomVersion}`);
@@ -38,12 +38,9 @@ class FileHelper {
 
      async updatePom(branchName, commitIds) {
          core.info('Updating POM');
-         core.debug(`Reading pom at path ${this.#POM_PATH}`);
          try {
-             core.debug(`Reading POM content`);
              // read content
-             await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
-             let content = fs.readFileSync(this.#POM_PATH, 'utf8');
+             let content = await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
              core.debug(`Updating POM content`);
              // change content
              let pomUpdated = false;
@@ -89,21 +86,20 @@ class FileHelper {
        return files;
      }
 
-     updateOpenapi(commitIds) {
+     async updateOpenapi(branchName, commitIds) {
         core.info('Updating openapi files');
-        core.debug(`Reading openapi files at path ./${this.#OPENAPI_FILE_PATH}`);
-        const files = this.#getFilesInADirectory(`./${this.#OPENAPI_FILE_PATH}`, ['aws', 'api-external']);
-        core.debug(`Files found at path ./${this.#OPENAPI_FILE_PATH}: ${files.join(', ')}`);
+        const files = await this.#repositoryHelper.getDirContent(branchName, this.#OPENAPI_FILE_PATH, ['aws', 'api-external']);
         if (files.length === 0) {
             core.info('No openapi file to update');
             return;
         }
+        core.debug(`Files found at path ${this.#OPENAPI_FILE_PATH: ${files.map(file => file.path).join(', ')}`);
         const filesToUpdate = [];
         for (const file of files) {
             try {
-                core.info(`Updating openapi file at path ${file}`);
+                core.info(`Updating openapi file at path ${file.path}`);
                 // read content
-                let content = fs.readFileSync(file, 'utf8');
+                let content = file.content;
                 // change content
                 let fileUpdated = false;
                 content = content.replace(this.#getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
@@ -115,13 +111,13 @@ class FileHelper {
                     return match;
                 });
                 if (fileUpdated) {
-                    core.info(`Openapi file at path ${file} updated successfully`);
-                    filesToUpdate.push({path: file.replace('./', ''), content})
+                    core.info(`Openapi file at path ${file.path} updated successfully`);
+                    filesToUpdate.push({path: file.path, content})
                     continue;
                 }
-                core.info(`Openapi file at path ${file} already updated`);
+                core.info(`Openapi file at path ${file.path} already updated`);
             } catch (error) {
-                throw new Error(`Error reading openapi file at path ${file}: ${error}`);
+                throw new Error(`Error reading openapi file at path ${file.path}: ${error}`);
             }
         }
         if (filesToUpdate.length > 0) {

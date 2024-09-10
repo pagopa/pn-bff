@@ -115,6 +115,34 @@ class RepositoryHelper {
         }
     }
 
+    async getDirContent(branchName, dirPath, excluded = []) {
+        core.info(`Reading dir at path ${dirPath}`);
+        try {
+            let files = [];
+            const {data: directory} = await this.#octokit.rest.repos.getContent({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              ref: `heads/${branchName}`,
+              path: dirPath,
+            });
+            core.info(`Dir at path ${dirPath} read`);
+            for (const elem of directory.entries) {
+                if (excluded.some(excl => elem.name.includes(excl))) {
+                    continue;
+                }
+                if (elem.type === 'file') {
+                    files.push({path: elem.path, content: Buffer.from(elem.content, 'base64')});
+                } else if (elem.type === 'dir') {
+                    const dirContent = await this.getDirContent(branchName, elem.path, excluded);
+                    files = files.concat(dirContent);
+                }
+            }
+            return files;
+        } catch (error) {
+            throw new Error(`Error reading file at path ${filePath}: ${error}`);
+        }
+    }
+
     async #createBlob(fileContent) {
         core.debug(`Creating blob from file content`);
         try {

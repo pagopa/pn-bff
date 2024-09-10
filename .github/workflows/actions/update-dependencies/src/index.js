@@ -29,7 +29,7 @@ async function run() {
         // update pom
         const pomContent = await fileHelper.updatePom(branchName, commitIds);
         // update openapi files
-        const openapiFiles = fileHelper.updateOpenapi(commitIds);
+        const openapiFiles = await fileHelper.updateOpenapi(branchName, commitIds);
         // commit changes
         let changesToCommit = [];
         if (pomContent) {
