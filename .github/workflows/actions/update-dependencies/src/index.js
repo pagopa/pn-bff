@@ -28,15 +28,17 @@ async function run() {
         await repositoryHelper.createBranch(branchName);
         // update pom
         const pomContent = fileHelper.updatePom(commitIds);
+        // update openapi files
+        const openapiFiles = fileHelper.updateOpenapi(commitIds);
         // commit changes
         let changesToCommit = [];
         if (pomContent) {
             changesToCommit.push({path: 'pom.xml', content: pomContent});
         }
-        // update openapi files
-        const openapiFiles = fileHelper.updateOpenapi(commitIds);
         changesToCommit = changesToCommit.concat(openapiFiles);
         await repositoryHelper.commitChanges(branchName, changesToCommit);
+        // create pull request
+        await repositoryHelper.createPullRequest(branchName, changesToCommit);
         return;
       }
       throw new Error(`No dependencies chosen`);

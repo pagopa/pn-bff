@@ -184,6 +184,33 @@ class RepositoryHelper {
         await this.#updateBranchRef(branchName, commit.sha)
         core.info(`Changes on branch ${branchName} pushed`);
     }
+
+    #getPullRequestBodyString(changesToCommit) {
+        let body = "## Short description\n\nUpdated micro-service dependencies\n\n## List of changes proposed in this pull request\n\n";
+        for (const change of changesToCommit) {
+            body += `- Updated ${change.path}\n`;
+        }
+        body += "\n## How to test\n\nRun a clean install -> run tests -> check that everything is ok";
+        return body;
+    }
+
+    async createPullRequest(branchName, changesToCommit) {
+        core.info(`Creating pull request`);
+        try {
+           const baseBranchName = core.getInput('ref', { required: true });
+           await this.#octokit.rest.pulls.create({
+             owner: github.context.repo.owner,
+             repo: github.context.repo.repo,
+             title: '[GitBot] - Update micro-service dependencies',
+             body: this.#getPullRequestBodyString(changesToCommit),
+             head: branchName,
+             base: baseBranchName,
+           });
+           core.info(`Pull request created`);
+        } catch (error) {
+            throw new Error(`Error during pull request creation: ${error}`);
+        }
+    }
 }
 
 module.exports = {
