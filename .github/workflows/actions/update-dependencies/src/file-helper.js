@@ -93,7 +93,7 @@ class FileHelper {
             core.info('No openapi file to update');
             return;
         }
-        core.debug(`Files found at path ${this.#OPENAPI_FILE_PATH: ${files.map(file => file.path).join(', ')}`);
+        core.debug(`Files found at path ${this.#OPENAPI_FILE_PATH}: ${files.map(file => file.path).join(', ')}`);
         const filesToUpdate = [];
         for (const file of files) {
             try {
