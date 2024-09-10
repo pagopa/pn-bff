@@ -63,29 +63,6 @@ class FileHelper {
          }
      }
 
-     // Recursive function to get files
-     #getFilesInADirectory(dirPath, excluded = []) {
-       let files = [];
-       // Get an array of all files and directories in the passed directory using fs.readdirSync
-       const fileList = fs.readdirSync(dirPath);
-       // Create the full path of the file/directory by concatenating the passed directory and file/directory name
-       for (const file of fileList) {
-         const name = `${dirPath}/${file}`;
-         if (excluded.some(excl => name.includes(excl))) {
-            continue;
-         }
-         // Check if the current file/directory is a directory using fs.statSync
-         if (fs.statSync(name).isDirectory()) {
-           // If it is a directory, recursively call the getFiles function with the directory path and the files array
-           files = files.concat(this.#getFilesInADirectory(name, excluded));
-           continue;
-         }
-         // If it is a file, push the full path to the files array
-         files.push(name);
-       }
-       return files;
-     }
-
      async updateOpenapi(branchName, commitIds) {
         core.info('Updating openapi files');
         const files = await this.#repositoryHelper.getDirContent(branchName, this.#OPENAPI_FILE_PATH, ['aws', 'api-external']);

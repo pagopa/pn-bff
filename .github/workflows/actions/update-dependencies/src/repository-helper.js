@@ -108,7 +108,6 @@ class RepositoryHelper {
               path: filePath,
             });
             core.info(`File at path ${filePath} read`);
-            core.info(Buffer.from(file.content, 'base64'));
             return Buffer.from(file.content, 'base64');
         } catch (error) {
             throw new Error(`Error reading file at path ${filePath}: ${error}`);
