@@ -85,9 +85,9 @@ class FileHelper {
 
      updateOpenapi(commitIds) {
         core.info('Updating openapi files');
-        core.debug(`Reading openapi files at path ./${this.#OPENAPI_DIRECTORY_PATH}`);
-        const files = this.#getFilesInADirectory(`./${this.#OPENAPI_DIRECTORY_PATH}`, ['aws', 'api-external']);
-        core.debug(`Files found at path ./${this.#OPENAPI_DIRECTORY_PATH}: ${files.join(', ')}`);
+        core.debug(`Reading openapi files at path ./${this.#OPENAPI_FILE_PATH}`);
+        const files = this.#getFilesInADirectory(`./${this.#OPENAPI_FILE_PATH}`, ['aws', 'api-external']);
+        core.debug(`Files found at path ./${this.#OPENAPI_FILE_PATH}: ${files.join(', ')}`);
         if (files.length === 0) {
             core.info('No openapi file to update');
             return;
