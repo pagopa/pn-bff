@@ -126,12 +126,12 @@ class RepositoryHelper {
             });
             core.info(`Content of dir at path ${dirPath} read`);
             for (const elem of directory) {
-                core.info(JSON.stringify(elem));
                 if (excluded.some(excl => elem.name.includes(excl))) {
                     continue;
                 }
                 if (elem.type === 'file') {
-                    files.push({path: elem.path, content: Buffer.from(elem.content, 'base64').toString('utf-8')});
+                    const fileContent = await this.getFileContent(branchName, file.path);
+                    files.push({path: elem.path, content: fileContent});
                 } else if (elem.type === 'dir') {
                     const dirContent = await this.getDirContent(branchName, elem.path, excluded);
                     files = files.concat(dirContent);
