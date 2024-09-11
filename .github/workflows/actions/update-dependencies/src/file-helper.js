@@ -8,7 +8,7 @@ const {InputHelper} = require('./input-helper');
 class FileHelper {
 
     #repositoryHelper;
-    #OPENAPI_ROOT_PATH = 'https://raw.githubusercontent.com';
+    #OPENAPI_ROOT_PATH = 'https://raw\\.githubusercontent\\.com';
     #OPENAPI_FILE_PATH = 'docs/openapi';
 
     constructor(repositoryHelper) {
