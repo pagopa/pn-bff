@@ -639,6 +639,47 @@
                         </configuration>
                     </execution>
 
+                    <!-- OPEN API PN-BFF PG API KEYS-->
+                    <execution>
+                        <id>api-internal-pn-bff-pg-apikeys</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-pg-apikeys.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
                     <!-- OPEN API PN-DELIVERY RECIPIENT-->
                     <execution>
                         <phase>generate-resources</phase>
@@ -1048,31 +1089,28 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-BFF PG API KEYS-->
+                    <!-- OPEN API PN-PUBLICKEY-MANAGER PG-->
                     <execution>
-                        <id>api-internal-pn-bff-pg-apikeys</id>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-publickey-pg</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/docs/openapi/api-internal-pn-bff-pg-apikeys.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <library>spring-boot</library>
-                            <modelNameSuffix/>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
                             </templateDirectory>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
                             <configOptions>
-                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
-                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
-                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.publickey-pg.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.publickey-pg.model
+                                </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
@@ -1082,9 +1120,41 @@
                                 <reactive>true</reactive>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
-                                <additionalModelTypeAnnotations>@lombok.Builder(toBuilder = true);
-                                    @lombok.NoArgsConstructor; @lombok.AllArgsConstructor
-                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-VIRTUALKEY-MANAGER PG-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-virtualkey-pg</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.virtualkey-pg.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.virtualkey.apikey-pg.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
                             </configOptions>
                         </configuration>
                     </execution>
