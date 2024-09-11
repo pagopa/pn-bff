@@ -1089,7 +1089,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-APIKEY-MANAGER PA-->
+                    <!-- OPEN API PN-APIKEY-MANAGER PG-->
                     <execution>
                         <phase>generate-resources</phase>
                         <id>generate-client-pn-apikey-pg</id>
