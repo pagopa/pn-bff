@@ -17,6 +17,9 @@ class FileHelper {
 
     #getGitHubOpenapiRegexp(commitIds) {
          const dependencies = Object.keys(commitIds);
+         if (!this.#OPENAPI_ROOT_PATH.match(^/https:\/\/www\.example\.com/$)) {
+             throw new Error('Wrong openapi root path');
+         }
          const regexp = new RegExp(`${this.#OPENAPI_ROOT_PATH}/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${this.#OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml`, 'g');
          core.debug(`Computed regular expression ${regexp.toString()}`);
          return regexp;
