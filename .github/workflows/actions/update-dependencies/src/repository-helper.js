@@ -235,7 +235,7 @@ class RepositoryHelper {
         for (const change of changesToCommit) {
             body += `- Updated ${change.path}\n`;
         }
-        body += "\n## How to test\n\nRun a clean install -> run tests -> check that everything is ok";
+        body += "\n## How to test\n\nRun a clean install -> run tests -> check that everything is ok\n\n>[!WARNING]\n>**IMPORTANT: remember to regenerate the external and aws files**";
         return body;
     }
 
@@ -243,21 +243,36 @@ class RepositoryHelper {
         core.info(`Check if an opened pull request already exists`);
         try {
            const baseBranchName = core.getInput('ref', { required: true });
-           const {data: pullRequest} = await this.#octokit.rest.pulls.list({
+           const {data: pullRequests} = await this.#octokit.rest.pulls.list({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
              head: branchName,
              base: baseBranchName,
              per_page: 1
            });
-           if (pullRequest.length === 0) {
+           if (pullRequests.length === 0) {
             core.info("Opened pull request doesn't exists");
-            return false;
+            return null;
            }
            core.info(`An opened pull request already exists`);
-           return true;
+           return pullRequests[0];
         } catch (error) {
             throw new Error(`Error during pull request retrieving: ${error}`);
+        }
+    }
+
+    async #updatePullRequest(pullNumber, changesToCommit) {
+        core.info('Updating pull request');
+        try {
+            await this.#octokit.rest.pulls.update({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: pullNumber,
+                body: this.#getPullRequestBodyString(changesToCommit),
+            });
+            core.info('Pull request updated');
+        } catch (error) {
+            throw new Error(`Error during pull request updating: ${error}`);
         }
     }
 
@@ -266,8 +281,10 @@ class RepositoryHelper {
             return;
         }
         // check if pull request already exists
-        const exists = await this.#checkIfPullRequestExists(branchName);
-        if (exists) {
+        const pullRequest = await this.#checkIfPullRequestExists(branchName);
+        if (pullRequest) {
+            // update pull request
+            await this.#updatePullRequest(pullRequest.number, changesToCommit);
             return;
         }
         core.info(`Creating pull request`);
