@@ -1089,15 +1089,15 @@
                         </configuration>
                     </execution>
 
-                    <!-- OPEN API PN-APIKEY-MANAGER PG-->
+                    <!-- OPEN API PN-PUBLICKEY-MANAGER PG-->
                     <execution>
                         <phase>generate-resources</phase>
-                        <id>generate-client-pn-apikey-pg</id>
+                        <id>generate-client-pn-publickey-pg</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://github.com/pagopa/pn-apikey-manager/blob/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
@@ -1106,10 +1106,45 @@
                                 ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
                             </templateDirectory>
                             <configOptions>
-                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.apikey-pg.api
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.publickey-pg.api
                                 </apiPackage>
                                 <modelPackage>
-                                    ${project.groupId}.bff.generated.openapi.msclient.apikey-pg.model
+                                    ${project.groupId}.bff.generated.openapi.msclient.publickey-pg.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-VIRTUALKEY-MANAGER PG-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-virtualkey-pg</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.virtualkey-pg.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.virtualkey.apikey-pg.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

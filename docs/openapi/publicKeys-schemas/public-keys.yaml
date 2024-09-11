@@ -4,92 +4,19 @@ components:
   schemas:
 
     BffPublicKeysResponse:
-      title: Elenco di public keys
-      description: >-
-        Dto contenente la lista delle public keys associate ad una pg.
-      type: object
-      required:
-        - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/BffPublicKeyRow'
-        lastKey:
-          type: string
-        createdAt:
-          type: string
-        total:
-          type: integer
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysResponse'
 
     BffPublicKeyRow:
-      type: object
-      properties:
-        kid:
-          type: string
-          description: Id della public key
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-        name:
-          type: string
-          description: Nome della public key
-        value:
-          type: string
-          description: Valore dell public key restituito solo se il query param showPublicKey == True
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-        createdAt:
-          type: string
-          description: Data censimento public key
-          format: date-time
-        status:
-          $ref: '#/components/schemas/BffPublicKeyStatus'
-        statusHistory:
-          type: array
-          description: Storico degli stati delle public key
-          items:
-            $ref: '#/components/schemas/BffPublicKeyStatusHistory'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyRow'
+
     BffPublicKeyStatus:
-      description: Stato della public key
-      type: string
-      enum: [ 'CREATED', 'ACTIVE', 'ROTATED', 'BLOCKED', 'DELETED' ]
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyStatus'
+
     BffPublicKeyStatusHistory:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/BffPublicKeyStatus'
-        date:
-          type: string
-          description: data a cui corrisponde il cambio di stato
-          format: date-time
-        changedByDenomination:
-          type: string
-          description: nome dell'utente che ha effettuato il cambio di stato
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyStatusHistory'
+
     BffPublicKeyRequest:
-      title: Richiesta di censimento nuova public key
-      description: >-
-        Request per il censimento di una nuova public key
-      type: object
-      required:
-        - publicKey
-      properties:
-        name:
-          type: string
-          description: nome della public key
-        publicKey:
-          type: string
-          description: Valore della public key
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyRequest'
+
     BffPublicKeyResponse:
-      title: Response censimento public key
-      description: >-
-        Response del censimento di una nuova public key
-      type: object
-      required:
-        - kid
-        - issuer
-      properties:
-        kid:
-          type: string
-          description: Kid della public key caricata da utilizzare nell'header kid del token JWT
-          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-        issuer:
-          type: string
-          description: Valore dell'issuer per la key caricata da utilizzare nel claims iss del token JWT
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/d986ad5fd527b938de0d735035f9144a4764972e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyResponse'
