@@ -5,15 +5,6 @@ components:
     BffVirtualKeysResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml#/components/schemas/VirtualKeysResponse'
 
-    BffVirtualKey:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml#/components/schemas/VirtualKey'
-
-    BffUserDto:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml#/components/schemas/UserDto'
-
-    BffVirtualKeyStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml#/components/schemas/VirtualKeyStatus'
-
     BffNewVirtualKeyRequest:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/db51961a815ada75459a4c0a8ccac024e6efad87/docs/openapi/pn-virtualkey-internal.yaml#/components/schemas/RequestNewVirtualKey'
 
