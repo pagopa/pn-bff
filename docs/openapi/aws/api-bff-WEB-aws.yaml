@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ydtDRYuReJsKtIZrjQ9H2SpWuA/qNIGtKlJzYX2aYTY=
+  version: yAx9J8kqYRNYOmwETN4WeD/SnqW3VZ21AA5XYLEgbo8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5522,6 +5522,8 @@ components:
       enum:
         - TOS
         - DATAPRIVACY
+        - TOS_SERCQ
+        - DATAPRIVACY_SERCQ
     ConsentVersion:
       type: string
       description: version of consent
@@ -5568,19 +5570,19 @@ components:
       required:
         - version
         - action
+        - type
       allOf:
         - $ref: '#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
               $ref: '#/components/schemas/ConsentVersion'
+            type:
+              $ref: '#/components/schemas/ConsentType'
     BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffTosPrivacyActionBody'
     BffPnStatusResponse:
       type: object
       required:
@@ -5872,6 +5874,7 @@ components:
         - SMS
         - PEC
         - APPIO
+        - SERCQ_SEND
     BffUserAddress:
       type: object
       required:

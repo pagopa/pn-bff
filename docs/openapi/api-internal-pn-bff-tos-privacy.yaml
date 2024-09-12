@@ -52,7 +52,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-
     put:
       summary: Accettazione TOS e Privacy
       description: >-

@@ -2,14 +2,13 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
-import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
+import it.pagopa.pn.bff.utils.helpers.FluxMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +17,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -85,23 +87,21 @@ class TosPrivacyControllerTest {
     }
 
     @Test
-    void putTosPrivacy() {
+    void acceptTosPrivacy() {
         Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.any()))
                 .thenReturn(Mono.empty());
 
-        BffTosPrivacyBody request = BffTosPrivacyBody.builder()
-                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
-                .build();
+        List<BffTosPrivacyActionBody> request = consentsMock.acceptTosPrivacyBodyMock();
 
         webTestClient.put()
                 .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PRIVACY_PATH).build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
-                .body(Mono.just(request), BffTosPrivacyBody.class)
+                .body(Flux.fromIterable(request), List.class)
                 .exchange()
                 .expectStatus()
                 .isNoContent()
@@ -110,21 +110,19 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat(new MonoMatcher<>(Mono.just(request)))
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
         );
     }
 
     @Test
-    void putTosPrivacyError() {
+    void acceptTosPrivacyError() {
         Mockito.when(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.any()))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
-        BffTosPrivacyBody request = BffTosPrivacyBody.builder()
-                .tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"))
-                .build();
+        List<BffTosPrivacyActionBody> request = consentsMock.acceptTosPrivacyBodyMock();
 
         webTestClient
                 .put()
@@ -132,7 +130,7 @@ class TosPrivacyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
-                .body(Mono.just(request), BffTosPrivacyBody.class)
+                .body(Flux.fromIterable(request), List.class)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -140,7 +138,7 @@ class TosPrivacyControllerTest {
         Mockito.verify(tosPrivacyService).acceptOrDeclineTosPrivacy(
                 eq(UserMock.PN_UID),
                 eq(CX_TYPE),
-                argThat(new MonoMatcher<>(Mono.just(request)))
+                argThat(new FluxMatcher<>(Flux.fromIterable(request)))
         );
     }
 }

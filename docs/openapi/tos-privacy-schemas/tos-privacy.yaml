@@ -3,7 +3,7 @@ info:
 components:
   schemas:
     BffConsent:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
 
     BffTosPrivacyConsent:
       type: object
@@ -17,20 +17,20 @@ components:
           $ref: '#/components/schemas/BffConsent'
 
     BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffTosPrivacyActionBody'
 
     BffTosPrivacyActionBody:
       required:
         - version
         - action
+        - type
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
-              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+            type:
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'

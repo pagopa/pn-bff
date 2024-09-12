@@ -872,7 +872,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -909,7 +909,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-address-book-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-address-book-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -983,7 +983,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/ce4435d659f8d72150bdb55c4ce9979049938967/docs/openapi/api-internal-pn-delivery-push.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/564dc963141bccf6985b460d86b5774f6d2361c0/docs/openapi/api-internal-pn-delivery-push.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

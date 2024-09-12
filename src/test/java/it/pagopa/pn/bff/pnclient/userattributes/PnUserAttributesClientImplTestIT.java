@@ -18,6 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -54,54 +57,30 @@ class PnUserAttributesClientImplTestIT {
     }
 
     @Test
-    void getTosConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getTosConsentResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+    void getConsents() throws JsonProcessingException {
+        List<Consent> consents = new ArrayList<>();
+        consents.add(consentsMock.getTosConsentResponseMock());
+        consents.add(consentsMock.getPrivacyConsentResponseMock());
+        String response = objectMapper.writeValueAsString(consents);
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsents(
                 UserMock.PN_UID,
                 CX_TYPE
-        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
+        )).expectNextSequence(consents).verifyComplete();
     }
 
     @Test
-    void getTosConsentError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+    void getConsentsError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UserMock.PN_UID,
-                CX_TYPE
-        )).expectError().verify();
-    }
-
-    @Test
-    void getPrivacyConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getPrivacyConsentResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
-                .respond(response()
-                        .withStatusCode(200)
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(response)
-                );
-
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
-                UserMock.PN_UID,
-                CX_TYPE
-        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
-    }
-
-    @Test
-    void getPrivacyConsentError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
-                .respond(response().withStatusCode(404));
-
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsents(
                 UserMock.PN_UID,
                 CX_TYPE
         )).expectError().verify();

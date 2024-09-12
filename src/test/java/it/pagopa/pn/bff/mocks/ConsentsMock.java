@@ -4,9 +4,11 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsentsMock {
     public Consent getTosConsentResponseMock() {
@@ -37,18 +39,18 @@ public class ConsentsMock {
 
     public BffTosPrivacyConsent getBffTosPrivacyConsentMock() {
         BffTosPrivacyConsent bffTosPrivacyConsent = new BffTosPrivacyConsent();
-        
+
         bffTosPrivacyConsent.setTos(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
         bffTosPrivacyConsent.setPrivacy(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
 
         return bffTosPrivacyConsent;
     }
 
-    public BffTosPrivacyBody acceptTosPrivacyBodyMock() {
-        BffTosPrivacyBody bffTosPrivacyBody = new BffTosPrivacyBody();
+    public List<BffTosPrivacyActionBody> acceptTosPrivacyBodyMock() {
+        List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
 
-        bffTosPrivacyBody.privacy(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
-        bffTosPrivacyBody.tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS));
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.DATAPRIVACY));
 
         return bffTosPrivacyBody;
     }

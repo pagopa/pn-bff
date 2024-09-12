@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.TosPrivacyService;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @CustomLog
@@ -54,12 +55,12 @@ public class TosPrivacyController implements UserConsentsApi {
     @Override
     public Mono<ResponseEntity<Void>> acceptTosPrivacyV1(String xPagopaPnUid,
                                                          CxTypeAuthFleet xPagopaPnCxType,
-                                                         Mono<BffTosPrivacyBody> tosPrivacyBody,
+                                                         Flux<BffTosPrivacyActionBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = tosPrivacyService
                 .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
-        
+
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));

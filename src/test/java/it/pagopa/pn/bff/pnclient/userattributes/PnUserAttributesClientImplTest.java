@@ -17,8 +17,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -39,60 +43,29 @@ class PnUserAttributesClientImplTest {
     private LegalApi legalApi;
 
     @Test
-    void getTosConsent() throws RestClientException {
-        when(consentsApi.getConsentByType(
+    void getConsents() throws RestClientException {
+        List<Consent> consents = new ArrayList<>();
+        consents.add(consentsMock.getTosConsentResponseMock());
+        consents.add(consentsMock.getPrivacyConsentResponseMock());
+        when(consentsApi.getConsents(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.isNull()
-        )).thenReturn(Mono.just(consentsMock.getTosConsentResponseMock()));
+                Mockito.any(CxTypeAuthFleet.class)
+        )).thenReturn(Flux.fromIterable(consents));
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsents(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF
-        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
+        )).expectNextSequence(consents).verifyComplete();
     }
 
     @Test
-    void getTosContentError() {
-        when(consentsApi.getConsentByType(
+    void getContentsError() {
+        when(consentsApi.getConsents(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.isNull()
-        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                Mockito.any(CxTypeAuthFleet.class)
+        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UserMock.PN_UID,
-                CxTypeAuthFleet.PF
-        )).expectError(WebClientResponseException.class).verify();
-    }
-
-    @Test
-    void getPrivacyConsent() throws RestClientException {
-        when(consentsApi.getConsentByType(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.isNull()
-        )).thenReturn(Mono.just(consentsMock.getPrivacyConsentResponseMock()));
-
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UserMock.PN_UID,
-                CxTypeAuthFleet.PF
-        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
-    }
-
-    @Test
-    void getPrivacyContentError() {
-        when(consentsApi.getConsentByType(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.any(ConsentType.class),
-                Mockito.isNull()
-        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
-
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsents(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF
         )).expectError(WebClientResponseException.class).verify();
