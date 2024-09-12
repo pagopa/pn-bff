@@ -127,8 +127,8 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/pg/public-key/{kid}/delete":
-    put:
+  "/bff/v1/pg/public-keys/{kid}":
+    delete:
       summary: Rimozione public key
       description: >-
         servizio di rimozione della public key identificata tramite kid
@@ -145,8 +145,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       responses:
-        '204':
-          description: No content
+        '200':
+          description: OK
         '400':
           description: Bad request
           content:
@@ -271,7 +271,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  # manca specifica api per ottenere lo status di attivazione della public key
+  # TODO: Public key activation status specification
 
   "/bff/v1/virtual-keys":
     get:
