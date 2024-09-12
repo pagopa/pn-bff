@@ -81,7 +81,7 @@ public class ApiKeysPaService {
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
-     * @param requestNewApiKey  Request that contains the name and the groups of te new api key
+     * @param requestNewApiKey  Request that contains the name and the groups of the new api key
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the id and the value of the new api key
      */

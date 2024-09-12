@@ -1144,7 +1144,7 @@
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.virtualkey-pg.api
                                 </apiPackage>
                                 <modelPackage>
-                                    ${project.groupId}.bff.generated.openapi.virtualkey.apikey-pg.model
+                                    ${project.groupId}.bff.generated.openapi.msclient.virtualkey-pg.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
