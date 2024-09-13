@@ -1,9 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const fs = require('fs');
 const xml2js = require('xml2js');
-
-const {InputHelper} = require('./input-helper');
 
 class FileHelper {
 
@@ -14,9 +11,16 @@ class FileHelper {
         this.#repositoryHelper = repositoryHelper;
     }
 
-    #getGitHubOpenapiRegexp(commitIds) {
-         const dependencies = Object.keys(commitIds);
-         const regexp = new RegExp(`https://raw.githubusercontent.com/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${this.#OPENAPI_FILE_PATH}/(?<openapiFile>.+).yaml`, 'g');
+    #getGitHubOpenapiRegexp(tags) {
+         const dependencies = Object.keys(tags);
+         const regexp = new RegExp(`https://raw\\.githubusercontent\\.com/${github.context.repo.owner}/(?<repository>${dependencies.join('|')})/(?<commitId>.+)/${this.#OPENAPI_FILE_PATH}/(?<openapiFile>.+)\\.yaml`, 'g');
+         core.debug(`Computed regular expression ${regexp.toString()}`);
+         return regexp;
+    }
+
+    #getInternalDependenciesRegexp(tags) {
+        const dependencies = Object.keys(tags);
+        const regexp = new RegExp(`(<dependency>\\s*<groupId>it\\.pagopa\\.pn</groupId>\\s*<artifactId>(?<repository>${dependencies.join('|')})</artifactId>\\s*<version>)(?<version>\\d\.\\d\.\\d)(</version>\\s*</dependency>)`, 'g');
          core.debug(`Computed regular expression ${regexp.toString()}`);
          return regexp;
     }
@@ -35,22 +39,34 @@ class FileHelper {
          }
      }
 
-     async updatePom(branchName, commitIds) {
+     async updatePom(branchName, tags) {
          core.info('Updating POM');
          try {
              // read content
              let content = await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
              core.debug(`Updating POM content`);
              // change content
+             // update microservices dependencies
              let pomUpdated = false;
-             content = content.replace(this.#getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
+             content = content.replace(this.#getGitHubOpenapiRegexp(tags), (match, repository, commitId, openapiFile) => {
                  core.debug(`Match ${match}, Repository ${repository} and CommitId ${commitId}`);
-                 if (commitId !== commitIds[repository]) {
+                 if (commitId !== tags[repository].commitId) {
                     pomUpdated = true;
-                    return `https://raw.githubusercontent.com/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
+                    return `https://raw.githubusercontent.com/${github.context.repo.owner}/${repository}/${tags[repository].commitId}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
                  }
                  return match;
              });
+             // update internal packages version
+             content = content.replace(this.#getInternalDependenciesRegexp(tags), (match, preVersion, repository, version, postVersion) => {
+                core.debug(`Match ${match}, Repository ${repository} and Version ${version}`);
+                // tag name contains v at start
+                const newVersion = tags[repository].name.replace('v', '');
+                if (version !== newVersion) {
+                   pomUpdated = true;
+                   return `${preVersion}${newVersion}${postVersion}`;
+                }
+                return match;
+            });
              if (pomUpdated) {
                 core.info('POM updated successfully');
                 return content;
@@ -62,7 +78,7 @@ class FileHelper {
          }
      }
 
-     async updateOpenapi(branchName, commitIds) {
+     async updateOpenapi(branchName, tags) {
         core.info('Updating openapi files');
         const files = await this.#repositoryHelper.getDirContent(branchName, this.#OPENAPI_FILE_PATH, ['aws', 'api-external']);
         if (files.length === 0) {
@@ -78,11 +94,11 @@ class FileHelper {
                 let content = file.content;
                 // change content
                 let fileUpdated = false;
-                content = content.replace(this.#getGitHubOpenapiRegexp(commitIds), (match, repository, commitId, openapiFile) => {
+                content = content.replace(this.#getGitHubOpenapiRegexp(tags), (match, repository, commitId, openapiFile) => {
                     core.debug(`Match ${match}, Repository ${repository} and CommitId ${commitId}`);
-                    if (commitId !== commitIds[repository]) {
+                    if (commitId !== tags[repository].commitId) {
                         fileUpdated = true;
-                        return `https://raw.githubusercontent.com/${github.context.repo.owner}/${repository}/${commitIds[repository]}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
+                        return `https://raw.githubusercontent.com/${github.context.repo.owner}/${repository}/${tags[repository].commitId}/${this.#OPENAPI_FILE_PATH}/${openapiFile}.yaml`;
                     }
                     return match;
                 });

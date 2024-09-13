@@ -8,6 +8,16 @@ class InputHelper {
         if (authFleet === "true") {
             dependencies.push('pn-auth-fleet');
         }
+        const parent = core.getInput('pn-parent', { required: true });
+        core.debug(`pn-parent = ${parent}`);
+        if (parent === "true") {
+            dependencies.push('pn-parent');
+        }
+        const model = core.getInput('pn-model', { required: true });
+        core.debug(`pn-model = ${model}`);
+        if (model === "true") {
+            dependencies.push('pn-model');
+        }
         const commons = core.getInput('pn-commons', { required: true });
         core.debug(`pn-commons = ${commons}`);
         if (commons === "true") {

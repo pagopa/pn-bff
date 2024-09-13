@@ -39,6 +39,8 @@ After that the pull request can be merged.
 **Required** `token` - the token used to do authenticated request to git-hub\
 **Required** `ref` - the branch from where create the pull request branch\
 **Required** `pn-auth-fleet` - a flag to set if you want to update the pn-auth-fleet dependency\
+**Required** `pn-parent` - a flag to set if you want to update the pn-parent dependency\
+**Required** `pn-model` - a flag to set if you want to update the pn-model dependency\
 **Required** `pn-commons` - a flag to set if you want to update the pn-commons dependency\
 **Required** `pn-delivery` - a flag to set if you want to update the pn-delivery dependency\
 **Required** `pn-apikey-manager` - a flag to set if you want to update the pn-apikey-manager dependency\

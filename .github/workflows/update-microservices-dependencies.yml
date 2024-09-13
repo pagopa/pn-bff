@@ -8,6 +8,16 @@ on:
         required: true
         type: boolean
         default: false
+      pn-parent:
+        description: Update pn-parent dependency?
+        required: true
+        type: boolean
+        default: false
+      pn-model:
+        description: Update pn-model dependency?
+        required: true
+        type: boolean
+        default: false
       pn-commons:
         description: Update pn-commons dependency?
         required: true
@@ -80,6 +90,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'develop'
           pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
+          pn-parent: ${{ inputs.pn-parent }}
+          pn-model: ${{ inputs.pn-model }}
           pn-commons: ${{ inputs.pn-commons }}
           pn-delivery: ${{ inputs.pn-delivery }}
           pn-apikey-manager: ${{ inputs.pn-apikey-manager }}

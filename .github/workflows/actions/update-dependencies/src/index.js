@@ -16,20 +16,20 @@ async function run() {
       const dependencies = InputHelper.getDependencies();
       if (dependencies.length > 0) {
         core.info(`Chosen dependencies to update = ${dependencies.join(', ')}`);
-        // for those dependencies chosen get the commit id of the last tag
-        const commitIds = {};
+        // for those dependencies chosen get the commit id and the name of the last tag
+        const tags = {};
         for (const dependency of dependencies) {
             core.info(`-------------------- ${dependency} --------------------`);
-            commitIds[dependency] = await repositoryHelper.getLastTagCommitId(dependency);
+            tags[dependency] = await repositoryHelper.getLastTag(dependency);
         };
         // create branch
         const pomVersion = await fileHelper.getPomVersion();
         const branchName = `${BRANCH_NAME_ROOT}/${pomVersion}`;
         await repositoryHelper.createBranch(branchName);
         // update pom
-        const pomContent = await fileHelper.updatePom(branchName, commitIds);
+        const pomContent = await fileHelper.updatePom(branchName, tags);
         // update openapi files
-        const openapiFiles = await fileHelper.updateOpenapi(branchName, commitIds);
+        const openapiFiles = await fileHelper.updateOpenapi(branchName, tags);
         // commit changes
         let changesToCommit = [];
         if (pomContent) {

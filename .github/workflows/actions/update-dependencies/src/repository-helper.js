@@ -16,7 +16,7 @@ class RepositoryHelper {
         throw new Error(`No GitHub token specified`);
     }
 
-    async getLastTagCommitId(repositoryName) {
+    async getLastTag(repositoryName) {
         core.debug(`Fetch list of tags for repository ${repositoryName}`);
         try {
             const {data: tags} = await this.#octokit.rest.repos.listTags({
@@ -26,7 +26,7 @@ class RepositoryHelper {
             });
             if (tags.length > 0) {
                 core.info(`Retrieved tag info for repository ${repositoryName}: version - ${tags[0].name} and commitId - ${tags[0].commit.sha}`);
-                return tags[0].commit.sha;
+                return {commitId: tags[0].commit.sha, tag: tags[0].name};
             }
             throw new Error(`No tag found for repository ${repositoryName}`);
         } catch(error) {
@@ -37,7 +37,7 @@ class RepositoryHelper {
     async #checkIfBranchExists(branchName) {
         core.debug(`Checking if branch ${branchName} exists`);
         try {
-            const branch = await this.#octokit.rest.git.getRef({
+            await this.#octokit.rest.git.getRef({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               ref: `heads/${branchName}`,
