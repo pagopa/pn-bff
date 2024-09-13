@@ -51,6 +51,8 @@ public interface CxTypeMapper {
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet convertApiKeysPACXType(CxTypeAuthFleet cxType);
 
+
+
     /**
      * Map bff CxTypeAuthFleet to the external registries selfcare CxTypeAuthFleet
      *
@@ -86,4 +88,13 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet convertMandateCXType(CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff CxTypeAuthFleet to the virtual key CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    @ValueMapping(source = "RADD", target = MappingConstants.NULL)
+    it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet convertVirtualKeysPGCXType(CxTypeAuthFleet cxType);
 }

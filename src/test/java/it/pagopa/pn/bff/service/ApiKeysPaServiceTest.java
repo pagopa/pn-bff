@@ -137,7 +137,7 @@ class ApiKeysPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(RequestNewApiKey.class),
                 Mockito.anyList()
-        )).thenReturn(Mono.just(apiKeysMock.geResponseNewApiKeyMock()));
+        )).thenReturn(Mono.just(apiKeysMock.getResponseNewApiKeyMock()));
 
         Mono<BffResponseNewApiKey> result = apiKeysPaService.newApiKey(
                 UserMock.PN_UID,
@@ -148,7 +148,7 @@ class ApiKeysPaServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.geResponseNewApiKeyMock()))
+                .expectNext(ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.getResponseNewApiKeyMock()))
                 .verifyComplete();
     }
 

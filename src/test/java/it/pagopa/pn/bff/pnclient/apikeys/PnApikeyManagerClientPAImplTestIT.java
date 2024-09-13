@@ -95,8 +95,8 @@ class PnApikeyManagerClientPAImplTestIT {
 
     @Test
     void newApiKey() throws JsonProcessingException {
-        String request = objectMapper.writeValueAsString(apiKeysMock.geRequestNewApiKeyMock());
-        String response = objectMapper.writeValueAsString(apiKeysMock.geResponseNewApiKeyMock());
+        String request = objectMapper.writeValueAsString(apiKeysMock.getRequestNewApiKeyMock());
+        String response = objectMapper.writeValueAsString(apiKeysMock.getResponseNewApiKeyMock());
         mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
                 .respond(response()
                         .withStatusCode(200)
@@ -108,14 +108,14 @@ class PnApikeyManagerClientPAImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                apiKeysMock.geRequestNewApiKeyMock(),
+                apiKeysMock.getRequestNewApiKeyMock(),
                 UserMock.PN_CX_GROUPS
-        )).expectNext(apiKeysMock.geResponseNewApiKeyMock()).verifyComplete();
+        )).expectNext(apiKeysMock.getResponseNewApiKeyMock()).verifyComplete();
     }
 
     @Test
     void newApiKeyError() throws JsonProcessingException {
-        String request = objectMapper.writeValueAsString(apiKeysMock.geRequestNewApiKeyMock());
+        String request = objectMapper.writeValueAsString(apiKeysMock.getRequestNewApiKeyMock());
         mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
                 .respond(response().withStatusCode(404));
 
@@ -123,7 +123,7 @@ class PnApikeyManagerClientPAImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                apiKeysMock.geRequestNewApiKeyMock(),
+                apiKeysMock.getRequestNewApiKeyMock(),
                 UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }

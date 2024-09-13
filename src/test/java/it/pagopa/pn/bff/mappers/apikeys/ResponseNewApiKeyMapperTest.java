@@ -15,7 +15,7 @@ class ResponseNewApiKeyMapperTest {
 
     @Test
     void testResponseNewApiKeyMapper() {
-        ResponseNewApiKey responseNewApiKey = apiKeysMock.geResponseNewApiKeyMock();
+        ResponseNewApiKey responseNewApiKey = apiKeysMock.getResponseNewApiKeyMock();
         BffResponseNewApiKey bffResponseNewApiKey = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(responseNewApiKey);
         assertNotNull(bffResponseNewApiKey);
         assertThat(bffResponseNewApiKey).usingRecursiveComparison().isEqualTo(responseNewApiKey);
