@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: yAx9J8kqYRNYOmwETN4WeD/SnqW3VZ21AA5XYLEgbo8=
+  version: FI1np1b3mB3xHJLLWQkO14UwdQOi503gCEQrsj9kgCg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1514,13 +1514,13 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/tos-privacy:
+  /v2/tos-privacy:
     get:
       summary: Accettazione TOS e Privacy
       description: Ritorna lo stato di accettazione dei TOS e della Privacy.
       tags:
         - UserConsents
-      operationId: getTosPrivacyV1
+      operationId: getTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
@@ -1538,7 +1538,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1560,7 +1560,7 @@ paths:
       description: Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
-      operationId: acceptTosPrivacyV1
+      operationId: acceptTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -1580,7 +1580,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1598,10 +1598,10 @@ paths:
         type: http_proxy
       parameters: []
     options:
-      operationId: Options for /v1/tos-privacy API CORS
+      operationId: Options for /v2/tos-privacy API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -5548,15 +5548,9 @@ components:
         isFirstAccept:
           type: boolean
     BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/Consent'
-        privacy:
-          $ref: '#/components/schemas/Consent'
+      type: array
+      items:
+        $ref: '#/components/schemas/Consent'
     ConsentAction:
       type: object
       properties:
