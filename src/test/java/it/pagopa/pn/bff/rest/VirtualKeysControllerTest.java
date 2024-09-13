@@ -2,9 +2,9 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestVirtualKeyStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.MonoExtensionsKt;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -163,5 +164,96 @@ public class VirtualKeysControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
                 );
+    }
+
+    @Test
+    void changeStatusApiKey() {
+        BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
+        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.ROTATE);
+
+        Mockito.when(virtualKeysService.changeStatusVirtualKey(
+                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.empty());
+
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
+                                .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header("id", "virtual-key-id")
+                .header(RequestVirtualKeyStatus.JSON_PROPERTY_STATUS,RequestVirtualKeyStatus.StatusEnum.ROTATE.toString())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Void.class);
+
+        Mockito.verify(virtualKeysService).changeStatusVirtualKey(
+                eq(UserMock.PN_UID),
+                eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG),
+                eq(UserMock.PN_CX_ID),
+                eq(UserMock.PN_CX_ROLE),
+                eq("API_KEY_ID"),
+                argThat(new MonoMatcher<>(Mono.just(request))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void changeStatusVirtualKeyError() {
+        BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
+        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.ROTATE);
+
+        Mockito.when(virtualKeysService.changeStatusVirtualKey(
+                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.any(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.put()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
+                                .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header("id", "virtual-key-id")
+                .header(RequestVirtualKeyStatus.JSON_PROPERTY_STATUS,RequestVirtualKeyStatus.StatusEnum.ROTATE.toString())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(virtualKeysService).changeStatusVirtualKey(
+                eq(UserMock.PN_UID),
+                eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG),
+                eq(UserMock.PN_CX_ID),
+                eq(UserMock.PN_CX_ROLE),
+                eq("API_KEY_ID"),
+                argThat(new MonoMatcher<>(Mono.just(request))),
+                eq(UserMock.PN_CX_GROUPS)
+        );
     }
 }

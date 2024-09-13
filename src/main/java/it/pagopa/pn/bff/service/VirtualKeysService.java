@@ -2,9 +2,12 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffVirtualKeyStatusRequest;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
+
 import it.pagopa.pn.bff.mappers.virtualkeys.RequestNewVirtualKeysMapper;
+import it.pagopa.pn.bff.mappers.virtualkeys.RequestVirtualKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.pnclient.virtualkeys.PnVirtualKeysManagerClientPGImpl;
@@ -79,5 +82,34 @@ public class VirtualKeysService {
 
             return responseNewVirtualKey.map(ResponseNewVirtualKeysMapper.modelMapper::mapResponseNewVirtualKey);
         });
+    }
+
+    /**
+     * Change the status of an virtual key
+     *
+     * @param xPagopaPnUid           User Identifier
+     * @param xPagopaPnCxType        Public Administration Type
+     * @param xPagopaPnCxId          Public Administration id
+     * @param xPagopaPnCxRole        Public Administration role
+     * @param id                     ID of the api key to change status
+     * @param bffVirtualKeyStatusRequest The new virtual key status
+     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @return
+     */
+    public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet xPagopaPnCxType,
+                                         String xPagopaPnCxId,String xPagopaPnCxRole, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
+                                         List<String> xPagopaPnCxGroups) {
+        log.info("Change api key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        return bffVirtualKeyStatusRequest.flatMap(request ->
+                pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
+                        xPagopaPnUid,
+                        CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+                        xPagopaPnCxId,
+                        xPagopaPnCxRole,
+                        id,
+                        RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(request),
+                        xPagopaPnCxGroups
+                ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+        );
     }
 }

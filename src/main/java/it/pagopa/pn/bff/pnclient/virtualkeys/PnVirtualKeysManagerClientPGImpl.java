@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.pnclient.virtualkeys;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.commons.log.PnLogger;
@@ -30,5 +31,21 @@ public class PnVirtualKeysManagerClientPGImpl {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "newVirtualKey");
 
         return virtualKeysApi.createVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,xPagopaPnCxRole, requestNewVirtualKey,xPagopaPnCxGroups);
+    }
+
+    public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                         String xPagopaPnCxId,String xPagopaPnCxRole, String id, RequestVirtualKeyStatus requestApiKeyStatus,
+                                         List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "changeStatusVirtualKey");
+
+        return virtualKeysApi.changeStatusVirtualKeys(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnCxRole,
+                id,
+                requestApiKeyStatus,
+                xPagopaPnCxGroups
+        );
     }
 }
