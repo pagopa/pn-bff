@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
 
 import java.util.ArrayList;
@@ -37,11 +37,11 @@ public class ConsentsMock {
         return consentAction;
     }
 
-    public BffTosPrivacyConsent getBffTosPrivacyConsentMock() {
-        BffTosPrivacyConsent bffTosPrivacyConsent = new BffTosPrivacyConsent();
+    public List<BffConsent> getBffTosPrivacyConsentMock() {
+        List<BffConsent> bffTosPrivacyConsent = new ArrayList<>();
 
-        bffTosPrivacyConsent.setTos(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
-        bffTosPrivacyConsent.setPrivacy(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
 
         return bffTosPrivacyConsent;
     }

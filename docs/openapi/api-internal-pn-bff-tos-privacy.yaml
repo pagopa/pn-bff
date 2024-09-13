@@ -26,19 +26,20 @@ tags:
       Invocazioni per sapere lo stato di accettazione dei TOS e della Privacy
 
 paths:
-  '/bff/v1/tos-privacy':
+  '/bff/v2/tos-privacy':
     get:
       summary: Accettazione TOS e Privacy
       description: >-
         Ritorna lo stato di accettazione dei TOS e della Privacy.
       tags:
         - UserConsents
-      operationId: getTosPrivacyV1
+      operationId: getTosPrivacyV2
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
+        - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
           description: OK
@@ -58,7 +59,7 @@ paths:
         Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
-      operationId: acceptTosPrivacyV1
+      operationId: acceptTosPrivacyV2
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL

@@ -1,20 +1,25 @@
 info:
   version: v1.0
 components:
+  parameters:
+    BffQueryTosPrivacyType:
+      required: true
+      description: Tipo di consent
+      name: type
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'
+
   schemas:
     BffConsent:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
 
     BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffConsent'
-        privacy:
-          $ref: '#/components/schemas/BffConsent'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffConsent'
 
     BffTosPrivacyBody:
       type: array

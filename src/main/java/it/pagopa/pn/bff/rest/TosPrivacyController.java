@@ -1,8 +1,9 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import lombok.CustomLog;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @CustomLog
 @RestController
@@ -23,7 +26,7 @@ public class TosPrivacyController implements UserConsentsApi {
     }
 
     /**
-     * GET /bff/v1/tos-privacy : Tos & Privacy information
+     * GET /bff/v2/tos-privacy : Tos & Privacy information
      * Get the Tos & Privacy information of the user
      *
      * @param xPagopaPnUid    User Identifier
@@ -32,18 +35,20 @@ public class TosPrivacyController implements UserConsentsApi {
      * @return the Tos & Privacy information of the user
      */
     @Override
-    public Mono<ResponseEntity<BffTosPrivacyConsent>> getTosPrivacyV1(String xPagopaPnUid,
-                                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                                      final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<BffConsent>>> getTosPrivacyV2(String xPagopaPnUid,
+                                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                                  List<ConsentType> type,
+                                                                  final ServerWebExchange exchange) {
 
-        Mono<BffTosPrivacyConsent> serviceResponse = tosPrivacyService
-                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType);
+        Flux<BffConsent> serviceResponse = tosPrivacyService
+                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType, type);
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.collectList()
+                .map(consents -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(consents)));
     }
 
     /**
-     * PUT /bff/v1/tos-privacy : Acceptance of TOS and Privacy
+     * PUT /bff/v2/tos-privacy : Acceptance of TOS and Privacy
      * Allows to accept the TOS and Privacy.
      *
      * @param xPagopaPnUid    User Identifier
@@ -53,7 +58,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * @return
      */
     @Override
-    public Mono<ResponseEntity<Void>> acceptTosPrivacyV1(String xPagopaPnUid,
+    public Mono<ResponseEntity<Void>> acceptTosPrivacyV2(String xPagopaPnUid,
                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                          Flux<BffTosPrivacyActionBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
