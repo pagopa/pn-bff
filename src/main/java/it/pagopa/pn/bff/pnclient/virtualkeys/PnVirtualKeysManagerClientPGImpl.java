@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.pnclient.virtualkeys;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
@@ -16,6 +17,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PnVirtualKeysManagerClientPGImpl {
     private final VirtualKeysApi virtualKeysApi;
+
+    public Mono<VirtualKeysResponse> getVirtualKeys(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet xPagopaPnCxType,
+                                            String xPagopaPnCxId, List<String> xPagopaPnCxGroups,String xPagopaPnCxRole,
+                                            Integer limit, String lastKey,
+                                            String lastUpdate, Boolean showVirtualKey) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "getVirtualKeys");
+
+        return virtualKeysApi.getVirtualKeys(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnCxRole,
+                xPagopaPnCxGroups,
+                limit,
+                lastKey,
+                lastUpdate,
+                showVirtualKey
+        );
+    }
 
     public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnCxRole, String id, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "deleteVirtualKey");

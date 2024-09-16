@@ -36,6 +36,61 @@ class PnVirtualKeysManageClientPgImplTest {
 
 
     @Test
+    void getVirtualKeys() throws RestClientException {
+        when(virtualKeysApi.getVirtualKeys(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.just(virtualKeysMock.getVirtualKeysMock()));
+
+        StepVerifier.create(pgVirtualKeysManageClient.getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        )).expectNext(virtualKeysMock.getVirtualKeysMock()).verifyComplete();
+    }
+
+    @Test
+    void getVirtualKeysError() {
+        when(virtualKeysApi.getVirtualKeys(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pgVirtualKeysManageClient.getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+
+    @Test
     void deleteVirtualKeyError() {
         when(virtualKeysApi.deleteVirtualKey(
                 Mockito.anyString(),

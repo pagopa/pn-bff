@@ -7,9 +7,11 @@ import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.RequestNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
+import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -42,6 +45,71 @@ public class VirtualKeysServiceTest {
         pnVirtualKeysManagerClientPG = mock(PnVirtualKeysManagerClientPGImpl.class);
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+    }
+
+
+    @Test
+    void getVirtualKeys() {
+        when(pnVirtualKeysManagerClientPG.getVirtualKeys(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.just(virtualKeysMock.getVirtualKeysMock()));
+
+
+        Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_ROLE,
+                UserMock.PN_CX_GROUPS,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        );
+
+        StepVerifier.create(result)
+                .expectNext(VirtualKeysMapper.modelMapper.mapVirtualKeysResponse(virtualKeysMock.getVirtualKeysMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getVirtualKeysError() {
+        when(pnVirtualKeysManagerClientPG.getVirtualKeys(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_ROLE,
+                UserMock.PN_CX_GROUPS,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
     }
 
 

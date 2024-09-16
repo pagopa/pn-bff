@@ -1,14 +1,19 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffVirtualKeyStatusRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.ResponseNewVirtualKey;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.VirtualKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 
+import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.RequestNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.RequestVirtualKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
+import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.pnclient.virtualkeys.PnVirtualKeysManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -28,6 +33,46 @@ public class VirtualKeysService {
     private final PnVirtualKeysManagerClientPGImpl pnVirtualKeysManagerClientPG;
     private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+
+    /**
+     * Get a paginated list of the virtual keys that belong to a Public Administration and are accessible by the current user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxRole     Public Administration role
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param limit             Number of items per page
+     * @param lastKey           The last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param lastUpdate        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param showVirtualKey    Flag to show/hide the virtual key
+     * @return the list of the api keys or error
+     */
+    public Mono<BffVirtualKeysResponse> getVirtualKeys(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet xPagopaPnCxType,
+                                                   String xPagopaPnCxId, String xPagopaPnCxRole, List<String> xPagopaPnCxGroups,
+                                                   Integer limit, String lastKey,
+                                                   String lastUpdate, Boolean showVirtualKey
+    ) {
+        log.info("Get api key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
+        Mono<VirtualKeysResponse> virtualKeysResponse = pnVirtualKeysManagerClientPG.getVirtualKeys(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole,
+                limit,
+                lastKey,
+                lastUpdate,
+                showVirtualKey
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        // list of groups linked to the pa
+        log.info("Get user groups - senderId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
+
+
+        return virtualKeysResponse.map(VirtualKeysMapper.modelMapper::mapVirtualKeysResponse);
+    }
 
     /**
      * Get a paginated list of the api keys that belong to a Public Administration and are accessible by the current user

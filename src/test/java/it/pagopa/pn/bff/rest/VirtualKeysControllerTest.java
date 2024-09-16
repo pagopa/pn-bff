@@ -5,7 +5,9 @@ import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestVirtualKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
+import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
 import it.pagopa.pn.bff.service.VirtualKeysService;
@@ -34,6 +36,106 @@ public class VirtualKeysControllerTest {
     @MockBean
     private VirtualKeysService virtualKeysService;
     private final VirtualKeysMock virtualKeysMock = new VirtualKeysMock();
+
+    @Test
+    void getApiKeys() {
+        BffVirtualKeysResponse response = VirtualKeysMapper.modelMapper.mapVirtualKeysResponse(virtualKeysMock.getVirtualKeysMock());
+        Mockito.when(virtualKeysService.getVirtualKeys(
+                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyBoolean()
+                ))
+                .thenReturn(Mono.just(response));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH)
+                                .queryParam("limit", 10)
+                                .queryParam("lastKey", "LAST_KEY")
+                                .queryParam("lastUpdate", "LAST_UPDATE")
+                                .queryParam("showVirtualKey", true)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffVirtualKeysResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(virtualKeysService).getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_ROLE,
+                UserMock.PN_CX_GROUPS,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        );
+    }
+
+    @Test
+    void getVirtualKeysError() {
+        Mockito.when(virtualKeysService.getVirtualKeys(
+                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyBoolean()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH)
+                                .queryParam("limit", 10)
+                                .queryParam("lastKey", "LAST_KEY")
+                                .queryParam("lastUpdate", "LAST_UPDATE")
+                                .queryParam("showVirtualKey", true)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+
+        Mockito.verify(virtualKeysService).getVirtualKeys(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_ROLE,
+                UserMock.PN_CX_GROUPS,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
+        );
+    }
 
 
     @Test
