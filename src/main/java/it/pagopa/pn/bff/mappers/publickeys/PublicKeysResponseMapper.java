@@ -21,8 +21,7 @@ public interface PublicKeysResponseMapper {
      * Maps a PublicKeysResponse to a BffPublicKeysResponse
      *
      * @param publicKeysResponse the PublicKeysResponse to map
-     * @param pgGroups        groups retrieved from selfcare and linked to current PG and user
      * @return the mapped BffPublicKeysResponse
      */
-    BffPublicKeysResponse mapPublicKeysResponse(PublicKeysResponse publicKeysResponse, @Context List<PgGroup> pgGroups);
+    BffPublicKeysResponse mapPublicKeysResponse(PublicKeysResponse publicKeysResponse);
 }
