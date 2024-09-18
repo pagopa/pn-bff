@@ -65,10 +65,12 @@ public class MandateMock {
 
     private it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto getBffUserMock(String firstName, String lastName, String fiscalCode) {
         it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto user = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPerson(true);
-        user.setDisplayName(user.getFirstName() + " " + user.getLastName());
+        user.setDenomination(firstName+ "" + lastName);
+//        user.setFirstName(firstName);
+//        user.setLastName(lastName);
+//        user.setPerson(true);
+//        user.setDisplayName(user.getFirstName() + " " + user.getLastName());
+
         user.setFiscalCode(fiscalCode);
         return user;
     }
