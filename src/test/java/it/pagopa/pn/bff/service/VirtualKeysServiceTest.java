@@ -45,6 +45,8 @@ public class VirtualKeysServiceTest {
         pnVirtualKeysManagerClientPG = mock(PnVirtualKeysManagerClientPGImpl.class);
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+
+        virtualKeysService = new VirtualKeysService(pnVirtualKeysManagerClientPG,pnExternalRegistriesClient,pnBffExceptionUtility);
     }
 
 
@@ -160,8 +162,7 @@ public class VirtualKeysServiceTest {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
-                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
-                .verify();
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404).verify();
     }
 
     @Test

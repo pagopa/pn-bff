@@ -8,6 +8,7 @@ public class PnBffRestConstants {
     public static final String CX_GROUPS_HEADER = "x-pagopa-pn-cx-groups";
     public static final String CX_ROLE_HEADER = "x-pagopa-pn-cx-role";
     private static final String BFF_PATH = "/bff";
+    private static final String PG_SELF = "/pg-self";
     private static final String VERSION_1 = "/v1";
     public static final String NOTIFICATIONS_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received";
     public static final String NOTIFICATION_AAR_QR_CODE_PATH = NOTIFICATIONS_RECEIVED_PATH + "/check-aar-qr-code";
@@ -34,7 +35,7 @@ public class PnBffRestConstants {
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
     public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
     public static final String MANDATE_PATH = BFF_PATH + VERSION_1 + "/mandate";
-    public static final String VIRTUALKEYS_PATH = BFF_PATH + VERSION_1 + "/virtual-keys";
+    public static final String VIRTUALKEYS_PATH = PG_SELF + "/virtual-keys";
     public static final String SENDER_DASHBOARD_GET_DATA_PATH
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
 
