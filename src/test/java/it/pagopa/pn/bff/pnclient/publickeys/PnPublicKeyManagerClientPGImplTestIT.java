@@ -38,7 +38,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @BeforeAll
     public static void startMockServer() {
-        mockServer = ClientAndServer.startClientAndServer(9998);
+        mockServer = startClientAndServer(9998);
         mockServerClient = new MockServerClient("localhost", 9998);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
