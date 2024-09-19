@@ -49,10 +49,13 @@ class TosPrivacyServiceTest {
         type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS);
         type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.DATAPRIVACY);
 
-        when(pnUserAttributesClient.getConsents(
+        when(pnUserAttributesClient.getConsentByType(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class)
-        )).thenReturn(Flux.just(tosConsent, privacyConsent));
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        ))
+                .thenReturn(Mono.just(tosConsent))
+                .thenReturn(Mono.just(privacyConsent));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         UserMock.PN_UID,
@@ -69,10 +72,11 @@ class TosPrivacyServiceTest {
         List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType> type = new ArrayList<>();
         type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS);
 
-        when(pnUserAttributesClient.getConsents(
+        when(pnUserAttributesClient.getConsentByType(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class)
-        )).thenReturn(Flux.just(tosConsent));
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        )).thenReturn(Mono.just(tosConsent));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         UserMock.PN_UID,
@@ -89,10 +93,11 @@ class TosPrivacyServiceTest {
         type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS);
         type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.DATAPRIVACY);
 
-        when(pnUserAttributesClient.getConsents(
+        when(pnUserAttributesClient.getConsentByType(
                 Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class)
-        )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         UserMock.PN_UID,

@@ -11,11 +11,11 @@ components:
       schema:
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/b29c334b2846321e86479797fed8eb061b09481d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'
 
   schemas:
     BffConsent:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/b29c334b2846321e86479797fed8eb061b09481d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
 
     BffTosPrivacyConsent:
       type: array
@@ -33,10 +33,10 @@ components:
         - action
         - type
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/b29c334b2846321e86479797fed8eb061b09481d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
-              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/b29c334b2846321e86479797fed8eb061b09481d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
             type:
-              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/b29c334b2846321e86479797fed8eb061b09481d/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'

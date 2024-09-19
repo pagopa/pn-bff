@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
@@ -35,9 +36,13 @@ public class TosPrivacyService {
     public Flux<BffConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
         log.info("Get tos and privacy consents - type: {}", xPagopaPnCxType);
 
-        return pnUserAttributesClient.getConsents(xPagopaPnUid,
-                        CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType))
-                .filter(consent -> type.stream().anyMatch(t -> t.getValue().equals(consent.getConsentType().getValue())))
+        Flux<Consent> consents = Flux.empty();
+        for (ConsentType t : type) {
+            Mono<Consent> consent = pnUserAttributesClient.getConsentByType(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
+            consents = Flux.concat(consents, consent);
+        }
+
+        return consents
                 .map(TosPrivacyConsentMapper.tosPrivacyConsentMapper::mapConsent)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
