@@ -26,7 +26,7 @@ class PnPublicKeyManagerClientPGImplTest {
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
     @Autowired
     private PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
-    @MockBean()
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi")
     private PublicKeysApi publicKeysApi;
 
     @Test
