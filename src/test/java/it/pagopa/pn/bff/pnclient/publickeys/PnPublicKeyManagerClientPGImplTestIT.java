@@ -29,8 +29,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
-    private final String path_1 = "/pg-self/public-keys";
-    private final String path_2 = "/pg-self/public-key";
+    private final String path = "/pg-self/public-keys";
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
 
     @Autowired
@@ -56,7 +55,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     @Test
     void getPublicKeys() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(publicKeysMock.getPublicKeysMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path_1))
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -78,7 +77,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @Test
     void getPublicKeysError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path_1))
+        mockServerClient.when(request().withMethod("GET").withPath(path))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnPublicKeyManagerClientPG.getPublicKeys(
@@ -98,7 +97,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     void newPublicKey() throws JsonProcessingException {
         String request = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyRequestMock());
         String response = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyResponseMock());
-        mockServerClient.when(request().withMethod("POST").withPath(path_2).withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -118,7 +117,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     @Test
     void newPublicKeyError() throws JsonProcessingException {
         String request = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyRequestMock());
-        mockServerClient.when(request().withMethod("POST").withPath(path_2).withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(path).withBody(request))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnPublicKeyManagerClientPG.newPublicKey(
@@ -133,7 +132,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @Test
     void deletePublicKey() {
-        mockServerClient.when(request().withMethod("DELETE").withPath(path_2 + "/PUBLIC_KEY_ID/delete"))
+        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID/delete"))
                 .respond(response()
                         .withStatusCode(204)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -151,7 +150,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @Test
     void deletePublicKeyError() {
-        mockServerClient.when(request().withMethod("DELETE").withPath(path_2 + "/PUBLIC_KEY_ID/delete"))
+        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID/delete"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnPublicKeyManagerClientPG.deletePublicKey(
@@ -167,7 +166,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     @Test
     void changeStatusPublicKey() throws JsonProcessingException {
         mockServerClient.when(request().withMethod("PUT")
-                        .withPath(path_2 + "/PUBLIC_KEY_ID/status")
+                        .withPath(path + "/PUBLIC_KEY_ID/status")
                         .withQueryStringParameter("queryStatus", "BLOCK"))
                 .respond(response()
                         .withStatusCode(204)
@@ -187,7 +186,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     @Test
     void changeStatusPublicKeyError() {
         mockServerClient.when(request().withMethod("PUT")
-                        .withPath(path_2 + "/PUBLIC_KEY_ID/status")
+                        .withPath(path + "/PUBLIC_KEY_ID/status")
                         .withQueryStringParameter("queryStatus", "BLOCK"))
                 .respond(response()
                         .withStatusCode(404)
@@ -208,7 +207,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     void rotatePublicKey() throws JsonProcessingException {
         String request = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyRequestMock());
         String response = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyResponseMock());
-        mockServerClient.when(request().withMethod("POST").withPath(path_2 + "/PUBLIC_KEY_ID/rotate").withBody(request))
+        mockServerClient.when(request().withMethod("POST").withPath(path + "/PUBLIC_KEY_ID/rotate").withBody(request))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)

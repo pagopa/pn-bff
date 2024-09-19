@@ -129,7 +129,7 @@ public class PublicKeysPgController implements PublicKeysApi {
     }
 
     /**
-     * PUT /bff/v1/pg/public-key/{kid}/status : public key LOCK/UNLOCK
+     * PUT /bff/v1/pg/public-keys/{kid}/status : public key LOCK/UNLOCK
      * Lock/Unlock the public key identified by kid
      *
      * @param xPagopaPnUid      User Identifier (required)
@@ -164,7 +164,7 @@ public class PublicKeysPgController implements PublicKeysApi {
     }
 
     /**
-     * POST /bff/v1/pg/public-key/{kid}/rotate : Rotate public key
+     * POST /bff/v1/pg/public-keys/{kid}/rotate : Rotate public key
      * Rotate the Public Key identified by kid
      *
      * @param xPagopaPnUid          User Identifier (required)

@@ -172,7 +172,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/pg/public-key/{kid}/status":
+  "/bff/v1/pg/public-keys/{kid}/status":
     put:
       summary: Blocco/Riattivazione public key
       description: >-
@@ -218,7 +218,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/pg/public-key/{kid}/rotate":
+  "/bff/v1/pg/public-keys/{kid}/rotate":
     post:
       summary: Rotazione public key
       description: >-
@@ -342,6 +342,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'                    # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                      # NO EXTERNAL
       requestBody:
         content:
           application/json:
