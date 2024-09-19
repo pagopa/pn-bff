@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: FI1np1b3mB3xHJLLWQkO14UwdQOi503gCEQrsj9kgCg=
+  version: ei34iOaBEZhSpy0zjuRawQuc+2UdMZ8mThctXGn/k9w=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1523,6 +1523,8 @@ paths:
       operationId: getTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
           description: OK
@@ -1554,7 +1556,6 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-      parameters: []
     put:
       summary: Accettazione TOS e Privacy
       description: Permette di accettare i TOS e la Privacy.
@@ -2887,6 +2888,16 @@ components:
       required: true
       schema:
         type: string
+    BffQueryTosPrivacyType:
+      name: type
+      description: Tipo di consent
+      required: true
+      explode: true
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ConsentType'
     BffQueryFromTime:
       name: fromTime
       in: query
