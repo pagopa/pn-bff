@@ -1,13 +1,13 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.SenderDashboardApi;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.BffSenderDashboardDataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.senderdashboard.SenderDashboardService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import it.pagopa.pn.bff.generated.openapi.server.v1.api.SenderDashboardApi;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 

@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;

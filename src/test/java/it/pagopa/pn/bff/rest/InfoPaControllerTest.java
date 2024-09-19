@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.*;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;

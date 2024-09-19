@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.PublicKeysApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.PublicKeysPgService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -69,12 +69,12 @@ public class PublicKeysPgController implements PublicKeysApi {
     /**
      * POST /bff/v1/pg/public-keys : Create a new public key
      *
-     * @param xPagopaPnUid          User Identifier (required)
-     * @param xPagopaPnCxType       Customer/Receiver Type (required)
-     * @param xPagopaPnCxId         Customer/Receiver Identifier (required)
-     * @param bffPublicKeyRequest   (required)
-     * @param xPagopaPnCxGroups     Customer Groups (optional)
-     * @param xPagopaPnCxRole       User's Role (derived by Self Care Token) (optional)
+     * @param xPagopaPnUid        User Identifier (required)
+     * @param xPagopaPnCxType     Customer/Receiver Type (required)
+     * @param xPagopaPnCxId       Customer/Receiver Identifier (required)
+     * @param bffPublicKeyRequest (required)
+     * @param xPagopaPnCxGroups   Customer Groups (optional)
+     * @param xPagopaPnCxRole     User's Role (derived by Self Care Token) (optional)
      * @return the public key just created
      */
     @Override
@@ -167,13 +167,13 @@ public class PublicKeysPgController implements PublicKeysApi {
      * POST /bff/v1/pg/public-keys/{kid}/rotate : Rotate public key
      * Rotate the Public Key identified by kid
      *
-     * @param xPagopaPnUid          User Identifier (required)
-     * @param xPagopaPnCxType       Customer/Receiver Type (required)
-     * @param xPagopaPnCxId         Customer/Receiver Identifier (required)
-     * @param kid                   Public key unique identifier (required)
-     * @param bffPublicKeyRequest   (required)
-     * @param xPagopaPnCxGroups     Customer Groups (optional)
-     * @param xPagopaPnCxRole       User's Role (derived by Self Care Token) (optional)
+     * @param xPagopaPnUid        User Identifier (required)
+     * @param xPagopaPnCxType     Customer/Receiver Type (required)
+     * @param xPagopaPnCxId       Customer/Receiver Identifier (required)
+     * @param kid                 Public key unique identifier (required)
+     * @param bffPublicKeyRequest (required)
+     * @param xPagopaPnCxGroups   Customer Groups (optional)
+     * @param xPagopaPnCxRole     User's Role (derived by Self Care Token) (optional)
      * @return the rotated public key
      */
     public Mono<ResponseEntity<BffPublicKeyResponse>> rotatePublicKeyV1(String xPagopaPnUid,
@@ -198,4 +198,3 @@ public class PublicKeysPgController implements PublicKeysApi {
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }
-

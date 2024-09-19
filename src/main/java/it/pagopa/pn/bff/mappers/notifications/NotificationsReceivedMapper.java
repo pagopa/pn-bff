@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationsResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

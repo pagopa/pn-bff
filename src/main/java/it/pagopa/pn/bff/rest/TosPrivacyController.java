@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.UserConsentsApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.TosPrivacyService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,7 @@ public class TosPrivacyController implements UserConsentsApi {
 
         Mono<Void> serviceResponse = tosPrivacyService
                 .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
-        
+
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));

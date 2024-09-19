@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoPaApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.*;
 import it.pagopa.pn.bff.service.InfoPaService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -80,7 +80,7 @@ public class InfoPaController implements InfoPaApi {
     public Mono<ResponseEntity<Flux<BffPaGroup>>> getPAGroupsV1(String xPagopaPnUid, String xPagopaPnCxId, List<String> xPagopaPnCxGroups, BffPaGroupStatus status, ServerWebExchange exchange) {
 
         Flux<BffPaGroup> serviceResponse = infoPaService.getGroups(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxGroups, status);
-        
+
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

@@ -6,7 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
@@ -56,7 +56,7 @@ class TosPrivacyServiceTest {
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA
                 ))
                 .expectNext(consentsMock.getBffTosPrivacyConsentMock())
                 .verifyComplete();
@@ -76,7 +76,7 @@ class TosPrivacyServiceTest {
 
         StepVerifier.create(tosPrivacyService.getTosPrivacy(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
@@ -97,7 +97,7 @@ class TosPrivacyServiceTest {
 
         Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA,
                 Mono.just(tosPrivacyBody)
         );
 
@@ -118,7 +118,7 @@ class TosPrivacyServiceTest {
 
         Mono<Void> result = tosPrivacyService.acceptOrDeclineTosPrivacy(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA,
                 Mono.just(tosPrivacyBody)
         );
 
@@ -130,7 +130,7 @@ class TosPrivacyServiceTest {
     void acceptOrDeclineTosPrivacyEmptyBodyError() {
         StepVerifier.create(tosPrivacyService.acceptOrDeclineTosPrivacy(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA,
                         Mono.just(new BffTosPrivacyBody())
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException

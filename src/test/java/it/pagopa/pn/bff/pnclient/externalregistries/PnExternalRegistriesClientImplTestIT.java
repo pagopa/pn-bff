@@ -38,6 +38,7 @@ class PnExternalRegistriesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
+    private final String pathUserInstitutions = "/ext-registry/pa/v1/user-institutions";
     private final String pathGroupsPa = "/ext-registry/pa/v1/groups";
     private final String pathGroupsPg = "/ext-registry/pg/v1/groups";
     private final String pathPaList = "/ext-registry/pa/v1/activated-on-pn";
@@ -69,7 +70,7 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void getInstitutions() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(paInfoMock.getInstitutionResourcePNMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions))
+        mockServerClient.when(request().withMethod("GET").withPath(pathUserInstitutions))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -86,7 +87,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutionsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions))
+        mockServerClient.when(request().withMethod("GET").withPath(pathUserInstitutions))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnExternalRegistriesClient.getInstitutions(

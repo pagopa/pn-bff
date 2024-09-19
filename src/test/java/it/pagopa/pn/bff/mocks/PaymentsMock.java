@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaymentRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class PaymentsMock {
         return paymentInfoRequest;
     }
 
-    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest getBffPaymentInfoRequestMock(int index) {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest paymentInfoRequest = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest();
+    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest getBffPaymentInfoRequestMock(int index) {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest paymentInfoRequest = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest();
         paymentInfoRequest.setCreditorTaxId("77777777777");
         paymentInfoRequest.setNoticeCode("33333333333333333" + index);
         return paymentInfoRequest;
@@ -55,8 +55,8 @@ public class PaymentsMock {
         return paymentsInfoRequest;
     }
 
-    public List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest> getBffPaymentsInfoRequestMock() {
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest> paymentsInfoRequest = new ArrayList<>();
+    public List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest> getBffPaymentsInfoRequestMock() {
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest> paymentsInfoRequest = new ArrayList<>();
         paymentsInfoRequest.add(getBffPaymentInfoRequestMock(0));
         paymentsInfoRequest.add(getBffPaymentInfoRequestMock(1));
         paymentsInfoRequest.add(getBffPaymentInfoRequestMock(2));
@@ -92,7 +92,7 @@ public class PaymentsMock {
 
     public BffPaymentRequest getBffPaymentRequestMock() {
         BffPaymentRequest paymentRequest = new BffPaymentRequest();
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentNotice paymentNotice = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentNotice();
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentNotice paymentNotice = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentNotice();
         paymentNotice.setAmount(999);
         paymentNotice.setNoticeNumber("333333333333333333");
         paymentNotice.setFiscalCode("77777777777");

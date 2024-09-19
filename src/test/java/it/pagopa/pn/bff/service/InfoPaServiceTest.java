@@ -5,9 +5,9 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitutionProduct;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitution;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitutionProduct;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPaGroup;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
@@ -66,7 +66,7 @@ class InfoPaServiceTest {
 
         Flux<BffInstitution> result = infoPaService.getInstitutions(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS);
 
@@ -84,7 +84,7 @@ class InfoPaServiceTest {
         StepVerifier
                 .create(infoPaService.getInstitutions(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
                         UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
@@ -102,7 +102,7 @@ class InfoPaServiceTest {
 
         Flux<BffInstitutionProduct> result = infoPaService.getInstitutionProducts(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS);
 
@@ -119,7 +119,7 @@ class InfoPaServiceTest {
 
         StepVerifier
                 .create(infoPaService.getInstitutionProducts(UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
                         UserMock.PN_CX_GROUPS))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)

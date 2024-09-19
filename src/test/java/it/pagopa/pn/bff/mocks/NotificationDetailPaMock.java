@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffFullNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import org.springframework.beans.BeanUtils;
 

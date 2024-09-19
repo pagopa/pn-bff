@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffDocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffDocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import org.junit.jupiter.api.Test;
 

@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffCheckAarRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class NotificationsReceivedMock {
     public static final String MANDATE_ID = "MANDATE_ID";
     public static final String SUBJECT_REG_EXP = "SUBJECT";
     public static final String IUN_MATCH = "IUN";
-    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED;
+    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED;
     public static final int SIZE = 10;
     public static final String START_DATE = "2014-04-30T00:00:00.000Z";
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";
@@ -55,14 +55,14 @@ public class NotificationsReceivedMock {
         return notificationSearchResponse;
     }
 
-    public ResponseCheckAarMandateDto getResponseCheckAarMandateDtoPNMock(){
+    public ResponseCheckAarMandateDto getResponseCheckAarMandateDtoPNMock() {
         ResponseCheckAarMandateDto responseCheckAarMandateDto = new ResponseCheckAarMandateDto();
         responseCheckAarMandateDto.setMandateId("MANDATE_ID");
         responseCheckAarMandateDto.setIun("IUN");
         return responseCheckAarMandateDto;
     }
 
-    public BffCheckAarRequest getRequestCheckAarMandateDtoPNMock(){
+    public BffCheckAarRequest getRequestCheckAarMandateDtoPNMock() {
         BffCheckAarRequest bffRequestCheckAarMandateDto = new BffCheckAarRequest();
         bffRequestCheckAarMandateDto.setAarQrCodeValue("S0FVRC1XTUFLLUdLTVktMjAyNDAzLU4tMV9QRi0zNzY1NDU2MS00NDZhLTRjODgtYjMyOC02Njk5YTgzMjJiMzNfZGI0YmJiZDktM2UwNy00YWJlLTk2ZTktOGY4ZTVlMzRkYWM2");
         return bffRequestCheckAarMandateDto;

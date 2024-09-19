@@ -46,7 +46,7 @@ class PnExternalRegistriesClientImplTest {
 
     @Test
     void getInstitutions() {
-        when(infoPaApi.getInstitutions(
+        when(infoPaApi.getUserInstitutions(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -65,7 +65,7 @@ class PnExternalRegistriesClientImplTest {
 
     @Test
     void getInstitutionsError() {
-        when(infoPaApi.getInstitutions(
+        when(infoPaApi.getUserInstitutions(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),

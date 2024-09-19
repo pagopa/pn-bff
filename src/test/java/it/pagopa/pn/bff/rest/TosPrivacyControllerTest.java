@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.TosPrivacyService;

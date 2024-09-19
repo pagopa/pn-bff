@@ -2,9 +2,9 @@ package it.pagopa.pn.bff.mappers.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.SearchMandateRequestDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.SearchMandateResponseDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.MandateDto;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffSearchMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffSearchMandateResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.MandateDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

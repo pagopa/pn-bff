@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.service.senderdashboard;
 
 import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
 import it.pagopa.pn.bff.service.senderdashboard.model.DataResponse;
 import it.pagopa.pn.bff.service.senderdashboard.model.DatalakeNotificationOverview;
