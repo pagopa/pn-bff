@@ -3,9 +3,10 @@ info:
 components:
   parameters:
     BffQueryTosPrivacyType:
-      required: true
-      description: Tipo di consent
       name: type
+      description: Tipo di consent
+      required: true
+      explode: true
       in: query
       schema:
         type: array
