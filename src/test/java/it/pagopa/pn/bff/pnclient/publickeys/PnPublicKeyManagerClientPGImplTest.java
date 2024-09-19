@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.pnclient.publickeys;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyStatus;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
@@ -26,7 +26,7 @@ class PnPublicKeyManagerClientPGImplTest {
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
     @Autowired
     private PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi")
+    @MockBean()
     private PublicKeysApi publicKeysApi;
 
     @Test

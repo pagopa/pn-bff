@@ -1,11 +1,12 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.apikeys.RequestApiKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyRequestMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
@@ -68,17 +69,17 @@ public class PublicKeysPgService {
     /**
      * Create new public key
      *
-     * @param xPagopaPnUid          User Identifier
-     * @param xPagopaPnCxType       PG Type
-     * @param xPagopaPnCxId         PG id
-     * @param xPagopaPnCxRole       PG user Role
-     * @param bffPublicKeyRequest   Request that contains the name and the groups of the new public key
-     * @param xPagopaPnCxGroups     PG Group id List
+     * @param xPagopaPnUid        User Identifier
+     * @param xPagopaPnCxType     PG Type
+     * @param xPagopaPnCxId       PG id
+     * @param xPagopaPnCxRole     PG user Role
+     * @param bffPublicKeyRequest Request that contains the name and the groups of the new public key
+     * @param xPagopaPnCxGroups   PG Group id List
      * @return BffPublicKeyResponse
      */
     public Mono<BffPublicKeyResponse> newPublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                    String xPagopaPnCxId, String xPagopaPnCxRole,
-                                                   Mono<BffPublicKeyRequest> bffPublicKeyRequest, List<String> xPagopaPnCxGroups){
+                                                   Mono<BffPublicKeyRequest> bffPublicKeyRequest, List<String> xPagopaPnCxGroups) {
         log.info("Create new public key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return bffPublicKeyRequest.flatMap(request -> {
@@ -108,7 +109,7 @@ public class PublicKeysPgService {
      * @return
      */
     public Mono<Void> deletePublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                   String xPagopaPnCxId, String xPagopaPnCxRole,
+                                      String xPagopaPnCxId, String xPagopaPnCxRole,
                                       String id, List<String> xPagopaPnCxGroups) {
         log.info("Delete public key {} - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
@@ -155,19 +156,19 @@ public class PublicKeysPgService {
     /**
      * Rotate the public key identified by its id
      *
-     * @param xPagopaPnUid          User Identifier
-     * @param xPagopaPnCxType       Customer/Receiver Type
-     * @param xPagopaPnCxId         Customer/Receiver Identifier
-     * @param xPagopaPnCxRole       User role
-     * @param id                    Unique identifier for the public key to be rotated
-     * @param bffPublicKeyRequest   The publicKeyRequest parameter
-     * @param xPagopaPnCxGroups     Customer Groups
+     * @param xPagopaPnUid        User Identifier
+     * @param xPagopaPnCxType     Customer/Receiver Type
+     * @param xPagopaPnCxId       Customer/Receiver Identifier
+     * @param xPagopaPnCxRole     User role
+     * @param id                  Unique identifier for the public key to be rotated
+     * @param bffPublicKeyRequest The publicKeyRequest parameter
+     * @param xPagopaPnCxGroups   Customer Groups
      * @return BffPublicKeyResponse
      */
     public Mono<BffPublicKeyResponse> rotatePublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                       String xPagopaPnCxId, String xPagopaPnCxRole,
                                                       String id, Mono<BffPublicKeyRequest> bffPublicKeyRequest,
-                                                      List<String> xPagopaPnCxGroups){
+                                                      List<String> xPagopaPnCxGroups) {
         log.info("Rotate public key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return bffPublicKeyRequest.flatMap(request -> {

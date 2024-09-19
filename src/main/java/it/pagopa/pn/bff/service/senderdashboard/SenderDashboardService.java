@@ -3,10 +3,10 @@ package it.pagopa.pn.bff.service.senderdashboard;
 import it.pagopa.pn.bff.exceptions.PnBffBadRequestException;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.exceptions.PnBffExceptionCodes;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.BffSenderDashboardDataResponse;
 import it.pagopa.pn.bff.mappers.senderdashboard.DataResponseMapper;
-import it.pagopa.pn.bff.service.senderdashboard.resources.DatalakeS3Resource;
 import it.pagopa.pn.bff.service.senderdashboard.exceptions.SenderNotFoundException;
+import it.pagopa.pn.bff.service.senderdashboard.resources.DatalakeS3Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,12 +26,12 @@ public class SenderDashboardService {
     /**
      * Fetches dashboard data for the specified sender.
      *
-     * @param cxType    Public Administration Type
-     * @param cxId      Public Administration id
+     * @param cxType     Public Administration Type
+     * @param cxId       Public Administration id
      * @param pathCxType Public Administration Type
-     * @param pathCxId  Public Administration id
-     * @param startDate the start date for the data request
-     * @param endDate   the end date for the data request.
+     * @param pathCxId   Public Administration id
+     * @param startDate  the start date for the data request
+     * @param endDate    the end date for the data request.
      * @return a {@link Mono} emitting the {@link BffSenderDashboardDataResponse}.
      */
     public Mono<BffSenderDashboardDataResponse> getDashboardData(
@@ -43,13 +43,13 @@ public class SenderDashboardService {
             LocalDate endDate) {
 
         // Path cxType and cxId mismatch
-        if(!Objects.equals(cxType, pathCxType) || !Objects.equals(cxId, pathCxId)) {
+        if (!Objects.equals(cxType, pathCxType) || !Objects.equals(cxId, pathCxId)) {
             return Mono.error(
                     new PnBffBadRequestException(
-                        "cxType and cxId mismatch",
-                        "The provided cxType and cxId do not match the values in the headers " +
-                                "x-pagopa-pn-cx-type and x-pagopa-pn-cx-id",
-                        PnBffExceptionCodes.ERROR_CODE_BFF_SENDERINPUTMISMATCH
+                            "cxType and cxId mismatch",
+                            "The provided cxType and cxId do not match the values in the headers " +
+                                    "x-pagopa-pn-cx-type and x-pagopa-pn-cx-id",
+                            PnBffExceptionCodes.ERROR_CODE_BFF_SENDERINPUTMISMATCH
                     ));
         }
 
@@ -70,7 +70,7 @@ public class SenderDashboardService {
                     log.debug("SenderId [{}] not found", cxId);
                     return Mono.empty();
                 })
-                .onErrorMap(Exception.class,  e -> {
+                .onErrorMap(Exception.class, e -> {
                     log.error("Exception occurred while fetching data from Datalake", e);
                     return new PnBffException(
                             e.getMessage(),

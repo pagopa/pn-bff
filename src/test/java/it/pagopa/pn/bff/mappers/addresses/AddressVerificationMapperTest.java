@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.addresses;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerification;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationRequest;
 import it.pagopa.pn.bff.mocks.AddressesMock;
 import org.junit.jupiter.api.Test;
 

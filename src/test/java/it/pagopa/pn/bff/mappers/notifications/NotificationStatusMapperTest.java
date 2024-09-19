@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

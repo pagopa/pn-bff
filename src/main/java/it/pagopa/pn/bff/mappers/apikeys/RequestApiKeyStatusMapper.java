@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestApiKeyStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffRequestApiKeyStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

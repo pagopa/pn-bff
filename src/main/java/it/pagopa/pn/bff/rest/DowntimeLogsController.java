@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.DowntimeApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffLegalFactDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeHistoryResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnStatusResponse;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -69,7 +69,7 @@ public class DowntimeLogsController implements DowntimeApi {
     public Mono<ResponseEntity<BffLegalFactDownloadMetadataResponse>> getLegalFactV1(String legalFactId, final ServerWebExchange exchange) {
 
         Mono<BffLegalFactDownloadMetadataResponse> serviceResponse = downtimeLogsService.getLegalFact(legalFactId);
-        
+
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

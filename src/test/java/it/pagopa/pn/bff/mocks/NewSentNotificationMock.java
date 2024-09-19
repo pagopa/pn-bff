@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.mocks;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewNotificationRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPreLoadRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNewNotificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPreLoadRequest;
 
 import java.util.ArrayList;
 import java.util.List;

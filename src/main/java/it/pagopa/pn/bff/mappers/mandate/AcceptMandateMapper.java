@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.AcceptRequestDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffAcceptRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

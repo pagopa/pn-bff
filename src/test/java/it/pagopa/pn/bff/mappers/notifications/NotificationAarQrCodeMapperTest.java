@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.RequestCheckAarMandateDto;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffCheckAarRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffCheckAarResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarResponse;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

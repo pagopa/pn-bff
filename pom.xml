@@ -190,7 +190,9 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -234,7 +236,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -279,7 +282,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-info
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -324,7 +328,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-info
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -367,7 +372,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.apikeys
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -409,7 +415,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-attributes
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -452,7 +459,9 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.server.v1.dto.user-attributes
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -494,7 +503,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.downtime-logs
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -536,7 +546,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -578,7 +589,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.mandate
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -620,7 +632,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.sender-dashboard
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -661,7 +674,8 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
-                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto</modelPackage>
+                                <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.apikeys
+                                </modelPackage>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
                                 <dateLibrary>java8</dateLibrary>
@@ -1097,7 +1111,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/c015df5a942d821691577cbcc62672e3043412e9/docs/openapi/pn-apikey-manager-pg-internal.yaml</inputSpec>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/c015df5a942d821691577cbcc62672e3043412e9/docs/openapi/pn-apikey-manager-pg-internal.yaml
+                            </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
@@ -1132,7 +1148,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/c015df5a942d821691577cbcc62672e3043412e9/docs/openapi/pn-virtualkey-internal.yaml</inputSpec>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/c015df5a942d821691577cbcc62672e3043412e9/docs/openapi/pn-virtualkey-internal.yaml
+                            </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>

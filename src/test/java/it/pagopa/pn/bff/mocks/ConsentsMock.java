@@ -3,9 +3,9 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
 
 public class ConsentsMock {
@@ -37,7 +37,7 @@ public class ConsentsMock {
 
     public BffTosPrivacyConsent getBffTosPrivacyConsentMock() {
         BffTosPrivacyConsent bffTosPrivacyConsent = new BffTosPrivacyConsent();
-        
+
         bffTosPrivacyConsent.setTos(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
         bffTosPrivacyConsent.setPrivacy(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
 
