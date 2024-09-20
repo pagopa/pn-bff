@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.mappers;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ValueMapping;
@@ -22,7 +21,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertDeliveryRecipientCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertDeliveryRecipientCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the delivery b2b pa CxTypeAuthFleet
@@ -31,7 +30,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet convertDeliveryB2bPACXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet convertDeliveryB2bPACXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the delivery web pa CxTypeAuthFleet
@@ -40,7 +39,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet convertDeliveryWebPACXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet convertDeliveryWebPACXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the api key CxTypeAuthFleet
@@ -49,7 +48,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet convertApiKeysPACXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet convertApiKeysPACXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
 
 
 
@@ -60,7 +59,16 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff CxTypeAuthFleet to the external registries selfcare CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    @ValueMapping(source = "RADD", target = MappingConstants.NULL)
+    it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the user attributes CxTypeAuthFleet
@@ -69,7 +77,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet convertUserAttributesCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet convertUserAttributesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the delivery push CxTypeAuthFleet
@@ -78,7 +86,7 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet convertDeliveryPushCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet convertDeliveryPushCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
      * Map bff CxTypeAuthFleet to the mandate CxTypeAuthFleet
@@ -87,14 +95,15 @@ public interface CxTypeMapper {
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet convertMandateCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet convertMandateCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet cxType);
 
     /**
-     * Map bff CxTypeAuthFleet to the virtual key CxTypeAuthFleet
+     * Map bff CxTypeAuthFleet to the public key CxTypeAuthFleet
      *
      * @param cxType bff CxTypeAuthFleet
      * @return the mapped CxTypeAuthFleet
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
-    it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet convertVirtualKeysPGCXType(CxTypeAuthFleet cxType);
+    it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet convertPublicKeysPGCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
+
 }

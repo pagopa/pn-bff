@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationsResponse;
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import org.junit.jupiter.api.Test;
 

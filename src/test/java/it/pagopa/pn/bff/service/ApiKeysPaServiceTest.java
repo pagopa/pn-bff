@@ -5,10 +5,10 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestNewApiKey;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestApiKeyStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffRequestNewApiKey;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffApiKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffRequestApiKeyStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffRequestNewApiKey;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffResponseNewApiKey;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
@@ -71,7 +71,7 @@ class ApiKeysPaServiceTest {
 
         Mono<BffApiKeysResponse> result = apiKeysPaService.getApiKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 10,
@@ -107,7 +107,7 @@ class ApiKeysPaServiceTest {
 
         Mono<BffApiKeysResponse> result = apiKeysPaService.getApiKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 10,
@@ -141,7 +141,7 @@ class ApiKeysPaServiceTest {
 
         Mono<BffResponseNewApiKey> result = apiKeysPaService.newApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 Mono.just(bffRequestNewApiKey),
                 UserMock.PN_CX_GROUPS
@@ -171,7 +171,7 @@ class ApiKeysPaServiceTest {
 
         Mono<BffResponseNewApiKey> result = apiKeysPaService.newApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 Mono.just(bffRequestNewApiKey),
                 UserMock.PN_CX_GROUPS
@@ -195,7 +195,7 @@ class ApiKeysPaServiceTest {
 
         Mono<Void> result = apiKeysPaService.deleteApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 UserMock.PN_CX_GROUPS
@@ -218,7 +218,7 @@ class ApiKeysPaServiceTest {
 
         Mono<Void> result = apiKeysPaService.deleteApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 UserMock.PN_CX_GROUPS
@@ -246,7 +246,7 @@ class ApiKeysPaServiceTest {
 
         Mono<Void> result = apiKeysPaService.changeStatusApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 Mono.just(bffRequestApiKeyStatus),
@@ -274,7 +274,7 @@ class ApiKeysPaServiceTest {
 
         Mono<Void> result = apiKeysPaService.changeStatusApiKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 Mono.just(bffRequestApiKeyStatus),

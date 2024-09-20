@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
@@ -731,7 +731,7 @@ class ReceivedNotificationControllerTest {
     }
 
     @Test
-    void checkAarQrCode(){
+    void checkAarQrCode() {
         BffCheckAarResponse response = NotificationAarQrCodeMapper.modelMapper.toBffResponseCheckAarMandateDto(notificationsReceivedMock.getResponseCheckAarMandateDtoPNMock());
         Mockito.when(notificationsRecipientService.checkAarQrCode(
                 Mockito.anyString(),
@@ -769,7 +769,7 @@ class ReceivedNotificationControllerTest {
     }
 
     @Test
-    void checkAarQrCodeError(){
+    void checkAarQrCodeError() {
         Mockito.when(notificationsRecipientService.checkAarQrCode(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

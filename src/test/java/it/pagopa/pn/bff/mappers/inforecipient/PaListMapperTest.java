@@ -13,13 +13,13 @@ public class PaListMapperTest {
     void testPaListMapper() {
         PaSummary paSummary = recipientInfoMock.getPaSummary();
 
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary bffPaSummary = PaListMapper.modelMapper.mapPaList(paSummary);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.PaSummary bffPaSummary = PaListMapper.modelMapper.mapPaList(paSummary);
         assertNotNull(bffPaSummary);
 
         assertEquals(bffPaSummary.getId(), paSummary.getId());
         assertEquals(bffPaSummary.getName(), paSummary.getName());
 
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary bffPaSummaryNull = PaListMapper.modelMapper.mapPaList(null);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.PaSummary bffPaSummaryNull = PaListMapper.modelMapper.mapPaList(null);
         assertNull(bffPaSummaryNull);
     }
 }

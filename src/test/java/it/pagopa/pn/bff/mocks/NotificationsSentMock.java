@@ -17,7 +17,7 @@ public class NotificationsSentMock {
     public static final String SENDER_ID = "SENDER_ID";
     public static final String SUBJECT_REG_EXP = "SUBJECT";
     public static final String IUN_MATCH = "IUN";
-    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED;
+    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED;
     public static final int SIZE = 10;
     public static final String START_DATE = "2014-04-30T00:00:00.000Z";
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";

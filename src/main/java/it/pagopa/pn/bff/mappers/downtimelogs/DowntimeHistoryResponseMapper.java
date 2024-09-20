@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.mappers.downtimelogs;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PnDowntimeEntry;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PnFunctionalityStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeHistoryResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.PnDowntimeEntry;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.PnFunctionalityStatus;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

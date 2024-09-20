@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.downtimelogs;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeEntry;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnStatusResponse;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

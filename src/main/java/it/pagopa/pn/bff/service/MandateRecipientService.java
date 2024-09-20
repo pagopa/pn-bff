@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.mandate.*;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
@@ -240,7 +240,7 @@ public class MandateRecipientService {
                                                    String xPagopaPnCxRole) {
         log.info("Get mandates by delegator - recipientId: {} - type: {} - groups: {} - role: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
-        
+
         return pnMandateClientRecipient
                 .getMandatesByDelegator(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole)
                 .map(MandatesMapper.modelMapper::mapMandateByDelegator)
