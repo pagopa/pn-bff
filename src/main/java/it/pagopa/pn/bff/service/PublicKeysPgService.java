@@ -11,7 +11,7 @@ import it.pagopa.pn.bff.mappers.publickeys.PublicKeyRequestMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
-import it.pagopa.pn.bff.pnclient.publickeys.PnPublicKeyManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

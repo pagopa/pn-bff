@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PgInfoMock;
@@ -322,7 +322,7 @@ public class PublicKeysPgControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.PUBLIC_KEYS_PATH + "/PUBLIC_KEY_ID/status")
-                                .queryParam("queryStatus", "BLOCK")
+                                .queryParam("status", "BLOCK")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
@@ -362,7 +362,7 @@ public class PublicKeysPgControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path(PnBffRestConstants.PUBLIC_KEYS_PATH + "/PUBLIC_KEY_ID/status")
-                                .queryParam("queryStatus", "BLOCK")
+                                .queryParam("status", "BLOCK")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())

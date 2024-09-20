@@ -342,8 +342,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: '#/components/parameters/cxGroupsAuthFleet'                    # NO EXTERNAL
-        - $ref: '#/components/parameters/cxRoleAuthFleet'                      # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'    # NO EXTERNAL
       requestBody:
         content:
           application/json:

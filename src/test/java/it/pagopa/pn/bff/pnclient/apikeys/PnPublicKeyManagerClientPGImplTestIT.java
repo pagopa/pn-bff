@@ -1,4 +1,4 @@
-package it.pagopa.pn.bff.pnclient.publickeys;
+package it.pagopa.pn.bff.pnclient.apikeys;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,7 +132,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @Test
     void deletePublicKey() {
-        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID/delete"))
+        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID"))
                 .respond(response()
                         .withStatusCode(204)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -150,8 +150,10 @@ class PnPublicKeyManagerClientPGImplTestIT {
 
     @Test
     void deletePublicKeyError() {
-        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID/delete"))
-                .respond(response().withStatusCode(404));
+        mockServerClient.when(request().withMethod("DELETE").withPath(path + "/PUBLIC_KEY_ID"))
+                .respond(response()
+                        .withStatusCode(404)
+                );
 
         StepVerifier.create(pnPublicKeyManagerClientPG.deletePublicKey(
                 UserMock.PN_UID,
@@ -167,7 +169,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     void changeStatusPublicKey() throws JsonProcessingException {
         mockServerClient.when(request().withMethod("PUT")
                         .withPath(path + "/PUBLIC_KEY_ID/status")
-                        .withQueryStringParameter("queryStatus", "BLOCK"))
+                        .withQueryStringParameter("status", "BLOCK"))
                 .respond(response()
                         .withStatusCode(204)
                 );
@@ -187,7 +189,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     void changeStatusPublicKeyError() {
         mockServerClient.when(request().withMethod("PUT")
                         .withPath(path + "/PUBLIC_KEY_ID/status")
-                        .withQueryStringParameter("queryStatus", "BLOCK"))
+                        .withQueryStringParameter("status", "BLOCK"))
                 .respond(response()
                         .withStatusCode(404)
                 );
@@ -223,5 +225,25 @@ class PnPublicKeyManagerClientPGImplTestIT {
                 publicKeysMock.gePublicKeyRequestMock(),
                 UserMock.PN_CX_GROUPS
         )).expectNext(publicKeysMock.gePublicKeyResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void rotatePublicKeyError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyRequestMock());
+        String response = objectMapper.writeValueAsString(publicKeysMock.gePublicKeyResponseMock());
+        mockServerClient.when(request().withMethod("POST").withPath(path + "/PUBLIC_KEY_ID/rotate").withBody(request))
+                .respond(response()
+                        .withStatusCode(404)
+                );
+
+        StepVerifier.create(pnPublicKeyManagerClientPG.rotatePublicKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_ROLE,
+                "PUBLIC_KEY_ID",
+                publicKeysMock.gePublicKeyRequestMock(),
+                UserMock.PN_CX_GROUPS
+        )).expectError().verify();
     }
 }

@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.publickeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ public class PublicKeysResponseMapperTest {
         // check on single public key
         for(int i = 0; i < bffPublicKeysResponse.getItems().size(); i++) {
             PublicKeyRow publicKeyRow = publicKeysResponse.getItems().get(i);
-            it.pagopa.pn.bff.generated.openapi.server.v1.dto.PublicKeyRow bffPublicKeyRow = bffPublicKeysResponse.getItems().get(i);
+            it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeyRow bffPublicKeyRow = bffPublicKeysResponse.getItems().get(i);
             assertEquals(bffPublicKeyRow.getKid(), publicKeyRow.getKid());
             assertEquals(bffPublicKeyRow.getName(), publicKeyRow.getName());
             assertEquals(bffPublicKeyRow.getValue(), publicKeyRow.getValue());

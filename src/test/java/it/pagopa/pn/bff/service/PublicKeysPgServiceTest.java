@@ -2,31 +2,26 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestNewApiKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PgInfoMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
-import it.pagopa.pn.bff.pnclient.publickeys.PnPublicKeyManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -71,7 +66,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeysResponse> result = publicKeysPgService.getPublicKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 UserMock.PN_CX_GROUPS,
@@ -109,7 +104,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeysResponse> result = publicKeysPgService.getPublicKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 UserMock.PN_CX_GROUPS,
@@ -144,7 +139,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeyResponse> result = publicKeysPgService.newPublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 Mono.just(bffPublicKeyRequest),
@@ -175,7 +170,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeyResponse> result = publicKeysPgService.newPublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 Mono.just(bffPublicKeyRequest),
@@ -201,7 +196,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<Void> result = publicKeysPgService.deletePublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",
@@ -226,7 +221,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<Void> result = publicKeysPgService.deletePublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",
@@ -253,7 +248,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<Void> result = publicKeysPgService.changeStatusPublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",
@@ -280,7 +275,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<Void> result = publicKeysPgService.changeStatusPublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",
@@ -314,7 +309,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeyResponse> result = publicKeysPgService.rotatePublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",
@@ -347,7 +342,7 @@ public class PublicKeysPgServiceTest {
 
         Mono<BffPublicKeyResponse> result = publicKeysPgService.rotatePublicKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "PUBLIC_KEY_ID",

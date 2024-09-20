@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.publickeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import org.junit.jupiter.api.Test;
 

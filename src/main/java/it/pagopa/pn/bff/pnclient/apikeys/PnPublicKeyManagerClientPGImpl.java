@@ -1,8 +1,7 @@
-package it.pagopa.pn.bff.pnclient.publickeys;
+package it.pagopa.pn.bff.pnclient.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.*;
-import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
