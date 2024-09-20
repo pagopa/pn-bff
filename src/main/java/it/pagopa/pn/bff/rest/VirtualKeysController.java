@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.VirtualKeysApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.service.VirtualKeysService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -97,7 +97,7 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @return
      */
     //@Override
-    public Mono<ResponseEntity<Void>> changeStatusVirtualKeyV1(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<ResponseEntity<Void>> changeStatusVirtualKeyV1(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
                                                            String xPagopaPnCxId,String xPagopaPnCxRole, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
                                                            List<String> xPagopaPnCxGroups) {
 

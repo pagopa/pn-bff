@@ -1,9 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
-
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeyStatusHistory;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffVirtualKeysResponse;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

@@ -2,32 +2,22 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestNewApiKey;
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
-import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
-import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
-import it.pagopa.pn.bff.mappers.virtualkeys.RequestNewVirtualKeysMapper;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
-import it.pagopa.pn.bff.pnclient.virtualkeys.PnVirtualKeysManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.apikeys.PnVirtualKeysManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import javax.jws.soap.SOAPBinding;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -67,7 +57,7 @@ public class VirtualKeysServiceTest {
 
         Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 UserMock.PN_CX_GROUPS,
@@ -98,7 +88,7 @@ public class VirtualKeysServiceTest {
 
         Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 UserMock.PN_CX_GROUPS,
@@ -181,7 +171,7 @@ public class VirtualKeysServiceTest {
 
         Mono<BffNewVirtualKeyResponse> result = virtualKeysService.newVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 Mono.just(bffNewVirtualKeyRequest),
@@ -209,7 +199,7 @@ public class VirtualKeysServiceTest {
 
         Mono<BffNewVirtualKeyResponse> result = virtualKeysService.newVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 Mono.just(bffNewVirtualKeyRequest),
@@ -240,7 +230,7 @@ public class VirtualKeysServiceTest {
 
         Mono<Void> result = virtualKeysService.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "API_KEY_ID",
@@ -274,7 +264,7 @@ public class VirtualKeysServiceTest {
 
         Mono<Void> result = virtualKeysService.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_ROLE,
                 "API_KEY_ID",

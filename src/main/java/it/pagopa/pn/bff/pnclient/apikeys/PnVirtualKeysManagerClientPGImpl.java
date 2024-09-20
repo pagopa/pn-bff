@@ -1,7 +1,5 @@
-package it.pagopa.pn.bff.pnclient.virtualkeys;
+package it.pagopa.pn.bff.pnclient.apikeys;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.RequestApiKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.commons.log.PnLogger;

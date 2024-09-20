@@ -1,8 +1,7 @@
 package it.pagopa.pn.bff.mappers.virtualkeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewVirtualKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKeyResponse;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
 import org.junit.jupiter.api.Test;
 
