@@ -78,4 +78,12 @@ class CxTypeMapperTest {
         assertNotNull(actualConvertMandate);
         assertEquals(actualConvertMandate.getValue(), cxTypeAuthFleet.getValue());
     }
+
+    @Test
+    void testConvertPublicKeysPGCXType() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG;
+        it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet actualConvertPGCXTypeResult = CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertPGCXTypeResult);
+        assertEquals(actualConvertPGCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
+    }
 }
