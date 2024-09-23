@@ -35,7 +35,7 @@ class PnVirtualKeysManageClientPgImplTest {
     void getVirtualKeys() throws RestClientException {
         when(virtualKeysApi.getVirtualKeys(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -47,7 +47,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.getVirtualKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PA,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
@@ -62,7 +62,7 @@ class PnVirtualKeysManageClientPgImplTest {
     void getVirtualKeysError() {
         when(virtualKeysApi.getVirtualKeys(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -74,7 +74,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.getVirtualKeys(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
@@ -99,11 +99,11 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.deleteVirtualKey(
                 UserMock.PN_UID,
-                CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 "VIRTUALKEY_ID",
-                UserMock.PN_CX_GROUPS
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
         )).expectError(WebClientResponseException.class).verify();
     }
 
@@ -120,12 +120,12 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.newVirtualKey(
                 UserMock.PN_UID,
-                CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
-                UserMock.PN_CX_GROUPS
-        )).expectNext(virtualKeysMock.getResponseNewVirtualKeyMock()).verifyComplete();
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+                )).expectNext(virtualKeysMock.getResponseNewVirtualKeyMock()).verifyComplete();
     }
 
     @Test
@@ -141,12 +141,12 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.newVirtualKey(
                 UserMock.PN_UID,
-                CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
-                UserMock.PN_CX_GROUPS
-        )).expectError(WebClientResponseException.class).verify();
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+                )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -165,13 +165,13 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 "API_KEY_ID",
                 requestVirtualKeyStatus,
-                UserMock.PN_CX_GROUPS
-        )).expectNext().verifyComplete();
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+                )).expectNext().verifyComplete();
     }
 
     @Test
@@ -190,12 +190,12 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 "API_KEY_ID",
                 requestVirtualKeyStatus,
-                UserMock.PN_CX_GROUPS
-        )).expectError(WebClientResponseException.class).verify();
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+                )).expectError(WebClientResponseException.class).verify();
     }
 }

@@ -139,11 +139,12 @@ public class VirtualKeysControllerTest {
     void deleteVirtualKey() {
         Mockito.when(virtualKeysService.deleteVirtualKey(
                         Mockito.anyString(),
-                        Mockito.any(CxTypeAuthFleet.class),
-                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyList()
+,
+                        Mockito.anyString()
                 ))
                 .thenReturn(Mono.empty());
 
@@ -166,11 +167,12 @@ public class VirtualKeysControllerTest {
 
         Mockito.verify(virtualKeysService).deleteVirtualKey(
                 UserMock.PN_UID,
-               CxTypeAuthFleet.PG,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                UserMock.PN_CX_ROLE,
                 "VIRTUALKEY_ID",
-                UserMock.PN_CX_GROUPS
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+
         );
     }
 
@@ -184,10 +186,10 @@ public class VirtualKeysControllerTest {
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.any(),
-                        Mockito.anyList()
-                ))
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                        ))
                 .thenReturn(Mono.just(response));
 
 
@@ -214,10 +216,10 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq(UserMock.PN_CX_ROLE),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
-        );
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE)
+                );
     }
 
     @Test
@@ -230,10 +232,10 @@ public class VirtualKeysControllerTest {
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.any(),
-                        Mockito.anyList()
-                ))
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                        ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
@@ -259,9 +261,9 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq(UserMock.PN_CX_ROLE),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE)
                 );
     }
 
@@ -275,10 +277,10 @@ public class VirtualKeysControllerTest {
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.any(),
-                        Mockito.anyList()
-                ))
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                        ))
                 .thenReturn(Mono.empty());
 
 
@@ -304,11 +306,11 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq(UserMock.PN_CX_ROLE),
                 eq("API_KEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
-        );
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE)
+                );
     }
 
     @Test
@@ -321,10 +323,10 @@ public class VirtualKeysControllerTest {
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.any(),
-                        Mockito.anyList()
-                ))
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                        ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
@@ -349,10 +351,10 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq(UserMock.PN_CX_ROLE),
                 eq("API_KEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
-        );
+                eq(UserMock.PN_CX_GROUPS),
+                eq(UserMock.PN_CX_ROLE)
+                );
     }
 }

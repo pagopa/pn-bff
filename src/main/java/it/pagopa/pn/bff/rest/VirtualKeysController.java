@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.VirtualKeysService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -36,13 +36,13 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @param exchange
      * @return the list of the api keys or error
      */
-   // @Override
+    @Override
     public Mono<ResponseEntity<BffVirtualKeysResponse>> getVirtualKeysV1(String xPagopaPnUid,
                                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                                  String xPagopaPnCxId,
-                                                                 String xPagopaPnCxRole,
                                                                  List<String> xPagopaPnCxGroups,
-                                                                 Integer limit,
+                                                                         String xPagopaPnCxRole,
+                                                                         Integer limit,
                                                                  String lastKey,
                                                                  String lastUpdate,
                                                                  Boolean showVirtualKey,
@@ -55,9 +55,20 @@ public class VirtualKeysController implements VirtualKeysApi {
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
-    //@Override
-    public Mono<ResponseEntity<Void>> deleteVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnCxRole, String id, List<String> xPagopaPnCxGroups){
-        Mono<Void> serviceResponse = virtualKeysService.deleteVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,xPagopaPnCxRole,id,xPagopaPnCxGroups);
+    /**
+     * Delete virtual key
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param kid     kid
+     * @param xPagopaPnCxRole    Public Administration role
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return Void
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> deleteVirtualKeyV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String kid, List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange){
+        Mono<Void> serviceResponse = virtualKeysService.deleteVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,kid,xPagopaPnCxGroups,xPagopaPnCxRole);
         return  serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
@@ -73,12 +84,12 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @return the newly created virtual key
      */
 
-   // @Override
+    @Override
     public Mono<ResponseEntity<BffNewVirtualKeyResponse>> newVirtualKeyV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                          String xPagopaPnCxId, String xPagopaPnCxRole , Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
-                                                                          List<String> xPagopaPnCxGroups) {
+                                                                          String xPagopaPnCxId, Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
+                                                                          List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange ) {
 
-        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysService.newVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,xPagopaPnCxRole,requestNewVirtualKey,xPagopaPnCxGroups);
+        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysService.newVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,requestNewVirtualKey,xPagopaPnCxGroups,xPagopaPnCxRole);
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
@@ -96,12 +107,12 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @param xPagopaPnCxGroups      Public Administration Group id List
      * @return
      */
-    //@Override
-    public Mono<ResponseEntity<Void>> changeStatusVirtualKeyV1(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
-                                                           String xPagopaPnCxId,String xPagopaPnCxRole, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
-                                                           List<String> xPagopaPnCxGroups) {
+    @Override
+    public Mono<ResponseEntity<Void>> changeStatusVirtualKeysV1(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
+                                                           String xPagopaPnCxId, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
+                                                           List<String> xPagopaPnCxGroups,String xPagopaPnCxRole, ServerWebExchange exchange) {
 
-        Mono<Void> serviceResponse = virtualKeysService.changeStatusVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,xPagopaPnCxRole,id,bffVirtualKeyStatusRequest,xPagopaPnCxGroups);
+        Mono<Void> serviceResponse = virtualKeysService.changeStatusVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,id,bffVirtualKeyStatusRequest,xPagopaPnCxGroups,xPagopaPnCxRole);
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }

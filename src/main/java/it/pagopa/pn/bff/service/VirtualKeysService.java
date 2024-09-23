@@ -1,12 +1,12 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.ResponseNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.VirtualKeysResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKeyRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKeyResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffVirtualKeyStatusRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffVirtualKeysResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 
 import it.pagopa.pn.bff.mappers.virtualkeys.RequestNewVirtualKeysMapper;
@@ -84,15 +84,15 @@ public class VirtualKeysService {
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return
      */
-    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String xPagopaPnCxRole, String id, List<String> xPagopaPnCxGroups
+    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String id, List<String> xPagopaPnCxGroups, String xPagopaPnCxRole
     ){
        pnVirtualKeysManagerClientPG.deleteVirtualKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
-                xPagopaPnCxRole,
-                id,
-                xPagopaPnCxGroups
+               id,
+               xPagopaPnCxGroups,
+                xPagopaPnCxRole
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return Mono.empty();
@@ -110,19 +110,19 @@ public class VirtualKeysService {
      * @return the id and the value of the new virtual key
      */
     public Mono<BffNewVirtualKeyResponse> newVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
-                                                        String xPagopaPnCxId, String xPagopaPnCxRole , Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
-                                                        List<String> xPagopaPnCxGroups) {
+                                                        String xPagopaPnCxId , Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
+                                                        List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
         log.info("Create new virtual key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return requestNewVirtualKey.flatMap(request -> {
             Mono<ResponseNewVirtualKey> responseNewVirtualKey = pnVirtualKeysManagerClientPG.newVirtualKey(
                     xPagopaPnUid,
-                    CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+                    xPagopaPnCxType,
                     xPagopaPnCxId,
-                    xPagopaPnCxRole,
                     RequestNewVirtualKeysMapper.modelMapper.mapRequestNewVirtualKey(request),
-                    xPagopaPnCxGroups
-            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+                    xPagopaPnCxGroups,
+                    xPagopaPnCxRole
+                    ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
             return responseNewVirtualKey.map(ResponseNewVirtualKeysMapper.modelMapper::mapResponseNewVirtualKey);
         });
@@ -141,18 +141,18 @@ public class VirtualKeysService {
      * @return
      */
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
-                                         String xPagopaPnCxId,String xPagopaPnCxRole, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
-                                         List<String> xPagopaPnCxGroups) {
+                                         String xPagopaPnCxId, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
+                                         List<String> xPagopaPnCxGroups,String xPagopaPnCxRole) {
         log.info("Change api key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return bffVirtualKeyStatusRequest.flatMap(request ->
                 pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                         xPagopaPnUid,
-                        CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+                        xPagopaPnCxType,
                         xPagopaPnCxId,
-                        xPagopaPnCxRole,
                         id,
                         RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(request),
-                        xPagopaPnCxGroups
+                        xPagopaPnCxGroups ,
+                        xPagopaPnCxRole
                 ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         );
     }
