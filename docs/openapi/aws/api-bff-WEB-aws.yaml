@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ydtDRYuReJsKtIZrjQ9H2SpWuA/qNIGtKlJzYX2aYTY=
+  version: odz+sfDHDmOg+w7PF0HlDGlByYXjr4p1Norgu5+PUZg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1514,15 +1514,17 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/tos-privacy:
+  /v2/tos-privacy:
     get:
       summary: Accettazione TOS e Privacy
       description: Ritorna lo stato di accettazione dei TOS e della Privacy.
       tags:
         - UserConsents
-      operationId: getTosPrivacyV1
+      operationId: getTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
           description: OK
@@ -1538,7 +1540,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1554,13 +1556,12 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-      parameters: []
     put:
       summary: Accettazione TOS e Privacy
       description: Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
-      operationId: acceptTosPrivacyV1
+      operationId: acceptTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -1580,7 +1581,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1598,10 +1599,10 @@ paths:
         type: http_proxy
       parameters: []
     options:
-      operationId: Options for /v1/tos-privacy API CORS
+      operationId: Options for /v2/tos-privacy API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/tos-privacy
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -2887,6 +2888,16 @@ components:
       required: true
       schema:
         type: string
+    BffQueryTosPrivacyType:
+      name: type
+      description: Tipo di consent
+      required: true
+      explode: true
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ConsentType'
     BffQueryFromTime:
       name: fromTime
       in: query
@@ -5522,6 +5533,9 @@ components:
       enum:
         - TOS
         - DATAPRIVACY
+        - TOS_DEST_B2B
+        - TOS_SERCQ
+        - DATAPRIVACY_SERCQ
     ConsentVersion:
       type: string
       description: version of consent
@@ -5546,15 +5560,9 @@ components:
         isFirstAccept:
           type: boolean
     BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/Consent'
-        privacy:
-          $ref: '#/components/schemas/Consent'
+      type: array
+      items:
+        $ref: '#/components/schemas/Consent'
     ConsentAction:
       type: object
       properties:
@@ -5568,19 +5576,19 @@ components:
       required:
         - version
         - action
+        - type
       allOf:
         - $ref: '#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
               $ref: '#/components/schemas/ConsentVersion'
+            type:
+              $ref: '#/components/schemas/ConsentType'
     BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffTosPrivacyActionBody'
     BffPnStatusResponse:
       type: object
       required:
@@ -5872,6 +5880,7 @@ components:
         - SMS
         - PEC
         - APPIO
+        - SERCQ_SEND
     BffUserAddress:
       type: object
       required:
@@ -5922,7 +5931,7 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           maxLength: 254
           pattern: >-
-            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO))$
+            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO)|([a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+\??.*))$
         requestId:
           type: string
           maxLength: 64

@@ -23,6 +23,15 @@ public class AddressesMock {
                         .senderId("default")
         );
 
+        legal.add(
+                new LegalAndUnverifiedDigitalAddress()
+                        .addressType(LegalAddressType.LEGAL)
+                        .channelType(LegalChannelType.SERCQ)
+                        .value("x-pagopa-pn-sercq:SEND-self:notification-already-delivered")
+                        .recipientId("1234567890")
+                        .senderId("default")
+        );
+
         List<CourtesyDigitalAddress> courtesy = new ArrayList<>();
         courtesy.add(
                 new CourtesyDigitalAddress()

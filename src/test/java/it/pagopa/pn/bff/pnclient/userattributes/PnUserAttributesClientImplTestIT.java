@@ -54,8 +54,9 @@ class PnUserAttributesClientImplTestIT {
     }
 
     @Test
-    void getTosConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getTosConsentResponseMock());
+    void getConsentByType() throws JsonProcessingException {
+        Consent consent = consentsMock.getTosConsentResponseMock();
+        String response = objectMapper.writeValueAsString(consent);
         mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response()
                         .withStatusCode(200)
@@ -63,47 +64,22 @@ class PnUserAttributesClientImplTestIT {
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
-        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
+                CX_TYPE,
+                ConsentType.TOS
+        )).expectNext(consent).verifyComplete();
     }
 
     @Test
-    void getTosConsentError() {
+    void getConsentByTypeError() {
         mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
-        )).expectError().verify();
-    }
-
-    @Test
-    void getPrivacyConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getPrivacyConsentResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
-                .respond(response()
-                        .withStatusCode(200)
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(response)
-                );
-
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
-                UserMock.PN_UID,
-                CX_TYPE
-        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
-    }
-
-    @Test
-    void getPrivacyConsentError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
-                .respond(response().withStatusCode(404));
-
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
-                UserMock.PN_UID,
-                CX_TYPE
+                CX_TYPE,
+                ConsentType.TOS
         )).expectError().verify();
     }
 
