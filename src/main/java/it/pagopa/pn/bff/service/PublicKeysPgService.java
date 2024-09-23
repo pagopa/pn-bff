@@ -10,7 +10,6 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyRequestMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ import java.util.List;
 @Slf4j
 public class PublicKeysPgService {
     private final PnPublicKeyManagerClientPGImpl pnPublickeyManagerClientPG;
-    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
@@ -172,11 +170,12 @@ public class PublicKeysPgService {
         log.info("Rotate public key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return bffPublicKeyRequest.flatMap(request -> {
-            Mono<PublicKeyResponse> publicKeyResponse = pnPublickeyManagerClientPG.newPublicKey(
+            Mono<PublicKeyResponse> publicKeyResponse = pnPublickeyManagerClientPG.rotatePublicKey(
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     xPagopaPnCxRole,
+                    id,
                     PublicKeyRequestMapper.modelMapper.mapPublicKeyRequest(request),
                     xPagopaPnCxGroups
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);

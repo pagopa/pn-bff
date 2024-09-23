@@ -12,8 +12,8 @@ import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PgInfoMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class PublicKeysPgServiceTest {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnExternalRegistriesClient, pnBffExceptionUtility);
+        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnBffExceptionUtility);
     }
 
     @Test
