@@ -14,6 +14,7 @@ import java.util.List;
 @CustomLog
 @RequiredArgsConstructor
 public class PnVirtualKeysManagerClientPGImpl {
+
     private final VirtualKeysApi virtualKeysApi;
 
     public Mono<VirtualKeysResponse> getVirtualKeys(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet xPagopaPnCxType,
