@@ -148,7 +148,7 @@ public class PublicKeysPgService {
                 id,
                 status,
                 xPagopaPnCxGroups
-        );
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }
 
     /**
