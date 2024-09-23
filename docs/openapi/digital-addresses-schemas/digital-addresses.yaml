@@ -3,7 +3,7 @@ info:
 components:
   parameters:
     BffSenderId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-address-book-api-internal.yaml#/components/parameters/senderId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3e95df802f80d5877e0a653ef1139b27966b1ec8/docs/openapi/pn-address-book-common-components.yaml#/components/parameters/senderId'
   schemas:
     BffUserAddresses:
       type: array
@@ -43,6 +43,7 @@ components:
         - SMS
         - PEC
         - APPIO
+        - SERCQ_SEND
 
     BffAddressType:
       type: string
@@ -51,7 +52,7 @@ components:
         - COURTESY
 
     BffAddressVerificationRequest:
-      $ref: https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerification
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3e95df802f80d5877e0a653ef1139b27966b1ec8/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerification'
 
     BffAddressVerificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-address-book-api-internal.yaml#/components/schemas/AddressVerificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3e95df802f80d5877e0a653ef1139b27966b1ec8/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerificationResponse'
