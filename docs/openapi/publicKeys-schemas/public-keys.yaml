@@ -11,3 +11,6 @@ components:
 
     BffPublicKeyResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyResponse'
+
+    BffPublicKeysIssuerResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'

@@ -2,13 +2,12 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysIssuerResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyRequestMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
+import it.pagopa.pn.bff.mappers.publickeys.PublicKeysIssuerStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -182,5 +181,26 @@ public class PublicKeysPgService {
 
             return publicKeyResponse.map(PublicKeyResponseMapper.modelMapper::mapPublicKeyResponse);
         });
+    }
+
+    /**
+     * Get the issuer status
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   PG Type
+     * @param xPagopaPnCxId     PG id
+     * @return BffPublicKeysIssuerResponse
+     */
+    public Mono<BffPublicKeysIssuerResponse> getPublicKeysIssuerStatus(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                       String xPagopaPnCxId) {
+        log.info("Get public keys issuer status - senderId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
+
+        Mono<PublicKeysIssuerResponse> publicKeysResponse = pnPublickeyManagerClientPG.getIssuerStatus(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(xPagopaPnCxType),
+                xPagopaPnCxId
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return publicKeysResponse.map(PublicKeysIssuerStatusMapper.modelMapper::mapPublicKeysIssuerStatus);
     }
 }
