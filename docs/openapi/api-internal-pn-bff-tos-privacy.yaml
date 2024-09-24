@@ -80,3 +80,56 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/pg/tos-privacy':
+    parameters:
+     - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'             # NO EXTERNAL
+     - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'          # NO EXTERNAL
+     - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
+    get:
+      summary: Get single consent by type
+      description: Returns single consent type for the recipient. Return a Consent with accepted false if consent type is not found.
+      operationId: getPgTosPrivacyV1
+      tags:
+        - UserConsents
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+    put:
+      summary: Accept a single consent type
+      description: Accept single consent type for the recipient
+      operationId: acceptPgTosPrivacyV1
+      parameters:
+       - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'             # NO EXTERNAL
+       - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'          # NO EXTERNAL
+      tags:
+        - UserConsents
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
