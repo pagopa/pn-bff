@@ -26,7 +26,6 @@ public class PnBffRestConstants {
     public static final String PA_LIST = BFF_PATH + VERSION_1 + "/pa-list";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
-    public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_1 + "/tos-privacy";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String TOKEN_EXCHANGE_PATH = BFF_PATH + VERSION_1 + "/token-exchange";
     public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
@@ -36,6 +35,8 @@ public class PnBffRestConstants {
     public static final String MANDATE_PATH = BFF_PATH + VERSION_1 + "/mandate";
     public static final String SENDER_DASHBOARD_GET_DATA_PATH
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
+    private static final String VERSION_2 = "/v2";
+    public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_2 + "/tos-privacy";
 
     private PnBffRestConstants() {
     }
