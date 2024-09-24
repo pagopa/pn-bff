@@ -13,8 +13,8 @@ public interface ResponseNewVirtualKeysMapper {
     /**
      * Maps a BffRequestNewVirtualKey to a RequestNewVirtualKey
      *
-     * @param bffNewVirtualKeyResponse the BffRequestNewVirtualKey to map
+     * @param responseNewVirtualKey the BffRequestNewVirtualKey to map
      * @return the mapped RequestNewApiKey
      */
-    BffNewVirtualKeyResponse mapResponseNewVirtualKey(ResponseNewVirtualKey bffNewVirtualKeyResponse);
+    BffNewVirtualKeyResponse mapResponseNewVirtualKey(ResponseNewVirtualKey responseNewVirtualKey);
 }

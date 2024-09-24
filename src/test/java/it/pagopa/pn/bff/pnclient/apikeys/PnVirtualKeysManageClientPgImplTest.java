@@ -99,7 +99,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.deleteVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 "VIRTUALKEY_ID",
                 UserMock.PN_CX_GROUPS,
@@ -120,7 +120,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.newVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -141,7 +141,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.newVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
                 UserMock.PN_CX_GROUPS,
@@ -165,7 +165,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 requestVirtualKeyStatus,
@@ -190,7 +190,7 @@ class PnVirtualKeysManageClientPgImplTest {
 
         StepVerifier.create(pgVirtualKeysManageClient.changeStatusVirtualKey(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
                 "API_KEY_ID",
                 requestVirtualKeyStatus,

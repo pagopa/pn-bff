@@ -61,14 +61,24 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
-     * @param kid     kid
+     * @param kid               kid
      * @param xPagopaPnCxRole    Public Administration role
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return Void
      */
     @Override
-    public Mono<ResponseEntity<Void>> deleteVirtualKeyV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String kid, List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange){
-        Mono<Void> serviceResponse = virtualKeysService.deleteVirtualKey(xPagopaPnUid,xPagopaPnCxType,xPagopaPnCxId,kid,xPagopaPnCxGroups,xPagopaPnCxRole);
+    public Mono<ResponseEntity<Void>> deleteVirtualKeyV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                         String xPagopaPnCxId, String kid,
+                                                         List<String> xPagopaPnCxGroups, String xPagopaPnCxRole,
+                                                         final ServerWebExchange exchange){
+        Mono<Void> serviceResponse = virtualKeysService.deleteVirtualKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                kid,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        );
         return  serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 

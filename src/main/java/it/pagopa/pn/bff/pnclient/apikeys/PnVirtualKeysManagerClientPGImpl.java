@@ -2,7 +2,6 @@ package it.pagopa.pn.bff.pnclient.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
@@ -38,11 +37,18 @@ public class PnVirtualKeysManagerClientPGImpl {
         );
     }
 
-    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String id, List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
+    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                       String xPagopaPnCxId, String id,
+                                       List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "deleteVirtualKey");
 
         return virtualKeysApi.deleteVirtualKey(
-                xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType), xPagopaPnCxId, xPagopaPnCxRole, id, xPagopaPnCxGroups
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnCxRole,
+                id,
+                xPagopaPnCxGroups
         );
     }
 
@@ -51,7 +57,14 @@ public class PnVirtualKeysManagerClientPGImpl {
                                                      List<String> xPagopaPnCxGroups, String xPagopaPnCxRole){
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "newVirtualKey");
 
-        return virtualKeysApi.createVirtualKey(xPagopaPnUid,CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),xPagopaPnCxId, xPagopaPnCxRole, requestNewVirtualKey,xPagopaPnCxGroups);
+        return virtualKeysApi.createVirtualKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnCxRole,
+                requestNewVirtualKey,
+                xPagopaPnCxGroups
+        );
     }
 
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -61,7 +74,7 @@ public class PnVirtualKeysManagerClientPGImpl {
 
         return virtualKeysApi.changeStatusVirtualKeys(
                 xPagopaPnUid,
-                CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+                xPagopaPnCxType,
                 xPagopaPnCxId,
                 xPagopaPnCxRole,
                 id,

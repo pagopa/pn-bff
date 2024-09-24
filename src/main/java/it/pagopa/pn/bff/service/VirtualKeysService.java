@@ -84,18 +84,18 @@ public class VirtualKeysService {
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return
      */
-    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, String id, List<String> xPagopaPnCxGroups, String xPagopaPnCxRole
+    public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                       String xPagopaPnCxId, String id,
+                                       List<String> xPagopaPnCxGroups, String xPagopaPnCxRole
     ){
-       pnVirtualKeysManagerClientPG.deleteVirtualKey(
-                xPagopaPnUid,
-                xPagopaPnCxType,
-                xPagopaPnCxId,
+       return pnVirtualKeysManagerClientPG.deleteVirtualKey(
+               xPagopaPnUid,
+               CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
+               xPagopaPnCxId,
                id,
                xPagopaPnCxGroups,
-                xPagopaPnCxRole
+               xPagopaPnCxRole
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-
-        return Mono.empty();
     }
 
     /**
@@ -117,7 +117,7 @@ public class VirtualKeysService {
         return requestNewVirtualKey.flatMap(request -> {
             Mono<ResponseNewVirtualKey> responseNewVirtualKey = pnVirtualKeysManagerClientPG.newVirtualKey(
                     xPagopaPnUid,
-                    xPagopaPnCxType,
+                    CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     RequestNewVirtualKeysMapper.modelMapper.mapRequestNewVirtualKey(request),
                     xPagopaPnCxGroups,
@@ -147,7 +147,7 @@ public class VirtualKeysService {
         return bffVirtualKeyStatusRequest.flatMap(request ->
                 pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                         xPagopaPnUid,
-                        xPagopaPnCxType,
+                        CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
                         xPagopaPnCxId,
                         id,
                         RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(request),

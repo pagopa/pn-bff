@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
@@ -108,7 +109,7 @@ public class VirtualKeysServiceTest {
     void deleteVirtualKey() {
         when(pnVirtualKeysManagerClientPG.deleteVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList()
@@ -134,7 +135,7 @@ public class VirtualKeysServiceTest {
     void deleteVirtualKeyError() {
         when(pnVirtualKeysManagerClientPG.deleteVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyList(),
@@ -163,7 +164,7 @@ public class VirtualKeysServiceTest {
 
         when(pnVirtualKeysManagerClientPG.newVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.any(RequestNewVirtualKey.class),
                 Mockito.anyList(),
@@ -191,7 +192,7 @@ public class VirtualKeysServiceTest {
 
         when(pnVirtualKeysManagerClientPG.newVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.any(RequestNewVirtualKey.class),
                 Mockito.anyList(),
@@ -221,7 +222,7 @@ public class VirtualKeysServiceTest {
 
         when(pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.any(),
@@ -255,7 +256,7 @@ public class VirtualKeysServiceTest {
 
         when(pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.any(),

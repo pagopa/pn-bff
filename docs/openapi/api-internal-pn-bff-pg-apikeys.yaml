@@ -408,7 +408,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/virtual-keys/{id}":
+  "/bff/v1/virtual-keys/{kid}":
     delete:
       summary: Eliminazione virtual key
       description: >-
@@ -451,7 +451,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/virtual-keys/{id}/status":
+  "/bff/v1/virtual-keys/{kid}/status":
     put:
       summary: Cambia lo stato della virtualKey
       description: >-
