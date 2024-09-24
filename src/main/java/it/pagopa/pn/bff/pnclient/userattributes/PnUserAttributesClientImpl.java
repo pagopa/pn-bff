@@ -23,6 +23,11 @@ public class PnUserAttributesClientImpl {
     private final CourtesyApi courtesyApi;
     private final LegalApi legalApi;
 
+    public Mono<Consent> getPgConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type){
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getPgConsentByType");
+        return consentsApi.getPgConsentByType( xPagopaPnUid,  xPagopaPnCxType,  type, null);
+    }
+
     public Mono<Consent> getConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType");
         return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, type, null);

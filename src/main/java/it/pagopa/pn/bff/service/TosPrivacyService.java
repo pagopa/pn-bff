@@ -26,6 +26,29 @@ public class TosPrivacyService {
     private final PnUserAttributesClientImpl pnUserAttributesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
+
+
+    /**
+     * Retrieve pg tos and privacy consents for the user
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Customer/Recipient Type
+     * @return an object containing the tos and privacy consents
+     */
+    public Flux<BffConsent> getPgTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
+        log.info("Get pg tos and privacy consents - type: {}", xPagopaPnCxType);
+
+        Flux<Consent> consents = Flux.empty();
+        for (ConsentType t : type) {
+            Mono<Consent> consent = pnUserAttributesClient.getPgConsentByType(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
+            consents = Flux.concat(consents, consent);
+        }
+
+        return consents
+                .map(TosPrivacyConsentMapper.tosPrivacyConsentMapper::mapConsent)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
+
     /**
      * Retrieve tos and privacy consents for the user
      *

@@ -25,6 +25,28 @@ public class TosPrivacyController implements UserConsentsApi {
         this.tosPrivacyService = tosPrivacyService;
     }
 
+
+    /**
+     * GET /bff/v1/pg/tos-privacy : Pg Tos & Privacy information
+     * Get the Ph Tos & Privacy information of the user
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Customer/Recipient Type
+     * @param exchange
+     * @return the Pg Tos & Privacy information of the user
+     */
+    @Override
+    public Mono<ResponseEntity<Flux<BffConsent>>> getPgTosPrivacyV1(String xPagopaPnUid,
+                                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                                  List<ConsentType> type,
+                                                                  final ServerWebExchange exchange) {
+
+        Flux<BffConsent> serviceResponse = tosPrivacyService
+                .getPgTosPrivacy(xPagopaPnUid, xPagopaPnCxType, type);
+
+        return serviceResponse.collectList()
+                .map(consents -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(consents)));
+    }
     /**
      * GET /bff/v2/tos-privacy : Tos & Privacy information
      * Get the Tos & Privacy information of the user
