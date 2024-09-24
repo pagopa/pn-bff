@@ -7,7 +7,6 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysRes
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
-import it.pagopa.pn.bff.mocks.PgInfoMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.PublicKeysPgService;
@@ -33,7 +32,6 @@ public class PublicKeysPgControllerTest {
     private static final String LAST_KEY = "LAST_KEY";
     private static final String CREATED_AT = "CREATED_AT";
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
-    private final PgInfoMock pgInfoMock = new PgInfoMock();
 
     @Autowired
     WebTestClient webTestClient;
@@ -46,15 +44,15 @@ public class PublicKeysPgControllerTest {
         BffPublicKeysResponse response = PublicKeysResponseMapper.modelMapper.mapPublicKeysResponse(publicKeysMock.getPublicKeysMock());
 
         Mockito.when(publicKeysPgService.getPublicKeys(
-                    Mockito.anyString(),
-                    Mockito.any(CxTypeAuthFleet.class),
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.anyList(),
-                    Mockito.anyInt(),
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.anyBoolean()
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyBoolean()
                 ))
                 .thenReturn(Mono.just(response));
 
@@ -65,7 +63,7 @@ public class PublicKeysPgControllerTest {
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("createdAt", CREATED_AT)
-                                .queryParam("showVirtualKey", true)
+                                .queryParam("showPublicKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -95,16 +93,16 @@ public class PublicKeysPgControllerTest {
     @Test
     void getPublicKeysError() {
         Mockito.when(publicKeysPgService.getPublicKeys(
-                Mockito.anyString(),
-                Mockito.any(CxTypeAuthFleet.class),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyList(),
-                Mockito.anyInt(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()
-        ))
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyInt(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyBoolean()
+                ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
@@ -114,7 +112,7 @@ public class PublicKeysPgControllerTest {
                                 .queryParam("limit", LIMIT)
                                 .queryParam("lastKey", LAST_KEY)
                                 .queryParam("createdAt", CREATED_AT)
-                                .queryParam("showVirtualKey", true)
+                                .queryParam("showPublicKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -318,12 +316,12 @@ public class PublicKeysPgControllerTest {
                 ))
                 .thenReturn(Mono.empty());
 
-        webTestClient.delete()
+        webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.PUBLIC_KEYS_PATH + "/PUBLIC_KEY_ID/status")
+                                .path(PnBffRestConstants.PUBLIC_KEYS_STATUS_PATH)
                                 .queryParam("status", "BLOCK")
-                                .build())
+                                .build("PUBLIC_KEY_ID"))
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -358,12 +356,12 @@ public class PublicKeysPgControllerTest {
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
-        webTestClient.delete()
+        webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.PUBLIC_KEYS_PATH + "/PUBLIC_KEY_ID/status")
+                                .path(PnBffRestConstants.PUBLIC_KEYS_STATUS_PATH)
                                 .queryParam("status", "BLOCK")
-                                .build())
+                                .build("PUBLIC_KEY_ID"))
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -407,8 +405,8 @@ public class PublicKeysPgControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.PUBLIC_KEYS_PATH)
-                                .build())
+                                .path(PnBffRestConstants.PUBLIC_KEYS_ROTATE_PATH)
+                                .build("PUBLIC_KEY_ID"))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -428,7 +426,7 @@ public class PublicKeysPgControllerTest {
                 eq(CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
                 eq(UserMock.PN_CX_ROLE),
-                "PUBLIC_KEY_ID",
+                eq("PUBLIC_KEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );
@@ -441,7 +439,6 @@ public class PublicKeysPgControllerTest {
         request.setPublicKey("mock-public-key-value");
         request.setExponent("mock-public-key-exponent");
         request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
-        BffPublicKeyResponse response = PublicKeyResponseMapper.modelMapper.mapPublicKeyResponse(publicKeysMock.gePublicKeyResponseMock());
 
         Mockito.when(publicKeysPgService.rotatePublicKey(
                         Mockito.anyString(),
@@ -457,8 +454,8 @@ public class PublicKeysPgControllerTest {
         webTestClient.post()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.PUBLIC_KEYS_PATH)
-                                .build())
+                                .path(PnBffRestConstants.PUBLIC_KEYS_ROTATE_PATH)
+                                .build("PUBLIC_KEY_ID"))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -476,7 +473,7 @@ public class PublicKeysPgControllerTest {
                 eq(CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
                 eq(UserMock.PN_CX_ROLE),
-                "PUBLIC_KEY_ID",
+                eq("PUBLIC_KEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
         );

@@ -3,10 +3,12 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyBody;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyConsent;
 import it.pagopa.pn.bff.mappers.tosprivacy.TosPrivacyConsentMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsentsMock {
     public Consent getTosConsentResponseMock() {
@@ -35,20 +37,20 @@ public class ConsentsMock {
         return consentAction;
     }
 
-    public BffTosPrivacyConsent getBffTosPrivacyConsentMock() {
-        BffTosPrivacyConsent bffTosPrivacyConsent = new BffTosPrivacyConsent();
+    public List<BffConsent> getBffTosPrivacyConsentMock() {
+        List<BffConsent> bffTosPrivacyConsent = new ArrayList<>();
 
-        bffTosPrivacyConsent.setTos(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
-        bffTosPrivacyConsent.setPrivacy(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getTosConsentResponseMock()));
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPrivacyConsentResponseMock()));
 
         return bffTosPrivacyConsent;
     }
 
-    public BffTosPrivacyBody acceptTosPrivacyBodyMock() {
-        BffTosPrivacyBody bffTosPrivacyBody = new BffTosPrivacyBody();
+    public List<BffTosPrivacyActionBody> acceptTosPrivacyBodyMock() {
+        List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
 
-        bffTosPrivacyBody.privacy(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
-        bffTosPrivacyBody.tos(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1"));
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.ConsentType.TOS));
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.ConsentType.DATAPRIVACY));
 
         return bffTosPrivacyBody;
     }

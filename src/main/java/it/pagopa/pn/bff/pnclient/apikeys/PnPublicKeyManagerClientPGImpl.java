@@ -97,4 +97,13 @@ public class PnPublicKeyManagerClientPGImpl {
                 xPagopaPnCxGroups
         );
     }
+
+    public Mono<PublicKeysIssuerResponse> getIssuerStatus(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                          String xPagoPaPnCxId) {
+        return publicKeysApi.getIssuerStatus(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagoPaPnCxId
+        );
+    }
 }

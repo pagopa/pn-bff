@@ -1,10 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.PublicKeysApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.service.PublicKeysPgService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -196,5 +193,28 @@ public class PublicKeysPgController implements PublicKeysApi {
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * GET /bff/v1/pg/public-keys : Public keys issuer status
+     * Get a paginated list of the public keys for the current PG user
+     *
+     * @param xPagopaPnUid      User Identifier (required)
+     * @param xPagopaPnCxType   Customer/Receiver Type (required)
+     * @param xPagopaPnCxId     Customer/Receiver Identifier (required)
+     * @return the public keys issuer status or error
+     */
+    public Mono<ResponseEntity<BffPublicKeysIssuerResponse>> getIssuerStatusPublicKeyV1(String xPagopaPnUid,
+                                                                                         CxTypeAuthFleet xPagopaPnCxType,
+                                                                                         String xPagopaPnCxId,
+                                                                                         final ServerWebExchange exchange) {
+
+        Mono<BffPublicKeysIssuerResponse> serviceResponse = publicKeysPgService.getPublicKeysIssuerStatus(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId
+        );
+
+        return serviceResponse.map((response -> ResponseEntity.status(HttpStatus.OK).body(response)));
     }
 }

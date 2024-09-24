@@ -9,17 +9,14 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResp
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
-import it.pagopa.pn.bff.mocks.PgInfoMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -29,18 +26,15 @@ import static org.mockito.Mockito.when;
 public class PublicKeysPgServiceTest {
     private static PublicKeysPgService publicKeysPgService;
     private static PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
-    private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
-    private final PgInfoMock pgInfoMock = new PgInfoMock();
 
     @BeforeAll
     public static void setup() {
         pnPublicKeyManagerClientPG = mock(PnPublicKeyManagerClientPGImpl.class);
-        pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnExternalRegistriesClient, pnBffExceptionUtility);
+        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnBffExceptionUtility);
     }
 
     @Test
@@ -56,13 +50,6 @@ public class PublicKeysPgServiceTest {
                 Mockito.anyString(),
                 Mockito.anyBoolean()
         )).thenReturn(Mono.just(publicKeysMock.getPublicKeysMock()));
-
-        when(pnExternalRegistriesClient.getPgGroups(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyList(),
-                Mockito.any()
-        )).thenReturn(Flux.fromIterable(pgInfoMock.getPgGroupsMock()));
 
         Mono<BffPublicKeysResponse> result = publicKeysPgService.getPublicKeys(
                 UserMock.PN_UID,
@@ -94,13 +81,6 @@ public class PublicKeysPgServiceTest {
                 Mockito.anyString(),
                 Mockito.anyBoolean()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
-
-        when(pnExternalRegistriesClient.getPgGroups(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyList(),
-                Mockito.any()
-        )).thenReturn(Flux.fromIterable(pgInfoMock.getPgGroupsMock()));
 
         Mono<BffPublicKeysResponse> result = publicKeysPgService.getPublicKeys(
                 UserMock.PN_UID,
