@@ -3,6 +3,28 @@ info:
 components:
   schemas:
 
+    BffPublicKeysCheckIssuerResponse:
+      type: object
+      required:
+        - issuer
+        - tosAccepted
+      properties:
+        issuer:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'
+#          type: object
+#          properties:
+#            isPresent:
+#              type: boolean
+#            issuerStatus:
+#              $ref: '#/components/schemas/BffPublicKeysIssuerStatus'
+        tosAccepted:
+          type: boolean
+
+    BffPublicKeysIssuerStatus:
+      description: Stato issuer
+      type: string
+      enum: [ 'ACTIVE', 'INACTIVE' ]
+
     BffPublicKeysResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysResponse'
 
@@ -12,5 +34,5 @@ components:
     BffPublicKeyResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyResponse'
 
-    BffPublicKeysIssuerResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'
+#    BffPublicKeysIssuerResponse:
+#      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'

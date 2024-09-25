@@ -271,11 +271,11 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/pg/public-keys/issuer/status":
+  "/bff/v1/pg/public-keys/check-issuer":
     get:
-      summary: Verifica esistenza issuer
+      summary: Verifica esistenza issuer e accettazione tos
       description: >-
-        Servizio di verifica esistenza issuer
+        Servizio di verifica esistenza issuer e accettazione tos
       tags:
         - PublicKeys
       operationId: getIssuerStatusPublicKeyV1
@@ -289,7 +289,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysIssuerResponse'
+                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysCheckIssuerResponse'
         '400':
           description: Bad request
           content:

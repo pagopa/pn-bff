@@ -104,4 +104,21 @@ public interface CxTypeMapper {
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet convertPublicKeysPGCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
 
+    /**
+     * Map bff CxTypeAuthFleet to the virtual key CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    @ValueMapping(source = "RADD", target = MappingConstants.NULL)
+    it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet convertVirtualKeysPGCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff apikey CxTypeAuthFleet to the user attributes CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    @ValueMapping(source = "RADD", target = MappingConstants.NULL)
+    it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet convertUserAttributesPGCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
 }

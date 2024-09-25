@@ -2,14 +2,13 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysIssuerResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeyRequestMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeysIssuerStatusMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
+import it.pagopa.pn.bff.mappers.publickeys.*;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +18,15 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static reactor.core.publisher.Mono.zip;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PublicKeysPgService {
     private final PnPublicKeyManagerClientPGImpl pnPublickeyManagerClientPG;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final PnUserAttributesClientImpl pnUserAttributesClient;
 
     /**
      * Get a paginated list of the public keys that belong to a PG and are accessible by the current user
@@ -191,16 +193,25 @@ public class PublicKeysPgService {
      * @param xPagopaPnCxId     PG id
      * @return BffPublicKeysIssuerResponse
      */
-    public Mono<BffPublicKeysIssuerResponse> getPublicKeysIssuerStatus(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<BffPublicKeysCheckIssuerResponse> checkIssuerPublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                        String xPagopaPnCxId) {
-        log.info("Get public keys issuer status - senderId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
 
-        Mono<PublicKeysIssuerResponse> publicKeysResponse = pnPublickeyManagerClientPG.getIssuerStatus(
+        log.info("Public keys check issuer - senderId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
+
+        Mono<PublicKeysIssuerResponse> publicKeysIssuerResponse = pnPublickeyManagerClientPG.getIssuerStatus(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(xPagopaPnCxType),
                 xPagopaPnCxId
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+        .map(PublicKeysIssuerStatusMapper.modelMapper::mapPublicKeysIssuerStatus);
+
+        // call api to verify tos acceptance
+        Mono<Consent> pnUserAttributesResp = pnUserAttributesClient.getConsentByType(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertUserAttributesPGCXType(xPagopaPnCxType),
+                ConsentType.TOS_DEST_B2B
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return publicKeysResponse.map(PublicKeysIssuerStatusMapper.modelMapper::mapPublicKeysIssuerStatus);
+        return Mono.zip(publicKeysIssuerResponse, pnUserAttributesResp).map(res -> PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(res.getT1(), res.getT2()));
     }
 }

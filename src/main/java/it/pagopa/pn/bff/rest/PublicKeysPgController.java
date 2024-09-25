@@ -204,12 +204,12 @@ public class PublicKeysPgController implements PublicKeysApi {
      * @param xPagopaPnCxId     Customer/Receiver Identifier (required)
      * @return the public keys issuer status or error
      */
-    public Mono<ResponseEntity<BffPublicKeysIssuerResponse>> getIssuerStatusPublicKeyV1(String xPagopaPnUid,
+    public Mono<ResponseEntity<BffPublicKeysCheckIssuerResponse>> getIssuerStatusPublicKeyV1(String xPagopaPnUid,
                                                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                                                          String xPagopaPnCxId,
                                                                                          final ServerWebExchange exchange) {
 
-        Mono<BffPublicKeysIssuerResponse> serviceResponse = publicKeysPgService.getPublicKeysIssuerStatus(
+        Mono<BffPublicKeysCheckIssuerResponse> serviceResponse = publicKeysPgService.checkIssuerPublicKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId

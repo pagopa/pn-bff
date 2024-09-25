@@ -12,6 +12,7 @@ import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
+import it.pagopa.pn.bff.pnclient.userattributes.PnUserAttributesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,14 +28,16 @@ public class PublicKeysPgServiceTest {
     private static PublicKeysPgService publicKeysPgService;
     private static PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
     private static PnBffExceptionUtility pnBffExceptionUtility;
+    private static PnUserAttributesClientImpl pnUserAttributesClient;
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
 
     @BeforeAll
     public static void setup() {
         pnPublicKeyManagerClientPG = mock(PnPublicKeyManagerClientPGImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
+        pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
 
-        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnBffExceptionUtility);
+        publicKeysPgService = new PublicKeysPgService(pnPublicKeyManagerClientPG, pnBffExceptionUtility, pnUserAttributesClient);
     }
 
     @Test
