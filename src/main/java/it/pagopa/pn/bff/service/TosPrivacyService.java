@@ -35,23 +35,45 @@ public class TosPrivacyService {
      * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
      * @return void
      */
-    public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnUid,
-                                                CxTypeAuthFleet xPagopaPnCxType,
-                                                Flux<BffTosPrivacyActionBody> tosPrivacyBody) {
+//    public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnUid,
+//                                                CxTypeAuthFleet xPagopaPnCxType,
+//                                                Flux<BffTosPrivacyActionBody> tosPrivacyBody) {
+//        log.info("Accept or decline pg tos and privacy consents - type: {}", xPagopaPnCxType);
+//
+//        Flux<Void> responses = tosPrivacyBody.flatMap(request -> {
+//            ConsentAction consentAction = new ConsentAction();
+//            consentAction.setAction(TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(request.getAction()));
+//            return pnUserAttributesClient.acceptConsentPg(
+//                    xPagopaPnUid,
+//                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+//                    TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(request.getType()),
+//                    consentAction,
+//                    request.getVersion()
+//            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+//        });
+//        return responses.collectList().then();
+//    }
+
+    public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                                  Flux<BffTosPrivacyActionBody> bffTosPrivacyActionBody,
+                                                  String xPagopaPnCxRole, List<String> xPagopaPnCxGroups) {
         log.info("Accept or decline pg tos and privacy consents - type: {}", xPagopaPnCxType);
 
-        Flux<Void> responses = tosPrivacyBody.flatMap(request -> {
+        Flux<Void> responses = bffTosPrivacyActionBody.flatMap(request -> {
             ConsentAction consentAction = new ConsentAction();
             consentAction.setAction(TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(request.getAction()));
             return pnUserAttributesClient.acceptConsentPg(
-                    xPagopaPnUid,
+                    xPagopaPnCxId,
                     CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                     TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(request.getType()),
+                    xPagopaPnCxRole,
+                    request.getVersion(),
                     consentAction,
-                    request.getVersion()
+                    xPagopaPnCxGroups
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
         });
         return responses.collectList().then();
+
     }
 
     /**

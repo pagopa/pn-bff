@@ -107,39 +107,47 @@ class PnUserAttributesClientImplTest {
 
     @Test
     void acceptConsentPg() {
-        when(consentsApi.consentAction(
+        when(consentsApi.setPgConsentAction(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.anyString(),
-                Mockito.any(ConsentAction.class)
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyList()
         )).thenReturn(Mono.empty());
 
         StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
+                "CUSTOMER",
+                "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
-                "1"
+                UserMock.PN_CX_GROUPS
         )).verifyComplete();
     }
 
     @Test
     void acceptConsentPgError() {
-        when(consentsApi.consentAction(
+        when(consentsApi.setPgConsentAction(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.anyString(),
-                Mockito.any(ConsentAction.class)
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyList()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
+                "CUSTOMER",
+                "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
-                "1"
+                UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
 

@@ -94,11 +94,13 @@ class PnUserAttributesClientImplTestIT {
                 );
 
         StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
-                UserMock.PN_UID,
-                CX_TYPE,
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
+                "CUSTOMER",
+                "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
-                "1.0"
+                UserMock.PN_CX_GROUPS
         )).expectNext().verifyComplete();
     }
 
@@ -109,11 +111,13 @@ class PnUserAttributesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
-                UserMock.PN_UID,
-                CX_TYPE,
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
+                "CUSTOMER",
+                "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
-                "1.0"
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 

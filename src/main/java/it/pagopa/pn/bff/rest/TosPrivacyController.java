@@ -36,13 +36,12 @@ public class TosPrivacyController implements UserConsentsApi {
      * @return
      */
     @Override
-    public Mono<ResponseEntity<Void>> acceptPgTosPrivacyV1(String xPagopaPnUid,
-                                                         CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type,
-                                                         Flux<BffTosPrivacyActionBody> tosPrivacyBody,
-                                                         ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Void>> acceptPgTosPrivacyV1(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
+                                                           Flux<BffTosPrivacyActionBody> bffTosPrivacyActionBody,
+                                                           String xPagopaPnCxRole, List<String> xPagopaPnCxGroups,  final ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = tosPrivacyService
-                .acceptOrDeclinePgTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+                .acceptOrDeclinePgTosPrivacy(xPagopaPnCxId, xPagopaPnCxType, bffTosPrivacyActionBody, xPagopaPnCxRole, xPagopaPnCxGroups);
 
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
@@ -60,7 +59,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * @return the Pg Tos & Privacy information of the user
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffConsent>>> getPgTosPrivacyV1(String xPagopaPnUid,
+    public Mono<ResponseEntity<Flux<BffConsent>>> getPgConsentByType(String xPagopaPnUid,
                                                                   CxTypeAuthFleet xPagopaPnCxType,
                                                                   List<ConsentType> type,
                                                                   final ServerWebExchange exchange) {

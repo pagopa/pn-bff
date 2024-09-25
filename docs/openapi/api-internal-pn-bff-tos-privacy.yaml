@@ -34,8 +34,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
@@ -60,8 +60,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
@@ -80,20 +80,20 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-
   '/bff/v1/pg/tos-privacy':
-    parameters:
-     - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'             # NO EXTERNAL
-     - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'          # NO EXTERNAL
-     - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
     get:
-      summary: Get single consent by type
-      description: Returns single consent type for the recipient. Return a Consent with accepted false if consent type is not found.
-      operationId: getPgTosPrivacyV1
+      summary: Accettazione TOS e Privacy
+      description: >-
+        Ritorna lo stato di accettazione dei TOS e della Privacy.
       tags:
         - UserConsents
+      operationId: getPgConsentByType
       #      security:                                                                # ONLY EXTERNAL
       #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'          # NO EXTERNAL
+        - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
           description: OK
@@ -108,14 +108,17 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
     put:
-      summary: Accept a single consent type
-      description: Accept single consent type for the recipient
-      operationId: acceptPgTosPrivacyV1
-      parameters:
-       - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'             # NO EXTERNAL
-       - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'          # NO EXTERNAL
+      summary: Accettazione TOS e Privacy
+      description: >-
+        Permette di accettare i TOS e la Privacy.
       tags:
         - UserConsents
+      operationId: acceptPgTosPrivacyV1
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'         # NO EXTERNAL
       #      security:                                                                # ONLY EXTERNAL
       #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
