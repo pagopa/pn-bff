@@ -35,14 +35,14 @@ public class TosPrivacyController implements UserConsentsApi {
      * @param exchange
      * @return
      */
-    //@Override
-    public Mono<ResponseEntity<Void>> acceptTosPrivacyV1(String xPagopaPnUid,
-                                                         CxTypeAuthFleet xPagopaPnCxType,
+    @Override
+    public Mono<ResponseEntity<Void>> acceptPgTosPrivacyV1(String xPagopaPnUid,
+                                                         CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type,
                                                          Flux<BffTosPrivacyActionBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = tosPrivacyService
-                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+                .acceptOrDeclinePgTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
 
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
