@@ -258,4 +258,34 @@ class PnPublicKeyManagerClientPGImplTest {
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void checkIssuerStatusPublicKeys() throws RestClientException {
+        when(publicKeysApi.getIssuerStatus(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(publicKeysMock.getIssuerStatusPublicKeysResponseMock()));
+
+        StepVerifier.create(pnPublicKeyManagerClientPG.getIssuerStatus(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        )).expectNext(publicKeysMock.getIssuerStatusPublicKeysResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void getIssuerStatusPublicKeysError() {
+        when(publicKeysApi.getIssuerStatus(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnPublicKeyManagerClientPG.getIssuerStatus(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        )).expectError(WebClientResponseException.class).verify();
+    }
 }

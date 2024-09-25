@@ -1,6 +1,9 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.*;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysCheckIssuerResponse;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -129,5 +132,34 @@ public class PublicKeysMock {
         publicKeyResponse.setKid("mock-public-key-kid");
 
         return publicKeyResponse;
+    }
+
+    public PublicKeysIssuerResponse getIssuerStatusPublicKeysResponseMock() {
+        PublicKeysIssuerResponse publicKeysIssuerResponse = new PublicKeysIssuerResponse();
+        publicKeysIssuerResponse.setIsPresent(true);
+        publicKeysIssuerResponse.setIssuerStatus(PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
+
+        return publicKeysIssuerResponse;
+    }
+
+    public BffPublicKeysCheckIssuerResponse checkIssuerStatusPublicKeysResponseMock() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse publicKeysIssuerResponse = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse();
+
+        publicKeysIssuerResponse.setIsPresent(true);
+        publicKeysIssuerResponse.setIssuerStatus(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
+
+        BffPublicKeysCheckIssuerResponse bffPublicKeysCheckIssuerResponse = new BffPublicKeysCheckIssuerResponse();
+        bffPublicKeysCheckIssuerResponse.setIssuer(publicKeysIssuerResponse);
+        bffPublicKeysCheckIssuerResponse.setTosAccepted(true);
+
+        return bffPublicKeysCheckIssuerResponse;
+    }
+
+    public BffPublicKeysCheckIssuerResponse getNullCheckIssuerMock() {
+        BffPublicKeysCheckIssuerResponse response = new BffPublicKeysCheckIssuerResponse();
+        response.setIssuer(null);
+        response.setTosAccepted(null);
+
+        return response;
     }
 }

@@ -29,6 +29,7 @@ public class PnBffRestConstants {
     public static final String PUBLIC_KEYS_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys";
     public static final String PUBLIC_KEYS_ROTATE_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys/{kid}/rotate";
     public static final String PUBLIC_KEYS_STATUS_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys/{kid}/status";
+    public static final String PUBLIC_KEYS_CHECK_ISSUER_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys/check-issuer";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
     public static final String PAYMENTS_CART_PATH = BFF_PATH + VERSION_1 + "/payments/cart";

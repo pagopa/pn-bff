@@ -15,10 +15,13 @@ import org.mapstruct.factory.Mappers;
 public interface PublicKeysCheckIssuerStatusMapper {
     PublicKeysCheckIssuerStatusMapper modelMapper = Mappers.getMapper(PublicKeysCheckIssuerStatusMapper.class);
 
-    default BffPublicKeysCheckIssuerResponse mapPublicKeysIssuerStatus(PublicKeysIssuerResponse publicKeysIssuerResponse, @Context Consent tosAccepted) {
+    default BffPublicKeysCheckIssuerResponse mapPublicKeysIssuerStatus(PublicKeysIssuerResponse publicKeysIssuerResponse, @Context Consent consent) {
         BffPublicKeysCheckIssuerResponse bffPublicKeysCheckIssuerResponse = new BffPublicKeysCheckIssuerResponse();
         bffPublicKeysCheckIssuerResponse.setIssuer(publicKeysIssuerResponse);
-        bffPublicKeysCheckIssuerResponse.setTosAccepted(tosAccepted.getAccepted());
+        if(consent != null)
+            bffPublicKeysCheckIssuerResponse.setTosAccepted(consent.getAccepted());
+        else
+            bffPublicKeysCheckIssuerResponse.setTosAccepted(null);
 
         return bffPublicKeysCheckIssuerResponse;
     }

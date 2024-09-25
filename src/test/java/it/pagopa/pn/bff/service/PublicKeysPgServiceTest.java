@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeyRequest;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysCheckIssuerResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
+import it.pagopa.pn.bff.mappers.publickeys.PublicKeysCheckIssuerStatusMapper;
+import it.pagopa.pn.bff.mappers.publickeys.PublicKeysIssuerStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
+import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.apikeys.PnPublicKeyManagerClientPGImpl;
@@ -331,6 +336,61 @@ public class PublicKeysPgServiceTest {
                 "PUBLIC_KEY_ID",
                 Mono.just(bffPublicKeyRequest),
                 UserMock.PN_CX_GROUPS
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void checkIssuerPublicKeys() {
+        ConsentsMock consentsMock = new ConsentsMock();
+        when(pnPublicKeyManagerClientPG.getIssuerStatus(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(publicKeysMock.getIssuerStatusPublicKeysResponseMock()));
+
+        when(pnUserAttributesClient.getConsentByType(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        )).thenReturn(Mono.just(consentsMock.getB2BConsentResponseMock()));
+
+        Mono<BffPublicKeysCheckIssuerResponse> result = publicKeysPgService.checkIssuerPublicKey(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        );
+
+        StepVerifier.create(result)
+                .expectNext(PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(
+                        PublicKeysIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(publicKeysMock.getIssuerStatusPublicKeysResponseMock()),
+                        consentsMock.getB2BConsentResponseMock()
+                ))
+                .verifyComplete();
+    }
+
+    @Test
+    void checkIssuerPublicKeysError() {
+        when(pnPublicKeyManagerClientPG.getIssuerStatus(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(publicKeysMock.getIssuerStatusPublicKeysResponseMock()));
+
+        when(pnUserAttributesClient.getConsentByType(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));;
+
+        Mono<BffPublicKeysCheckIssuerResponse> result = publicKeysPgService.checkIssuerPublicKey(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
         );
 
         StepVerifier.create(result)

@@ -31,6 +31,16 @@ public class ConsentsMock {
         return consent;
     }
 
+    public Consent getB2BConsentResponseMock() {
+        Consent consent = new Consent();
+        consent.setConsentType(ConsentType.TOS_DEST_B2B);
+        consent.setConsentVersion("1");
+        consent.setAccepted(true);
+        consent.setRecipientId("1234567890");
+        consent.setIsFirstAccept(false);
+        return consent;
+    }
+
     public ConsentAction requestConsentActionMock() {
         ConsentAction consentAction = new ConsentAction();
         consentAction.setAction(ConsentAction.ActionEnum.ACCEPT);
