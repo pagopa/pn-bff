@@ -9,7 +9,6 @@ import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -24,9 +23,9 @@ public class PnUserAttributesClientImpl {
     private final CourtesyApi courtesyApi;
     private final LegalApi legalApi;
 
-    public Flux<Consent> getConsents(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsents");
-        return consentsApi.getConsents(xPagopaPnUid, xPagopaPnCxType);
+    public Mono<Consent> getConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType");
+        return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, type, null);
     }
 
     public Mono<Void> acceptConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,

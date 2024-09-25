@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: FI1np1b3mB3xHJLLWQkO14UwdQOi503gCEQrsj9kgCg=
+  version: odz+sfDHDmOg+w7PF0HlDGlByYXjr4p1Norgu5+PUZg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1523,6 +1523,8 @@ paths:
       operationId: getTosPrivacyV2
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
           description: OK
@@ -1554,7 +1556,6 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-      parameters: []
     put:
       summary: Accettazione TOS e Privacy
       description: Permette di accettare i TOS e la Privacy.
@@ -2887,6 +2888,16 @@ components:
       required: true
       schema:
         type: string
+    BffQueryTosPrivacyType:
+      name: type
+      description: Tipo di consent
+      required: true
+      explode: true
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ConsentType'
     BffQueryFromTime:
       name: fromTime
       in: query
@@ -5522,6 +5533,7 @@ components:
       enum:
         - TOS
         - DATAPRIVACY
+        - TOS_DEST_B2B
         - TOS_SERCQ
         - DATAPRIVACY_SERCQ
     ConsentVersion:
@@ -5919,7 +5931,7 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           maxLength: 254
           pattern: >-
-            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO))$
+            ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO)|([a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+\??.*))$
         requestId:
           type: string
           maxLength: 64

@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <artifactId>pn-bff</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <name>pn-bff</name>
     <description>Backend for frontend della piattaforma SEND</description>
     <scm>
@@ -648,7 +648,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/61a0375d62688642e3fb43db08c55cb265c4101a/docs/openapi/api-internal-web-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/dbc5ba1c1e5e8454e6cacb7f2bc84a5905ff0a0c/docs/openapi/api-internal-web-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -685,7 +685,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/61a0375d62688642e3fb43db08c55cb265c4101a/docs/openapi/api-internal-b2b-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/dbc5ba1c1e5e8454e6cacb7f2bc84a5905ff0a0c/docs/openapi/api-internal-b2b-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -722,7 +722,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/61a0375d62688642e3fb43db08c55cb265c4101a/docs/openapi/api-internal-web-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/dbc5ba1c1e5e8454e6cacb7f2bc84a5905ff0a0c/docs/openapi/api-internal-web-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -872,7 +872,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-user-consents-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3e95df802f80d5877e0a653ef1139b27966b1ec8/docs/openapi/pn-user-consents-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -909,7 +909,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/bffa7c7d92f4238b16c81b4645b5e37972cda7c5/docs/openapi/pn-address-book-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3e95df802f80d5877e0a653ef1139b27966b1ec8/docs/openapi/pn-address-book-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

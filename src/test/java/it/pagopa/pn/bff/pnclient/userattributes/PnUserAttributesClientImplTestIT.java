@@ -18,9 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -57,32 +54,32 @@ class PnUserAttributesClientImplTestIT {
     }
 
     @Test
-    void getConsents() throws JsonProcessingException {
-        List<Consent> consents = new ArrayList<>();
-        consents.add(consentsMock.getTosConsentResponseMock());
-        consents.add(consentsMock.getPrivacyConsentResponseMock());
-        String response = objectMapper.writeValueAsString(consents);
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+    void getConsentByType() throws JsonProcessingException {
+        Consent consent = consentsMock.getTosConsentResponseMock();
+        String response = objectMapper.writeValueAsString(consent);
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnUserAttributesClient.getConsents(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
-        )).expectNextSequence(consents).verifyComplete();
+                CX_TYPE,
+                ConsentType.TOS
+        )).expectNext(consent).verifyComplete();
     }
 
     @Test
-    void getConsentsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path))
+    void getConsentByTypeError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnUserAttributesClient.getConsents(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
+                CX_TYPE,
+                ConsentType.TOS
         )).expectError().verify();
     }
 

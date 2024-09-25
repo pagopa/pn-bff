@@ -36,6 +36,7 @@ paths:
       operationId: getTosPrivacyV2
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
         - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
         '200':
