@@ -99,7 +99,6 @@ class TosPrivacyControllerTest {
         List<BffConsent> response = consentsMock.getBffTosPrivacyConsentMock();
         List<ConsentType> type = new ArrayList<>();
         type.add(ConsentType.TOS_DEST_B2B);
-        type.add(ConsentType.DATAPRIVACY);
 
         Mockito.when(tosPrivacyService.getPgTosPrivacy(
                         Mockito.anyString(),

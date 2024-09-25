@@ -41,7 +41,7 @@ class PnUserAttributesClientImplTest {
 
     @Test
     void getPgConsentByType() throws RestClientException {
-        Consent consent = consentsMock.getTosConsentResponseMock();
+        Consent consent = consentsMock.getPgTosConsentResponseMock();
         when(consentsApi.getPgConsentByType(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

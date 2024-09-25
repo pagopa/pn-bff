@@ -54,6 +54,70 @@ class PnUserAttributesClientImplTestIT {
     }
 
     @Test
+    void getPgConsentByType() throws JsonProcessingException {
+        Consent consent = consentsMock.getPgTosConsentResponseMock();
+        String response = objectMapper.writeValueAsString(consent);
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_UID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B
+        )).expectNext(consent).verifyComplete();
+    }
+
+    @Test
+    void getPgConsentByTypeError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_UID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B
+        )).expectError().verify();
+    }
+
+    @Test
+    void acceptPgTosConsent() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(path + "/TOS").withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("")
+                );
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_UID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1.0"
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void acceptPgTosConsentError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(path + "/TOS").withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_UID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1.0"
+        )).expectError().verify();
+    }
+
+    @Test
     void getConsentByType() throws JsonProcessingException {
         Consent consent = consentsMock.getTosConsentResponseMock();
         String response = objectMapper.writeValueAsString(consent);
