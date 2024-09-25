@@ -36,7 +36,7 @@ class PnDeliveryClientPAImplTestIT {
     private final Integer recipientIdx = 0;
     private final String attachmentName = "PAGOPA";
     private final String notificationsListPath = "/delivery/notifications/sent";
-    private final String notificationDetailPath = "/delivery/v2.3/notifications/sent/" + iun;
+    private final String notificationDetailPath = "/delivery/v2.4/notifications/sent/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
     private final String newNotificationPath = "/delivery/v2.3/requests";
