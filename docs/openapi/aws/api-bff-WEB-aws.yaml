@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: odz+sfDHDmOg+w7PF0HlDGlByYXjr4p1Norgu5+PUZg=
+  version: alBmiznmrcKsvhd83iMSS9ALl6FTWfUS4w879DmOcRI=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3047,8 +3047,6 @@ components:
       type: object
       properties:
         iun:
-          type: string
-          description: Identificativo Univoco Notifica
           $ref: '#/components/schemas/IUN'
         paProtocolNumber:
           type: string

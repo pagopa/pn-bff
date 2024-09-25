@@ -27,7 +27,7 @@ public class AddressesMock {
                 new LegalAndUnverifiedDigitalAddress()
                         .addressType(LegalAddressType.LEGAL)
                         .channelType(LegalChannelType.SERCQ)
-                        .value("x-pagopa-pn-sercq:SEND-self:notification-already-delivered")
+                        .value("x-pagopa-pn-sercq:send-self:notification-already-delivered")
                         .recipientId("1234567890")
                         .senderId("default")
         );
