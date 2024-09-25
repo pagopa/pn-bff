@@ -9,6 +9,8 @@ public class PnBffRestConstants {
     public static final String CX_ROLE_HEADER = "x-pagopa-pn-cx-role";
     private static final String BFF_PATH = "/bff";
     private static final String VERSION_1 = "/v1";
+    private static final String PG = "/pg";
+
     public static final String NOTIFICATIONS_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received";
     public static final String NOTIFICATION_AAR_QR_CODE_PATH = NOTIFICATIONS_RECEIVED_PATH + "/check-aar-qr-code";
     public static final String NOTIFICATIONS_RECEIVED_DELEGATED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/delegated";
@@ -37,6 +39,7 @@ public class PnBffRestConstants {
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
     private static final String VERSION_2 = "/v2";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_2 + "/tos-privacy";
+    public static final String TOS_PG_PRIVACY_PATH = BFF_PATH + VERSION_1 + PG +  "/tos-privacy";
 
     private PnBffRestConstants() {
     }

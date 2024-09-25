@@ -38,6 +38,40 @@ class PnUserAttributesClientImplTest {
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi")
     private LegalApi legalApi;
 
+
+    @Test
+    void getPgConsentByType() throws RestClientException {
+        Consent consent = consentsMock.getTosConsentResponseMock();
+        when(consentsApi.getPgConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any()
+        )).thenReturn(Mono.just(consent));
+
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B
+        )).expectNext(consent).verifyComplete();
+    }
+
+    @Test
+    void getPgContentByTypeError() {
+        when(consentsApi.getPgConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.any()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
     @Test
     void getConsentByType() throws RestClientException {
         Consent consent = consentsMock.getTosConsentResponseMock();
@@ -68,6 +102,44 @@ class PnUserAttributesClientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void acceptConsentPg() {
+        when(consentsApi.consentAction(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class)
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1"
+        )).verifyComplete();
+    }
+
+    @Test
+    void acceptConsentPgError() {
+        when(consentsApi.consentAction(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B,
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                "1"
         )).expectError(WebClientResponseException.class).verify();
     }
 

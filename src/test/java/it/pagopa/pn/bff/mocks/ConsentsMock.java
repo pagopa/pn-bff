@@ -54,4 +54,13 @@ public class ConsentsMock {
 
         return bffTosPrivacyBody;
     }
+
+    public List<BffTosPrivacyActionBody> acceptPgTosPrivacyBodyMock() {
+        List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
+
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS_SERCQ));
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.DATAPRIVACY));
+
+        return bffTosPrivacyBody;
+    }
 }
