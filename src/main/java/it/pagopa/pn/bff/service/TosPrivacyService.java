@@ -29,6 +29,31 @@ public class TosPrivacyService {
 
 
     /**
+     * Accept or decline pg tos and privacy consents
+     *
+     * @param xPagopaPnCxId    User Identifier
+     * @param xPagopaPnCxType Customer/Recipient Type
+     * @param consentType Type of consent
+     * @param xPagopaPnCxRole Role of Customer
+     * @param consentAction  action of consent
+     * @param version version of consent
+     * @param xPagopaPnCxGroups Customer/Recipient group
+     * @return
+     */
+    public Mono<Void> setPgConsentAction(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType consentType, String xPagopaPnCxRole, String version, ConsentAction consentAction, List<String> xPagopaPnCxGroups) {
+        log.info("Accept or decline pg tos and privacy consents - type: {}", xPagopaPnCxType);
+            return pnUserAttributesClient.setPgConsentAction(
+                    xPagopaPnCxId,
+                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
+                    consentType,
+                    xPagopaPnCxRole,
+                    version,
+                    consentAction,
+                    xPagopaPnCxGroups
+            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
+
+    /**
      * Retrieve pg tos and privacy consents for the user
      *
      * @param xPagopaPnUid    User Identifier

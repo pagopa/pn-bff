@@ -25,6 +25,30 @@ public class TosPrivacyController implements UserConsentsApi {
         this.tosPrivacyService = tosPrivacyService;
     }
 
+    /**
+     * PUT /bff/v1/pg/tos-privacy : Acceptance of  Pg TOS and Privacy
+     * Allows to accept the Pg  TOS and Privacy.
+     *
+     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxType Public Administration Type
+     * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
+     * @param exchange
+     * @return
+     */
+    //@Override
+    public Mono<ResponseEntity<Void>> acceptTosPrivacyV1(String xPagopaPnUid,
+                                                         CxTypeAuthFleet xPagopaPnCxType,
+                                                         Flux<BffTosPrivacyActionBody> tosPrivacyBody,
+                                                         ServerWebExchange exchange) {
+
+        Mono<Void> serviceResponse = tosPrivacyService
+                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
+    }
+
 
     /**
      * GET /bff/v1/pg/tos-privacy : Pg Tos & Privacy information
