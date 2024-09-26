@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -59,7 +60,7 @@ class TosPrivacyServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                         type
                 ))
-                .expectNextSequence(consentsMock.getBffTosPrivacyConsentMock())
+                .expectNextSequence(consentsMock.getBffPgTosPrivacyConsentMock())
                 .verifyComplete();
     }
 

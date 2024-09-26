@@ -56,6 +56,14 @@ public class ConsentsMock {
         return bffTosPrivacyConsent;
     }
 
+    public List<BffConsent> getBffPgTosPrivacyConsentMock() {
+        List<BffConsent> bffTosPrivacyConsent = new ArrayList<>();
+
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPgTosConsentResponseMock()));
+
+        return bffTosPrivacyConsent;
+    }
+
     public List<BffTosPrivacyActionBody> acceptTosPrivacyBodyMock() {
         List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
 

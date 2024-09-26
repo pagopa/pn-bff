@@ -40,7 +40,7 @@ class TosPrivacyControllerTest {
 
 
     @Test
-    void acceptPgTosPrivacyV1() {
+    void acceptPgTosPrivacy() {
         Mockito.when(tosPrivacyService.acceptOrDeclinePgTosPrivacy(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -56,6 +56,8 @@ class TosPrivacyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .body(Flux.fromIterable(request), List.class)
                 .exchange()
                 .expectStatus()
@@ -85,10 +87,13 @@ class TosPrivacyControllerTest {
 
         webTestClient
                 .put()
-                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PG_PRIVACY_PATH).build())
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PG_PRIVACY_PATH)
+                                .queryParam("type", ConsentType.TOS_DEST_B2B).build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .body(Flux.fromIterable(request), List.class)
                 .exchange()
                 .expectStatus()
@@ -104,7 +109,7 @@ class TosPrivacyControllerTest {
     }
 
     @Test
-    void getPgTosPrivacyV1() {
+    void getPgTosPrivacy() {
         List<BffConsent> response = consentsMock.getBffTosPrivacyConsentMock();
         List<ConsentType> type = new ArrayList<>();
         type.add(ConsentType.TOS_DEST_B2B);

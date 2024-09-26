@@ -114,7 +114,7 @@ paths:
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
-      parameters:
+      parameters:                                                                     # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'           # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'           # NO EXTERNAL
