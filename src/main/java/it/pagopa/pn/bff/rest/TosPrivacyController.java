@@ -30,7 +30,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * Allows to accept the Pg  TOS and Privacy.
      *
      * @param xPagopaPnCxId    User Identifier
-     * @param xPagopaPnCxType Public Administration Type
+     * @param xPagopaPnCxType Custome/Recipient Type
      * @param bffTosPrivacyActionBody  Body of the request containing the acceptance of the Pg TOS and Privacy
      * @param xPagopaPnCxRole    Customer/Recipietn Role
      * @param xPagopaPnCxGroups  List of Customer/Recipietn groups

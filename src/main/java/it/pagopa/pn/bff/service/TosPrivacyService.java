@@ -28,35 +28,19 @@ public class TosPrivacyService {
 
 
     /**
-     * Accept or decline tos and privacy consents
+     * Accept or decline pg tos and privacy consents
      *
-     * @param xPagopaPnUid    User Identifier
-     * @param xPagopaPnCxType Public Administration Type
-     * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
+     * @param xPagopaPnCxId    User Identifier
+     * @param xPagopaPnCxType Custome/Recipient Type
+     * @param bffTosPrivacyActionBody  Body of the request containing the acceptance of the Pg TOS and Privacy
+     * @param xPagopaPnCxRole    Customer/Recipietn Role
+     * @param xPagopaPnCxGroups  List of Customer/Recipietn groups
      * @return void
      */
-//    public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnUid,
-//                                                CxTypeAuthFleet xPagopaPnCxType,
-//                                                Flux<BffTosPrivacyActionBody> tosPrivacyBody) {
-//        log.info("Accept or decline pg tos and privacy consents - type: {}", xPagopaPnCxType);
-//
-//        Flux<Void> responses = tosPrivacyBody.flatMap(request -> {
-//            ConsentAction consentAction = new ConsentAction();
-//            consentAction.setAction(TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(request.getAction()));
-//            return pnUserAttributesClient.acceptConsentPg(
-//                    xPagopaPnUid,
-//                    CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
-//                    TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(request.getType()),
-//                    consentAction,
-//                    request.getVersion()
-//            ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-//        });
-//        return responses.collectList().then();
-//    }
-
     public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                                   Flux<BffTosPrivacyActionBody> bffTosPrivacyActionBody,
                                                   String xPagopaPnCxRole, List<String> xPagopaPnCxGroups) {
+
         log.info("Accept or decline pg tos and privacy consents - type: {}", xPagopaPnCxType);
 
         Flux<Void> responses = bffTosPrivacyActionBody.flatMap(request -> {
