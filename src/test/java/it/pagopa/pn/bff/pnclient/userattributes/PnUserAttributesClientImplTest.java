@@ -50,7 +50,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.just(consent));
 
         StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B
         )).expectNext(consent).verifyComplete();
@@ -66,7 +66,7 @@ class PnUserAttributesClientImplTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B
         )).expectError(WebClientResponseException.class).verify();

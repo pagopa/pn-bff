@@ -56,7 +56,7 @@ class TosPrivacyServiceTest {
                 .thenReturn(Mono.just(tosConsent));
 
         StepVerifier.create(tosPrivacyService.getPgTosPrivacy(
-                        UserMock.PN_UID,
+                        UserMock.PN_CX_ID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                         type
                 ))
@@ -76,7 +76,7 @@ class TosPrivacyServiceTest {
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(tosPrivacyService.getPgTosPrivacy(
-                        UserMock.PN_UID,
+                        UserMock.PN_CX_ID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                         type
                 ))

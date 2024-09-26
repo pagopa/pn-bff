@@ -62,16 +62,16 @@ public class TosPrivacyService {
     /**
      * Retrieve pg tos and privacy consents for the user
      *
-     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxId    User Identifier
      * @param xPagopaPnCxType Customer/Recipient Type
      * @return an object containing the tos and privacy consents
      */
-    public Flux<BffConsent> getPgTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
+    public Flux<BffConsent> getPgTosPrivacy(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
         log.info("Get pg tos and privacy consents - type: {}", xPagopaPnCxType);
 
         Flux<Consent> consents = Flux.empty();
         for (ConsentType t : type) {
-            Mono<Consent> consent = pnUserAttributesClient.getPgConsentByType(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
+            Mono<Consent> consent = pnUserAttributesClient.getPgConsentByType(xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
             consents = Flux.concat(consents, consent);
         }
 

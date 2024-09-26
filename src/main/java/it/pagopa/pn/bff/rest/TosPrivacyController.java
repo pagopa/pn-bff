@@ -55,20 +55,20 @@ public class TosPrivacyController implements UserConsentsApi {
      * GET /bff/v1/pg/tos-privacy : Pg Tos & Privacy information
      * Get the Pg Tos & Privacy information of the user
      *
-     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxId    User Identifier
      * @param xPagopaPnCxType Customer/Recipient Type
      * @param type            Consent Type
      * @param exchange
      * @return the Pg Tos & Privacy information of the user
      */
     @Override
-    public Mono<ResponseEntity<Flux<BffConsent>>> getPgConsentByType(String xPagopaPnUid,
+    public Mono<ResponseEntity<Flux<BffConsent>>> getPgConsentByType(String xPagopaPnCxId,
                                                                      CxTypeAuthFleet xPagopaPnCxType,
                                                                      List<ConsentType> type,
                                                                      final ServerWebExchange exchange) {
 
         Flux<BffConsent> serviceResponse = tosPrivacyService
-                .getPgTosPrivacy(xPagopaPnUid, xPagopaPnCxType, type);
+                .getPgTosPrivacy(xPagopaPnCxId, xPagopaPnCxType, type);
 
         return serviceResponse.collectList()
                 .map(consents -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(consents)));

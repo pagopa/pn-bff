@@ -129,7 +129,7 @@ class TosPrivacyControllerTest {
                         .build()
                 )
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER,UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .exchange()
                 .expectStatus()
@@ -138,7 +138,7 @@ class TosPrivacyControllerTest {
                 .isEqualTo(response);
 
         Mockito.verify(tosPrivacyService).getPgTosPrivacy(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CX_TYPE,
                 type
         );
@@ -164,14 +164,14 @@ class TosPrivacyControllerTest {
                         .build()
                 )
                 .accept(MediaType.APPLICATION_JSON)
-                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER,UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .exchange()
                 .expectStatus()
                 .isNotFound();
 
         Mockito.verify(tosPrivacyService).getPgTosPrivacy(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CX_TYPE,
                 type
         );

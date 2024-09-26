@@ -29,9 +29,9 @@ public class PnUserAttributesClientImpl {
         return consentsApi.setPgConsentAction(xPagopaPnCxId,xPagopaPnCxType,type,xPagopaPnCxRole,version,consentAction,xPagopaPnCxGroups);
     }
 
-    public Mono<Consent> getPgConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type){
+    public Mono<Consent> getPgConsentByType(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, ConsentType type){
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getPgConsentByType");
-        return consentsApi.getPgConsentByType( xPagopaPnUid,  xPagopaPnCxType,  type, null);
+        return consentsApi.getPgConsentByType( xPagopaPnCxId,  xPagopaPnCxType,  type, null);
     }
 
     public Mono<Consent> getConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {

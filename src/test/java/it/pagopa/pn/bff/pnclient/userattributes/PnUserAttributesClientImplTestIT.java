@@ -66,7 +66,7 @@ class PnUserAttributesClientImplTestIT {
                 );
 
         StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CX_TYPE,
                 ConsentType.TOS_DEST_B2B
         )).expectNext(consent).verifyComplete();
@@ -78,7 +78,7 @@ class PnUserAttributesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
-                UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CX_TYPE,
                 ConsentType.TOS_DEST_B2B
         )).expectError().verify();
