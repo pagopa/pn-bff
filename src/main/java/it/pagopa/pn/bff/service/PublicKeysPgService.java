@@ -18,8 +18,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static reactor.core.publisher.Mono.zip;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -207,7 +205,7 @@ public class PublicKeysPgService {
         // call api to verify tos acceptance
         Mono<Consent> pnUserAttributesResp = pnUserAttributesClient.getConsentByType(
                 xPagopaPnUid,
-                CxTypeMapper.cxTypeMapper.convertUserAttributesPGCXType(xPagopaPnCxType),
+                CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                 ConsentType.TOS_DEST_B2B
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
