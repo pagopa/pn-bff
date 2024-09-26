@@ -26,15 +26,14 @@ public class TosPrivacyService {
     private final PnUserAttributesClientImpl pnUserAttributesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
-
     /**
      * Accept or decline pg tos and privacy consents
      *
-     * @param xPagopaPnCxId    User Identifier
-     * @param xPagopaPnCxType Custome/Recipient Type
-     * @param bffTosPrivacyActionBody  Body of the request containing the acceptance of the Pg TOS and Privacy
-     * @param xPagopaPnCxRole    Customer/Recipietn Role
-     * @param xPagopaPnCxGroups  List of Customer/Recipietn groups
+     * @param xPagopaPnCxId           User Identifier
+     * @param xPagopaPnCxType         Customer/Recipient Type
+     * @param bffTosPrivacyActionBody Body of the request containing the acceptance of the Pg TOS and Privacy
+     * @param xPagopaPnCxRole         Customer/Recipient Role
+     * @param xPagopaPnCxGroups       List of Customer/Recipient groups
      * @return void
      */
     public Mono<Void> acceptOrDeclinePgTosPrivacy(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
