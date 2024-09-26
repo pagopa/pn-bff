@@ -37,8 +37,8 @@ paths:
       tags:
         - PublicKeys
       operationId: getPublicKeysV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
@@ -85,7 +85,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-
     post:
       summary: Censimento public key
       description: >-
@@ -93,8 +92,8 @@ paths:
       tags:
         - PublicKeys
       operationId: newPublicKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
@@ -135,8 +134,8 @@ paths:
       tags:
         - PublicKeys
       operationId: deletePublicKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
@@ -180,8 +179,8 @@ paths:
       tags:
         - PublicKeys
       operationId: changeStatusPublicKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
@@ -319,8 +318,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: getVirtualKeysV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
@@ -374,8 +373,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: newVirtualKeyV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
