@@ -34,8 +34,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
@@ -58,8 +58,58 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyBody'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+  '/bff/v1/pg/tos-privacy':
+    get:
+      summary: Accettazione Pg TOS e Privacy
+      description: >-
+        Ritorna lo stato di accettazione dei TOS e della Privacy del Pg.
+      tags:
+        - UserConsents
+      operationId: getPgConsentByType
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/schemas/BffTosPrivacyConsent'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+    put:
+      summary: Accettazione Pg TOS e Privacy
+      description: >-
+        Permette di accettare i TOS e la Privacy del Pg.
+      tags:
+        - UserConsents
+      operationId: acceptPgTosPrivacyV1
+      parameters:
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
         required: true
         content:
