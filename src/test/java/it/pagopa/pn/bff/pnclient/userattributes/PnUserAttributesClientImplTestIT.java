@@ -97,7 +97,7 @@ class PnUserAttributesClientImplTestIT {
                 UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
-                "CUSTOMER",
+                UserMock.PN_CX_ROLE,
                 "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
                 UserMock.PN_CX_GROUPS
@@ -114,7 +114,7 @@ class PnUserAttributesClientImplTestIT {
                 UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PG,
                 ConsentType.TOS_DEST_B2B,
-                "CUSTOMER",
+                UserMock.PN_CX_ROLE,
                 "1",
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
                 UserMock.PN_CX_GROUPS

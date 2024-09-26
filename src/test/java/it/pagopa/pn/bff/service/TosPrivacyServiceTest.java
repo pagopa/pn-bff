@@ -102,7 +102,7 @@ class TosPrivacyServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                 Flux.fromIterable(tosPrivacyBody),
-                "CUSTOMER",
+                UserMock.PN_CX_ROLE,
                 UserMock.PN_CX_GROUPS
                 );
 
@@ -127,7 +127,7 @@ class TosPrivacyServiceTest {
                         UserMock.PN_UID,
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
                         Flux.fromIterable(tosPrivacyBody),
-                        "CUSTOMER",
+                        UserMock.PN_CX_ROLE,
                         UserMock.PN_CX_GROUPS
 
                 ))

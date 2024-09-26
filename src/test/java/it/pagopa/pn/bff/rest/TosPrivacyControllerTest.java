@@ -66,7 +66,7 @@ class TosPrivacyControllerTest {
                 eq(UserMock.PN_CX_ID),
                 eq(CX_TYPE),
                 argThat(new FluxMatcher<>(Flux.fromIterable(request))),
-                eq("CUSTOMER"),
+                eq(UserMock.PN_CX_ROLE),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
@@ -98,7 +98,7 @@ class TosPrivacyControllerTest {
                 eq(UserMock.PN_CX_ID),
                 eq(CX_TYPE),
                 argThat(new FluxMatcher<>(Flux.fromIterable(request))),
-                eq("CUSTOMER"),
+                eq(UserMock.PN_CX_ROLE),
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
