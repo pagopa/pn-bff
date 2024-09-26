@@ -21,6 +21,16 @@ public class ConsentsMock {
         return consent;
     }
 
+    public Consent getPgTosConsentResponseMock() {
+        Consent consent = new Consent();
+        consent.setConsentType(ConsentType.TOS_DEST_B2B);
+        consent.setConsentVersion("1");
+        consent.setAccepted(true);
+        consent.setRecipientId("1234567890");
+        consent.setIsFirstAccept(false);
+        return consent;
+    }
+
     public Consent getPrivacyConsentResponseMock() {
         Consent consent = new Consent();
         consent.setConsentType(ConsentType.DATAPRIVACY);
@@ -46,11 +56,27 @@ public class ConsentsMock {
         return bffTosPrivacyConsent;
     }
 
+    public List<BffConsent> getBffPgTosPrivacyConsentMock() {
+        List<BffConsent> bffTosPrivacyConsent = new ArrayList<>();
+
+        bffTosPrivacyConsent.add(TosPrivacyConsentMapper.tosPrivacyConsentMapper.mapConsent(getPgTosConsentResponseMock()));
+
+        return bffTosPrivacyConsent;
+    }
+
     public List<BffTosPrivacyActionBody> acceptTosPrivacyBodyMock() {
         List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
 
         bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS));
         bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.DATAPRIVACY));
+
+        return bffTosPrivacyBody;
+    }
+
+    public List<BffTosPrivacyActionBody> acceptPgTosPrivacyBodyMock() {
+        List<BffTosPrivacyActionBody> bffTosPrivacyBody = new ArrayList<>();
+
+        bffTosPrivacyBody.add(new BffTosPrivacyActionBody().action(BffTosPrivacyActionBody.ActionEnum.ACCEPT).version("1").type(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS_DEST_B2B));
 
         return bffTosPrivacyBody;
     }

@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -39,6 +40,101 @@ class TosPrivacyServiceTest {
         pnUserAttributesClient = mock(PnUserAttributesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         tosPrivacyService = new TosPrivacyService(pnUserAttributesClient, pnBffExceptionUtility);
+    }
+
+    @Test
+    void getPgConsents() {
+        Consent tosConsent = consentsMock.getPgTosConsentResponseMock();
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType> type = new ArrayList<>();
+        type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS_DEST_B2B);
+
+        when(pnUserAttributesClient.getPgConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        ))
+                .thenReturn(Mono.just(tosConsent));
+
+        StepVerifier.create(tosPrivacyService.getPgTosPrivacy(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                        type
+                ))
+                .expectNextSequence(consentsMock.getBffPgTosPrivacyConsentMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void getPgConsentsError() {
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType> type = new ArrayList<>();
+        type.add(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType.TOS_DEST_B2B);
+
+        when(pnUserAttributesClient.getPgConsentByType(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(tosPrivacyService.getPgTosPrivacy(
+                        UserMock.PN_CX_ID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                        type
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void acceptOrDeclinePgTosPrivacy() {
+        List<BffTosPrivacyActionBody> tosPrivacyBody = consentsMock.acceptPgTosPrivacyBodyMock();
+
+        when(pnUserAttributesClient.acceptConsentPg(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.empty());
+
+        Mono<Void> result = tosPrivacyService.acceptOrDeclinePgTosPrivacy(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                Flux.fromIterable(tosPrivacyBody),
+                UserMock.PN_CX_ROLE,
+                UserMock.PN_CX_GROUPS
+                );
+
+        StepVerifier.create(result).expectComplete().verify();
+    }
+
+    @Test
+    void acceptOrDeclinePGTosPrivacyError() {
+        List<BffTosPrivacyActionBody> tosPrivacyBody = consentsMock.acceptPgTosPrivacyBodyMock();
+
+        when(pnUserAttributesClient.acceptConsentPg(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(ConsentType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(ConsentAction.class),
+                Mockito.anyList()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(tosPrivacyService.acceptOrDeclinePgTosPrivacy(
+                        UserMock.PN_UID,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PG,
+                        Flux.fromIterable(tosPrivacyBody),
+                        UserMock.PN_CX_ROLE,
+                        UserMock.PN_CX_GROUPS
+
+                ))
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
     }
 
     @Test

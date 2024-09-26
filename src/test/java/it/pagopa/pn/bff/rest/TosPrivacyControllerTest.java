@@ -12,6 +12,7 @@ import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import it.pagopa.pn.bff.utils.helpers.FluxMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -36,6 +37,145 @@ class TosPrivacyControllerTest {
     ConsentsMock consentsMock = new ConsentsMock();
     @MockBean
     private TosPrivacyService tosPrivacyService;
+
+
+    @Test
+    void acceptPgTosPrivacy() {
+        Mockito.when(tosPrivacyService.acceptOrDeclinePgTosPrivacy(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.any(),
+                        Mockito.anyString(),
+                        Mockito.anyList()))
+                .thenReturn(Mono.empty());
+
+        List<BffTosPrivacyActionBody> request = consentsMock.acceptPgTosPrivacyBodyMock();
+
+        webTestClient.put()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PG_PRIVACY_PATH).build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .body(Flux.fromIterable(request), List.class)
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody(Void.class);
+
+        Mockito.verify(tosPrivacyService).acceptOrDeclinePgTosPrivacy(
+                eq(UserMock.PN_CX_ID),
+                eq(CX_TYPE),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request))),
+                eq(UserMock.PN_CX_ROLE),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void acceptPgTosPrivacyError() {
+        Mockito.when(tosPrivacyService.acceptOrDeclinePgTosPrivacy(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(),
+                Mockito.anyString(),
+                Mockito.anyList()))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        List<BffTosPrivacyActionBody> request = consentsMock.acceptPgTosPrivacyBodyMock();
+
+        webTestClient
+                .put()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.TOS_PG_PRIVACY_PATH)
+                                .queryParam("type", ConsentType.TOS_DEST_B2B).build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .body(Flux.fromIterable(request), List.class)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(tosPrivacyService).acceptOrDeclinePgTosPrivacy(
+                eq(UserMock.PN_CX_ID),
+                eq(CX_TYPE),
+                argThat(new FluxMatcher<>(Flux.fromIterable(request))),
+                eq(UserMock.PN_CX_ROLE),
+                eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void getPgTosPrivacy() {
+        List<BffConsent> response = consentsMock.getBffTosPrivacyConsentMock();
+        List<ConsentType> type = new ArrayList<>();
+        type.add(ConsentType.TOS_DEST_B2B);
+
+        Mockito.when(tosPrivacyService.getPgTosPrivacy(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Flux.fromIterable(response));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.TOS_PG_PRIVACY_PATH)
+                        .queryParam("type", type)
+                        .build()
+                )
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER,UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(BffConsent.class)
+                .isEqualTo(response);
+
+        Mockito.verify(tosPrivacyService).getPgTosPrivacy(
+                UserMock.PN_CX_ID,
+                CX_TYPE,
+                type
+        );
+    }
+
+    @Test
+    void getPgTosPrivacyError() {
+        List<ConsentType> type = new ArrayList<>();
+        type.add(ConsentType.TOS_DEST_B2B);
+        type.add(ConsentType.DATAPRIVACY);
+
+        Mockito.when(tosPrivacyService.getPgTosPrivacy(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyList()))
+                .thenReturn(Flux.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.TOS_PG_PRIVACY_PATH)
+                        .queryParam("type", type)
+                        .build()
+                )
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER,UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(tosPrivacyService).getPgTosPrivacy(
+                UserMock.PN_CX_ID,
+                CX_TYPE,
+                type
+        );
+    }
 
     @Test
     void getTosPrivacy() {
