@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: TecdLxa3xtcVok2M/YSNlkBrXkp/9a9JMjLP+q33j9E=
+  version: XRaC2Y4ORJVr7IMevFXA4ZW0LT+op9M0S4NTpZ3yRp0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1521,6 +1521,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/BffQueryTosPrivacyType'
       responses:
@@ -1536,8 +1538,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
@@ -1562,6 +1562,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
         required: true
         content:
@@ -1577,8 +1579,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
@@ -1613,10 +1613,12 @@ paths:
   /v1/pg/tos-privacy:
     get:
       summary: Accettazione Pg TOS e Privacy
-      description: Ritorna lo stato di accettazione dei TOS e della Privacy del Pg.
+      description: Ritorna lo stato di accettazione dei TOS e della Privacy della Pg.
       tags:
         - UserConsents
       operationId: getPgConsentByType
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/BffQueryTosPrivacyType'
       responses:
@@ -1632,8 +1634,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
@@ -1654,11 +1654,12 @@ paths:
         type: http_proxy
     put:
       summary: Accettazione Pg TOS e Privacy
-      description: Permette di accettare i TOS e la Privacy del Pg.
+      description: Permette di accettare i TOS e la Privacy della Pg.
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
-      parameters: []
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
         required: true
         content:
@@ -1674,8 +1675,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
@@ -1694,6 +1693,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+      parameters: []
     options:
       operationId: Options for /v1/pg/tos-privacy API CORS
       x-amazon-apigateway-integration:

@@ -34,8 +34,8 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
@@ -58,8 +58,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         required: true
         content:
@@ -79,12 +79,12 @@ paths:
     get:
       summary: Accettazione Pg TOS e Privacy
       description: >-
-        Ritorna lo stato di accettazione dei TOS e della Privacy del Pg.
+        Ritorna lo stato di accettazione dei TOS e della Privacy della Pg.
       tags:
         - UserConsents
       operationId: getPgConsentByType
-      #      security:                                                                # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
         - $ref: './tos-privacy-schemas/tos-privacy.yaml#/components/parameters/BffQueryTosPrivacyType'
       responses:
@@ -103,13 +103,12 @@ paths:
     put:
       summary: Accettazione Pg TOS e Privacy
       description: >-
-        Permette di accettare i TOS e la Privacy del Pg.
+        Permette di accettare i TOS e la Privacy della Pg.
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
-      parameters:
-      #      security:                                                                # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
         required: true
         content:
