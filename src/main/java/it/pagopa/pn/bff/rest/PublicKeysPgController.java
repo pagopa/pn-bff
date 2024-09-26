@@ -197,7 +197,7 @@ public class PublicKeysPgController implements PublicKeysApi {
 
     /**
      * GET /bff/v1/pg/public-keys : Public keys issuer status
-     * Get a paginated list of the public keys for the current PG user
+     * Get the check issuer Status Object
      *
      * @param xPagopaPnUid      User Identifier (required)
      * @param xPagopaPnCxType   Customer/Receiver Type (required)

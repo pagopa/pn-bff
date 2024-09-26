@@ -11,7 +11,6 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysChe
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysCheckIssuerStatusMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeysIssuerStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
@@ -29,7 +28,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PublicKeysPgServiceTest {
+class PublicKeysPgServiceTest {
     private static PublicKeysPgService publicKeysPgService;
     private static PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
     private static PnBffExceptionUtility pnBffExceptionUtility;
@@ -366,8 +365,8 @@ public class PublicKeysPgServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(
-                        PublicKeysIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(publicKeysMock.getIssuerStatusPublicKeysResponseMock()),
+                .expectNext(PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(
+                        publicKeysMock.getIssuerStatusPublicKeysResponseMock(),
                         consentsMock.getB2BConsentResponseMock()
                 ))
                 .verifyComplete();

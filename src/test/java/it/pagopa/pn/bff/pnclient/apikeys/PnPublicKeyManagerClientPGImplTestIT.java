@@ -248,7 +248,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     }
 
     @Test
-    void getIssuerStatusPublicKeys() throws JsonProcessingException {
+    void checkIssuerStatusPublicKeys() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(publicKeysMock.getIssuerStatusPublicKeysResponseMock());
         mockServerClient.when(request().withMethod("GET").withPath(path + "/issuer/status"))
                 .respond(response()
@@ -265,7 +265,7 @@ class PnPublicKeyManagerClientPGImplTestIT {
     }
 
     @Test
-    void getIssuerStatusPublicKeysError() {
+    void checkIssuerStatusPublicKeysError() {
         mockServerClient.when(request().withMethod("GET").withPath(path + "/issuer/status"))
                 .respond(response().withStatusCode(404));
 

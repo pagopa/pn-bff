@@ -198,12 +198,11 @@ public class PublicKeysPgService {
 
         log.info("Public keys check issuer - senderId: {} - type: {}", xPagopaPnCxId, xPagopaPnCxType);
 
-        Mono<PublicKeysIssuerResponse> publicKeysIssuerResponse = pnPublickeyManagerClientPG.getIssuerStatus(
+        Mono<it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysIssuerResponse> publicKeysIssuerResponse = pnPublickeyManagerClientPG.getIssuerStatus(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(xPagopaPnCxType),
                 xPagopaPnCxId
-        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-        .map(PublicKeysIssuerStatusMapper.modelMapper::mapPublicKeysIssuerStatus);
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // call api to verify tos acceptance
         Mono<Consent> pnUserAttributesResp = pnUserAttributesClient.getConsentByType(
@@ -212,6 +211,6 @@ public class PublicKeysPgService {
                 ConsentType.TOS_DEST_B2B
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return Mono.zip(publicKeysIssuerResponse, pnUserAttributesResp).map(res -> PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(res.getT1(), res.getT2()));
+        return Mono.zip(publicKeysIssuerResponse, pnUserAttributesResp).map(res -> PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(res.getT1(), res.getT2()));
     }
 }

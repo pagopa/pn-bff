@@ -1,8 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.*;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysCheckIssuerResponse;
 
 import java.time.OffsetDateTime;
@@ -11,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PublicKeysMock {
-    private ArrayList<String> getPublicKeyGroups(String... groups) { return new ArrayList<>(Arrays.asList(groups)); }
 
     private ArrayList<PublicKeyStatusHistory> getPublicKeyStatusHistory(PublicKeyStatusHistory... statusHistories) {
         return new ArrayList<>(Arrays.asList(statusHistories));
@@ -143,23 +140,16 @@ public class PublicKeysMock {
     }
 
     public BffPublicKeysCheckIssuerResponse checkIssuerStatusPublicKeysResponseMock() {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse publicKeysIssuerResponse = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse();
+        BffPublicKeysCheckIssuerResponse bffPublicKeysIssuerResponse = new BffPublicKeysCheckIssuerResponse();
 
-        publicKeysIssuerResponse.setIsPresent(true);
-        publicKeysIssuerResponse.setIssuerStatus(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse bffIssuer = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse();
 
-        BffPublicKeysCheckIssuerResponse bffPublicKeysCheckIssuerResponse = new BffPublicKeysCheckIssuerResponse();
-        bffPublicKeysCheckIssuerResponse.setIssuer(publicKeysIssuerResponse);
-        bffPublicKeysCheckIssuerResponse.setTosAccepted(true);
+        bffIssuer.setIsPresent(true);
+        bffIssuer.setIssuerStatus(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
 
-        return bffPublicKeysCheckIssuerResponse;
-    }
+        bffPublicKeysIssuerResponse.setTosAccepted(true);
+        bffPublicKeysIssuerResponse.setIssuer(bffIssuer);
 
-    public BffPublicKeysCheckIssuerResponse getNullCheckIssuerMock() {
-        BffPublicKeysCheckIssuerResponse response = new BffPublicKeysCheckIssuerResponse();
-        response.setIssuer(null);
-        response.setTosAccepted(null);
-
-        return response;
+        return bffPublicKeysIssuerResponse;
     }
 }

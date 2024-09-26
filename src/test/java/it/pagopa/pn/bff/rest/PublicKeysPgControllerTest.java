@@ -6,7 +6,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysCheckIssuerStatusMapper;
-import it.pagopa.pn.bff.mappers.publickeys.PublicKeysIssuerStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(PublicKeysPgController.class)
-public class PublicKeysPgControllerTest {
+class PublicKeysPgControllerTest {
     private static final Integer LIMIT = 10;
     private static final String LAST_KEY = "LAST_KEY";
     private static final String CREATED_AT = "CREATED_AT";
@@ -486,8 +485,8 @@ public class PublicKeysPgControllerTest {
         consent.setConsentType(ConsentType.TOS_DEST_B2B);
         consent.setAccepted(true);
 
-        BffPublicKeysCheckIssuerResponse response = PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(
-                PublicKeysIssuerStatusMapper.modelMapper.mapPublicKeysIssuerStatus(publicKeysMock.getIssuerStatusPublicKeysResponseMock()),
+        BffPublicKeysCheckIssuerResponse response = PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(
+                publicKeysMock.getIssuerStatusPublicKeysResponseMock(),
                 consent
         );
 

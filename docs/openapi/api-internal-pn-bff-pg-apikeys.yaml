@@ -225,6 +225,8 @@ paths:
       tags:
         - PublicKeys
       operationId: rotatePublicKeyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
@@ -278,6 +280,8 @@ paths:
       tags:
         - PublicKeys
       operationId: getIssuerStatusPublicKeyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
@@ -307,8 +311,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-
-  # TODO: Public key activation status specification
 
   "/bff/v1/virtual-keys":
     get:
@@ -415,6 +417,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: deleteVirtualKeyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'
@@ -458,6 +462,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: changeStatusVirtualKeysV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'

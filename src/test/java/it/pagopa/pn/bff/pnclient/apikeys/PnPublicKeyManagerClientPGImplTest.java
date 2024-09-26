@@ -275,7 +275,7 @@ class PnPublicKeyManagerClientPGImplTest {
     }
 
     @Test
-    void getIssuerStatusPublicKeysError() {
+    void checkIssuerStatusPublicKeysError() {
         when(publicKeysApi.getIssuerStatus(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
