@@ -40,7 +40,7 @@ public class TosPrivacyController implements UserConsentsApi {
     @Override
     public Mono<ResponseEntity<Void>> acceptPgTosPrivacyV1(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                                            Flux<BffTosPrivacyActionBody> bffTosPrivacyActionBody,
-                                                           String xPagopaPnCxRole, List<String> xPagopaPnCxGroups,  final ServerWebExchange exchange) {
+                                                           String xPagopaPnCxRole, List<String> xPagopaPnCxGroups, final ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = tosPrivacyService
                 .acceptOrDeclinePgTosPrivacy(xPagopaPnCxId, xPagopaPnCxType, bffTosPrivacyActionBody, xPagopaPnCxRole, xPagopaPnCxGroups);
@@ -63,9 +63,9 @@ public class TosPrivacyController implements UserConsentsApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffConsent>>> getPgConsentByType(String xPagopaPnUid,
-                                                                  CxTypeAuthFleet xPagopaPnCxType,
-                                                                  List<ConsentType> type,
-                                                                  final ServerWebExchange exchange) {
+                                                                     CxTypeAuthFleet xPagopaPnCxType,
+                                                                     List<ConsentType> type,
+                                                                     final ServerWebExchange exchange) {
 
         Flux<BffConsent> serviceResponse = tosPrivacyService
                 .getPgTosPrivacy(xPagopaPnUid, xPagopaPnCxType, type);
@@ -73,12 +73,14 @@ public class TosPrivacyController implements UserConsentsApi {
         return serviceResponse.collectList()
                 .map(consents -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(consents)));
     }
+
     /**
      * GET /bff/v2/tos-privacy : Tos & Privacy information
      * Get the Tos & Privacy information of the user
      *
      * @param xPagopaPnUid    User Identifier
      * @param xPagopaPnCxType Public Administration Type
+     * @param type            List of consents to retrieve
      * @param exchange
      * @return the Tos & Privacy information of the user
      */
@@ -103,7 +105,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * @param xPagopaPnCxType Public Administration Type
      * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
      * @param exchange
-     * @return
+     * @return void
      */
     @Override
     public Mono<ResponseEntity<Void>> acceptTosPrivacyV2(String xPagopaPnUid,

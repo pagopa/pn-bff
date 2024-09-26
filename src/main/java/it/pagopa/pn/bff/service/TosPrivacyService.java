@@ -86,6 +86,7 @@ public class TosPrivacyService {
      *
      * @param xPagopaPnUid    User Identifier
      * @param xPagopaPnCxType Public Administration Type
+     * @param type            List of consents to retrieve
      * @return an object containing the tos and privacy consents
      */
     public Flux<BffConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
