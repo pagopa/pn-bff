@@ -29,9 +29,11 @@ public class TosPrivacyController implements UserConsentsApi {
      * PUT /bff/v1/pg/tos-privacy : Acceptance of  Pg TOS and Privacy
      * Allows to accept the Pg  TOS and Privacy.
      *
-     * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxId    User Identifier
      * @param xPagopaPnCxType Public Administration Type
-     * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
+     * @param bffTosPrivacyActionBody  Body of the request containing the acceptance of the Pg TOS and Privacy
+     * @param xPagopaPnCxRole    Customer/Recipietn Role
+     * @param xPagopaPnCxGroups  List of Customer/Recipietn groups
      * @param exchange
      * @return
      */
@@ -51,10 +53,11 @@ public class TosPrivacyController implements UserConsentsApi {
 
     /**
      * GET /bff/v1/pg/tos-privacy : Pg Tos & Privacy information
-     * Get the Ph Tos & Privacy information of the user
+     * Get the Pg Tos & Privacy information of the user
      *
      * @param xPagopaPnUid    User Identifier
      * @param xPagopaPnCxType Customer/Recipient Type
+     * @param type Consent Type
      * @param exchange
      * @return the Pg Tos & Privacy information of the user
      */
