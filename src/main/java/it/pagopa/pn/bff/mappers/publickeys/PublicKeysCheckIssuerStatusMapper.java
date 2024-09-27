@@ -26,13 +26,4 @@ public interface PublicKeysCheckIssuerStatusMapper {
     @Mapping(target = "issuer", source = "publicKeysIssuerResponse")
     @Mapping(target = "tosAccepted", source = "consent.accepted")
     BffPublicKeysCheckIssuerResponse mapPublicKeysCheckIssuerStatus(PublicKeysIssuerResponse publicKeysIssuerResponse, Consent consent);
-//        BffPublicKeysCheckIssuerResponse bffPublicKeysCheckIssuerResponse = new BffPublicKeysCheckIssuerResponse();
-//        bffPublicKeysCheckIssuerResponse.setIssuer(publicKeysIssuerResponse);
-//        if(consent != null)
-//            bffPublicKeysCheckIssuerResponse.setTosAccepted(consent.getAccepted());
-//        else
-//            bffPublicKeysCheckIssuerResponse.setTosAccepted(null);
-//
-//        return bffPublicKeysCheckIssuerResponse;
-//    }
 }

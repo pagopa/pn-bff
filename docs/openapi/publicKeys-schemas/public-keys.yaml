@@ -14,11 +14,6 @@ components:
         tosAccepted:
           type: boolean
 
-    BffPublicKeysIssuerStatus:
-      description: Stato issuer
-      type: string
-      enum: [ 'ACTIVE', 'INACTIVE' ]
-
     BffPublicKeysResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysResponse'
 

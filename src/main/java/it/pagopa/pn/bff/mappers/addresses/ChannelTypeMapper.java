@@ -16,7 +16,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface ChannelTypeMapper {
 
-    String SERCQ_SEND_VALUE = "x-pagopa-pn-sercq:SEND-self:notification-already-delivered";
+    String SERCQ_SEND_VALUE = "x-pagopa-pn-sercq:send-self:notification-already-delivered";
 
     ChannelTypeMapper channelTypeMapper = Mappers.getMapper(ChannelTypeMapper.class);
 
