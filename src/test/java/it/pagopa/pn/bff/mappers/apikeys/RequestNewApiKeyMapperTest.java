@@ -27,7 +27,7 @@ class RequestNewApiKeyMapperTest {
 
         RequestNewApiKey requestNewApiKey = RequestNewApiKeyMapper.modelMapper.mapRequestNewApiKey(bffRequestNewApiKey);
         assertNotNull(requestNewApiKey);
-        assertThat(requestNewApiKey).usingRecursiveComparison().isEqualTo(apiKeysMock.geRequestNewApiKeyMock());
+        assertThat(requestNewApiKey).usingRecursiveComparison().isEqualTo(apiKeysMock.getRequestNewApiKeyMock());
 
         requestNewApiKey = RequestNewApiKeyMapper.modelMapper.mapRequestNewApiKey(null);
         assertNull(requestNewApiKey);

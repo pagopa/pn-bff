@@ -3,7 +3,6 @@ package it.pagopa.pn.bff.mappers.publickeys;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.PublicKeysIssuerResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysCheckIssuerResponse;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,7 +19,7 @@ public interface PublicKeysCheckIssuerStatusMapper {
      * Maps a PublicKeysIssuerResponse to a BffPublicKeysCheckIssuerResponse
      *
      * @param publicKeysIssuerResponse the PublicKeysIssuerResponse to map
-     * @param consent the Consent to map
+     * @param consent                  the Consent to map
      * @return the mapped BffPublicKeysCheckIssuerResponse
      */
     @Mapping(target = "issuer", source = "publicKeysIssuerResponse")

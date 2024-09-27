@@ -140,7 +140,7 @@ class ApiKeysPaControllerTest {
         groups.add("mock-id-1");
         groups.add("mock-id-3");
         request.setGroups(groups);
-        BffResponseNewApiKey response = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.geResponseNewApiKeyMock());
+        BffResponseNewApiKey response = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.getResponseNewApiKeyMock());
 
         Mockito.when(apiKeysPaService.newApiKey(
                         Mockito.anyString(),
