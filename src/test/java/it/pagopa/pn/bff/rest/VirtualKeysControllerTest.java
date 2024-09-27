@@ -12,7 +12,7 @@ import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
-import it.pagopa.pn.bff.service.VirtualKeysService;
+import it.pagopa.pn.bff.service.VirtualKeysPgService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
@@ -30,17 +30,17 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(VirtualKeysController.class)
-public class VirtualKeysControllerTest {
+class VirtualKeysControllerTest {
     private final VirtualKeysMock virtualKeysMock = new VirtualKeysMock();
     @Autowired
     WebTestClient webTestClient;
     @MockBean
-    private VirtualKeysService virtualKeysService;
+    private VirtualKeysPgService virtualKeysPgService;
 
     @Test
     void getVirtualKeys() {
         BffVirtualKeysResponse response = VirtualKeysMapper.modelMapper.mapVirtualKeysResponse(virtualKeysMock.getVirtualKeysMock());
-        Mockito.when(virtualKeysService.getVirtualKeys(
+        Mockito.when(virtualKeysPgService.getVirtualKeys(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -75,7 +75,7 @@ public class VirtualKeysControllerTest {
                 .expectBody(BffVirtualKeysResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(virtualKeysService).getVirtualKeys(
+        Mockito.verify(virtualKeysPgService).getVirtualKeys(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -90,7 +90,7 @@ public class VirtualKeysControllerTest {
 
     @Test
     void getVirtualKeysError() {
-        Mockito.when(virtualKeysService.getVirtualKeys(
+        Mockito.when(virtualKeysPgService.getVirtualKeys(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -124,7 +124,7 @@ public class VirtualKeysControllerTest {
                 .isNotFound();
 
 
-        Mockito.verify(virtualKeysService).getVirtualKeys(
+        Mockito.verify(virtualKeysPgService).getVirtualKeys(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -140,7 +140,7 @@ public class VirtualKeysControllerTest {
 
     @Test
     void deleteVirtualKey() {
-        Mockito.when(virtualKeysService.deleteVirtualKey(
+        Mockito.when(virtualKeysPgService.deleteVirtualKey(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -167,7 +167,45 @@ public class VirtualKeysControllerTest {
                 .isOk()
                 .expectBody(Void.class);
 
-        Mockito.verify(virtualKeysService).deleteVirtualKey(
+        Mockito.verify(virtualKeysPgService).deleteVirtualKey(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                "VIRTUALKEY_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+
+        );
+    }
+    @Test
+    void deleteVirtualKeyError() {
+        Mockito.when(virtualKeysPgService.deleteVirtualKey(
+                        Mockito.anyString(),
+                        Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.delete()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH + "/VIRTUALKEY_ID")
+                                .build())
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header("id", "VIRTUALKEY_ID")
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(virtualKeysPgService).deleteVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -184,7 +222,7 @@ public class VirtualKeysControllerTest {
         request.setName("mock-virtual-key-name");
         BffNewVirtualKeyResponse response = ResponseNewVirtualKeysMapper.modelMapper.mapResponseNewVirtualKey(virtualKeysMock.getResponseNewVirtualKeyMock());
 
-        Mockito.when(virtualKeysService.newVirtualKey(
+        Mockito.when(virtualKeysPgService.newVirtualKey(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -214,7 +252,7 @@ public class VirtualKeysControllerTest {
                 .expectBody(BffNewVirtualKeyResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(virtualKeysService).newVirtualKey(
+        Mockito.verify(virtualKeysPgService).newVirtualKey(
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
@@ -230,7 +268,7 @@ public class VirtualKeysControllerTest {
         request.setName("mock-virtual-key-name");
         BffNewVirtualKeyResponse response = ResponseNewVirtualKeysMapper.modelMapper.mapResponseNewVirtualKey(virtualKeysMock.getResponseNewVirtualKeyMock());
 
-        Mockito.when(virtualKeysService.newVirtualKey(
+        Mockito.when(virtualKeysPgService.newVirtualKey(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -259,7 +297,7 @@ public class VirtualKeysControllerTest {
                 .isNotFound();
 
 
-        Mockito.verify(virtualKeysService).newVirtualKey(
+        Mockito.verify(virtualKeysPgService).newVirtualKey(
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
@@ -274,7 +312,7 @@ public class VirtualKeysControllerTest {
         BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
         request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.BLOCK);
 
-        Mockito.when(virtualKeysService.changeStatusVirtualKey(
+        Mockito.when(virtualKeysPgService.changeStatusVirtualKey(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -303,7 +341,7 @@ public class VirtualKeysControllerTest {
                 .isOk()
                 .expectBody(Void.class);
 
-        Mockito.verify(virtualKeysService).changeStatusVirtualKey(
+        Mockito.verify(virtualKeysPgService).changeStatusVirtualKey(
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
@@ -319,7 +357,7 @@ public class VirtualKeysControllerTest {
         BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
         request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.BLOCK);
 
-        Mockito.when(virtualKeysService.changeStatusVirtualKey(
+        Mockito.when(virtualKeysPgService.changeStatusVirtualKey(
                         Mockito.anyString(),
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
@@ -347,7 +385,7 @@ public class VirtualKeysControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(virtualKeysService).changeStatusVirtualKey(
+        Mockito.verify(virtualKeysPgService).changeStatusVirtualKey(
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),

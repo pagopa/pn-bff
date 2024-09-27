@@ -9,12 +9,9 @@ import java.util.List;
 
 public class VirtualKeysMock {
 
-    private ArrayList<String> getVirtualkeyGroups(String... groups) {
-        return new ArrayList<>(Arrays.asList(groups));
-    }
 
 
-    private VirtualKey getVirtualKeyMock(String id, String value, String name, OffsetDateTime lastUpdate, ArrayList<String> groups, VirtualKeyStatus virtualKeyStatus) {
+    private VirtualKey getVirtualKeyMock(String id, String value, String name, OffsetDateTime lastUpdate, VirtualKeyStatus virtualKeyStatus) {
         VirtualKey virtualKey = new VirtualKey();
         virtualKey.setId(id);
         virtualKey.setValue(value);
@@ -36,7 +33,6 @@ public class VirtualKeysMock {
                 "9e522ef5-a024-4dbd-8a59-3e090c637650",
                 "Rimborso e multe",
                 OffsetDateTime.parse("2022-09-21T09:33:58.709695008Z"),
-                getVirtualkeyGroups("mock-group-1", "mock-group-2", "mock-group-3", "mock-group-4", "mock-group-5"),
                 VirtualKeyStatus.ENABLED
         );
         // second virtual key
@@ -45,7 +41,6 @@ public class VirtualKeysMock {
                 "9e522ef5-a024-4dbd-8a59-3e090c637652",
                 "Cartelle esattoriali",
                 OffsetDateTime.parse("2022-09-22T09:33:58.709695008Z"),
-                getVirtualkeyGroups("mock-group-2"),
                 VirtualKeyStatus.BLOCKED
         );
         // third virtual key
@@ -54,7 +49,6 @@ public class VirtualKeysMock {
                 "9e522ef5-a024-4dbd-8a59-3e090c637654",
                 "Rimborsi",
                 OffsetDateTime.parse("2022-09-22T09:33:58.709695008Z"),
-                getVirtualkeyGroups("mock-group-3"),
                 VirtualKeyStatus.ROTATED
         );
         virtualKeyRows.add(firstApiKey);

@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.VirtualKeysApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
-import it.pagopa.pn.bff.service.VirtualKeysService;
+import it.pagopa.pn.bff.service.VirtualKeysPgService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,10 @@ import java.util.List;
 @RestController
 public class VirtualKeysController implements VirtualKeysApi {
 
-    private final VirtualKeysService virtualKeysService;
+    private final VirtualKeysPgService virtualKeysPgService;
 
-    public VirtualKeysController(VirtualKeysService virtualKeysService) {
-        this.virtualKeysService = virtualKeysService;
+    public VirtualKeysController(VirtualKeysPgService virtualKeysPgService) {
+        this.virtualKeysPgService = virtualKeysPgService;
     }
 
     /**
@@ -49,7 +49,7 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                                          Boolean showVirtualKey,
                                                                          final ServerWebExchange exchange) {
 
-        Mono<BffVirtualKeysResponse> serviceResponse = virtualKeysService.getVirtualKeys(
+        Mono<BffVirtualKeysResponse> serviceResponse = virtualKeysPgService.getVirtualKeys(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxRole, xPagopaPnCxGroups, limit, lastKey, lastUpdate, showVirtualKey
         );
 
@@ -57,7 +57,8 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
-     * Delete virtual key
+     * DELETE bff/v1/virtual-keys/{kid}: delete virtual key
+     * Delete virtual key with passing kid
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Customer/Recipient Type
@@ -72,7 +73,7 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                          String xPagopaPnCxId, String kid,
                                                          List<String> xPagopaPnCxGroups, String xPagopaPnCxRole,
                                                          final ServerWebExchange exchange) {
-        Mono<Void> serviceResponse = virtualKeysService.deleteVirtualKey(
+        Mono<Void> serviceResponse = virtualKeysPgService.deleteVirtualKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -84,6 +85,7 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
+     * POST bff/v1/virtual-keys: create a new virtual key
      * Create new virtual key
      *
      * @param xPagopaPnUid         User Identifier
@@ -100,7 +102,7 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                                           String xPagopaPnCxId, Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
                                                                           List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange) {
 
-        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysService.newVirtualKey(
+        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysPgService.newVirtualKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -130,7 +132,7 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                                 String xPagopaPnCxId, String kid, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
                                                                 List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange) {
 
-        Mono<Void> serviceResponse = virtualKeysService.changeStatusVirtualKey(
+        Mono<Void> serviceResponse = virtualKeysPgService.changeStatusVirtualKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

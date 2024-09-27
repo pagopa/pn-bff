@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class VirtualKeysService {
+public class VirtualKeysPgService {
 
     private final PnVirtualKeysManagerClientPGImpl pnVirtualKeysManagerClientPG;
     private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
@@ -47,7 +47,7 @@ public class VirtualKeysService {
                                                        Integer limit, String lastKey,
                                                        String lastUpdate, Boolean showVirtualKey
     ) {
-        log.info("Get api key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Get virtual key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         Mono<VirtualKeysResponse> virtualKeysResponse = pnVirtualKeysManagerClientPG.getVirtualKeys(
                 xPagopaPnUid,
@@ -60,11 +60,6 @@ public class VirtualKeysService {
                 lastUpdate,
                 showVirtualKey
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-
-        // list of groups linked to the pa
-        log.info("Get user groups - senderId: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxGroups);
-
-
         return virtualKeysResponse.map(VirtualKeysMapper.modelMapper::mapVirtualKeysResponse);
     }
 
@@ -83,6 +78,8 @@ public class VirtualKeysService {
                                        String xPagopaPnCxId, String kid,
                                        List<String> xPagopaPnCxGroups, String xPagopaPnCxRole
     ) {
+        log.info("Delete virtual key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+
         return pnVirtualKeysManagerClientPG.deleteVirtualKey(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
@@ -138,7 +135,7 @@ public class VirtualKeysService {
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                              String xPagopaPnCxId, String kid, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
                                              List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
-        log.info("Change api key {} status - senderId: {} - type: {} - groups: {}", kid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Change virtual key {} status - senderId: {} - type: {} - groups: {}", kid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return bffVirtualKeyStatusRequest.flatMap(request ->
                 pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                         xPagopaPnUid,

@@ -24,7 +24,7 @@ public class VirtualKeysMapperTest {
         assertEquals(bffVirtualKeysResponse.getTotal(), virtualKeysResponse.getTotal());
         assertEquals(bffVirtualKeysResponse.getItems().size(), virtualKeysResponse.getItems().size());
 
-        BffApiKeysResponse bffApiKeysResponseNull = ApiKeysMapper.modelMapper.mapApiKeysResponse(null, new ArrayList<>());
-        assertNull(bffApiKeysResponseNull);
+        BffVirtualKeysResponse bffVirtualKeysResponseNull = VirtualKeysMapper.modelMapper.mapVirtualKeysResponse(null);
+        assertNull(bffVirtualKeysResponseNull);
     }
 }

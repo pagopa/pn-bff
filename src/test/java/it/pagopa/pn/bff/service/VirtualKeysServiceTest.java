@@ -22,8 +22,8 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class VirtualKeysServiceTest {
-    private static VirtualKeysService virtualKeysService;
+class VirtualKeysServiceTest {
+    private static VirtualKeysPgService virtualKeysPgService;
     private static PnVirtualKeysManagerClientPGImpl pnVirtualKeysManagerClientPG;
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
@@ -36,7 +36,7 @@ public class VirtualKeysServiceTest {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        virtualKeysService = new VirtualKeysService(pnVirtualKeysManagerClientPG, pnExternalRegistriesClient, pnBffExceptionUtility);
+        virtualKeysPgService = new VirtualKeysPgService(pnVirtualKeysManagerClientPG, pnExternalRegistriesClient, pnBffExceptionUtility);
     }
 
 
@@ -55,7 +55,7 @@ public class VirtualKeysServiceTest {
         )).thenReturn(Mono.just(virtualKeysMock.getVirtualKeysMock()));
 
 
-        Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
+        Mono<BffVirtualKeysResponse> result = virtualKeysPgService.getVirtualKeys(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -86,7 +86,7 @@ public class VirtualKeysServiceTest {
                 Mockito.anyBoolean()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Mono<BffVirtualKeysResponse> result = virtualKeysService.getVirtualKeys(
+        Mono<BffVirtualKeysResponse> result = virtualKeysPgService.getVirtualKeys(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -116,7 +116,7 @@ public class VirtualKeysServiceTest {
                 , Mockito.anyString()
         )).thenReturn(Mono.empty());
 
-        Mono<Void> result = virtualKeysService.deleteVirtualKey(
+        Mono<Void> result = virtualKeysPgService.deleteVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -142,7 +142,7 @@ public class VirtualKeysServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Mono<Void> result = virtualKeysService.deleteVirtualKey(
+        Mono<Void> result = virtualKeysPgService.deleteVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -171,7 +171,7 @@ public class VirtualKeysServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.just(virtualKeysMock.getResponseNewVirtualKeyMock()));
 
-        Mono<BffNewVirtualKeyResponse> result = virtualKeysService.newVirtualKey(
+        Mono<BffNewVirtualKeyResponse> result = virtualKeysPgService.newVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -186,7 +186,7 @@ public class VirtualKeysServiceTest {
     }
 
     @Test
-    void newVirtualKeysError() {
+    void newVirtualKeyError() {
         BffNewVirtualKeyRequest bffNewVirtualKeyRequest = new BffNewVirtualKeyRequest();
         bffNewVirtualKeyRequest.setName("mock-virtual-key-name");
 
@@ -199,7 +199,7 @@ public class VirtualKeysServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
-        Mono<BffNewVirtualKeyResponse> result = virtualKeysService.newVirtualKey(
+        Mono<BffNewVirtualKeyResponse> result = virtualKeysPgService.newVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -230,7 +230,7 @@ public class VirtualKeysServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.empty());
 
-        Mono<Void> result = virtualKeysService.changeStatusVirtualKey(
+        Mono<Void> result = virtualKeysPgService.changeStatusVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
@@ -266,7 +266,7 @@ public class VirtualKeysServiceTest {
                 )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
 
-        Mono<Void> result = virtualKeysService.changeStatusVirtualKey(
+        Mono<Void> result = virtualKeysPgService.changeStatusVirtualKey(
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
