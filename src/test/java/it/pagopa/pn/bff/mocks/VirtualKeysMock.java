@@ -17,7 +17,7 @@ public class VirtualKeysMock {
         virtualKey.setValue(value);
         virtualKey.setName(name);
         virtualKey.setLastUpdate(lastUpdate);
-        virtualKey.setStatus(virtualKey.getStatus());
+        virtualKey.setStatus(virtualKeyStatus);
         return virtualKey;
     }
 
