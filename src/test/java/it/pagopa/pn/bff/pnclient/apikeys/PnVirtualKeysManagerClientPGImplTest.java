@@ -22,14 +22,12 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnVirtualKeysManagerClientPGImpl.class})
 @ExtendWith(SpringExtension.class)
-class PnVirtualKeysManagerClientPgImplTest {
+class PnVirtualKeysManagerClientPGImplTest {
+    private final VirtualKeysMock virtualKeysMock = new VirtualKeysMock();
     @Autowired
     private PnVirtualKeysManagerClientPGImpl pgVirtualKeysManageClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi")
     private VirtualKeysApi virtualKeysApi;
-
-    private final VirtualKeysMock virtualKeysMock = new VirtualKeysMock();
-
 
     @Test
     void getVirtualKeys() throws RestClientException {
@@ -137,7 +135,7 @@ class PnVirtualKeysManagerClientPgImplTest {
                 Mockito.anyString(),
                 Mockito.any(RequestNewVirtualKey.class),
                 Mockito.anyList()
-                )).thenReturn(Mono.just(virtualKeysMock.getResponseNewVirtualKeyMock()));
+        )).thenReturn(Mono.just(virtualKeysMock.getResponseNewVirtualKeyMock()));
 
         StepVerifier.create(pgVirtualKeysManageClient.newVirtualKey(
                 UserMock.PN_UID,
@@ -146,7 +144,7 @@ class PnVirtualKeysManagerClientPgImplTest {
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-                )).expectNext(virtualKeysMock.getResponseNewVirtualKeyMock()).verifyComplete();
+        )).expectNext(virtualKeysMock.getResponseNewVirtualKeyMock()).verifyComplete();
     }
 
     @Test
@@ -167,7 +165,7 @@ class PnVirtualKeysManagerClientPgImplTest {
                 virtualKeysMock.getRequestNewVirtualKeyMock(),
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-                )).expectError(WebClientResponseException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
@@ -192,7 +190,7 @@ class PnVirtualKeysManagerClientPgImplTest {
                 requestVirtualKeyStatus,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-                )).expectNext().verifyComplete();
+        )).expectNext().verifyComplete();
     }
 
     @Test
@@ -217,6 +215,6 @@ class PnVirtualKeysManagerClientPgImplTest {
                 requestVirtualKeyStatus,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-                )).expectError(WebClientResponseException.class).verify();
+        )).expectError(WebClientResponseException.class).verify();
     }
 }
