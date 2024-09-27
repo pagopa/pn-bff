@@ -23,7 +23,7 @@ class PublicKeysCheckIssuerStatusMapperTest {
         publicKeysIssuerResponse.setIssuerStatus(PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
         publicKeysIssuerResponse.setIsPresent(true);
 
-        consent = consentsMock.getB2BConsentResponseMock();
+        consent = consentsMock.getPgTosConsentResponseMock();
 
         BffPublicKeysCheckIssuerResponse bffPublicKeysCheckIssuerResponse =
                 PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(publicKeysIssuerResponse, consent);

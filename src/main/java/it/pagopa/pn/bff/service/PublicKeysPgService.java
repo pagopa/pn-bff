@@ -203,8 +203,8 @@ public class PublicKeysPgService {
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         // call api to verify tos acceptance
-        Mono<Consent> pnUserAttributesResp = pnUserAttributesClient.getConsentByType(
-                xPagopaPnUid,
+        Mono<Consent> pnUserAttributesResp = pnUserAttributesClient.getPgConsentByType(
+                xPagopaPnCxId,
                 CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                 ConsentType.TOS_DEST_B2B
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);

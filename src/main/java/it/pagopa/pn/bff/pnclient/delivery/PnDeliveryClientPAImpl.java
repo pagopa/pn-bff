@@ -48,12 +48,12 @@ public class PnDeliveryClientPAImpl {
         );
     }
 
-    public Mono<FullSentNotificationV23> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullSentNotificationV24> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun,
                                                              List<String> xPagopaPnCxGroups) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV23");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV24");
 
-        return senderReadB2BApi.getSentNotificationV23(
+        return senderReadB2BApi.getSentNotificationV24(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

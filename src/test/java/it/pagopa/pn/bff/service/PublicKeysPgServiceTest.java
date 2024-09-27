@@ -352,11 +352,11 @@ class PublicKeysPgServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.just(publicKeysMock.getIssuerStatusPublicKeysResponseMock()));
 
-        when(pnUserAttributesClient.getConsentByType(
+        when(pnUserAttributesClient.getPgConsentByType(
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class)
-        )).thenReturn(Mono.just(consentsMock.getB2BConsentResponseMock()));
+        )).thenReturn(Mono.just(consentsMock.getPgTosConsentResponseMock()));
 
         Mono<BffPublicKeysCheckIssuerResponse> result = publicKeysPgService.checkIssuerPublicKey(
                 UserMock.PN_UID,
@@ -367,7 +367,7 @@ class PublicKeysPgServiceTest {
         StepVerifier.create(result)
                 .expectNext(PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(
                         publicKeysMock.getIssuerStatusPublicKeysResponseMock(),
-                        consentsMock.getB2BConsentResponseMock()
+                        consentsMock.getPgTosConsentResponseMock()
                 ))
                 .verifyComplete();
     }
@@ -380,7 +380,7 @@ class PublicKeysPgServiceTest {
                 Mockito.anyString()
         )).thenReturn(Mono.just(publicKeysMock.getIssuerStatusPublicKeysResponseMock()));
 
-        when(pnUserAttributesClient.getConsentByType(
+        when(pnUserAttributesClient.getPgConsentByType(
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class)
