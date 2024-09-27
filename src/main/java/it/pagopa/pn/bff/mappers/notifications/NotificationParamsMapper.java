@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

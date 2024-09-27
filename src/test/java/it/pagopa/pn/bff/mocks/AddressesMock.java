@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationRequest;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAcceptRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUpdateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffAcceptRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffNewMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffSearchMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffUpdateRequest;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -56,15 +56,15 @@ public class MandateMock {
         return newMandateRequest;
     }
 
-    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.OrganizationIdDto getBffOrganizationMock(int index) {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.OrganizationIdDto organization = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.OrganizationIdDto();
+    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.OrganizationIdDto getBffOrganizationMock(int index) {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.OrganizationIdDto organization = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.OrganizationIdDto();
         organization.setName("Organization " + index);
         organization.setUniqueIdentifier("organization-" + index);
         return organization;
     }
 
-    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto getBffUserMock(String firstName, String lastName, String fiscalCode) {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto user = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.UserDto();
+    private it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.UserDto getBffUserMock(String firstName, String lastName, String fiscalCode) {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.UserDto user = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.UserDto();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setPerson(true);
@@ -79,7 +79,7 @@ public class MandateMock {
         OffsetDateTime tomorrow = today.plusDays(1);
         newMandateRequest.setDateto(tomorrow.format(fmt));
         newMandateRequest.setDelegate(getBffUserMock("Mario", "Rossi", "RSSMRA80A01H501U"));
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.OrganizationIdDto> visibilityIds = new ArrayList<>();
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.OrganizationIdDto> visibilityIds = new ArrayList<>();
         visibilityIds.add(getBffOrganizationMock(1));
         visibilityIds.add(getBffOrganizationMock(2));
         visibilityIds.add(getBffOrganizationMock(3));

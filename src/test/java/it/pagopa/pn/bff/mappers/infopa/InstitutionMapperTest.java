@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.mappers.infopa;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.RootParentResourcePN;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitution;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

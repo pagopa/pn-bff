@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

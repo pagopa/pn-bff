@@ -18,5 +18,5 @@ public interface PaListMapper {
      * @param paList List of PA
      * @return BffPaSummary
      */
-    it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary mapPaList(PaSummary paList);
+    it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.PaSummary mapPaList(PaSummary paList);
 }

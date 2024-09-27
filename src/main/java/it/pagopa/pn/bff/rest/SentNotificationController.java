@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationSentApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.service.NotificationsPAService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -215,7 +215,7 @@ public class SentNotificationController implements NotificationSentApi {
         Flux<BffPreLoadResponse> serviceResponse = notificationsPAService.preSignedUpload(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffPreLoadRequest
         );
-        
+
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

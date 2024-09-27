@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.mappers.addresses;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyChannelType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalChannelType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffChannelType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffChannelType;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

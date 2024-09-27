@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.mappers.payments;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaymentInfoItem;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaymentInfoRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentInfoItem;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.PaymentInfoRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

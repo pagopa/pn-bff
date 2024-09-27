@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.mappers;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.ProblemError;
+
+import it.pagopa.pn.common.rest.error.v1.dto.ProblemError;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

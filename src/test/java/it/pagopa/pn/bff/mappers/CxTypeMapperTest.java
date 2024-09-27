@@ -1,6 +1,5 @@
 package it.pagopa.pn.bff.mappers;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +9,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertDeliveryRecipientCXType() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PF;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PF;
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet actualConvertRecipientCXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertRecipientCXTypeResult);
         assertEquals(actualConvertRecipientCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
@@ -18,7 +17,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertDeliveryB2bPACXType() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(cxTypeAuthFleet);
         assertNotNull(actualConvertPACXTypeResult);
         assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
@@ -26,7 +25,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertDeliveryWebPACXType() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertDeliveryWebPACXType(cxTypeAuthFleet);
         assertNotNull(actualConvertPACXTypeResult);
         assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
@@ -34,7 +33,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertApiKeysPACXType() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.CxTypeAuthFleet actualConvertPACXTypeResult = CxTypeMapper.cxTypeMapper.convertApiKeysPACXType(cxTypeAuthFleet);
         assertNotNull(actualConvertPACXTypeResult);
         assertEquals(actualConvertPACXTypeResult.getValue(), cxTypeAuthFleet.getValue());
@@ -42,7 +41,15 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertExternalRegistriesSelfCare() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet actualConvertExternalRegistriesSelfCare = CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertExternalRegistriesSelfCare);
+        assertEquals(actualConvertExternalRegistriesSelfCare.getValue(), cxTypeAuthFleet.getValue());
+    }
+
+    @Test
+    void testConvertExternalRegistriesPayments() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet actualConvertExternalRegistriesSelfCare = CxTypeMapper.cxTypeMapper.convertExternalRegistriesCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertExternalRegistriesSelfCare);
         assertEquals(actualConvertExternalRegistriesSelfCare.getValue(), cxTypeAuthFleet.getValue());
@@ -50,7 +57,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertUserAttributes() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet actualConvertUserAttributes = CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertUserAttributes);
         assertEquals(actualConvertUserAttributes.getValue(), cxTypeAuthFleet.getValue());
@@ -58,7 +65,7 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertDeliveryPush() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PA;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA;
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet actualConvertDeliveryPush = CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertDeliveryPush);
         assertEquals(actualConvertDeliveryPush.getValue(), cxTypeAuthFleet.getValue());
@@ -66,9 +73,25 @@ class CxTypeMapperTest {
 
     @Test
     void testConvertMandate() {
-        CxTypeAuthFleet cxTypeAuthFleet = CxTypeAuthFleet.PF;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PF;
         it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet actualConvertMandate = CxTypeMapper.cxTypeMapper.convertMandateCXType(cxTypeAuthFleet);
         assertNotNull(actualConvertMandate);
         assertEquals(actualConvertMandate.getValue(), cxTypeAuthFleet.getValue());
+    }
+
+    @Test
+    void testConvertPublicKeysPGCXType() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG;
+        it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.CxTypeAuthFleet actualConvertPGCXTypeResult = CxTypeMapper.cxTypeMapper.convertPublicKeysPGCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertPGCXTypeResult);
+        assertEquals(actualConvertPGCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
+    }
+
+    @Test
+    void testConvertUserAttributesCXType() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG;
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet actualConvertPGCXTypeResult = CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertPGCXTypeResult);
+        assertEquals(actualConvertPGCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
     }
 }

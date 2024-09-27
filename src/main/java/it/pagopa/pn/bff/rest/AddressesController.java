@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.AddressesApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.*;
 import it.pagopa.pn.bff.service.AddressesService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;

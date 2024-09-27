@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ApiKeysResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ResponseNewApiKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.RequestApiKeyStatusMapper;
@@ -81,7 +81,7 @@ public class ApiKeysPaService {
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Public Administration Type
      * @param xPagopaPnCxId     Public Administration id
-     * @param requestNewApiKey  Request that contains the name and the groups of te new api key
+     * @param requestNewApiKey  Request that contains the name and the groups of the new api key
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the id and the value of the new api key
      */

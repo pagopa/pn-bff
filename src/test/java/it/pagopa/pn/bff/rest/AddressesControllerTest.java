@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.*;
 import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
 import it.pagopa.pn.bff.mocks.AddressesMock;
