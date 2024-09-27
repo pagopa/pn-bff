@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestVirtualKeyStatus;
-import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.mocks.VirtualKeysMock;
 import org.junit.jupiter.api.AfterAll;
@@ -52,7 +51,9 @@ class PnVirtualKeysManagerClientPGImplTestIT {
     }
 
     @AfterEach
-    public void resetMockServerClient() { mockServerClient.reset(); }
+    public void resetMockServerClient() {
+        mockServerClient.reset();
+    }
 
     @Test
     void getVirtualKeys() throws JsonProcessingException {
@@ -83,15 +84,15 @@ class PnVirtualKeysManagerClientPGImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnVirtualKeysManagerClientPGImpl.getVirtualKeys(
-                        UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
-                        UserMock.PN_CX_ID,
-                        UserMock.PN_CX_GROUPS,
-                        UserMock.PN_CX_ROLE,
-                        10,
-                        "LAST_KEY",
-                        "LAST_UPDATE",
-                        true
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE,
+                10,
+                "LAST_KEY",
+                "LAST_UPDATE",
+                true
         )).expectError().verify();
     }
 
@@ -193,7 +194,7 @@ class PnVirtualKeysManagerClientPGImplTestIT {
     }
 
     @Test
-    void changeStatusVitualKeyError() throws JsonProcessingException {
+    void changeStatusVirtualKeyError() throws JsonProcessingException {
 
         RequestVirtualKeyStatus requestVirtualKeyStatus = new RequestVirtualKeyStatus();
         requestVirtualKeyStatus.setStatus(RequestVirtualKeyStatus.StatusEnum.BLOCK);

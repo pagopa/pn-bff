@@ -1,9 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestVirtualKeyStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKeyRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKeyResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffVirtualKeyStatusRequest;
@@ -229,7 +227,7 @@ class VirtualKeysControllerTest {
                         Mockito.any(),
                         Mockito.anyList(),
                         Mockito.anyString()
-                        ))
+                ))
                 .thenReturn(Mono.just(response));
 
 
@@ -259,14 +257,13 @@ class VirtualKeysControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)
-                );
+        );
     }
 
     @Test
     void newVirtualKeyError() {
         BffNewVirtualKeyRequest request = new BffNewVirtualKeyRequest();
         request.setName("mock-virtual-key-name");
-        BffNewVirtualKeyResponse response = ResponseNewVirtualKeysMapper.modelMapper.mapResponseNewVirtualKey(virtualKeysMock.getResponseNewVirtualKeyMock());
 
         Mockito.when(virtualKeysPgService.newVirtualKey(
                         Mockito.anyString(),
@@ -275,7 +272,7 @@ class VirtualKeysControllerTest {
                         Mockito.any(),
                         Mockito.anyList(),
                         Mockito.anyString()
-                        ))
+                ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
@@ -304,7 +301,7 @@ class VirtualKeysControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)
-                );
+        );
     }
 
     @Test
@@ -320,7 +317,7 @@ class VirtualKeysControllerTest {
                         Mockito.any(),
                         Mockito.anyList(),
                         Mockito.anyString()
-                        ))
+                ))
                 .thenReturn(Mono.empty());
 
 
@@ -349,7 +346,7 @@ class VirtualKeysControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)
-                );
+        );
     }
 
     @Test
@@ -365,7 +362,7 @@ class VirtualKeysControllerTest {
                         Mockito.any(),
                         Mockito.anyList(),
                         Mockito.anyString()
-                        ))
+                ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
 
@@ -393,6 +390,6 @@ class VirtualKeysControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)
-                );
+        );
     }
 }

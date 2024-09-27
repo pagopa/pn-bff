@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.RequestNewVirtualKey;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
@@ -214,7 +214,6 @@ class VirtualKeysServiceTest {
                 .verify();
     }
 
-
     @Test
     void changeStatusVirtualKey() {
         BffVirtualKeyStatusRequest bffVirtualKeyStatusRequest = new BffVirtualKeyStatusRequest();
@@ -263,7 +262,7 @@ class VirtualKeysServiceTest {
                 Mockito.anyList(),
                 Mockito.anyString()
 
-                )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
 
         Mono<Void> result = virtualKeysPgService.changeStatusVirtualKey(
@@ -274,7 +273,7 @@ class VirtualKeysServiceTest {
                 Mono.just(bffVirtualKeyStatusRequest),
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
-                );
+        );
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
