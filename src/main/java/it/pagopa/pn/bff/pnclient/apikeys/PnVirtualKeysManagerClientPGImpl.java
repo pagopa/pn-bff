@@ -68,7 +68,7 @@ public class PnVirtualKeysManagerClientPGImpl {
     }
 
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                         String xPagopaPnCxId, String id, RequestVirtualKeyStatus requestApiKeyStatus,
+                                         String xPagopaPnCxId, String id, RequestVirtualKeyStatus requestVirtualKeyStatus,
                                          List<String> xPagopaPnCxGroups,String xPagopaPnCxRole) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "changeStatusVirtualKey");
 
@@ -78,7 +78,7 @@ public class PnVirtualKeysManagerClientPGImpl {
                 xPagopaPnCxId,
                 xPagopaPnCxRole,
                 id,
-                requestApiKeyStatus,
+                requestVirtualKeyStatus,
                 xPagopaPnCxGroups
         );
     }

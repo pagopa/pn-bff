@@ -35,7 +35,7 @@ public class VirtualKeysControllerTest {
     private final VirtualKeysMock virtualKeysMock = new VirtualKeysMock();
 
     @Test
-    void getApiKeys() {
+    void getVirtualKeys() {
         BffVirtualKeysResponse response = VirtualKeysMapper.modelMapper.mapVirtualKeysResponse(virtualKeysMock.getVirtualKeysMock());
         Mockito.when(virtualKeysService.getVirtualKeys(
                         Mockito.anyString(),
@@ -57,15 +57,15 @@ public class VirtualKeysControllerTest {
                                 .path(PnBffRestConstants.VIRTUALKEYS_PATH)
                                 .queryParam("limit", 10)
                                 .queryParam("lastKey", "LAST_KEY")
-                                .queryParam("lastUpdate", "LAST_UPDATE")
+                                .queryParam("lastUpdata", "LAST_UPDATE")
                                 .queryParam("showVirtualKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -107,7 +107,7 @@ public class VirtualKeysControllerTest {
                                 .path(PnBffRestConstants.VIRTUALKEYS_PATH)
                                 .queryParam("limit", 10)
                                 .queryParam("lastKey", "LAST_KEY")
-                                .queryParam("lastUpdate", "LAST_UPDATE")
+                                .queryParam("lastUpdata", "LAST_UPDATE")
                                 .queryParam("showVirtualKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -142,8 +142,7 @@ public class VirtualKeysControllerTest {
                         Mockito.any(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.anyList()
-,
+                        Mockito.anyList(),
                         Mockito.anyString()
                 ))
                 .thenReturn(Mono.empty());
@@ -152,7 +151,7 @@ public class VirtualKeysControllerTest {
         webTestClient.delete()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.VIRTUALKEYS_PATH + "/VIRTUAL_KEY_ID")
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH + "/VIRTUALKEY_ID")
                                 .build())
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
@@ -268,9 +267,9 @@ public class VirtualKeysControllerTest {
     }
 
     @Test
-    void changeStatusApiKey() {
+    void changeStatusVirtualKey() {
         BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
-        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.ROTATE);
+        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.BLOCK);
 
         Mockito.when(virtualKeysService.changeStatusVirtualKey(
                         Mockito.anyString(),
@@ -287,15 +286,14 @@ public class VirtualKeysControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH + "/VIRTUALKEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header("id", "virtual-key-id")
-                .header(RequestVirtualKeyStatus.JSON_PROPERTY_STATUS,RequestVirtualKeyStatus.StatusEnum.ROTATE.toString())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -306,7 +304,7 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq("API_KEY_ID"),
+                eq("VIRTUALKEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)
@@ -316,7 +314,7 @@ public class VirtualKeysControllerTest {
     @Test
     void changeStatusVirtualKeyError() {
         BffVirtualKeyStatusRequest request = new BffVirtualKeyStatusRequest();
-        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.ROTATE);
+        request.setStatus(BffVirtualKeyStatusRequest.StatusEnum.BLOCK);
 
         Mockito.when(virtualKeysService.changeStatusVirtualKey(
                         Mockito.anyString(),
@@ -333,15 +331,14 @@ public class VirtualKeysControllerTest {
         webTestClient.put()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(PnBffRestConstants.APIKEYS_PATH + "/API_KEY_ID/status")
+                                .path(PnBffRestConstants.VIRTUALKEYS_PATH + "/VIRTUALKEY_ID/status")
                                 .build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG.getValue())
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
-                .header("id", "virtual-key-id")
-                .header(RequestVirtualKeyStatus.JSON_PROPERTY_STATUS,RequestVirtualKeyStatus.StatusEnum.ROTATE.toString())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -351,7 +348,7 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq("API_KEY_ID"),
+                eq("VIRTUALKEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)

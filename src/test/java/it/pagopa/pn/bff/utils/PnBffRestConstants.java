@@ -36,7 +36,7 @@ public class PnBffRestConstants {
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
     public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
     public static final String MANDATE_PATH = BFF_PATH + VERSION_1 + "/mandate";
-    public static final String VIRTUALKEYS_PATH = PG_SELF + "/virtual-keys";
+    public static final String VIRTUALKEYS_PATH = BFF_PATH + VERSION_1 + "/virtual-keys";
     public static final String SENDER_DASHBOARD_GET_DATA_PATH
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
     private static final String VERSION_2 = "/v2";

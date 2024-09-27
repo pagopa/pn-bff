@@ -34,23 +34,23 @@ public class VirtualKeysService {
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
-     * Get a paginated list of the virtual keys that belong to a Public Administration and are accessible by the current user
+     * Get a paginated list of the virtual keys that belong to a Customer/Recipient and are accessible by the current user
      *
      * @param xPagopaPnUid      User Identifier
-     * @param xPagopaPnCxType   Public Administration Type
-     * @param xPagopaPnCxId     Public Administration id
-     * @param xPagopaPnCxRole     Public Administration role
-     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param xPagopaPnCxType   Customer/Recipient Type
+     * @param xPagopaPnCxId     PCustomer/Recipient id
+     * @param xPagopaPnCxRole    Customer/Recipient role
+     * @param xPagopaPnCxGroups Customer/Recipient Group id List
      * @param limit             Number of items per page
      * @param lastKey           The last key returned by the previous search. If null, it will be returned the keys of the first page
-     * @param lastUpdate        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param lastUpdata        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
      * @param showVirtualKey    Flag to show/hide the virtual key
-     * @return the list of the api keys or error
+     * @return the list of the virtual keys or error
      */
     public Mono<BffVirtualKeysResponse> getVirtualKeys(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
                                                        String xPagopaPnCxId, String xPagopaPnCxRole, List<String> xPagopaPnCxGroups,
                                                        Integer limit, String lastKey,
-                                                       String lastUpdate, Boolean showVirtualKey
+                                                       String lastUpdata, Boolean showVirtualKey
     ) {
         log.info("Get api key list - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
@@ -62,7 +62,7 @@ public class VirtualKeysService {
                 xPagopaPnCxRole,
                 limit,
                 lastKey,
-                lastUpdate,
+                lastUpdata,
                 showVirtualKey
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
@@ -74,14 +74,14 @@ public class VirtualKeysService {
     }
 
     /**
-     * Get a paginated list of the api keys that belong to a Public Administration and are accessible by the current user
+     * Get a paginated list of the virtual keys that belong to a Customer/Recipient and are accessible by the current user
      *
      * @param xPagopaPnUid      User Identifier
-     * @param xPagopaPnCxType   Public Administration Type
-     * @param xPagopaPnCxRole     Public Administration Role
-     * @param xPagopaPnCxId     Public Administration id
+     * @param xPagopaPnCxType   Customer/Recipient Type
+     * @param xPagopaPnCxRole    Customer/Recipient Role
+     * @param xPagopaPnCxId     Customer/Recipient id
      * @param id                Virtual Keys id
-     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param xPagopaPnCxGroups Customer/Recipient Group id List
      * @return
      */
     public Mono<Void> deleteVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
@@ -102,11 +102,11 @@ public class VirtualKeysService {
      * Create new virtual key
      *
      * @param xPagopaPnUid      User Identifier
-     * @param xPagopaPnCxType   Public Administration Type
-     * @param xPagopaPnCxId     Public Administration id
-     * @param xPagopaPnCxRole     Public Administration role
-     * @param requestNewVirtualKey  Request that contains the name and the groups of te new api key
-     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param xPagopaPnCxType   Customer/Recipient Type
+     * @param xPagopaPnCxId     Customer/Recipient id
+     * @param xPagopaPnCxRole     Customer/Recipient role
+     * @param requestNewVirtualKey  Request that contains the name and the groups of te new virtual
+     * @param xPagopaPnCxGroups Customer/Recipient Group id List
      * @return the id and the value of the new virtual key
      */
     public Mono<BffNewVirtualKeyResponse> newVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
@@ -132,12 +132,12 @@ public class VirtualKeysService {
      * Change the status of an virtual key
      *
      * @param xPagopaPnUid           User Identifier
-     * @param xPagopaPnCxType        Public Administration Type
-     * @param xPagopaPnCxId          Public Administration id
-     * @param xPagopaPnCxRole        Public Administration role
-     * @param id                     ID of the api key to change status
+     * @param xPagopaPnCxType        Customer/Recipient Type
+     * @param xPagopaPnCxId          Customer/Recipient id
+     * @param xPagopaPnCxRole        Customer/Recipient role
+     * @param id                     ID of the virtual key to change status
      * @param bffVirtualKeyStatusRequest The new virtual key status
-     * @param xPagopaPnCxGroups      Public Administration Group id List
+     * @param xPagopaPnCxGroups      Customer/Recipient Group id List
      * @return
      */
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,

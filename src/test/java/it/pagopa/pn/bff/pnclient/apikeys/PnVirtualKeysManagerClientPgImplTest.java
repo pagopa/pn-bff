@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnVirtualKeysManagerClientPGImpl.class})
 @ExtendWith(SpringExtension.class)
-class PnVirtualKeysManageClientPgImplTest {
+class PnVirtualKeysManagerClientPgImplTest {
     @Autowired
     private PnVirtualKeysManagerClientPGImpl pgVirtualKeysManageClient;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi")
@@ -108,6 +108,27 @@ class PnVirtualKeysManageClientPgImplTest {
     }
 
     @Test
+    void deleteVirtualKey() {
+        when(virtualKeysApi.deleteVirtualKey(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.empty());
+
+        StepVerifier.create(pgVirtualKeysManageClient.deleteVirtualKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID,
+                "VIRTUALKEY_ID",
+                UserMock.PN_CX_GROUPS,
+                UserMock.PN_CX_ROLE
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
     void newVirtualKey() throws RestClientException {
         when(virtualKeysApi.createVirtualKey(
                 Mockito.anyString(),
@@ -129,7 +150,7 @@ class PnVirtualKeysManageClientPgImplTest {
     }
 
     @Test
-    void newApiKeyError() {
+    void newVirtualKeyError() {
         when(virtualKeysApi.createVirtualKey(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -167,7 +188,7 @@ class PnVirtualKeysManageClientPgImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PG,
                 UserMock.PN_CX_ID,
-                "API_KEY_ID",
+                "VIRTUALKEY_ID",
                 requestVirtualKeyStatus,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
