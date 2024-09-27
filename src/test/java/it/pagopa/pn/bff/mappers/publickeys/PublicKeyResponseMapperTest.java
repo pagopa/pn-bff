@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PublicKeyResponseMapperTest {
+class PublicKeyResponseMapperTest {
 
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
 

@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.pnclient.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.*;
+import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class PnPublicKeyManagerClientPGImpl {
                                                   List<String> xPagopaPnCxGroups, Integer limit, String lastKey,
                                                   String createdAt, Boolean showPublicKey) {
 
-//        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_PUBLICKEY_MANAGER, "getPublicKeys");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "getPublicKeys");
 
         return publicKeysApi.getPublicKeys(
                 xPagopaPnUid,
@@ -40,7 +41,7 @@ public class PnPublicKeyManagerClientPGImpl {
                                                 String xPagopaPnCxId, String xPagopaPnCxRole,
                                                 PublicKeyRequest publicKeyRequest, List<String> xPagopaPnCxGroups) {
 
-//        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_PUBLICKEY_MANAGER, "newPublicKey");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "newPublicKey");
 
         return publicKeysApi.newPublicKey(
                 xPagopaPnUid,
@@ -55,7 +56,7 @@ public class PnPublicKeyManagerClientPGImpl {
     public Mono<Void> deletePublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                       String xPagopaPnCxId, String xPagopaPnCxRole,
                                       String id, List<String> xPagopaPnCxGroups) {
-//        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_PUBLICKEY_MANAGER, "deletePublicKeys");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "deletePublicKeys");
 
         return publicKeysApi.deletePublicKeys(
                 xPagopaPnUid,
@@ -70,7 +71,7 @@ public class PnPublicKeyManagerClientPGImpl {
     public Mono<Void> changeStatusPublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                             String xPagopaPnCxId, String xPagopaPnCxRole,
                                             String id, String status, List<String> xPagopaPnCxGroups) {
-//        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_PUBLICKEY_MANAGER, "deletePublicKey");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "changeStatusPublicKey");
 
         return publicKeysApi.changeStatusPublicKey(
                 xPagopaPnUid,
@@ -87,6 +88,8 @@ public class PnPublicKeyManagerClientPGImpl {
                                                    String xPagopaPnCxId, String xPagopaPnCxRole,
                                                    String id, PublicKeyRequest publicKeyRequest,
                                                    List<String> xPagopaPnCxGroups) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "rotatePublicKey");
+
         return publicKeysApi.rotatePublicKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
@@ -100,6 +103,8 @@ public class PnPublicKeyManagerClientPGImpl {
 
     public Mono<PublicKeysIssuerResponse> getIssuerStatus(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                           String xPagoPaPnCxId) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_APIKEY_MANAGER, "getIssuerStatus");
+
         return publicKeysApi.getIssuerStatus(
                 xPagopaPnUid,
                 xPagopaPnCxType,

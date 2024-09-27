@@ -196,20 +196,20 @@ public class PublicKeysPgController implements PublicKeysApi {
     }
 
     /**
-     * GET /bff/v1/pg/public-keys : Public keys issuer status
-     * Get a paginated list of the public keys for the current PG user
+     * GET /bff/v1/pg/public-keys/check-issuer : Public keys issuer status
+     * Get the check issuer Status Object
      *
-     * @param xPagopaPnUid      User Identifier (required)
-     * @param xPagopaPnCxType   Customer/Receiver Type (required)
-     * @param xPagopaPnCxId     Customer/Receiver Identifier (required)
+     * @param xPagopaPnUid    User Identifier (required)
+     * @param xPagopaPnCxType Customer/Receiver Type (required)
+     * @param xPagopaPnCxId   Customer/Receiver Identifier (required)
      * @return the public keys issuer status or error
      */
-    public Mono<ResponseEntity<BffPublicKeysIssuerResponse>> getIssuerStatusPublicKeyV1(String xPagopaPnUid,
+    public Mono<ResponseEntity<BffPublicKeysCheckIssuerResponse>> checkIssuerPublicKeyV1(String xPagopaPnUid,
                                                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                                                          String xPagopaPnCxId,
                                                                                          final ServerWebExchange exchange) {
 
-        Mono<BffPublicKeysIssuerResponse> serviceResponse = publicKeysPgService.getPublicKeysIssuerStatus(
+        Mono<BffPublicKeysCheckIssuerResponse> serviceResponse = publicKeysPgService.checkIssuerPublicKey(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId

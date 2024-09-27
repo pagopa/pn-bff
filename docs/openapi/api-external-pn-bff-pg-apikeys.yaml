@@ -37,14 +37,9 @@ paths:
       tags:
         - PublicKeys
       operationId: getPublicKeysV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'    # NO EXTERNAL
         - name: limit
           in: query
           schema:
@@ -92,14 +87,8 @@ paths:
       tags:
         - PublicKeys
       operationId: newPublicKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'  # NO EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         content:
           application/json:
@@ -134,14 +123,9 @@ paths:
       tags:
         - PublicKeys
       operationId: deletePublicKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       responses:
         '200':
@@ -179,14 +163,9 @@ paths:
       tags:
         - PublicKeys
       operationId: changeStatusPublicKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
         - $ref: '#/components/parameters/queryStatus'
       responses:
@@ -225,14 +204,9 @@ paths:
       tags:
         - PublicKeys
       operationId: rotatePublicKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'   # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       requestBody:
         content:
@@ -279,13 +253,9 @@ paths:
         Servizio di verifica esistenza issuer e accettazione tos
       tags:
         - PublicKeys
-      operationId: checkIssuerPublicKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
+      operationId: getIssuerStatusPublicKeyV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
         '200':
           description: OK
@@ -320,14 +290,9 @@ paths:
       tags:
         - VirtualKeys
       operationId: getVirtualKeysV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'    # NO EXTERNAL
         - name: limit
           in: query
           schema:
@@ -375,14 +340,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: newVirtualKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters: # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'    # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'  # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'    # NO EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
         content:
           application/json:
@@ -409,7 +368,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/virtual-keys/{kid}":
+  "/bff/v1/virtual-keys/{id}":
     delete:
       summary: Eliminazione virtual key
       description: >-
@@ -417,14 +376,9 @@ paths:
       tags:
         - VirtualKeys
       operationId: deleteVirtualKeyV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'   # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       responses:
         '200':
@@ -454,7 +408,7 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/virtual-keys/{kid}/status":
+  "/bff/v1/virtual-keys/{id}/status":
     put:
       summary: Cambia lo stato della virtualKey
       description: >-
@@ -462,14 +416,9 @@ paths:
       tags:
         - VirtualKeys
       operationId: changeStatusVirtualKeysV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'      # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'   # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'     # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'   # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       requestBody:
         content:
@@ -516,7 +465,6 @@ components:
       required: true
       schema:
         type: string
-        x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
     queryStatus:
       description: >-
         Action per il cambio stato di una public key
