@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.mappers.tosprivacy;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -37,5 +37,5 @@ public interface TosPrivacyConsentMapper {
      * @param type the bff ConsentType to map
      * @return the mapped microservice ConsentType
      */
-    ConsentType convertConsentType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType type);
+    ConsentType convertConsentType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.ConsentType type);
 }

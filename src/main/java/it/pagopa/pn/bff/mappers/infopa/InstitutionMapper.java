@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffInstitution;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitution;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

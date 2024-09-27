@@ -1,10 +1,10 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.InfoRecipientApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPgGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.PaSummary;
 import it.pagopa.pn.bff.service.InfoRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,7 @@ public class InfoRecipientController implements InfoRecipientApi {
                                                              final ServerWebExchange exchange) {
 
         Flux<PaSummary> paSummaryFlux = infoRecipientService.getPaList(xPagopaPnCxId, xPagopaPnCxType, paNameFilter);
-        
+
         return paSummaryFlux.collectList().map(paSummaries -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(paSummaries)));
     }
 }

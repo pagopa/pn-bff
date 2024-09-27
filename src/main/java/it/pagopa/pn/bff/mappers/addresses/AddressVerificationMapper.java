@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.mappers.addresses;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerification;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerificationResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

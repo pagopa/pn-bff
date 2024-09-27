@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.mappers.infopa;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPaGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPaGroupStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.mappers.tosprivacy;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentAction;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffConsent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.ConsentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffConsent;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.ConsentType;
 import it.pagopa.pn.bff.mocks.ConsentsMock;
 import org.junit.jupiter.api.Test;
 
@@ -30,14 +30,14 @@ public class TosPrivacyConsentMapperTest {
 
     @Test
     void testConsentActionMapper() {
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum
-                acceptAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum.ACCEPT;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody.ActionEnum
+                acceptAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody.ActionEnum.ACCEPT;
         ConsentAction.ActionEnum convertAcceptAction = TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(acceptAction);
         assertNotNull(convertAcceptAction);
         assertEquals(convertAcceptAction, ConsentAction.ActionEnum.ACCEPT);
 
-        it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum
-                declineAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffTosPrivacyActionBody.ActionEnum.DECLINE;
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody.ActionEnum
+                declineAction = it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffTosPrivacyActionBody.ActionEnum.DECLINE;
         ConsentAction.ActionEnum convertDeclineAction = TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(declineAction);
         assertNotNull(convertDeclineAction);
         assertEquals(convertDeclineAction, ConsentAction.ActionEnum.DECLINE);

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: alBmiznmrcKsvhd83iMSS9ALl6FTWfUS4w879DmOcRI=
+  version: r8WYSaiJP/7KSiflTgebwBmrpUpjmgx7y7hVNeH9wuU=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1199,6 +1199,704 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/pg/public-keys:
+    get:
+      summary: Ricerca public keys
+      description: servizio di consultazione della lista delle public keys
+      tags:
+        - PublicKeys
+      operationId: getPublicKeysV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: createdAt
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showPublicKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicKeysResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      summary: Censimento public key
+      description: servizio di censimento di una public key
+      tags:
+        - PublicKeys
+      operationId: newPublicKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicKeyRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicKeyResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/pg/public-keys API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/public-keys/{kid}:
+    delete:
+      summary: Rimozione public key
+      description: servizio di rimozione della public key identificata tramite kid
+      tags:
+        - PublicKeys
+      operationId: deletePublicKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathKid'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. delete an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pg/public-keys/{kid} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/public-keys/{kid}/status:
+    put:
+      summary: Blocco/Riattivazione public key
+      description: >-
+        servizio di blocco/riattivazione della public key identificata tramite
+        kid
+      tags:
+        - PublicKeys
+      operationId: changeStatusPublicKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathKid'
+        - $ref: '#/components/parameters/queryStatus'
+      responses:
+        '200':
+          description: No content
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pg/public-keys/{kid}/status API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/public-keys/{kid}/rotate:
+    post:
+      summary: Rotazione public key
+      description: servizio di rotazione della public key identificata tramite kid
+      tags:
+        - PublicKeys
+      operationId: rotatePublicKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathKid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicKeyRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicKeyResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/rotate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pg/public-keys/{kid}/rotate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/rotate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.kid: method.request.path.kid
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/public-keys/check-issuer:
+    get:
+      summary: Verifica esistenza issuer e accettazione tos
+      description: Servizio di verifica esistenza issuer e accettazione tos
+      tags:
+        - PublicKeys
+      operationId: getIssuerStatusPublicKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPublicKeysCheckIssuerResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/check-issuer
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/pg/public-keys/check-issuer API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/check-issuer
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/virtual-keys:
+    get:
+      summary: Visualizzazione virtual keys
+      description: Servizio di consultazione della lista delle virtual keys censite.
+      tags:
+        - VirtualKeys
+      operationId: getVirtualKeysV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 10
+        - name: lastKey
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lastUpdata
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: showVirtualKey
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualKeysResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      summary: Censimento virtual key
+      description: Servizio di creazione di una nuova virtual key.
+      tags:
+        - VirtualKeys
+      operationId: newVirtualKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestNewVirtualKey'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseNewVirtualKey'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/virtual-keys API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/virtual-keys/{id}:
+    delete:
+      summary: Eliminazione virtual key
+      description: Servizio di eliminazione di una virtual key.
+      tags:
+        - VirtualKeys
+      operationId: deleteVirtualKeyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathKid'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/virtual-keys/{id} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/virtual-keys/{id}/status:
+    put:
+      summary: Cambia lo stato della virtualKey
+      description: servizio di cambio stato della virtualKey
+      tags:
+        - VirtualKeys
+      operationId: changeStatusVirtualKeysV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathKid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestVirtualKeyStatus'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/virtual-keys/{id}/status API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}/status
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.id: method.request.path.id
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
   /v1/institutions:
     get:
       summary: Get Institutions list
@@ -1603,6 +2301,102 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pg/tos-privacy:
+    get:
+      summary: Accettazione Pg TOS e Privacy
+      description: Ritorna lo stato di accettazione dei TOS e della Privacy della Pg.
+      tags:
+        - UserConsents
+      operationId: getPgConsentByType
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffTosPrivacyConsent'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    put:
+      summary: Accettazione Pg TOS e Privacy
+      description: Permette di accettare i TOS e la Privacy della Pg.
+      tags:
+        - UserConsents
+      operationId: acceptPgTosPrivacyV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BffTosPrivacyBody'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/pg/tos-privacy API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -2888,6 +3682,23 @@ components:
       required: true
       schema:
         type: string
+    pathKid:
+      description: Identificativo univoco della chiave (pubblica o virtuale)
+      name: kid
+      in: path
+      required: true
+      schema:
+        type: string
+    queryStatus:
+      description: Action per il cambio stato di una public key
+      name: status
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - BLOCK
+          - ENABLE
     BffQueryTosPrivacyType:
       name: type
       description: Tipo di consent
@@ -5390,6 +6201,262 @@ components:
             - BLOCK
             - ENABLE
             - ROTATE
+    PublicKeyStatus:
+      description: Stato della public key
+      type: string
+      enum:
+        - CREATED
+        - ACTIVE
+        - ROTATED
+        - BLOCKED
+        - DELETED
+    PublicKeyStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/PublicKeyStatus'
+        date:
+          type: string
+          description: data a cui corrisponde il cambio di stato
+          format: date-time
+        changedByDenomination:
+          type: string
+          description: nome dell'utente che ha effettuato il cambio di stato
+    PublicKeyRow:
+      type: object
+      properties:
+        kid:
+          type: string
+          description: Id della public key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        issuer:
+          type: string
+          description: Issuer della public key
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        name:
+          type: string
+          description: Nome della public key
+        value:
+          type: string
+          description: >-
+            Valore dell public key restituito solo se il query param
+            showPublicKey == True
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        createdAt:
+          type: string
+          description: Data censimento public key
+          format: date-time
+        status:
+          $ref: '#/components/schemas/PublicKeyStatus'
+        statusHistory:
+          type: array
+          description: Storico degli stati delle public key
+          items:
+            $ref: '#/components/schemas/PublicKeyStatusHistory'
+    PublicKeysResponse:
+      title: Elenco di public keys
+      description: Dto contenente la lista delle public keys associate ad una pg.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicKeyRow'
+        lastKey:
+          type: string
+        createdAt:
+          type: string
+        total:
+          type: number
+    PublicKeyRequest:
+      title: Richiesta di censimento nuova public key
+      description: Request per il censimento di una nuova public key
+      type: object
+      required:
+        - publicKey
+      properties:
+        name:
+          type: string
+          description: nome della public key
+        publicKey:
+          type: string
+          description: Valore della public key (esclusi header e footer)
+        exponent:
+          type: string
+          description: Esponente della public key
+          default: AQAB
+        algorithm:
+          description: Algoritmo di crittografia usato per la public key
+          type: string
+          enum:
+            - RS256
+          default: RS256
+    PublicKeyResponse:
+      title: Response censimento public key
+      description: Response del censimento di una nuova public key
+      type: object
+      required:
+        - kid
+        - issuer
+      properties:
+        kid:
+          type: string
+          description: >-
+            Kid della public key caricata da utilizzare nell'header kid del
+            token JWT
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        issuer:
+          type: string
+          description: >-
+            Valore dell'issuer per la key caricata da utilizzare nel claims iss
+            del token JWT
+    PublicKeysIssuerResponse:
+      title: Verifica esistenza issuer
+      description: Dto contenente la verifica dell'esistenza di un issuer
+      type: object
+      properties:
+        isPresent:
+          type: boolean
+        issuerStatus:
+          description: Stato dell'issuer
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+    BffPublicKeysCheckIssuerResponse:
+      type: object
+      required:
+        - issuer
+        - tosAccepted
+      properties:
+        issuer:
+          $ref: '#/components/schemas/PublicKeysIssuerResponse'
+        tosAccepted:
+          type: boolean
+    UserDto:
+      description: Available only for request where requesting user is the delegator
+      oneOf:
+        - type: object
+          properties:
+            displayName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            firstName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            lastName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            companyName:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 250
+              pattern: ^([\x20-\xFF]{1,250})$
+            fiscalCode:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              maxLength: 16
+              pattern: >-
+                ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
+            person:
+              type: boolean
+        - type: 'null'
+    VirtualKeyStatus:
+      description: Stato della virtual key
+      type: string
+      enum:
+        - CREATED
+        - ENABLED
+        - BLOCKED
+        - ROTATED
+        - DELETED
+    VirtualKey:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id della virtual key
+        name:
+          type: string
+          description: Nome della virtual key
+        value:
+          type: string
+          description: Valore della virtual key
+        lastUpdate:
+          type: string
+          description: Data ultima modifica
+          format: date-time
+        user:
+          type: object
+          $ref: '#/components/schemas/UserDto'
+        status:
+          $ref: '#/components/schemas/VirtualKeyStatus'
+    VirtualKeysResponse:
+      title: Elenco di virtual keys
+      description: Dto contenente la lista delle virtual keys associate ad un utente.
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualKey'
+        lastKey:
+          type: string
+        lastUpdate:
+          type: string
+        total:
+          type: number
+    RequestNewVirtualKey:
+      title: Request creazione virtual key
+      description: Request per la creazione di una nuova virtual key
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: ^(?!\s).+(?<!\s)$
+          description: nome della virtual key
+    ResponseNewVirtualKey:
+      title: Response creazione virtual key
+      description: Response per la creazione di una nuova virtual key
+      type: object
+      required:
+        - id
+        - virtualKey
+      properties:
+        id:
+          type: string
+          description: id della virtual key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        virtualKey:
+          type: string
+          description: Valore della virtual key appena generata
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+    RequestVirtualKeyStatus:
+      title: Richiesta di cambio stato per una virtual key
+      description: Richiesta di cambio stato per una virtual key
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Action per il cambio stato di una virtual key
+          enum:
+            - BLOCK
+            - ENABLE
+            - ROTATE
     BffInstitution:
       type: object
       required:
@@ -5956,40 +7023,6 @@ components:
       properties:
         value:
           type: number
-    UserDto:
-      description: Available only for request where requesting user is the delegator
-      oneOf:
-        - type: object
-          properties:
-            displayName:
-              type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
-              maxLength: 80
-              pattern: ^([\x20-\xFF]{1,80})$
-            firstName:
-              type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
-              maxLength: 80
-              pattern: ^([\x20-\xFF]{1,80})$
-            lastName:
-              type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
-              maxLength: 80
-              pattern: ^([\x20-\xFF]{1,80})$
-            companyName:
-              type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
-              maxLength: 250
-              pattern: ^([\x20-\xFF]{1,250})$
-            fiscalCode:
-              type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
-              maxLength: 16
-              pattern: >-
-                ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
-            person:
-              type: boolean
-        - type: 'null'
     OrganizationIdDto:
       description: Available always, not required on mandate creation.
       oneOf:
@@ -6343,6 +7376,12 @@ tags:
       notifiche a loro destinate.
   - name: ApiKeys
     description: Invocazioni utilizzabili dai mittenti per la gestione delle api keys
+  - name: PublicKeys
+    description: >-
+      Invocazioni utilizzabili dalle PG destinatarie per la gestione delle
+      public keys
+  - name: VirtualKeys
+    description: Gestione delle virtual keys per gli utenti e amministratori
   - name: InfoPa
     description: Invocazioni per sapere i portali disponibili di un ente
   - name: InfoRecipient

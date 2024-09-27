@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.mandate;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandate;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffMandate;
 import it.pagopa.pn.bff.mocks.MandateMock;
 import org.junit.jupiter.api.Test;
 

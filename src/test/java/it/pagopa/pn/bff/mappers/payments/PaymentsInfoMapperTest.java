@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.mappers.payments;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPaymentInfoItem;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentInfoItem;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import org.junit.jupiter.api.Test;
 

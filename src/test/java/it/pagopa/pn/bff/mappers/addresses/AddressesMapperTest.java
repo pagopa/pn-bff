@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.mappers.addresses;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyDigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffChannelType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUserAddress;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffChannelType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffUserAddress;
 import it.pagopa.pn.bff.mocks.AddressesMock;
 import org.junit.jupiter.api.Test;
 

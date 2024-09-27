@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.*;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandatesMapper;
 import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;

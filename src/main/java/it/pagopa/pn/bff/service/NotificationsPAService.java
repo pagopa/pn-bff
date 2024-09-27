@@ -8,7 +8,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentD
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;

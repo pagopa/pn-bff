@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.mandate;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.MandateDto;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffNewMandateRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffNewMandateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface NewMandateMapper {
     NewMandateMapper modelMapper = Mappers.getMapper(NewMandateMapper.class);
-    
+
     /**
      * Maps a BffNewMandateRequest to a MandateDto
      *

@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.utils;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
