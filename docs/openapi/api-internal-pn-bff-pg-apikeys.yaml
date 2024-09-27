@@ -338,7 +338,7 @@ paths:
           required: false
           schema:
             type: string
-        - name: lastUpdata
+        - name: lastUpdate
           in: query
           required: false
           schema:

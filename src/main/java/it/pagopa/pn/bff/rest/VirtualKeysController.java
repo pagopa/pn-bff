@@ -32,7 +32,7 @@ public class VirtualKeysController implements VirtualKeysApi {
      * @param xPagopaPnCxGroups Customer/Recipient id List
      * @param limit             Number of items per page
      * @param lastKey           The last key returned by the previous search. If null, it will be returned the keys of the first page
-     * @param lastUpdata        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
+     * @param lastUpdate        The update date of the last key returned by the previous search. If null, it will be returned the keys of the first page
      * @param showVirtualKey    Flag to show/hide the virtual key
      * @param exchange
      * @return the list of the virtual keys or error
@@ -45,12 +45,12 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                                          String xPagopaPnCxRole,
                                                                          Integer limit,
                                                                          String lastKey,
-                                                                         String lastUpdata,
+                                                                         String lastUpdate,
                                                                          Boolean showVirtualKey,
                                                                          final ServerWebExchange exchange) {
 
         Mono<BffVirtualKeysResponse> serviceResponse = virtualKeysService.getVirtualKeys(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxRole, xPagopaPnCxGroups, limit, lastKey, lastUpdata, showVirtualKey
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxRole, xPagopaPnCxGroups, limit, lastKey, lastUpdate, showVirtualKey
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -100,30 +100,45 @@ public class VirtualKeysController implements VirtualKeysApi {
                                                                           String xPagopaPnCxId, Mono<BffNewVirtualKeyRequest> requestNewVirtualKey,
                                                                           List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange) {
 
-        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysService.newVirtualKey(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, requestNewVirtualKey, xPagopaPnCxGroups, xPagopaPnCxRole);
+        Mono<BffNewVirtualKeyResponse> serviceResponse = virtualKeysService.newVirtualKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                requestNewVirtualKey,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
     /**
-     * PUT bff/v1/virtual-keys/{id}/status: Change status for an virtual key
+     * PUT bff/v1/virtual-keys/{kid}/status: Change status for an virtual key
      * Change the status of the virtual key identified by the id path parameter
      *
      * @param xPagopaPnUid               User Identifier
      * @param xPagopaPnCxType            Customer/Recipient Type
      * @param xPagopaPnCxId              Customer/Recipient id
      * @param xPagopaPnCxRole            Customer/Recipient role
-     * @param id                         ID of the api key to change status
+     * @param kid                        kid of the api key to change status
      * @param bffVirtualKeyStatusRequest The new virtual key status
      * @param xPagopaPnCxGroups          Customer/Recipient id List
-     * @return
+     * @return void
      */
     @Override
-    public Mono<ResponseEntity<Void>> changeStatusVirtualKeysV1(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet xPagopaPnCxType,
-                                                                String xPagopaPnCxId, String id, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
+    public Mono<ResponseEntity<Void>> changeStatusVirtualKeysV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId, String kid, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
                                                                 List<String> xPagopaPnCxGroups, String xPagopaPnCxRole, ServerWebExchange exchange) {
 
-        Mono<Void> serviceResponse = virtualKeysService.changeStatusVirtualKey(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, id, bffVirtualKeyStatusRequest, xPagopaPnCxGroups, xPagopaPnCxRole);
+        Mono<Void> serviceResponse = virtualKeysService.changeStatusVirtualKey(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                kid,
+                bffVirtualKeyStatusRequest,
+                xPagopaPnCxGroups,
+                xPagopaPnCxRole
+        );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
