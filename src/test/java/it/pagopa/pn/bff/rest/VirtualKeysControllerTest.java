@@ -58,7 +58,7 @@ class VirtualKeysControllerTest {
                                 .path(PnBffRestConstants.VIRTUALKEYS_PATH)
                                 .queryParam("limit", 10)
                                 .queryParam("lastKey", "LAST_KEY")
-                                .queryParam("lastUpdata", "LAST_UPDATE")
+                                .queryParam("lastUpdate", "LAST_UPDATE")
                                 .queryParam("showVirtualKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ class VirtualKeysControllerTest {
                                 .path(PnBffRestConstants.VIRTUALKEYS_PATH)
                                 .queryParam("limit", 10)
                                 .queryParam("lastKey", "LAST_KEY")
-                                .queryParam("lastUpdata", "LAST_UPDATE")
+                                .queryParam("lastUpdate", "LAST_UPDATE")
                                 .queryParam("showVirtualKey", true)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
@@ -175,6 +175,7 @@ class VirtualKeysControllerTest {
 
         );
     }
+
     @Test
     void deleteVirtualKeyError() {
         Mockito.when(virtualKeysPgService.deleteVirtualKey(
