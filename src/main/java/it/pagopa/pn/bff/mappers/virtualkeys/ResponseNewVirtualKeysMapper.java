@@ -5,16 +5,19 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffNewVirtualKey
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapstruct mapper interface, used to map the ResponseNewVirtualKey to BffResponseNewVirtualKey
+ */
 @Mapper
 public interface ResponseNewVirtualKeysMapper {
 
     ResponseNewVirtualKeysMapper modelMapper = Mappers.getMapper(ResponseNewVirtualKeysMapper.class);
 
     /**
-     * Maps a BffRequestNewVirtualKey to a RequestNewVirtualKey
+     * Maps a ResponseNewVirtualKey to a BffNewVirtualKeyResponse
      *
-     * @param responseNewVirtualKey the BffRequestNewVirtualKey to map
-     * @return the mapped RequestNewApiKey
+     * @param responseNewVirtualKey the ResponseNewVirtualKey to map
+     * @return the mapped ResponseNewVirtualKey
      */
     BffNewVirtualKeyResponse mapResponseNewVirtualKey(ResponseNewVirtualKey responseNewVirtualKey);
 }
