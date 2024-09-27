@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: r8WYSaiJP/7KSiflTgebwBmrpUpjmgx7y7hVNeH9wuU=
+  version: 78qjbQuXP5DllPh4tmEHKit8dwcMwpZmhQhKMujAxnA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1560,7 +1560,7 @@ paths:
       description: Servizio di verifica esistenza issuer e accettazione tos
       tags:
         - PublicKeys
-      operationId: getIssuerStatusPublicKeyV1
+      operationId: checkIssuerPublicKeyV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
@@ -1639,7 +1639,7 @@ paths:
           required: false
           schema:
             type: string
-        - name: lastUpdata
+        - name: lastUpdate
           in: query
           required: false
           schema:
@@ -1751,7 +1751,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/virtual-keys/{id}:
+  /v1/virtual-keys/{kid}:
     delete:
       summary: Eliminazione virtual key
       description: Servizio di eliminazione di una virtual key.
@@ -1791,7 +1791,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1803,25 +1803,25 @@ paths:
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-          integration.request.path.id: method.request.path.id
+          integration.request.path.kid: method.request.path.kid
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/virtual-keys/{id} API CORS
+      operationId: Options for /v1/virtual-keys/{kid} API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
-          integration.request.path.id: method.request.path.id
+          integration.request.path.kid: method.request.path.kid
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/virtual-keys/{id}/status:
+  /v1/virtual-keys/{kid}/status:
     put:
       summary: Cambia lo stato della virtualKey
       description: servizio di cambio stato della virtualKey
@@ -1867,7 +1867,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}/status
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}/status
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1879,20 +1879,20 @@ paths:
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
-          integration.request.path.id: method.request.path.id
+          integration.request.path.kid: method.request.path.kid
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/virtual-keys/{id}/status API CORS
+      operationId: Options for /v1/virtual-keys/{kid}/status API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{id}/status
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}/status
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
-          integration.request.path.id: method.request.path.id
+          integration.request.path.kid: method.request.path.kid
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
