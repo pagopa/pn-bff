@@ -194,7 +194,7 @@ class PnVirtualKeysManagerClientPGImplTest {
     }
 
     @Test
-    void changeStatusApiKeyError() {
+    void changeStatusVirtualKeyError() {
         RequestVirtualKeyStatus requestVirtualKeyStatus = new RequestVirtualKeyStatus();
         requestVirtualKeyStatus.setStatus(RequestVirtualKeyStatus.StatusEnum.ROTATE);
         when(virtualKeysApi.changeStatusVirtualKeys(
