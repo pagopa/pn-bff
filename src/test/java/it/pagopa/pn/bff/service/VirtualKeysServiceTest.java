@@ -36,7 +36,7 @@ class VirtualKeysServiceTest {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
 
-        virtualKeysPgService = new VirtualKeysPgService(pnVirtualKeysManagerClientPG, pnExternalRegistriesClient, pnBffExceptionUtility);
+        virtualKeysPgService = new VirtualKeysPgService(pnVirtualKeysManagerClientPG, pnBffExceptionUtility);
     }
 
 

@@ -13,11 +13,11 @@ class RequestVirtualKeyStatusMapperTest {
     void testRequestVirtualKeyStatusMapper() {
         BffVirtualKeyStatusRequest bffVirtualKeyStatusRequest = new BffVirtualKeyStatusRequest();
         bffVirtualKeyStatusRequest.setStatus(BffVirtualKeyStatusRequest.StatusEnum.ROTATE);
-        RequestVirtualKeyStatus requestVirtualKeyStatus = RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(bffVirtualKeyStatusRequest);
+        RequestVirtualKeyStatus requestVirtualKeyStatus = RequestVirtualKeyStatusMapper.modelMapper.mapRequestVirtualKeyStatus(bffVirtualKeyStatusRequest);
         assertNotNull(requestVirtualKeyStatus);
         assertThat(requestVirtualKeyStatus).usingRecursiveComparison().isEqualTo(bffVirtualKeyStatusRequest);
 
-        requestVirtualKeyStatus = RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(null);
+        requestVirtualKeyStatus = RequestVirtualKeyStatusMapper.modelMapper.mapRequestVirtualKeyStatus(null);
         assertNull(requestVirtualKeyStatus);
     }
 

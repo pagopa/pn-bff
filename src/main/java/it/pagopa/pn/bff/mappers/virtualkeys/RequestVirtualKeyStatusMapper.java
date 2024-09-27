@@ -10,13 +10,13 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface RequestVirtualKeyStatusMapper {
-    RequestVirtualKeyStatusMapper modelmapper = Mappers.getMapper(RequestVirtualKeyStatusMapper.class);
+    RequestVirtualKeyStatusMapper modelMapper = Mappers.getMapper(RequestVirtualKeyStatusMapper.class);
 
     /**
      * Maps a BffRequestVirtualKeyStatus to a RequestVirtualKeyStatus
      *
      * @param bffVirtualKeyStatusRequest the BffVirtualKeyStatusRequest to map
-     * @return the mapped RequestVirtualKeyStatus
+     * @return the mapped BffRequestVirtualKeyStatus
      */
     RequestVirtualKeyStatus mapRequestVirtualKeyStatus(BffVirtualKeyStatusRequest bffVirtualKeyStatusRequest);
 }

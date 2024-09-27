@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the RequestNewVirtualKey to BffRequestNewVirtualKey
+ * Mapstruct mapper interface, used to map the BffRequestNewVirtualKey to RequestNewVirtualKey
  */
 @Mapper
 public interface RequestNewVirtualKeysMapper {

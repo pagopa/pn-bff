@@ -9,7 +9,6 @@ import it.pagopa.pn.bff.mappers.virtualkeys.RequestVirtualKeyStatusMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.ResponseNewVirtualKeysMapper;
 import it.pagopa.pn.bff.mappers.virtualkeys.VirtualKeysMapper;
 import it.pagopa.pn.bff.pnclient.apikeys.PnVirtualKeysManagerClientPGImpl;
-import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,6 @@ import java.util.List;
 public class VirtualKeysPgService {
 
     private final PnVirtualKeysManagerClientPGImpl pnVirtualKeysManagerClientPG;
-    private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
 
     /**
@@ -64,7 +62,7 @@ public class VirtualKeysPgService {
     }
 
     /**
-     * Get a paginated list of the virtual keys that belong to a Customer/Recipient and are accessible by the current user
+     * Delete a virtual key
      *
      * @param xPagopaPnUid      User Identifier
      * @param xPagopaPnCxType   Customer/Recipient Type
@@ -97,7 +95,7 @@ public class VirtualKeysPgService {
      * @param xPagopaPnCxType      Customer/Recipient Type
      * @param xPagopaPnCxId        Customer/Recipient id
      * @param xPagopaPnCxRole      Customer/Recipient role
-     * @param requestNewVirtualKey Request that contains the name and the groups of te new virtual
+     * @param requestNewVirtualKey Request that contains the name and the groups of the new virtual key
      * @param xPagopaPnCxGroups    Customer/Recipient Group id List
      * @return the id and the value of the new virtual key
      */
@@ -142,7 +140,7 @@ public class VirtualKeysPgService {
                         CxTypeMapper.cxTypeMapper.convertVirtualKeysPGCXType(xPagopaPnCxType),
                         xPagopaPnCxId,
                         kid,
-                        RequestVirtualKeyStatusMapper.modelmapper.mapRequestVirtualKeyStatus(request),
+                        RequestVirtualKeyStatusMapper.modelMapper.mapRequestVirtualKeyStatus(request),
                         xPagopaPnCxGroups,
                         xPagopaPnCxRole
                 ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)

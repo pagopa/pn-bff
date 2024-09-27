@@ -4,13 +4,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VirtualKeysMock {
-
-
-
+    
     private VirtualKey getVirtualKeyMock(String id, String value, String name, OffsetDateTime lastUpdate, VirtualKeyStatus virtualKeyStatus) {
         VirtualKey virtualKey = new VirtualKey();
         virtualKey.setId(id);
