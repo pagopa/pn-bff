@@ -307,7 +307,7 @@ public class VirtualKeysControllerTest {
                 eq(UserMock.PN_UID),
                 eq(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG),
                 eq(UserMock.PN_CX_ID),
-                eq("API_KEY_ID"),
+                eq("VIRTUALKEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE)

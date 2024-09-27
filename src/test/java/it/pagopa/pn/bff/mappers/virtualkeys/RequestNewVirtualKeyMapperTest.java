@@ -15,7 +15,7 @@ class RequestNewVirtualKeyMapperTest {
     @Test
     void testRequestNewVirtualKeyMapper() {
         BffNewVirtualKeyRequest bffNewVirtualKeyRequest = new BffNewVirtualKeyRequest();
-        bffNewVirtualKeyRequest.setName("mock-api-virtual-name");
+        bffNewVirtualKeyRequest.setName("mock-virtual-key-name");
 
         RequestNewVirtualKey requestNewVirtualKey = RequestNewVirtualKeysMapper.modelMapper.mapRequestNewVirtualKey(bffNewVirtualKeyRequest);
         assertNotNull(requestNewVirtualKey);

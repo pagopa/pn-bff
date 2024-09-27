@@ -168,14 +168,18 @@ class PnVirtualKeysManagerClientPGImplTestIT {
     }
 
     @Test
-    void changeStatusVirtualKey() {
+    void changeStatusVirtualKey() throws JsonProcessingException {
         RequestVirtualKeyStatus requestVirtualKeyStatus = new RequestVirtualKeyStatus();
         requestVirtualKeyStatus.setStatus(RequestVirtualKeyStatus.StatusEnum.BLOCK);
+        String request = objectMapper.writeValueAsString(requestVirtualKeyStatus);
 
         mockServerClient.when(request().withMethod("PUT")
                         .withPath(path + "/VIRTUALKEY_ID/status")
-                        .withQueryStringParameter("status", "BLOCK"))
-                .respond(response().withStatusCode(200));
+                        .withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                );
 
         StepVerifier.create(pnVirtualKeysManagerClientPGImpl.changeStatusVirtualKey(
                 UserMock.PN_UID,
@@ -189,14 +193,15 @@ class PnVirtualKeysManagerClientPGImplTestIT {
     }
 
     @Test
-    void changeStatusVitualKeyError() {
+    void changeStatusVitualKeyError() throws JsonProcessingException {
 
         RequestVirtualKeyStatus requestVirtualKeyStatus = new RequestVirtualKeyStatus();
         requestVirtualKeyStatus.setStatus(RequestVirtualKeyStatus.StatusEnum.BLOCK);
+        String request = objectMapper.writeValueAsString(requestVirtualKeyStatus);
 
         mockServerClient.when(request().withMethod("PUT")
                         .withPath(path + "/VIRTUALKEY_ID/status")
-                        .withQueryStringParameter("status", "BLOCK"))
+                        .withBody(request))
                 .respond(response()
                         .withStatusCode(404)
                 );
