@@ -23,13 +23,9 @@ public class PnBffRestConstants {
     public static final String NOTIFICATION_SENT_CANCEL_PATH = NOTIFICATION_SENT_PATH + "/cancel";
     public static final String NOTIFICATION_SENT_PRELOAD_PATH = NOTIFICATIONS_SENT_PATH + "/documents/preload";
     public static final String GROUPS_PA_PATH = BFF_PATH + VERSION_1 + "/pa/groups";
-    public static final String GROUPS_PG_PATH = BFF_PATH + VERSION_1 + "/pg/groups";
     public static final String PA_LIST = BFF_PATH + VERSION_1 + "/pa-list";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
-    public static final String PUBLIC_KEYS_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys";
-    public static final String PUBLIC_KEYS_ROTATE_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys/{kid}/rotate";
-    public static final String PUBLIC_KEYS_STATUS_PATH = BFF_PATH + VERSION_1 + "/pg/public-keys/{kid}/status";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
     public static final String PAYMENTS_CART_PATH = BFF_PATH + VERSION_1 + "/payments/cart";
@@ -39,6 +35,14 @@ public class PnBffRestConstants {
     public static final String VIRTUALKEYS_PATH = BFF_PATH + VERSION_1 + "/virtual-keys";
     public static final String SENDER_DASHBOARD_GET_DATA_PATH
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
+    private static final String PG = "/pg";
+    public static final String GROUPS_PG_PATH = BFF_PATH + VERSION_1 + PG + "/groups";
+    public static final String PUBLIC_KEYS_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys";
+    public static final String PUBLIC_KEYS_ROTATE_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys/{kid}/rotate";
+    public static final String PUBLIC_KEYS_STATUS_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys/{kid}/status";
+    public static final String PUBLIC_KEYS_CHECK_ISSUER_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys/check-issuer";
+    public static final String VIRTUAL_KEYS_PATH = BFF_PATH + VERSION_1 + PG + "/virtual-keys";
+    public static final String TOS_PG_PRIVACY_PATH = BFF_PATH + VERSION_1 + PG + "/tos-privacy";
     private static final String VERSION_2 = "/v2";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_2 + "/tos-privacy";
 

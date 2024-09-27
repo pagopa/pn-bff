@@ -86,4 +86,12 @@ class CxTypeMapperTest {
         assertNotNull(actualConvertPGCXTypeResult);
         assertEquals(actualConvertPGCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
     }
+
+    @Test
+    void testConvertUserAttributesCXType() {
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxTypeAuthFleet = it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PG;
+        it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet actualConvertPGCXTypeResult = CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(cxTypeAuthFleet);
+        assertNotNull(actualConvertPGCXTypeResult);
+        assertEquals(actualConvertPGCXTypeResult.getValue(), cxTypeAuthFleet.getValue());
+    }
 }

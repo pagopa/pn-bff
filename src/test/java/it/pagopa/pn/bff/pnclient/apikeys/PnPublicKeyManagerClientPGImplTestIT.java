@@ -246,4 +246,33 @@ class PnPublicKeyManagerClientPGImplTestIT {
                 UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
+
+    @Test
+    void checkIssuerStatusPublicKeys() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(publicKeysMock.getIssuerStatusPublicKeysResponseMock());
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/issuer/status"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnPublicKeyManagerClientPG.getIssuerStatus(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        )).expectNext(publicKeysMock.getIssuerStatusPublicKeysResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void checkIssuerStatusPublicKeysError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/issuer/status"))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnPublicKeyManagerClientPG.getIssuerStatus(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        )).expectError().verify();
+    }
 }

@@ -1,11 +1,11 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyRequest;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeyResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Consent;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.ConsentType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeyResponseMapper;
+import it.pagopa.pn.bff.mappers.publickeys.PublicKeysCheckIssuerStatusMapper;
 import it.pagopa.pn.bff.mappers.publickeys.PublicKeysResponseMapper;
 import it.pagopa.pn.bff.mocks.PublicKeysMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @Slf4j
 @WebFluxTest(PublicKeysPgController.class)
-public class PublicKeysPgControllerTest {
+class PublicKeysPgControllerTest {
     private static final Integer LIMIT = 10;
     private static final String LAST_KEY = "LAST_KEY";
     private static final String CREATED_AT = "CREATED_AT";
@@ -476,6 +476,75 @@ public class PublicKeysPgControllerTest {
                 eq("PUBLIC_KEY_ID"),
                 argThat(new MonoMatcher<>(Mono.just(request))),
                 eq(UserMock.PN_CX_GROUPS)
+        );
+    }
+
+    @Test
+    void checkIssuerStatusPublicKeys() {
+        Consent consent = new Consent();
+        consent.setConsentType(ConsentType.TOS_DEST_B2B);
+        consent.setAccepted(true);
+
+        BffPublicKeysCheckIssuerResponse response = PublicKeysCheckIssuerStatusMapper.modelMapper.mapPublicKeysCheckIssuerStatus(
+                publicKeysMock.getIssuerStatusPublicKeysResponseMock(),
+                consent
+        );
+
+        Mockito.when(publicKeysPgService.checkIssuerPublicKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.PUBLIC_KEYS_CHECK_ISSUER_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffPublicKeysCheckIssuerResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(publicKeysPgService).checkIssuerPublicKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
+        );
+    }
+
+    @Test
+    void checkIssuerStatusPublicKeysError() {
+        Mockito.when(publicKeysPgService.checkIssuerPublicKey(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.PUBLIC_KEYS_CHECK_ISSUER_PATH)
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PG.getValue())
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(publicKeysPgService).checkIssuerPublicKey(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PG,
+                UserMock.PN_CX_ID
         );
     }
 }

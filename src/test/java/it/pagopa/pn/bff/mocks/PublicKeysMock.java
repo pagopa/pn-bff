@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.model.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffPublicKeysCheckIssuerResponse;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PublicKeysMock {
-    private ArrayList<String> getPublicKeyGroups(String... groups) { return new ArrayList<>(Arrays.asList(groups)); }
 
     private ArrayList<PublicKeyStatusHistory> getPublicKeyStatusHistory(PublicKeyStatusHistory... statusHistories) {
         return new ArrayList<>(Arrays.asList(statusHistories));
@@ -129,5 +129,27 @@ public class PublicKeysMock {
         publicKeyResponse.setKid("mock-public-key-kid");
 
         return publicKeyResponse;
+    }
+
+    public PublicKeysIssuerResponse getIssuerStatusPublicKeysResponseMock() {
+        PublicKeysIssuerResponse publicKeysIssuerResponse = new PublicKeysIssuerResponse();
+        publicKeysIssuerResponse.setIsPresent(true);
+        publicKeysIssuerResponse.setIssuerStatus(PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
+
+        return publicKeysIssuerResponse;
+    }
+
+    public BffPublicKeysCheckIssuerResponse checkIssuerStatusPublicKeysResponseMock() {
+        BffPublicKeysCheckIssuerResponse bffPublicKeysIssuerResponse = new BffPublicKeysCheckIssuerResponse();
+
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse bffIssuer = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse();
+
+        bffIssuer.setIsPresent(true);
+        bffIssuer.setIssuerStatus(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.PublicKeysIssuerResponse.IssuerStatusEnum.ACTIVE);
+
+        bffPublicKeysIssuerResponse.setTosAccepted(true);
+        bffPublicKeysIssuerResponse.setIssuer(bffIssuer);
+
+        return bffPublicKeysIssuerResponse;
     }
 }
