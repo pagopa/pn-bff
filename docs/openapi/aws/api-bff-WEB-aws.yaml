@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 78qjbQuXP5DllPh4tmEHKit8dwcMwpZmhQhKMujAxnA=
+  version: w2W9HM4HRENBLYNA/3TU0Ka6CpgCh74sR2QUjbAurKg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1619,7 +1619,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/virtual-keys:
+  /v1/pg/virtual-keys:
     get:
       summary: Visualizzazione virtual keys
       description: Servizio di consultazione della lista delle virtual keys censite.
@@ -1671,7 +1671,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1722,7 +1722,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1740,10 +1740,10 @@ paths:
         type: http_proxy
       parameters: []
     options:
-      operationId: Options for /v1/virtual-keys API CORS
+      operationId: Options for /v1/pg/virtual-keys API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -1751,7 +1751,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/virtual-keys/{kid}:
+  /v1/pg/virtual-keys/{kid}:
     delete:
       summary: Eliminazione virtual key
       description: Servizio di eliminazione di una virtual key.
@@ -1791,7 +1791,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1809,10 +1809,10 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/virtual-keys/{kid} API CORS
+      operationId: Options for /v1/pg/virtual-keys/{kid} API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1821,7 +1821,7 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/virtual-keys/{kid}/status:
+  /v1/pg/virtual-keys/{kid}/status:
     put:
       summary: Cambia lo stato della virtualKey
       description: servizio di cambio stato della virtualKey
@@ -1867,7 +1867,7 @@ paths:
                 $ref: '#/components/schemas/Problem'
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}/status
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}/status
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -1885,10 +1885,10 @@ paths:
         timeoutInMillis: 29000
         type: http_proxy
     options:
-      operationId: Options for /v1/virtual-keys/{kid}/status API CORS
+      operationId: Options for /v1/pg/virtual-keys/{kid}/status API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/virtual-keys/{kid}/status
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}/status
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -6165,6 +6165,7 @@ components:
       properties:
         name:
           type: string
+          pattern: ^\S.*\S$
           description: nome dell'api key
         groups:
           type: array
@@ -6425,7 +6426,7 @@ components:
       properties:
         name:
           type: string
-          pattern: ^(?!\s).+(?<!\s)$
+          pattern: ^\S.*\S$
           description: nome della virtual key
     ResponseNewVirtualKey:
       title: Response creazione virtual key

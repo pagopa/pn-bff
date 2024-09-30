@@ -23,7 +23,7 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
-     * GET bff/v1/virtual-keys: Virtual keys list
+     * GET bff/v1/pg/virtual-keys: Virtual keys list
      * Get a paginated list of the virtual keys
      *
      * @param xPagopaPnUid      User Identifier
@@ -57,7 +57,7 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
-     * DELETE bff/v1/virtual-keys/{kid}: delete virtual key
+     * DELETE bff/v1/pg/virtual-keys/{kid}: delete virtual key
      * Delete virtual key with passing kid
      *
      * @param xPagopaPnUid      User Identifier
@@ -85,7 +85,7 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
-     * POST bff/v1/virtual-keys: create a new virtual key
+     * POST bff/v1/pg/virtual-keys: create a new virtual key
      * Create new virtual key
      *
      * @param xPagopaPnUid         User Identifier
@@ -115,7 +115,7 @@ public class VirtualKeysController implements VirtualKeysApi {
     }
 
     /**
-     * PUT bff/v1/virtual-keys/{kid}/status: Change status for an virtual key
+     * PUT bff/v1/pg/virtual-keys/{kid}/status: Change status for an virtual key
      * Change the status of the virtual key identified by the id path parameter
      *
      * @param xPagopaPnUid               User Identifier

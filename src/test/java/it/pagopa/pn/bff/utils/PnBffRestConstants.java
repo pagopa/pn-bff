@@ -31,10 +31,10 @@ public class PnBffRestConstants {
     public static final String ADDRESSES_PATH = BFF_PATH + VERSION_1 + "/addresses";
     public static final String CREATE_DELETE_ADDRESS_PATH = ADDRESSES_PATH + "/{addressType}/{senderId}/{channelType}";
     public static final String MANDATE_PATH = BFF_PATH + VERSION_1 + "/mandate";
-    public static final String VIRTUALKEYS_PATH = BFF_PATH + VERSION_1 + "/virtual-keys";
     public static final String SENDER_DASHBOARD_GET_DATA_PATH
             = BFF_PATH + VERSION_1 + "/sender-dashboard/dashboard-data-request/{cxType}/{cxId}";
     private static final String PG = "/pg";
+    public static final String VIRTUALKEYS_PATH = BFF_PATH + VERSION_1 + PG + "/virtual-keys";
     public static final String GROUPS_PG_PATH = BFF_PATH + VERSION_1 + PG + "/groups";
     public static final String PUBLIC_KEYS_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys";
     public static final String PUBLIC_KEYS_ROTATE_PATH = BFF_PATH + VERSION_1 + PG + "/public-keys/{kid}/rotate";
