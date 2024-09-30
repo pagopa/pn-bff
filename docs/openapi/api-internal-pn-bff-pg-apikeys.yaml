@@ -72,7 +72,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysResponse'
+                $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysResponse'
         '400':
           description: Bad request
           content:
@@ -104,7 +104,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyRequest'
+              $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyRequest'
         required: true
       responses:
         '200':
@@ -112,7 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyResponse'
+                $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyResponse'
         '400':
           description: Bad request
           content:
@@ -238,7 +238,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyRequest"
+              $ref: "./apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyRequest"
         required: true
       responses:
         '200':
@@ -246,7 +246,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyResponse'
+                $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyResponse'
         '400':
           description: Bad request
           content:
@@ -292,7 +292,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './publicKeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysCheckIssuerResponse'
+                $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeysCheckIssuerResponse'
         '400':
           description: Bad request
           content:
@@ -355,7 +355,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './virtualKeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeysResponse'
+                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeysResponse'
         '400':
           description: Bad request
           content:
@@ -387,7 +387,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './virtualKeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyRequest'
+              $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyRequest'
         required: true
       responses:
         '201':
@@ -395,7 +395,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './virtualKeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyResponse'
+                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyResponse'
         '400':
           description: Bad request
           content:
@@ -475,7 +475,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "./virtualKeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeyStatusRequest"
+              $ref: "./apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeyStatusRequest"
         required: true
       responses:
         '200':
