@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: lkchPWDSJtdyOU73mSUBNgndGXSCnuA82HUAmjuEuFQ=
+  version: w2W9HM4HRENBLYNA/3TU0Ka6CpgCh74sR2QUjbAurKg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6165,7 +6165,7 @@ components:
       properties:
         name:
           type: string
-          pattern: ^(?!\s).+(?<!\s)$
+          pattern: ^\S.*\S$
           description: nome dell'api key
         groups:
           type: array
@@ -6426,7 +6426,7 @@ components:
       properties:
         name:
           type: string
-          pattern: ^(?!\s).+(?<!\s)$
+          pattern: ^\S.*\S$
           description: nome della virtual key
     ResponseNewVirtualKey:
       title: Response creazione virtual key
