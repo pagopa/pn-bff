@@ -814,7 +814,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/230402e5fc1041c15004f45d8c919ae0db24db6a/docs/openapi/pn-apikey-manager-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/880adaf36b3338ed6974947841c464e8b78ca809/docs/openapi/pn-apikey-manager-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -1111,7 +1111,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-pg-internal.yaml</inputSpec>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/880adaf36b3338ed6974947841c464e8b78ca809/docs/openapi/pn-apikey-manager-pg-internal.yaml
+                            </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
@@ -1146,7 +1148,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-apikey-manager/b302ac0b47dbbc283fa3791586734fd77dd2ed8e/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml</inputSpec>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-apikey-manager/880adaf36b3338ed6974947841c464e8b78ca809/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml
+                            </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
                             <generateApiTests>false</generateApiTests>
