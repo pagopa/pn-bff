@@ -282,177 +282,177 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
-  "/bff/v1/pg/virtual-keys":
-    get:
-      summary: Visualizzazione virtual keys
-      description: >-
-        Servizio di consultazione della lista delle virtual keys censite.
-      tags:
-        - VirtualKeys
-      operationId: getVirtualKeysV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 10
-        - name: lastKey
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: lastUpdate
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: showVirtualKey
-          in: query
-          required: false
-          schema:
-            type: boolean
-            default: false
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeysResponse'
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '500':
-          description: Internal error
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-    post:
-      summary: Censimento virtual key
-      description: >-
-        Servizio di creazione di una nuova virtual key.
-      tags:
-        - VirtualKeys
-      operationId: newVirtualKeyV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyRequest'
-        required: true
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyResponse'
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '500':
-          description: Internal error
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-
-  "/bff/v1/pg/virtual-keys/{kid}":
-    delete:
-      summary: Eliminazione virtual key
-      description: >-
-        Servizio di eliminazione di una virtual key.
-      tags:
-        - VirtualKeys
-      operationId: deleteVirtualKeyV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
-        - $ref: '#/components/parameters/pathKid'
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '404':
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '500':
-          description: Internal error
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-
-  "/bff/v1/pg/virtual-keys/{kid}/status":
-    put:
-      summary: Cambia lo stato della virtualKey
-      description: >-
-        servizio di cambio stato della virtualKey
-      tags:
-        - VirtualKeys
-      operationId: changeStatusVirtualKeysV1
-      security:                                      # ONLY EXTERNAL
-        - bearerAuth: [ ]                            # ONLY EXTERNAL
-      parameters:
-        - $ref: '#/components/parameters/pathKid'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "./apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeyStatusRequest"
-        required: true
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition (i.e. enable an enabled key)
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '404':
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
-        '500':
-          description: Internal error
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem'
+#  "/bff/v1/pg/virtual-keys":
+#    get:
+#      summary: Visualizzazione virtual keys
+#      description: >-
+#        Servizio di consultazione della lista delle virtual keys censite.
+#      tags:
+#        - VirtualKeys
+#      operationId: getVirtualKeysV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      parameters:
+#        - name: limit
+#          in: query
+#          schema:
+#            type: integer
+#            default: 10
+#        - name: lastKey
+#          in: query
+#          required: false
+#          schema:
+#            type: string
+#        - name: lastUpdate
+#          in: query
+#          required: false
+#          schema:
+#            type: string
+#        - name: showVirtualKey
+#          in: query
+#          required: false
+#          schema:
+#            type: boolean
+#            default: false
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeysResponse'
+#        '400':
+#          description: Bad request
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '500':
+#          description: Internal error
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#    post:
+#      summary: Censimento virtual key
+#      description: >-
+#        Servizio di creazione di una nuova virtual key.
+#      tags:
+#        - VirtualKeys
+#      operationId: newVirtualKeyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyRequest'
+#        required: true
+#      responses:
+#        '201':
+#          description: Created
+#          content:
+#            application/json:
+#              schema:
+#                $ref: './apikeys-schemas/virtual-keys.yaml#/components/schemas/BffNewVirtualKeyResponse'
+#        '400':
+#          description: Bad request
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '500':
+#          description: Internal error
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#
+#  "/bff/v1/pg/virtual-keys/{kid}":
+#    delete:
+#      summary: Eliminazione virtual key
+#      description: >-
+#        Servizio di eliminazione di una virtual key.
+#      tags:
+#        - VirtualKeys
+#      operationId: deleteVirtualKeyV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      parameters:
+#        - $ref: '#/components/parameters/pathKid'
+#      responses:
+#        '200':
+#          description: OK
+#        '400':
+#          description: Bad request
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '409':
+#          description: Wrong state transition
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '404':
+#          description: Not found
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '500':
+#          description: Internal error
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#
+#  "/bff/v1/pg/virtual-keys/{kid}/status":
+#    put:
+#      summary: Cambia lo stato della virtualKey
+#      description: >-
+#        servizio di cambio stato della virtualKey
+#      tags:
+#        - VirtualKeys
+#      operationId: changeStatusVirtualKeysV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      parameters:
+#        - $ref: '#/components/parameters/pathKid'
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "./apikeys-schemas/virtual-keys.yaml#/components/schemas/BffVirtualKeyStatusRequest"
+#        required: true
+#      responses:
+#        '200':
+#          description: OK
+#        '400':
+#          description: Bad request
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '409':
+#          description: Wrong state transition (i.e. enable an enabled key)
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '404':
+#          description: Not found
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
+#        '500':
+#          description: Internal error
+#          content:
+#            application/problem+json:
+#              schema:
+#                $ref: './common-refs.yaml#/components/schemas/Problem'
 
 components:
   parameters:
