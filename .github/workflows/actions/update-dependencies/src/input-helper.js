@@ -2,26 +2,13 @@ const core = require('@actions/core');
 
 class InputHelper {
     static getDependencies() {
-        const dependencies = [];
+        // by default we updated the pn-commons, pn-model and pn-parent dependencies
+        // other dependencies are updated based on user choice
+        const dependencies = ['pn-commons', 'pn-model', 'pn-parent'];
         const authFleet = core.getInput('pn-auth-fleet', { required: true });
         core.debug(`pn-auth-fleet = ${authFleet}`);
         if (authFleet === "true") {
             dependencies.push('pn-auth-fleet');
-        }
-        const parent = core.getInput('pn-parent', { required: true });
-        core.debug(`pn-parent = ${parent}`);
-        if (parent === "true") {
-            dependencies.push('pn-parent');
-        }
-        const model = core.getInput('pn-model', { required: true });
-        core.debug(`pn-model = ${model}`);
-        if (model === "true") {
-            dependencies.push('pn-model');
-        }
-        const commons = core.getInput('pn-commons', { required: true });
-        core.debug(`pn-commons = ${commons}`);
-        if (commons === "true") {
-            dependencies.push('pn-commons');
         }
         const delivery = core.getInput('pn-delivery', { required: true });
         core.debug(`pn-delivery = ${delivery}`);

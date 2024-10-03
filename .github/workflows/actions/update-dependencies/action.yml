@@ -11,18 +11,6 @@ inputs:
     description: Update pn-auth-fleet dependency?
     required: true
     default: "false"
-  pn-parent:
-    description: Update pn-parent dependency?
-    required: true
-    default: "false"
-  pn-model:
-    description: Update pn-model dependency?
-    required: true
-    default: "false"
-  pn-commons:
-    description: Update pn-commons dependency?
-    required: true
-    default: "false"
   pn-delivery:
     description: Update pn-delivery dependency?
     required: true
