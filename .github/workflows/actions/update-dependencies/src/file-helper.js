@@ -20,7 +20,7 @@ class FileHelper {
 
     #getInternalDependenciesRegexp(tags) {
         const dependencies = Object.keys(tags);
-        const regexp = new RegExp(`(<dependency>\\s*<groupId>it\\.pagopa\\.pn</groupId>\\s*<artifactId>(?<repository>${dependencies.join('|')})</artifactId>\\s*<version>)(?<version>\\d\.\\d\.\\d)(</version>\\s*</dependency>)`, 'g');
+        const regexp = new RegExp(`(<dependency>\\s*<groupId>it\\.pagopa\\.pn</groupId>\\s*<artifactId>(?<repository>${dependencies.join('|')})</artifactId>\\s*<version>)(?<version>\\d\\.\\d\\.\\d)(</version>\\s*</dependency>)`, 'g');
          core.debug(`Computed regular expression ${regexp.toString()}`);
          return regexp;
     }
