@@ -82,7 +82,7 @@ paths:
         Ritorna lo stato di accettazione dei TOS e della Privacy della Pg.
       tags:
         - UserConsents
-      operationId: getPgConsentByType
+      operationId: getPgTosPrivacyV1
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: w2W9HM4HRENBLYNA/3TU0Ka6CpgCh74sR2QUjbAurKg=
+  version: 1+54gS47Cyp1I0YHac5rxgy/EpnYI83pFzDEOyKxs3k=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2314,7 +2314,7 @@ paths:
       description: Ritorna lo stato di accettazione dei TOS e della Privacy della Pg.
       tags:
         - UserConsents
-      operationId: getPgConsentByType
+      operationId: getPgTosPrivacyV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
