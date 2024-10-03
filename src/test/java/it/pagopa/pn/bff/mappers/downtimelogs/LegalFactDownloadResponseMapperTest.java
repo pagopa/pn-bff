@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.downtimelogs;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffLegalFactDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.mocks.DowntimeLogsMock;
 import org.junit.jupiter.api.Test;
 

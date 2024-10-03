@@ -111,7 +111,7 @@ public class ApiKeysMock {
         return apiKeysResponse;
     }
 
-    public RequestNewApiKey geRequestNewApiKeyMock() {
+    public RequestNewApiKey getRequestNewApiKeyMock() {
         RequestNewApiKey requestNewApiKey = new RequestNewApiKey();
         requestNewApiKey.setName("mock-api-key-name");
         List<String> groups = new ArrayList<>();
@@ -121,7 +121,7 @@ public class ApiKeysMock {
         return requestNewApiKey;
     }
 
-    public ResponseNewApiKey geResponseNewApiKeyMock() {
+    public ResponseNewApiKey getResponseNewApiKeyMock() {
         ResponseNewApiKey responseNewApiKey = new ResponseNewApiKey();
         responseNewApiKey.setId("mock-api-key-id");
         responseNewApiKey.setApiKey("mock-api-key-value");

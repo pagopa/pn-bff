@@ -6,10 +6,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.Address
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyChannelType;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalChannelType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffChannelType;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUserAddress;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffChannelType;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffUserAddress;
 import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
 import it.pagopa.pn.bff.mocks.AddressesMock;
@@ -55,7 +55,7 @@ public class AddressesServiceTest {
 
         Flux<BffUserAddress> addresses = addressesService.getUserAddresses(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
         );
@@ -78,7 +78,7 @@ public class AddressesServiceTest {
 
         Flux<BffUserAddress> addresses = addressesService.getUserAddresses(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE
         );
@@ -106,7 +106,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
                         AddressesMock.SENDER_ID,
@@ -132,7 +132,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
                         AddressesMock.SENDER_ID,
@@ -163,7 +163,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
                         AddressesMock.SENDER_ID,
@@ -189,7 +189,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
                         AddressesMock.SENDER_ID,
@@ -215,7 +215,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.deleteDigitalAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
                         AddressesMock.SENDER_ID,
@@ -238,7 +238,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.deleteDigitalAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.COURTESY,
                         AddressesMock.SENDER_ID,
@@ -263,7 +263,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.deleteDigitalAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
                         AddressesMock.SENDER_ID,
@@ -286,7 +286,7 @@ public class AddressesServiceTest {
 
         StepVerifier.create(addressesService.deleteDigitalAddress(
                         UserMock.PN_UID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PF,
                         UserMock.PN_CX_ROLE,
                         BffAddressType.LEGAL,
                         AddressesMock.SENDER_ID,

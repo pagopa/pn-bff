@@ -87,15 +87,15 @@ class PnApikeyManagerClientPAImplTest {
                 Mockito.anyString(),
                 Mockito.any(RequestNewApiKey.class),
                 Mockito.anyList()
-        )).thenReturn(Mono.just(apiKeysMock.geResponseNewApiKeyMock()));
+        )).thenReturn(Mono.just(apiKeysMock.getResponseNewApiKeyMock()));
 
         StepVerifier.create(paApikeyManagerClient.newApiKey(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                apiKeysMock.geRequestNewApiKeyMock(),
+                apiKeysMock.getRequestNewApiKeyMock(),
                 UserMock.PN_CX_GROUPS
-        )).expectNext(apiKeysMock.geResponseNewApiKeyMock()).verifyComplete();
+        )).expectNext(apiKeysMock.getResponseNewApiKeyMock()).verifyComplete();
     }
 
     @Test
@@ -112,7 +112,7 @@ class PnApikeyManagerClientPAImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
-                apiKeysMock.geRequestNewApiKeyMock(),
+                apiKeysMock.getRequestNewApiKeyMock(),
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }

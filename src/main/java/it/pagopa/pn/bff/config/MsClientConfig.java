@@ -13,10 +13,12 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -201,5 +203,25 @@ public class MsClientConfig extends CommonBaseClient {
                         initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.mandate.ApiClient.buildWebClientBuilder()));
         apiClient.setBasePath(cfg.getMandateBaseUrl());
         return new MandateServiceApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    PublicKeysApi publicKeysApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getApikeyManagerBaseUrl());
+        return new PublicKeysApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    VirtualKeysApi virtualKeysApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.ApiClient.buildWebClientBuilder()));
+        apiClient.setBasePath(cfg.getApikeyManagerBaseUrl());
+        return new VirtualKeysApi(apiClient);
     }
 }

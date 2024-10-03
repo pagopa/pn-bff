@@ -29,6 +29,7 @@ class PnUserAttributesClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String path = "/user-consents/v1/consents";
+    private final String pathPG = "/pg-consents/v1/consents/";
     private final String addressPath = "/address-book/v1/digital-address";
     private final ConsentsMock consentsMock = new ConsentsMock();
     private final AddressesMock addressesMock = new AddressesMock();
@@ -54,56 +55,100 @@ class PnUserAttributesClientImplTestIT {
     }
 
     @Test
-    void getTosConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getTosConsentResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+    void getPgConsentByType() throws JsonProcessingException {
+        Consent consent = consentsMock.getPgTosConsentResponseMock();
+        String response = objectMapper.writeValueAsString(consent);
+        mockServerClient.when(request().withMethod("GET").withPath(pathPG +  ConsentType.TOS_DEST_B2B))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UserMock.PN_UID,
-                CX_TYPE
-        )).expectNext(consentsMock.getTosConsentResponseMock()).verifyComplete();
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_CX_ID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B
+        )).expectNext(consent).verifyComplete();
     }
 
     @Test
-    void getTosConsentError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
+    void getPgConsentByTypeError() {
+        mockServerClient.when(request().withMethod("GET").withPath(pathPG +  ConsentType.TOS_DEST_B2B))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnUserAttributesClient.getTosConsent(
-                UserMock.PN_UID,
-                CX_TYPE
+        StepVerifier.create(pnUserAttributesClient.getPgConsentByType(
+                UserMock.PN_CX_ID,
+                CX_TYPE,
+                ConsentType.TOS_DEST_B2B
         )).expectError().verify();
     }
 
     @Test
-    void getPrivacyConsent() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(consentsMock.getPrivacyConsentResponseMock());
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
+    void acceptPgTosConsent() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(pathPG +  ConsentType.TOS_DEST_B2B).withBody(request))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("")
+                );
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B,
+                UserMock.PN_CX_ROLE,
+                "1",
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                UserMock.PN_CX_GROUPS
+        )).expectNext().verifyComplete();
+    }
+
+    @Test
+    void acceptPgTosConsentError() throws JsonProcessingException {
+        String request = objectMapper.writeValueAsString(consentsMock.requestConsentActionMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(pathPG +  ConsentType.TOS_DEST_B2B).withBody(request))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnUserAttributesClient.acceptConsentPg(
+                UserMock.PN_CX_ID,
+                CxTypeAuthFleet.PG,
+                ConsentType.TOS_DEST_B2B,
+                UserMock.PN_CX_ROLE,
+                "1",
+                new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
+                UserMock.PN_CX_GROUPS
+        )).expectError().verify();
+    }
+
+    @Test
+    void getConsentByType() throws JsonProcessingException {
+        Consent consent = consentsMock.getTosConsentResponseMock();
+        String response = objectMapper.writeValueAsString(consent);
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
-        )).expectNext(consentsMock.getPrivacyConsentResponseMock()).verifyComplete();
+                CX_TYPE,
+                ConsentType.TOS
+        )).expectNext(consent).verifyComplete();
     }
 
     @Test
-    void getPrivacyConsentError() {
-        mockServerClient.when(request().withMethod("GET").withPath(path + "/DATAPRIVACY"))
+    void getConsentByTypeError() {
+        mockServerClient.when(request().withMethod("GET").withPath(path + "/TOS"))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnUserAttributesClient.getPrivacyConsent(
+        StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
-                CX_TYPE
+                CX_TYPE,
+                ConsentType.TOS
         )).expectError().verify();
     }
 

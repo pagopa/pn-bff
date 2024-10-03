@@ -3,7 +3,8 @@ package it.pagopa.pn.bff.mappers.addresses;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyDigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalAndUnverifiedDigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffUserAddress;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffUserAddress;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * LegalAndUnverifiedDigitalAddress and CourtesyDigitalAddress) to
  * the BffUserAddress
  */
-@Mapper
+@Mapper(uses = {ChannelTypeMapper.class})
 public interface AddressesMapper {
     AddressesMapper addressesMapper = Mappers.getMapper(AddressesMapper.class);
 
@@ -33,7 +34,7 @@ public interface AddressesMapper {
 
         if (legal != null) {
             for (LegalAndUnverifiedDigitalAddress legalAddress : legal) {
-                bffUserAddress.add(mapLegalAddress(legalAddress));
+                bffUserAddress.add(mapLegalAddress(legalAddress, legalAddress));
             }
         }
 
@@ -52,7 +53,7 @@ public interface AddressesMapper {
      * @param legalAddress LegalAndUnverifiedDigitalAddress to map
      * @return the mapped BffUserAddress
      */
-    BffUserAddress mapLegalAddress(LegalAndUnverifiedDigitalAddress legalAddress);
+    BffUserAddress mapLegalAddress(LegalAndUnverifiedDigitalAddress legalAddress, @Context LegalAndUnverifiedDigitalAddress address);
 
     /**
      * Map CourtesyDigitalAddress to BffUserAddress

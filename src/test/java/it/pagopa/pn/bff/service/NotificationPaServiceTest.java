@@ -6,7 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PreLoad
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
@@ -66,12 +66,12 @@ class NotificationPaServiceTest {
 
         Mono<BffNotificationsResponse> result = notificationsPAService.searchSentNotifications(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
@@ -103,12 +103,12 @@ class NotificationPaServiceTest {
 
         Mono<BffNotificationsResponse> result = notificationsPAService.searchSentNotifications(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
@@ -134,7 +134,7 @@ class NotificationPaServiceTest {
 
         Mono<BffFullNotificationV1> result = notificationsPAService.getSentNotificationDetail(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 UserMock.PN_CX_GROUPS
@@ -157,7 +157,7 @@ class NotificationPaServiceTest {
 
         Mono<BffFullNotificationV1> result = notificationsPAService.getSentNotificationDetail(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 UserMock.PN_CX_GROUPS
@@ -185,7 +185,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.AAR,
@@ -215,7 +215,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.AAR,
@@ -236,7 +236,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.AAR,
@@ -270,13 +270,13 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -300,13 +300,13 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -321,13 +321,13 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 null,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.LegalFactCategory.ANALOG_DELIVERY,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -345,7 +345,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
@@ -377,7 +377,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
@@ -405,7 +405,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
@@ -425,7 +425,7 @@ class NotificationPaServiceTest {
     void getNotificationDocumentAttachmentNoDocumentId() {
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
@@ -459,7 +459,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationPayment(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 0,
@@ -488,7 +488,7 @@ class NotificationPaServiceTest {
 
         Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationPayment(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 0,
@@ -515,7 +515,7 @@ class NotificationPaServiceTest {
 
         Mono<BffRequestStatus> result = notificationsPAService.notificationCancellation(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 UserMock.PN_CX_GROUPS
@@ -538,7 +538,7 @@ class NotificationPaServiceTest {
 
         Mono<BffRequestStatus> result = notificationsPAService.notificationCancellation(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
                 UserMock.PN_CX_GROUPS
@@ -562,7 +562,7 @@ class NotificationPaServiceTest {
 
         Mono<BffNewNotificationResponse> result = notificationsPAService.newSentNotification(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 Mono.just(newSentNotificationMock.getBffNewSentNotificationRequest()),
                 UserMock.PN_CX_GROUPS
@@ -585,7 +585,7 @@ class NotificationPaServiceTest {
 
         Mono<BffNewNotificationResponse> result = notificationsPAService.newSentNotification(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 Mono.just(newSentNotificationMock.getBffNewSentNotificationRequest()),
                 UserMock.PN_CX_GROUPS
@@ -613,7 +613,7 @@ class NotificationPaServiceTest {
 
         Flux<BffPreLoadResponse> result = notificationsPAService.preSignedUpload(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 Flux.fromIterable(newSentNotificationMock.getBffPreloadRequestMock())
         );
@@ -634,7 +634,7 @@ class NotificationPaServiceTest {
 
         Flux<BffPreLoadResponse> result = notificationsPAService.preSignedUpload(
                 UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PA,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
                 UserMock.PN_CX_ID,
                 Flux.fromIterable(newSentNotificationMock.getBffPreloadRequestMock())
         );

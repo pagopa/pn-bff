@@ -2,10 +2,10 @@ package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroup;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffPgGroupStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.PaSummary;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPgGroup;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.PaSummary;
 import it.pagopa.pn.bff.mappers.inforecipient.GroupsMapper;
 import it.pagopa.pn.bff.mappers.inforecipient.PaListMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;

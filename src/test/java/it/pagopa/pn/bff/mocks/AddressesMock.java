@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffAddressVerificationRequest;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,15 @@ public class AddressesMock {
                         .codeValid(true)
                         .pecValid(true)
                         .value("test@pec.it")
+                        .recipientId("1234567890")
+                        .senderId("default")
+        );
+
+        legal.add(
+                new LegalAndUnverifiedDigitalAddress()
+                        .addressType(LegalAddressType.LEGAL)
+                        .channelType(LegalChannelType.SERCQ)
+                        .value("x-pagopa-pn-sercq:send-self:notification-already-delivered")
                         .recipientId("1234567890")
                         .senderId("default")
         );

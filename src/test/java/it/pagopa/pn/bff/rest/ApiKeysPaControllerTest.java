@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.*;
 import it.pagopa.pn.bff.mappers.apikeys.ApiKeysMapper;
 import it.pagopa.pn.bff.mappers.apikeys.ResponseNewApiKeyMapper;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
@@ -140,7 +140,7 @@ class ApiKeysPaControllerTest {
         groups.add("mock-id-1");
         groups.add("mock-id-3");
         request.setGroups(groups);
-        BffResponseNewApiKey response = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.geResponseNewApiKeyMock());
+        BffResponseNewApiKey response = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(apiKeysMock.getResponseNewApiKeyMock());
 
         Mockito.when(apiKeysPaService.newApiKey(
                         Mockito.anyString(),

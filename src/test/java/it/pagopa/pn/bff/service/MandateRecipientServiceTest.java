@@ -3,8 +3,8 @@ package it.pagopa.pn.bff.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffMandate;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSearchMandateResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffMandate;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.BffSearchMandateResponse;
 import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandatesMapper;
 import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;
@@ -50,7 +50,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.countMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         "STATUS"
@@ -71,7 +71,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.countMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         "STATUS"
@@ -95,7 +95,7 @@ public class MandateRecipientServiceTest {
         StepVerifier.create(mandateRecipientService.createMandate(
                         UserMock.PN_UID,
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         Mono.just(mandateMock.getBffNewMandateRequestMock())
@@ -118,7 +118,7 @@ public class MandateRecipientServiceTest {
         StepVerifier.create(mandateRecipientService.createMandate(
                         UserMock.PN_UID,
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         Mono.just(mandateMock.getBffNewMandateRequestMock())
@@ -141,7 +141,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.acceptMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -164,7 +164,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.acceptMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -188,7 +188,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.updateMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -211,7 +211,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.updateMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -234,7 +234,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.rejectMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
@@ -255,7 +255,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.rejectMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
@@ -277,7 +277,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.revokeMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
@@ -298,7 +298,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.revokeMandate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         "MANDATE_ID",
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
@@ -324,7 +324,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.getMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         "STATUS"
@@ -345,7 +345,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.getMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
                         "STATUS"
@@ -370,7 +370,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.searchMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         10,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -395,7 +395,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.searchMandatesByDelegate(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         10,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
@@ -422,7 +422,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.getMandatesByDelegator(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
                 ))
@@ -441,7 +441,7 @@ public class MandateRecipientServiceTest {
 
         StepVerifier.create(mandateRecipientService.getMandatesByDelegator(
                         UserMock.PN_CX_ID,
-                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet.PF,
+                        it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE
                 ))

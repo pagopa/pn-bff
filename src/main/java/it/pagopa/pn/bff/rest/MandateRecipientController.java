@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.MandateApi;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.*;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.*;
 import it.pagopa.pn.bff.service.MandateRecipientService;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
@@ -287,7 +287,7 @@ public class MandateRecipientController implements MandateApi {
         Flux<BffMandate> serviceResponse = mandateRecipientService.getMandatesByDelegator(
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole
         );
-        
+
         return serviceResponse
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));

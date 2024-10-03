@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.mappers.apikeys;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.model.ResponseNewApiKey;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffResponseNewApiKey;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.BffResponseNewApiKey;
 import it.pagopa.pn.bff.mocks.ApiKeysMock;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class ResponseNewApiKeyMapperTest {
 
     @Test
     void testResponseNewApiKeyMapper() {
-        ResponseNewApiKey responseNewApiKey = apiKeysMock.geResponseNewApiKeyMock();
+        ResponseNewApiKey responseNewApiKey = apiKeysMock.getResponseNewApiKeyMock();
         BffResponseNewApiKey bffResponseNewApiKey = ResponseNewApiKeyMapper.modelMapper.mapResponseNewApiKey(responseNewApiKey);
         assertNotNull(bffResponseNewApiKey);
         assertThat(bffResponseNewApiKey).usingRecursiveComparison().isEqualTo(responseNewApiKey);

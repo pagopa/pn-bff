@@ -1,36 +1,42 @@
 info:
   version: v1.0
 components:
+  parameters:
+    BffQueryTosPrivacyType:
+      name: type
+      description: Tipo di consent
+      required: true
+      explode: true
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7d4a8ca084b43886b1adf222c43da224716c70e2/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'
+
   schemas:
     BffConsent:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7d4a8ca084b43886b1adf222c43da224716c70e2/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/Consent'
 
     BffTosPrivacyConsent:
-      type: object
-      required:
-        - tos
-        - privacy
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffConsent'
-        privacy:
-          $ref: '#/components/schemas/BffConsent'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffConsent'
 
     BffTosPrivacyBody:
-      type: object
-      properties:
-        tos:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
-        privacy:
-          $ref: '#/components/schemas/BffTosPrivacyActionBody'
+      type: array
+      items:
+        $ref: '#/components/schemas/BffTosPrivacyActionBody'
 
     BffTosPrivacyActionBody:
       required:
         - version
         - action
+        - type
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7d4a8ca084b43886b1adf222c43da224716c70e2/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentAction'
         - type: object
           properties:
             version:
-              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/3ccaaa205a343df72f813c34b99f2f2ddf9ade3b/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7d4a8ca084b43886b1adf222c43da224716c70e2/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentVersion'
+            type:
+              $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7d4a8ca084b43886b1adf222c43da224716c70e2/docs/openapi/pn-user-consents-api-internal.yaml#/components/schemas/ConsentType'

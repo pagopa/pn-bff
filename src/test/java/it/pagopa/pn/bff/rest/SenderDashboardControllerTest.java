@@ -1,8 +1,8 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.BffSenderDashboardDataResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.BffSenderDashboardDataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.sender_dashboard.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.senderdashboard.SenderDashboardService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
