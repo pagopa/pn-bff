@@ -17,7 +17,7 @@ class PublicKeyRequestMapperTest {
         BffPublicKeyRequest bffPublicKeyRequest = new BffPublicKeyRequest();
         bffPublicKeyRequest.setName("mock-public-key-name");
         bffPublicKeyRequest.setPublicKey("mock-public-key-value");
-        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         bffPublicKeyRequest.setExponent("mock-public-key-exponent");
 
         PublicKeyRequest publicKeyRequest = PublicKeyRequestMapper.modelMapper.mapPublicKeyRequest(bffPublicKeyRequest);

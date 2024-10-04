@@ -92,7 +92,7 @@ public class PublicKeysPgController implements PublicKeysApi {
                 xPagopaPnCxGroups
         );
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
     }
 
     /**
@@ -122,7 +122,8 @@ public class PublicKeysPgController implements PublicKeysApi {
                 xPagopaPnCxGroups
         );
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
     /**
@@ -157,7 +158,7 @@ public class PublicKeysPgController implements PublicKeysApi {
                 xPagopaPnCxGroups
         );
 
-        return serviceResposne.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResposne.map(response -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(response));
     }
 
     /**

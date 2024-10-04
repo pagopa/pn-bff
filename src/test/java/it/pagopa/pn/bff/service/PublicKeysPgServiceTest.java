@@ -112,7 +112,7 @@ class PublicKeysPgServiceTest {
         BffPublicKeyRequest bffPublicKeyRequest = new BffPublicKeyRequest();
         bffPublicKeyRequest.setName("mock-public-key-name");
         bffPublicKeyRequest.setPublicKey("PUBLIC_KEY");
-        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         bffPublicKeyRequest.setExponent("EXPONENT");
 
         when(pnPublicKeyManagerClientPG.newPublicKey(
@@ -143,7 +143,7 @@ class PublicKeysPgServiceTest {
         BffPublicKeyRequest bffPublicKeyRequest = new BffPublicKeyRequest();
         bffPublicKeyRequest.setName("mock-public-key-name");
         bffPublicKeyRequest.setPublicKey("PUBLIC_KEY");
-        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         bffPublicKeyRequest.setExponent("EXPONENT");
 
         when(pnPublicKeyManagerClientPG.newPublicKey(
@@ -281,7 +281,7 @@ class PublicKeysPgServiceTest {
         BffPublicKeyRequest bffPublicKeyRequest = new BffPublicKeyRequest();
         bffPublicKeyRequest.setName("mock-public-key-name");
         bffPublicKeyRequest.setPublicKey("PUBLIC_KEY");
-        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         bffPublicKeyRequest.setExponent("EXPONENT");
 
         when(pnPublicKeyManagerClientPG.rotatePublicKey(
@@ -314,7 +314,7 @@ class PublicKeysPgServiceTest {
         BffPublicKeyRequest bffPublicKeyRequest = new BffPublicKeyRequest();
         bffPublicKeyRequest.setName("mock-public-key-name");
         bffPublicKeyRequest.setPublicKey("PUBLIC_KEY");
-        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        bffPublicKeyRequest.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         bffPublicKeyRequest.setExponent("EXPONENT");
 
         when(pnPublicKeyManagerClientPG.rotatePublicKey(

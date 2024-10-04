@@ -247,7 +247,7 @@ class VirtualKeysControllerTest {
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody(BffNewVirtualKeyResponse.class)
                 .isEqualTo(response);
 

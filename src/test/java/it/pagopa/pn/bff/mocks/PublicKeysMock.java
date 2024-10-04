@@ -116,7 +116,7 @@ public class PublicKeysMock {
 
         publicKeyRequest.setName("mock-public-key-name");
         publicKeyRequest.setPublicKey("mock-public-key-value");
-        publicKeyRequest.setAlgorithm(PublicKeyRequest.AlgorithmEnum.RS256);
+        publicKeyRequest.setAlgorithm(PublicKeyRequest.AlgorithmEnum.RSA);
         publicKeyRequest.setExponent("mock-public-key-exponent");
 
         return publicKeyRequest;
