@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 1+54gS47Cyp1I0YHac5rxgy/EpnYI83pFzDEOyKxs3k=
+  version: mgX3w3F8ygD56kNQJ7BPg1HB/cqpp9yEZZ2j/vV6rEA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -1243,6 +1243,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
@@ -1282,7 +1288,7 @@ paths:
               $ref: '#/components/schemas/PublicKeyRequest'
         required: true
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
@@ -1343,10 +1349,16 @@ paths:
       parameters:
         - $ref: '#/components/parameters/pathKid'
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
@@ -1416,10 +1428,16 @@ paths:
         - $ref: '#/components/parameters/pathKid'
         - $ref: '#/components/parameters/queryStatus'
       responses:
-        '200':
+        '204':
           description: No content
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
@@ -1500,6 +1518,12 @@ paths:
                 $ref: '#/components/schemas/PublicKeyResponse'
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
@@ -1663,6 +1687,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
@@ -1710,6 +1740,18 @@ paths:
                 $ref: '#/components/schemas/ResponseNewVirtualKey'
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition
           content:
             application/problem+json:
               schema:
@@ -1767,6 +1809,12 @@ paths:
           description: OK
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
@@ -1843,6 +1891,12 @@ paths:
           description: OK
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
@@ -6281,19 +6335,28 @@ components:
         name:
           type: string
           description: nome della public key
+          maxLength: 254
+          pattern: ^[a-zA-Z0-9-\s]+$
         publicKey:
           type: string
           description: Valore della public key (esclusi header e footer)
+          maxLength: 500
         exponent:
           type: string
           description: Esponente della public key
           default: AQAB
         algorithm:
-          description: Algoritmo di crittografia usato per la public key
+          description: Algoritmo di crittografia usato per la generazione della public key
           type: string
           enum:
-            - RS256
-          default: RS256
+            - RSA
+          default: RSA
+        keySize:
+          description: Dimensione della chiave
+          type: number
+          enum:
+            - 2048
+          default: 2048
     PublicKeyResponse:
       title: Response censimento public key
       description: Response del censimento di una nuova public key
