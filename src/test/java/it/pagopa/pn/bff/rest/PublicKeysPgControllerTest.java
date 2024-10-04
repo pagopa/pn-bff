@@ -143,7 +143,7 @@ class PublicKeysPgControllerTest {
         request.setName("mock-public-key-name");
         request.setPublicKey("mock-public-key-value");
         request.setExponent("mock-public-key-exponent");
-        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         BffPublicKeyResponse response = PublicKeyResponseMapper.modelMapper.mapPublicKeyResponse(publicKeysMock.gePublicKeyResponseMock());
 
         Mockito.when(publicKeysPgService.newPublicKey(
@@ -171,7 +171,7 @@ class PublicKeysPgControllerTest {
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody(BffPublicKeyResponse.class)
                 .isEqualTo(response);
 
@@ -191,7 +191,7 @@ class PublicKeysPgControllerTest {
         request.setName("mock-public-key-name");
         request.setPublicKey("mock-public-key-value");
         request.setExponent("mock-public-key-exponent");
-        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
 
         Mockito.when(publicKeysPgService.newPublicKey(
                         Mockito.anyString(),
@@ -254,7 +254,7 @@ class PublicKeysPgControllerTest {
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isNoContent()
                 .expectBody(Void.class);
 
         Mockito.verify(publicKeysPgService).deletePublicKey(
@@ -388,7 +388,7 @@ class PublicKeysPgControllerTest {
         request.setName("mock-public-key-name");
         request.setPublicKey("mock-public-key-value");
         request.setExponent("mock-public-key-exponent");
-        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
         BffPublicKeyResponse response = PublicKeyResponseMapper.modelMapper.mapPublicKeyResponse(publicKeysMock.gePublicKeyResponseMock());
 
         Mockito.when(publicKeysPgService.rotatePublicKey(
@@ -438,7 +438,7 @@ class PublicKeysPgControllerTest {
         request.setName("mock-public-key-name");
         request.setPublicKey("mock-public-key-value");
         request.setExponent("mock-public-key-exponent");
-        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RS256);
+        request.setAlgorithm(BffPublicKeyRequest.AlgorithmEnum.RSA);
 
         Mockito.when(publicKeysPgService.rotatePublicKey(
                         Mockito.anyString(),

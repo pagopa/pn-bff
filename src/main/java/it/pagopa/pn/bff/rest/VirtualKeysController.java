@@ -111,7 +111,7 @@ public class VirtualKeysController implements VirtualKeysApi {
                 xPagopaPnCxRole
         );
 
-        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
     }
 
     /**

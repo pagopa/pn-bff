@@ -79,6 +79,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
@@ -107,7 +113,7 @@ paths:
               $ref: './apikeys-schemas/public-keys.yaml#/components/schemas/BffPublicKeyRequest'
         required: true
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
@@ -144,22 +150,28 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'  # NO EXTERNAL
         - $ref: '#/components/parameters/pathKid'
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition (i.e. delete an enabled key)
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. delete an enabled key)
           content:
             application/problem+json:
               schema:
@@ -190,7 +202,7 @@ paths:
         - $ref: '#/components/parameters/pathKid'
         - $ref: '#/components/parameters/queryStatus'
       responses:
-        '200':
+        '204':
           description: No content
         '400':
           description: Bad request
@@ -198,14 +210,20 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition (i.e. enable an enabled key)
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
@@ -253,14 +271,20 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition (i.e. enable an enabled key)
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
@@ -362,6 +386,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
@@ -402,6 +432,18 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal error
           content:
@@ -435,14 +477,20 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition
           content:
             application/problem+json:
               schema:
@@ -486,14 +534,20 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
-        '409':
-          description: Wrong state transition (i.e. enable an enabled key)
+        '403':
+          description: Forbidden
           content:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
         '404':
           description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '409':
+          description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
