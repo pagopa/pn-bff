@@ -10,15 +10,15 @@ components:
         - tosAccepted
       properties:
         issuer:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysIssuerResponse'
         tosAccepted:
           type: boolean
 
     BffPublicKeysResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeysResponse'
 
     BffPublicKeyRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyRequest'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyRequest'
 
     BffPublicKeyResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-pg-internal.yaml#/components/schemas/PublicKeyResponse'

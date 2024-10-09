@@ -3,13 +3,13 @@ info:
 components:
   schemas:
     BffVirtualKeysResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/VirtualKeysResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/VirtualKeysResponse'
 
     BffNewVirtualKeyRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/RequestNewVirtualKey'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/RequestNewVirtualKey'
 
     BffNewVirtualKeyResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/ResponseNewVirtualKey'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/ResponseNewVirtualKey'
 
     BffVirtualKeyStatusRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8a5306661830be517e394599e31e56bf5eb93f2a/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/RequestVirtualKeyStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/8edca93430f34aa220079cf3f4ddab0649dc7238/docs/openapi/pn-apikey-manager-virtualkey-internal.yaml#/components/schemas/RequestVirtualKeyStatus'
