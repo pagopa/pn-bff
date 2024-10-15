@@ -17,6 +17,7 @@ public class NotificationDetailUtility {
      * They are used to filter out those timeline events that are not included in the list
      */
     final private static List<String> AnalogFlowAllowedCodes = java.util.List.of(
+            "CON020",
             "CON080",
             "RECRN001C",
             "RECRN002C",
