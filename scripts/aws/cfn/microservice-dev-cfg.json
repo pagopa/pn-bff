@@ -18,6 +18,7 @@
     "WebLandingBucketArn": "arn:aws:s3:::web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
     "WebLandingBucketPrefix": "static/documents",
     "RaddStoreRegistryGenerationConfigParameter": "/pn-radd-store-registry-lambda/generation-config",
-    "DataIndexerLambdaAlarmNDays": "5"
+    "DataIndexerLambdaAlarmNDays": "5",
+    "PnBffRetryMaxAttempts": "0"
   }
 }

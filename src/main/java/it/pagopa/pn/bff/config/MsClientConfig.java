@@ -20,6 +20,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyA
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,6 +29,12 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class MsClientConfig extends CommonBaseClient {
 
+    @Override
+    @Autowired
+    public void setRetryMaxAttempts(@Value("${pn.bff.retry.max-attempts}") int retryMaxAttempts) {
+        super.setRetryMaxAttempts(retryMaxAttempts);
+    }
+    
     @Bean
     @Primary
     RecipientReadApi recipientReadApi(PnBffConfigs cfg) {

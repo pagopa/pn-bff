@@ -356,6 +356,11 @@ Parameters:
     Default: '0 0 * * ? *'
     Description: Cron to schedule the Lambda (UTC).
 
+  PnBffRetryMaxAttempts:
+    Type: Number
+    Description: Custom max retry attempts
+    Default: 0
+
 Conditions:
   CreateFakeDLRole:
     Fn::Not:
@@ -412,6 +417,7 @@ Resources:
             !Sub 'PN_BFF_DL_ASSUME_ROLE_ARN=${DlAssumeRoleArn}']
         ContainerEnvEntry20: !Sub 'PN_BFF_DL_OVERVIEW_OBJECT_KEY=${DlOverviewObjectKey}'
         ContainerEnvEntry21: !Sub 'PN_BFF_DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
+        ContainerEnvEntry22: !Sub 'PN_BFF_RETRY_MAXATTEMPTS=${PnBffRetryMaxAttempts}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
