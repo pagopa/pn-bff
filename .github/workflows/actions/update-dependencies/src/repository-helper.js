@@ -101,14 +101,15 @@ class RepositoryHelper {
     async getFileContent(branchName, filePath) {
         core.info(`Reading file at path ${filePath}`);
         try {
+            core.info('INIZIO');
             const {data: file} = await this.#octokit.rest.repos.getContent({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               ref: `heads/${branchName}`,
               path: filePath,
             });
-            core.info('------------------------------');
-            core.info(JSON.stringify(branchName));
+            core.info('FINE');
+            core.info(branchName);
             core.info(JSON.stringify(file));
             core.info('------------------------------');
             core.info(`File at path ${filePath} read`);
