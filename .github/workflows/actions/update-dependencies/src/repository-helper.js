@@ -107,6 +107,7 @@ class RepositoryHelper {
               ref: `heads/${branchName}`,
               path: filePath,
             });
+            core.info(JSON.stringify(file));
             core.info(`File at path ${filePath} read`);
             return Buffer.from(file.content, 'base64').toString('utf-8');
         } catch (error) {
