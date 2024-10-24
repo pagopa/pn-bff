@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNewNotificationRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNewNotificationResponse;
@@ -22,7 +22,7 @@ public interface NewSentNotificationMapper {
      * @param request the BffNewNotificationRequest to map
      * @return the mapped NewNotificationRequestV23
      */
-    NewNotificationRequestV23 mapRequest(BffNewNotificationRequest request);
+    NewNotificationRequestV24 mapRequest(BffNewNotificationRequest request);
 
     /**
      * Maps a NewNotificationResponse to a BffNewNotificationResponse
