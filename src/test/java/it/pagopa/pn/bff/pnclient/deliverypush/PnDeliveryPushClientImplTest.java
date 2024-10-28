@@ -5,7 +5,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsA
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -91,12 +90,11 @@ class PnDeliveryPushClientImplTest {
 
     @Test
     void getLegalFact() throws RestClientException {
-        when(legalFactsApi.getLegalFact(
+        when(legalFactsApi.getLegalFactById(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(LegalFactCategory.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any(UUID.class)
@@ -107,7 +105,6 @@ class PnDeliveryPushClientImplTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                LegalFactCategory.DIGITAL_DELIVERY,
                 "LEGAL_FACT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
@@ -116,12 +113,11 @@ class PnDeliveryPushClientImplTest {
 
     @Test
     void getLegalFactError() {
-        when(legalFactsApi.getLegalFact(
+        when(legalFactsApi.getLegalFactById(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(LegalFactCategory.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.any(UUID.class)
@@ -132,7 +128,6 @@ class PnDeliveryPushClientImplTest {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 "IUN",
-                LegalFactCategory.DIGITAL_DELIVERY,
                 "LEGAL_FACT_ID",
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
@@ -140,7 +135,7 @@ class PnDeliveryPushClientImplTest {
     }
 
     @Test
-    void notificationCancellation(){
+    void notificationCancellation() {
         when(notificationCancellationApi.notificationCancellation(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -159,7 +154,7 @@ class PnDeliveryPushClientImplTest {
     }
 
     @Test
-    void notificationCancellationError(){
+    void notificationCancellationError() {
         when(notificationCancellationApi.notificationCancellation(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
