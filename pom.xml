@@ -740,7 +740,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/b07c6f35a052a9669ed0a6f935b3177f7f727d0e/docs/openapi/api-internal-b2b-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/84ae7bd170d9a6ed7686629820f4c4ae87a124a8/docs/openapi/api-internal-b2b-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
