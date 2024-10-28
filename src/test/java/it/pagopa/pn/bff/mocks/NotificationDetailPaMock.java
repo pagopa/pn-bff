@@ -525,14 +525,14 @@ public class NotificationDetailPaMock {
         return timeline;
     }
 
-    public FullSentNotificationV24 getNotificationMultiRecipientMock() {
-        FullSentNotificationV24 bffFullNotificationV1Mock = new FullSentNotificationV24();
+    public FullSentNotificationV25 getNotificationMultiRecipientMock() {
+        FullSentNotificationV25 bffFullNotificationV1Mock = new FullSentNotificationV25();
 
         bffFullNotificationV1Mock.setAbstract("Abstract della notifica");
         bffFullNotificationV1Mock.setPaProtocolNumber("302011692956029071");
         bffFullNotificationV1Mock.setSubject("notifica analogica con cucumber");
         bffFullNotificationV1Mock.setNotificationFeePolicy(NotificationFeePolicy.FLAT_RATE);
-        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullSentNotificationV24.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullSentNotificationV25.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         bffFullNotificationV1Mock.setSenderDenomination("Comune di palermo");
         bffFullNotificationV1Mock.senderTaxId("80016350821");
         bffFullNotificationV1Mock.setGroup("000");
@@ -549,8 +549,8 @@ public class NotificationDetailPaMock {
         return bffFullNotificationV1Mock;
     }
 
-    public FullSentNotificationV24 getOneRecipientNotification() {
-        FullSentNotificationV24 oneRecipientNotification = getNotificationMultiRecipientMock();
+    public FullSentNotificationV25 getOneRecipientNotification() {
+        FullSentNotificationV25 oneRecipientNotification = getNotificationMultiRecipientMock();
         oneRecipientNotification.setRecipients(Collections.singletonList(oneRecipientNotification.getRecipients().get(0)));
         oneRecipientNotification.setTimeline(oneRecipientNotification.getTimeline()
                 .stream()
@@ -568,7 +568,7 @@ public class NotificationDetailPaMock {
     }
 
     public BffFullNotificationV1 notificationToFERADD() {
-        FullSentNotificationV24 notificationDTORadd = getNotificationMultiRecipientMock();
+        FullSentNotificationV25 notificationDTORadd = getNotificationMultiRecipientMock();
         notificationDTORadd.setTimeline(getTimelineRADDMock());
         return NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd);
     }

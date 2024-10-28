@@ -243,6 +243,11 @@ components:
           pattern: "^([0-9]{6}[A-Z]{1})$"
           description: >-
             Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+        additionalLanguages:
+          type: array
+          items:
+            type: string
+            maxItems: 1
 
     BffNewNotificationResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'

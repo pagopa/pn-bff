@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: mgX3w3F8ygD56kNQJ7BPg1HB/cqpp9yEZZ2j/vV6rEA=
+  version: lmmOlzmE1T0hrx/emMw/eAuZMUlRsFA0+EXwYWS4PIo=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4422,6 +4422,11 @@ components:
             nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
             PIATTAFORMA NOTIFICHE
             DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+        additionalLanguages:
+          type: array
+          items:
+            type: string
+            maxItems: 1
     NewNotificationResponse:
       title: Identificativi della richiesta di notifica
       description: >-
