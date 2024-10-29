@@ -85,4 +85,21 @@ public class InfoPaController implements InfoPaApi {
                 .collectList()
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(response)));
     }
+
+    /**
+     * GET /bff/v1/pa/additional-lang
+     * Get the list of additional languages for the PA
+     *
+     * @param xPagopaPnCxId (required)
+     * @param exchange
+     * @return the list of additional languages
+     */
+    @Override
+    public Mono<ResponseEntity<BffAdditionalLanguages>> getAdditionalLang(String xPagopaPnCxId, final ServerWebExchange exchange) {
+
+        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.getLang(xPagopaPnCxId);
+
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }

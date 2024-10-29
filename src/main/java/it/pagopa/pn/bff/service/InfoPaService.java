@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.LanguageMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -81,4 +83,20 @@ public class InfoPaService {
 
         return paGroups.map(GroupsMapper.modelMapper::mapGroups);
     }
+
+    /**
+     * Get the additional languages for the PA
+     *
+     * @param xPagopaPnCxId Public Administration id
+     * @return the additional languages
+     */
+    public Mono<BffAdditionalLanguages> getLang(String xPagopaPnCxId) {
+        log.info("Get additional languages - senderId: {}", xPagopaPnCxId);
+
+        return pnExternalRegistriesClient.getAdditionalLanguage(xPagopaPnCxId)
+                .map(LanguageMapper.modelMapper::toBffAdditionalLanguages)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+    }
+
 }
