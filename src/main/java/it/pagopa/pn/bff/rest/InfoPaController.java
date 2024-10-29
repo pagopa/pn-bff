@@ -87,7 +87,7 @@ public class InfoPaController implements InfoPaApi {
     }
 
     /**
-     * GET /bff/v1/pa/additional-lang
+     * GET /bff/v1/pa/additional-languages
      * Get the list of additional languages for the PA
      *
      * @param xPagopaPnCxId (required)
@@ -97,7 +97,7 @@ public class InfoPaController implements InfoPaApi {
     @Override
     public Mono<ResponseEntity<BffAdditionalLanguages>> getAdditionalLang(String xPagopaPnCxId, final ServerWebExchange exchange) {
 
-        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.getLang(xPagopaPnCxId);
+        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.getAdditionalLanguages(xPagopaPnCxId);
 
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
