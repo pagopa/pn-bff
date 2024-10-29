@@ -19,4 +19,7 @@ public interface LanguageMapper {
      * @return The mapped BffAdditionalLanguages
      */
     BffAdditionalLanguages toBffAdditionalLanguages(AdditionalLanguages languages);
+
+
+    AdditionalLanguages toAdditionalLanguages(BffAdditionalLanguages languages);
 }

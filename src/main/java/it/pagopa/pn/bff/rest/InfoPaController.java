@@ -102,4 +102,21 @@ public class InfoPaController implements InfoPaApi {
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
+
+    /**
+     * PUT /bff/v1/pa/additional-lang
+     * Change the additional languages for the PA
+     *
+     * @param bffAdditionalLanguages (required)
+     * @param exchange
+     * @return the updated additional languages
+     */
+    @Override
+    public Mono<ResponseEntity<BffAdditionalLanguages>> changeAdditionalLang(Mono<BffAdditionalLanguages> bffAdditionalLanguages, final ServerWebExchange exchange) {
+
+        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.changeAdditionalLanguages(bffAdditionalLanguages);
+
+        return serviceResponse
+                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }

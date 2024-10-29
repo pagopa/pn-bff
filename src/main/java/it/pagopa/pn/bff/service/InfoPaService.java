@@ -96,7 +96,20 @@ public class InfoPaService {
         return pnExternalRegistriesClient.getAdditionalLanguage(xPagopaPnCxId)
                 .map(LanguageMapper.modelMapper::toBffAdditionalLanguages)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-
     }
 
+    /**
+     * Change the additional languages for the PA
+     *
+     * @param bffAdditionalLanguages the additional languages to update
+     * @return the updated additional languages
+     */
+    public Mono<BffAdditionalLanguages> changeAdditionalLanguages(Mono<BffAdditionalLanguages> bffAdditionalLanguages) {
+        log.info("Change additional languages - additionalLanguages: {}", bffAdditionalLanguages);
+
+        return bffAdditionalLanguages.flatMap(bffAdditionalLang -> pnExternalRegistriesClient.changeAdditionalLanguages(
+                        LanguageMapper.modelMapper.toAdditionalLanguages(bffAdditionalLang)
+                )).map(LanguageMapper.modelMapper::toBffAdditionalLanguages)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+    }
 }

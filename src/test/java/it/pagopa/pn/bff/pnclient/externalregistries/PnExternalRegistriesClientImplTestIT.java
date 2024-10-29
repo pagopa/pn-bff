@@ -45,7 +45,7 @@ class PnExternalRegistriesClientImplTestIT {
     private final String pathPaList = "/ext-registry/pa/v1/activated-on-pn";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
     private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
-    private final String pathAdditionalLanguages = "/ext-registry-private/pa/v1/additional-languages/" + paId;
+    private final String pathAdditionalLanguages = "/ext-registry-private/pa/v1/additional-lang";
     private final PaInfoMock paInfoMock = new PaInfoMock();
     private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
@@ -287,7 +287,7 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void getAdditionalLanguages() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(paInfoMock.getAdditionalLanguagesMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages))
+        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages + "/" + paId))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -304,6 +304,31 @@ class PnExternalRegistriesClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage(paId)).expectError().verify();
+    }
+
+    @Test
+    void changeAdditionalLanguages() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(paInfoMock.getAdditionalLanguagesMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient
+                        .changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectError()
+                .verify();
     }
 
 }
