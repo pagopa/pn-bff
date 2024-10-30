@@ -245,6 +245,9 @@ components:
             Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
         additionalLanguages:
           type: array
+          description: >-
+            In questo campo è possibile definire la lingua addizionale (oltre a quella italiana) da utilizzare per la generazione documenti, atti opponibili a terzi ecc.
+            Attualmente è possibile indicare un solo item e dunque una sola lingua aggiuntiva.
           items:
             type: string
             maxItems: 1
