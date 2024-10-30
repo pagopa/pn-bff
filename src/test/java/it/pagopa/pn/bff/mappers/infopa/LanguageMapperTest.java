@@ -5,8 +5,6 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffAdditionalL
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -20,19 +18,23 @@ public class LanguageMapperTest {
         BffAdditionalLanguages bffAdditionalLanguages = LanguageMapper.modelMapper.toBffAdditionalLanguages(additionalLanguages);
 
         assertNotNull(bffAdditionalLanguages);
-        assertEquals(bffAdditionalLanguages.getAdditionalLanguages().size(), additionalLanguages.getAdditionalLanguages().size());
+        for (int i = 0; i < additionalLanguages.getAdditionalLanguages().size(); i++) {
+            assertEquals(bffAdditionalLanguages.getAdditionalLanguages().get(i), additionalLanguages.getAdditionalLanguages().get(i));
+        }
     }
 
     @Test
     void testMapToAdditionalLanguages() {
-        BffAdditionalLanguages bffAdditionalLanguages = new BffAdditionalLanguages(
-                "mock-pa-id",
-                List.of("en")
-        );
+        String paId = "mock-pa-id";
+        BffAdditionalLanguages bffAdditionalLanguages = new BffAdditionalLanguages();
+        bffAdditionalLanguages.setAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock().getAdditionalLanguages());
 
-        AdditionalLanguages additionalLanguages = LanguageMapper.modelMapper.toAdditionalLanguages(bffAdditionalLanguages);
+        AdditionalLanguages additionalLanguages = LanguageMapper.modelMapper.toAdditionalLanguages(paId, bffAdditionalLanguages);
 
         assertNotNull(additionalLanguages);
-        assertEquals(additionalLanguages.getAdditionalLanguages().size(), bffAdditionalLanguages.getAdditionalLanguages().size());
+        for (int i = 0; i < bffAdditionalLanguages.getAdditionalLanguages().size(); i++) {
+            assertEquals(additionalLanguages.getAdditionalLanguages().get(i), bffAdditionalLanguages.getAdditionalLanguages().get(i));
+        }
+        assertEquals(additionalLanguages.getPaId(), paId);
     }
 }

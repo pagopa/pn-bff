@@ -112,9 +112,9 @@ public class InfoPaController implements InfoPaApi {
      * @return the updated additional languages
      */
     @Override
-    public Mono<ResponseEntity<BffAdditionalLanguages>> changeAdditionalLang(Mono<BffAdditionalLanguages> bffAdditionalLanguages, final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffAdditionalLanguages>> changeAdditionalLang(String xPagopaCxId, Mono<BffAdditionalLanguages> bffAdditionalLanguages, final ServerWebExchange exchange) {
 
-        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.changeAdditionalLanguages(bffAdditionalLanguages);
+        Mono<BffAdditionalLanguages> serviceResponse = infoPaService.changeAdditionalLanguages(xPagopaCxId, bffAdditionalLanguages);
 
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

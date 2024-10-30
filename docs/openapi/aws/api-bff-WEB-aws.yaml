@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: i29k0UgFQR4TSTe9PXuBZ/HiXYt9O5yYYfhkzZkAdlc=
+  version: nYzR3oBwHd+tToj2F7+2xhqWH6tsP/LaWEQWpO2bNmw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2150,7 +2150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdditionalLanguages'
+                $ref: '#/components/schemas/BffAdditionalLanguages'
         '400':
           description: Invalid input
           content:
@@ -2193,7 +2193,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdditionalLanguages'
+              $ref: '#/components/schemas/BffAdditionalLanguages'
         required: true
       responses:
         '200':
@@ -2201,7 +2201,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdditionalLanguages'
+                $ref: '#/components/schemas/BffAdditionalLanguages'
         '400':
           description: Invalid input
           content:
@@ -6705,20 +6705,13 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffPaGroup'
-    PaId:
-      title: The PA id used by self care
-      description: An unique ID that identify a Public Administration
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[ -~ ]*$
-    AdditionalLanguages:
-      title: Request Body for getLang
-      description: Retrieve the additional language info
+    BffAdditionalLanguages:
+      title: Additional languages
+      description: Contains the list of additional languages
       type: object
+      required:
+        - additionalLanguages
       properties:
-        paId:
-          $ref: '#/components/schemas/PaId'
         additionalLanguages:
           description: Array of an element containing the additional language
           type: array
@@ -6726,9 +6719,6 @@ components:
             type: string
           example:
             - DE
-      required:
-        - paId
-        - additionalLanguages
     PgGroupStatus:
       title: Status of group defined in Self Care PG (Notifiche digitali)
       description: >-

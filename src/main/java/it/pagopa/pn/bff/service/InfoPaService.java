@@ -104,11 +104,11 @@ public class InfoPaService {
      * @param bffAdditionalLanguages the additional languages to update
      * @return the updated additional languages
      */
-    public Mono<BffAdditionalLanguages> changeAdditionalLanguages(Mono<BffAdditionalLanguages> bffAdditionalLanguages) {
+    public Mono<BffAdditionalLanguages> changeAdditionalLanguages(String paId, Mono<BffAdditionalLanguages> bffAdditionalLanguages) {
         log.info("Change additional languages - additionalLanguages: {}", bffAdditionalLanguages);
 
         return bffAdditionalLanguages.flatMap(bffAdditionalLang -> pnExternalRegistriesClient.changeAdditionalLanguages(
-                        LanguageMapper.modelMapper.toAdditionalLanguages(bffAdditionalLang)
+                        LanguageMapper.modelMapper.toAdditionalLanguages(paId, bffAdditionalLang)
                 )).map(LanguageMapper.modelMapper::toBffAdditionalLanguages)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
     }

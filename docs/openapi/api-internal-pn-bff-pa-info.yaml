@@ -171,6 +171,8 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoPa
+      parameters: # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'                         # NO EXTERNAL
       requestBody:
         content:
           application/json:
