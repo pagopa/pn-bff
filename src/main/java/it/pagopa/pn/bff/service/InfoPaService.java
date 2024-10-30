@@ -90,7 +90,7 @@ public class InfoPaService {
      * @param xPagopaPnCxId Public Administration id
      * @return the additional languages
      */
-    public Mono<BffAdditionalLanguages> getLang(String xPagopaPnCxId) {
+    public Mono<BffAdditionalLanguages> getAdditionalLanguages(String xPagopaPnCxId) {
         log.info("Get additional languages - senderId: {}", xPagopaPnCxId);
 
         return pnExternalRegistriesClient.getAdditionalLanguage(xPagopaPnCxId)

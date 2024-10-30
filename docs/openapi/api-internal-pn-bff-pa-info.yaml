@@ -135,7 +135,7 @@ paths:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
 
-  '/bff/v1/pa/additional-lang':
+  '/bff/v1/pa/additional-languages':
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang

@@ -300,7 +300,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getAdditionalLanguagesError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages))
+        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages + "/" + paId))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage(paId)).expectError().verify();
