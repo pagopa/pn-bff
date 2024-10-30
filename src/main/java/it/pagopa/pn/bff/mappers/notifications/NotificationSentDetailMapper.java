@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the FullSentNotificationV24
+ * Mapstruct mapper interface, used to map the FullSentNotificationV25
  * to the BffFullNotificationV1
  */
 @Mapper(uses = {SenderNotificationTimelineMapper.class})
@@ -20,9 +20,9 @@ public interface NotificationSentDetailMapper {
     NotificationSentDetailMapper modelMapper = Mappers.getMapper(NotificationSentDetailMapper.class);
 
     /**
-     * Maps a FullSentNotificationV24 to a BffFullNotificationV1
+     * Maps a FullSentNotificationV25 to a BffFullNotificationV1
      *
-     * @param notification the FullSentNotificationV24 to map
+     * @param notification the FullSentNotificationV25 to map
      * @return the mapped BffFullNotificationV1
      */
     BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV25 notification);
