@@ -371,7 +371,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -402,7 +401,6 @@ class ReceivedNotificationControllerTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS,
                 null
         );
@@ -418,7 +416,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -448,7 +445,6 @@ class ReceivedNotificationControllerTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS,
                 null
         );
@@ -465,7 +461,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -476,7 +471,6 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentId", "legal-fact-id")
-                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -497,7 +491,6 @@ class ReceivedNotificationControllerTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
                 null
         );
@@ -513,7 +506,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -525,7 +517,6 @@ class ReceivedNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_RECEIVED_DOCUMENT_PATH)
                                 .queryParam("documentId", "legal-fact-id")
-                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -544,7 +535,6 @@ class ReceivedNotificationControllerTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS,
                 null
         );
@@ -561,7 +551,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -592,7 +581,6 @@ class ReceivedNotificationControllerTest {
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
-                null,
                 UserMock.PN_CX_GROUPS,
                 null
         );
@@ -608,7 +596,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList(),
                         Mockito.nullable(UUID.class)
                 ))
@@ -637,7 +624,6 @@ class ReceivedNotificationControllerTest {
                 IUN,
                 BffDocumentType.ATTACHMENT,
                 0,
-                null,
                 null,
                 UserMock.PN_CX_GROUPS,
                 null
