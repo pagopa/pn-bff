@@ -1038,7 +1038,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/f5713da534974627738a4917c6724925f4c22fee/docs/openapi/api-internal-pn-delivery-push.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/refs/heads/feature/PN-12922/docs/openapi/api-internal-pn-delivery-push.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
