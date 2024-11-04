@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Bc4lXmu8Oy09i7Tg09qb33gtD8cY8K/rDmOdOGcHSbc=
+  version: wRw9HgCXh3WLXZGJ82lJpf8CDikkspePVpKH6l2xDqI=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4619,6 +4619,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
+        - NOTIFICATION_CANCELLED
     BffLegalFactId:
       type: object
       required:
