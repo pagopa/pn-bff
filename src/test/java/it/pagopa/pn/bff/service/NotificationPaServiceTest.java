@@ -330,7 +330,7 @@ class NotificationPaServiceTest {
                 )
                 .verify();
     }
-    
+
     @Test
     void getNotificationDocumentAttachment() {
         when(pnDeliveryClientPA.getSentNotificationDocument(
@@ -520,7 +520,7 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24.class),
                 Mockito.anyList()
         )).thenReturn(Mono.just(newSentNotificationMock.getNewSentNotificationResponse()));
 
@@ -543,7 +543,7 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24.class),
                 Mockito.anyList()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
