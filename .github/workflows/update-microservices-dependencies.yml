@@ -43,7 +43,6 @@ on:
         required: true
         type: boolean
         default: false
-  push:
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -62,8 +61,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          #ref: 'develop'
-          ref: 'fix/pn-11377'
+          ref: 'develop'
           fetch-depth: 0
       - name: setup git config
         run: |
@@ -76,19 +74,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'develop'
-          # pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
-          # pn-delivery: ${{ inputs.pn-delivery }}
-          # pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
-          # pn-external-registries: ${{ inputs.pn-external-registries }}
-          # pn-user-attributes: ${{ inputs.pn-user-attributes }}
-          # pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
-          # pn-delivery-push: ${{ inputs.pn-delivery-push }}
-          # pn-mandate: ${{ inputs.pn-mandate }}
-          pn-auth-fleet: "true"
-          pn-delivery: "false"
-          pn-apikey-manager: "false"
-          pn-external-registries: "false"
-          pn-user-attributes: "false"
-          pn-downtime-logs: "false"
-          pn-delivery-push: "false"
-          pn-mandate: "false"
+          pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
+          pn-delivery: ${{ inputs.pn-delivery }}
+          pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
+          pn-external-registries: ${{ inputs.pn-external-registries }}
+          pn-user-attributes: ${{ inputs.pn-user-attributes }}
+          pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
+          pn-delivery-push: ${{ inputs.pn-delivery-push }}
+          pn-mandate: ${{ inputs.pn-mandate }}
