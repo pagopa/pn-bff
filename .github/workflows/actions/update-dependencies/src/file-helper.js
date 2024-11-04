@@ -44,9 +44,6 @@ class FileHelper {
          try {
              // read content
              let content = await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
-             core.info('------------------------------');
-            core.info(content);
-            core.info('------------------------------');
              core.debug(`Updating POM content`);
              // change content
              // update microservices dependencies
@@ -62,6 +59,9 @@ class FileHelper {
              // update internal packages version
              content = content.replace(this.#getInternalDependenciesRegexp(tags), (match, preVersion, repository, version, postVersion) => {
                 core.debug(`Match ${match}, Repository ${repository} and Version ${version}`);
+                core.info('------------------------------');
+            core.info(tags);
+            core.info('------------------------------');
                 // tag name contains v at start
                 const newVersion = tags[repository].name.replace('v', '');
                 if (version !== newVersion) {
