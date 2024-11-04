@@ -246,14 +246,10 @@ class RepositoryHelper {
            const {data: pullRequests} = await this.#octokit.rest.pulls.list({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
-             head: branchName,
+             head: `octocat:${branchName}`,
              base: baseBranchName,
              per_page: 1
            });
-           core.info("------------------------------");
-           core.info(branchName);
-           core.info(JSON.stringify(pullRequests));
-           core.info("------------------------------");
            if (pullRequests.length === 0) {
             core.info("Opened pull request doesn't exists");
             return null;
