@@ -44,6 +44,9 @@ class FileHelper {
          try {
              // read content
              let content = await this.#repositoryHelper.getFileContent(branchName, 'pom.xml');
+             core.info('------------------------------');
+            core.info(content);
+            core.info('------------------------------');
              core.debug(`Updating POM content`);
              // change content
              // update microservices dependencies
