@@ -34,7 +34,7 @@ class PnDeliveryPushClientImplTestIT {
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
     private final String legalFactId = "LEGAL_FACT_ID";
     private final String documentPath = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
-    private final String legalFactPath = "/delivery-push/" + iun + "/legal-facts/" + legalFactId;
+    private final String legalFactPath = "/delivery-push/" + iun + "/download/legal-facts/" + legalFactId;
     private final String cancellationPath = "/delivery-push/v2.0/notifications/cancel/" + iun;
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
