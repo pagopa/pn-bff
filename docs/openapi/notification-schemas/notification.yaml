@@ -4,13 +4,13 @@ components:
   schemas:
 
     BffNotificationsResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
 
     BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV23'
         - type: object
           required:
             - notificationStatusHistory
@@ -85,7 +85,7 @@ components:
       description: >-
         Documento della notifica.
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
         - type: object
           properties:
             title:
@@ -167,10 +167,10 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/f5713da534974627738a4917c6724925f4c22fee/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
     
     BffCheckAarRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
     
     BffCheckAarResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'
 
     BffNewNotificationRequest:
       description: I campi utilizzati per la creazione di una nuova Notifica.
@@ -209,17 +209,17 @@ components:
           type: array
           description: Informazioni sui destinatari
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV23'
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV23'
         documents:
           type: array
           description: Documenti notificati
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument'
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument'
           minItems: 1
         notificationFeePolicy:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationFeePolicy'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationFeePolicy'
         cancelledIun:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN'
         physicalCommunicationType:
           type: string
           description: Tipologia comunicazione fisica
@@ -227,9 +227,9 @@ components:
             - AR_REGISTERED_LETTER
             - REGISTERED_LETTER_890
         senderDenomination:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination'
         senderTaxId:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId'
         group:
           type: string
           description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
@@ -245,10 +245,10 @@ components:
             Codice tassonomico della notifica basato sulla definizione presente nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5 PIATTAFORMA NOTIFICHE DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
 
     BffNewNotificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
 
     BffPreLoadRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
 
     BffPreLoadResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/daf6a96f2888f246badf1f5b953243adce6c19ce/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/468721a8dbbfc7d9313ff8a780b1f4eeb3565c7c/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'
