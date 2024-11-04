@@ -250,6 +250,9 @@ class RepositoryHelper {
              base: baseBranchName,
              per_page: 1
            });
+           core.info("------------------------------");
+           core.info(JSON.stringify(pullRequests));
+           core.info("------------------------------");
            if (pullRequests.length === 0) {
             core.info("Opened pull request doesn't exists");
             return null;

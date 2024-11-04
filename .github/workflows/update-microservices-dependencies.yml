@@ -61,7 +61,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: 'develop'
+          # ref: 'develop'
+          ref: 'fix/pn-11377'
           fetch-depth: 0
       - name: setup git config
         run: |
