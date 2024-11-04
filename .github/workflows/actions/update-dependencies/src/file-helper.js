@@ -60,7 +60,7 @@ class FileHelper {
              content = content.replace(this.#getInternalDependenciesRegexp(tags), (match, preVersion, repository, version, postVersion) => {
                 core.debug(`Match ${match}, Repository ${repository} and Version ${version}`);
                 core.info('------------------------------');
-            core.info(tags);
+            core.info(JSON.stringify(tags));
             core.info('------------------------------');
                 // tag name contains v at start
                 const newVersion = tags[repository].name.replace('v', '');
