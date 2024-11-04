@@ -288,13 +288,13 @@ class RepositoryHelper {
         const pullRequest = await this.#checkIfPullRequestExists(branchName);
         if (pullRequest) {
             // update pull request
-            await this.#updatePullRequest(pullRequest.number, changesToCommit);
+            // await this.#updatePullRequest(pullRequest.number, changesToCommit);
             return;
         }
         core.info(`Creating pull request`);
         try {
            const baseBranchName = core.getInput('ref', { required: true });
-           await this.#octokit.rest.pulls.create({
+           /*await this.#octokit.rest.pulls.create({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
              title: '[GitBot] - Update micro-service dependencies',
@@ -302,6 +302,7 @@ class RepositoryHelper {
              head: branchName,
              base: baseBranchName,
            });
+           */
            core.info(`Pull request created`);
         } catch (error) {
             throw new Error(`Error during pull request creation: ${error}`);
