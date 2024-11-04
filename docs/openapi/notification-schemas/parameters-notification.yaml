@@ -90,7 +90,7 @@ components:
       in: query
       required: false
       schema:
-        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/f5713da534974627738a4917c6724925f4c22fee/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/9eb656231a38d674caf538842f13666983f6bbf8/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
 
     ############################################################################################
     ###                     PARAMETRI DOWLOAD PAGAMENTI NOTIFICA                             ###
