@@ -251,6 +251,7 @@ class RepositoryHelper {
              per_page: 1
            });
            core.info("------------------------------");
+           core.info(branchName);
            core.info(JSON.stringify(pullRequests));
            core.info("------------------------------");
            if (pullRequests.length === 0) {
