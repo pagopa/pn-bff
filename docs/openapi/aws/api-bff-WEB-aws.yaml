@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: mgX3w3F8ygD56kNQJ7BPg1HB/cqpp9yEZZ2j/vV6rEA=
+  version: wRw9HgCXh3WLXZGJ82lJpf8CDikkspePVpKH6l2xDqI=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -223,7 +223,6 @@ paths:
         - $ref: '#/components/parameters/BffPathDocumentType'
         - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -727,7 +726,6 @@ paths:
         - $ref: '#/components/parameters/queryMandateId'
         - $ref: '#/components/parameters/BffQueryDocumentIdx'
         - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -3666,15 +3664,6 @@ components:
         type: string
         pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
         maxLength: 1024
-    BffQueryDocumentCategory:
-      description: >-
-        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
-        disposizione dei suoi utenti.
-      name: documentCategory
-      in: query
-      required: false
-      schema:
-        $ref: '#/components/schemas/LegalFactCategory'
     pathRecipientIdx:
       name: recipientIdx
       description: indice del destinatario nella lista partendo da 0.
@@ -4630,6 +4619,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
+        - NOTIFICATION_CANCELLED
     BffLegalFactId:
       type: object
       required:
@@ -5952,21 +5942,6 @@ components:
         - ATTACHMENT
         - LEGAL_FACT
         - AAR
-    LegalFactCategory:
-      title: Tipi di atti opponibili a terzi
-      description: >-
-        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
-        disposizione dei suoi utenti.
-          - _SENDER_ACK_: atto di "presa in carico" di una notifica
-          - _DIGITAL_DELIVERY_: ...
-      type: string
-      enum:
-        - SENDER_ACK
-        - DIGITAL_DELIVERY
-        - ANALOG_DELIVERY
-        - RECIPIENT_ACCESS
-        - PEC_RECEIPT
-        - ANALOG_FAILURE_DELIVERY
     BffDocumentDownloadMetadataResponse:
       type: object
       required:

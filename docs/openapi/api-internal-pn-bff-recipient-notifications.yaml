@@ -177,7 +177,6 @@ paths:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentIdx'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK

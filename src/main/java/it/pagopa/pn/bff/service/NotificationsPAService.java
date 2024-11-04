@@ -1,7 +1,7 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV24;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV25;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
@@ -26,7 +26,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_DOCUMENTIDNOTFOUND;
-import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +104,7 @@ public class NotificationsPAService {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
-        Mono<FullSentNotificationV24> notificationDetail = pnDeliveryClient.getSentNotification(
+        Mono<FullSentNotificationV25> notificationDetail = pnDeliveryClient.getSentNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -126,7 +125,6 @@ public class NotificationsPAService {
      * @param documentType      the document type (aar, attachment or legal fact)
      * @param documentIdx       the document index if attachment
      * @param documentId        the document id if aar or legal fact
-     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the requested document
      */
@@ -136,7 +134,6 @@ public class NotificationsPAService {
                                                                                  BffDocumentType documentType,
                                                                                  Integer documentIdx,
                                                                                  String documentId,
-                                                                                 LegalFactCategory documentCategory,
                                                                                  List<String> xPagopaPnCxGroups
     ) {
         log.info("Get notification document - senderId: {} - type: {} - groups: {} - iun: {}",
@@ -192,21 +189,11 @@ public class NotificationsPAService {
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
             }
-            if (documentCategory == null) {
-                log.error("Legal fact category not found");
-                return Mono.error(new PnBffException(
-                        "Legal fact category not found",
-                        "The legal fact category is missed",
-                        HttpStatus.BAD_REQUEST.value(),
-                        ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND
-                ));
-            }
             Mono<LegalFactDownloadMetadataResponse> legalFact = pnDeliveryPushClient.getLegalFact(
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     iun,
-                    NotificationParamsMapper.modelMapper.mapLegalFactCategory(documentCategory),
                     documentId,
                     xPagopaPnCxGroups,
                     null

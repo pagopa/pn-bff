@@ -3,7 +3,7 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
 import it.pagopa.pn.bff.mocks.*;
@@ -108,7 +108,7 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void getSentNotificationV24() throws RestClientException {
-        when(senderReadB2BApi.getSentNotificationV24(
+        when(senderReadB2BApi.getSentNotificationV25(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -127,7 +127,7 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void getSentNotificationV24Error() {
-        when(senderReadB2BApi.getSentNotificationV24(
+        when(senderReadB2BApi.getSentNotificationV25(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -238,12 +238,12 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void newSentNotification() throws RestClientException {
-        when(newNotificationApi.sendNewNotificationV23(
+        when(newNotificationApi.sendNewNotificationV24(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NewNotificationRequestV23.class),
+                Mockito.any(NewNotificationRequestV24.class),
                 Mockito.anyList(),
                 Mockito.nullable(String.class),
                 Mockito.nullable(String.class)
@@ -260,12 +260,12 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void newSentNotificationError() {
-        when(newNotificationApi.sendNewNotificationV23(
+        when(newNotificationApi.sendNewNotificationV24(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NewNotificationRequestV23.class),
+                Mockito.any(NewNotificationRequestV24.class),
                 Mockito.anyList(),
                 Mockito.nullable(String.class),
                 Mockito.nullable(String.class)
