@@ -59,11 +59,8 @@ class FileHelper {
              // update internal packages version
              content = content.replace(this.#getInternalDependenciesRegexp(tags), (match, preVersion, repository, version, postVersion) => {
                 core.debug(`Match ${match}, Repository ${repository} and Version ${version}`);
-                core.info('------------------------------');
-            core.info(JSON.stringify(tags));
-            core.info('------------------------------');
                 // tag name contains v at start
-                const newVersion = tags[repository].name.replace('v', '');
+                const newVersion = tags[repository].tag.replace('v', '');
                 if (version !== newVersion) {
                    pomUpdated = true;
                    return `${preVersion}${newVersion}${postVersion}`;
