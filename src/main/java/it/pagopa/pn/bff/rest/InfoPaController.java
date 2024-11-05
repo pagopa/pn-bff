@@ -104,7 +104,7 @@ public class InfoPaController implements InfoPaApi {
     }
 
     /**
-     * PUT /bff/v1/pa/additional-lang
+     * PUT /bff/v1/pa/additional-languages
      * Change the additional languages for the PA
      *
      * @param bffAdditionalLanguages (required)
