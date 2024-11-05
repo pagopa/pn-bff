@@ -503,7 +503,7 @@ Resources:
         ApplicationLoadBalancerArn: !Ref ApplicationLoadBalancerArn
         ThrottledPathsRegexp: '(/bff/v1/addresses/.*)'
         ThrottlingGroupString: 'recapiti-by-cx-id'
-        MaxRequestPerThrottlingPeriod: 25
+        MaxRequestPerThrottlingPeriod: 100
         ThrottlingPeriodSeconds: 300         
 
   # DataIndexer Lambda
