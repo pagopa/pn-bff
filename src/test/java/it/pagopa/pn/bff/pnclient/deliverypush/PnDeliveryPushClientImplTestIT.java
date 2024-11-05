@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -33,10 +32,9 @@ class PnDeliveryPushClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final String iun = "DHUJ-QYVT-DMVH-202302-P-1";
-    private final LegalFactCategory legalFactCategory = LegalFactCategory.DIGITAL_DELIVERY;
     private final String legalFactId = "LEGAL_FACT_ID";
     private final String documentPath = "/delivery-push/" + iun + "/document/" + DocumentCategory.AAR;
-    private final String legalFactPath = "/delivery-push/" + iun + "/legal-facts/" + legalFactCategory + "/" + legalFactId;
+    private final String legalFactPath = "/delivery-push/" + iun + "/download/legal-facts/" + legalFactId;
     private final String cancellationPath = "/delivery-push/v2.0/notifications/cancel/" + iun;
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
@@ -114,7 +112,6 @@ class PnDeliveryPushClientImplTestIT {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 iun,
-                legalFactCategory,
                 legalFactId,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()
@@ -131,7 +128,6 @@ class PnDeliveryPushClientImplTestIT {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 iun,
-                legalFactCategory,
                 legalFactId,
                 UserMock.PN_CX_GROUPS,
                 UUID.randomUUID()

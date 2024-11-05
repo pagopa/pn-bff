@@ -13,7 +13,7 @@ servers:
 paths:
   /v1/notifications/sent:
     get:
-      summary: 'Mittente: ricerca notifiche inviate'
+      summary: "Mittente: ricerca notifiche inviate"
       description: Questa operazione permette di ricercare le notifiche inviate.
       tags:
         - NotificationSent
@@ -21,33 +21,33 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/notificationSearchStartDate'
-        - $ref: '#/components/parameters/notificationSearchEndDate'
-        - $ref: '#/components/parameters/notificationSearchRecipientId'
-        - $ref: '#/components/parameters/BffNotificationSearchStatus'
-        - $ref: '#/components/parameters/notificationSearchSubject'
-        - $ref: '#/components/parameters/notificationSearchIun'
-        - $ref: '#/components/parameters/notificationSearchPageSize'
-        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+        - $ref: "#/components/parameters/notificationSearchStartDate"
+        - $ref: "#/components/parameters/notificationSearchEndDate"
+        - $ref: "#/components/parameters/notificationSearchRecipientId"
+        - $ref: "#/components/parameters/BffNotificationSearchStatus"
+        - $ref: "#/components/parameters/notificationSearchSubject"
+        - $ref: "#/components/parameters/notificationSearchIun"
+        - $ref: "#/components/parameters/notificationSearchPageSize"
+        - $ref: "#/components/parameters/notificationSearchNextPagesKey"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
-        '400':
+                $ref: "#/components/schemas/NotificationSearchResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent
@@ -58,7 +58,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -85,32 +85,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffNewNotificationRequest'
+              $ref: "#/components/schemas/BffNewNotificationRequest"
       responses:
-        '202':
+        "202":
           description: Accepted
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewNotificationResponse'
-        '400':
+                $ref: "#/components/schemas/NewNotificationResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Conflict
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
@@ -123,7 +123,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -146,7 +146,7 @@ paths:
         type: http_proxy
   /v1/notifications/sent/{iun}:
     get:
-      summary: 'Mittente: lettura dettagli notifica'
+      summary: "Mittente: lettura dettagli notifica"
       description: >-
         Questa operazione permette di leggere tutti i dettagli di una notifica
         accettata.
@@ -156,26 +156,26 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+        - $ref: "#/components/parameters/pathIun"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullNotificationV1'
-        '400':
+                $ref: "#/components/schemas/BffFullNotificationV1"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
@@ -186,7 +186,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -219,36 +219,35 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/BffPathDocumentType'
-        - $ref: '#/components/parameters/BffQueryDocumentIdx'
-        - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryDocumentCategory'
+        - $ref: "#/components/parameters/pathIun"
+        - $ref: "#/components/parameters/BffPathDocumentType"
+        - $ref: "#/components/parameters/BffQueryDocumentIdx"
+        - $ref: "#/components/parameters/BffQueryDocumentId"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
-        '400':
+                $ref: "#/components/schemas/BffDocumentDownloadMetadataResponse"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/documents/{documentType}
@@ -259,7 +258,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -294,35 +293,35 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/pathRecipientIdx'
-        - $ref: '#/components/parameters/pathAttachmentName'
-        - $ref: '#/components/parameters/attachmentIdx'
+        - $ref: "#/components/parameters/pathIun"
+        - $ref: "#/components/parameters/pathRecipientIdx"
+        - $ref: "#/components/parameters/pathAttachmentName"
+        - $ref: "#/components/parameters/attachmentIdx"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
-        '400':
+                $ref: "#/components/schemas/BffDocumentDownloadMetadataResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/payments/{recipientIdx}/{attachmentName}
@@ -333,7 +332,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -364,7 +363,7 @@ paths:
         type: http_proxy
   /v1/notifications/sent/{iun}/cancel:
     put:
-      summary: 'Mittente: annullamento notifica'
+      summary: "Mittente: annullamento notifica"
       description: Questa operazione permette di annullare una notifica inviata.
       tags:
         - NotificationSent
@@ -372,32 +371,32 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+        - $ref: "#/components/parameters/pathIun"
       responses:
-        '202':
+        "202":
           description: Accepted - Richiesta annullamento presa in carico
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RequestStatus'
-        '400':
+                $ref: "#/components/schemas/RequestStatus"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/cancel
@@ -408,7 +407,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -449,30 +448,30 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/PreLoadRequest'
+                $ref: "#/components/schemas/PreLoadRequest"
               minItems: 1
               maxItems: 15
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PreLoadResponse'
-        '400':
+                  $ref: "#/components/schemas/PreLoadResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/documents/preload
@@ -483,7 +482,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -506,7 +505,7 @@ paths:
         type: http_proxy
   /v1/notifications/received:
     get:
-      summary: 'Destinatario: ricerca notifiche ricevute'
+      summary: "Destinatario: ricerca notifiche ricevute"
       description: Questa operazione permette di ricercare le notifiche ricevute.
       tags:
         - NotificationReceived
@@ -514,34 +513,34 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/notificationSearchStartDate'
-        - $ref: '#/components/parameters/notificationSearchEndDate'
-        - $ref: '#/components/parameters/notificationSearchMandateId'
-        - $ref: '#/components/parameters/notificationSearchSenderId'
-        - $ref: '#/components/parameters/BffNotificationSearchStatus'
-        - $ref: '#/components/parameters/notificationSearchSubject'
-        - $ref: '#/components/parameters/notificationSearchIun'
-        - $ref: '#/components/parameters/notificationSearchPageSize'
-        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+        - $ref: "#/components/parameters/notificationSearchStartDate"
+        - $ref: "#/components/parameters/notificationSearchEndDate"
+        - $ref: "#/components/parameters/notificationSearchMandateId"
+        - $ref: "#/components/parameters/notificationSearchSenderId"
+        - $ref: "#/components/parameters/BffNotificationSearchStatus"
+        - $ref: "#/components/parameters/notificationSearchSubject"
+        - $ref: "#/components/parameters/notificationSearchIun"
+        - $ref: "#/components/parameters/notificationSearchPageSize"
+        - $ref: "#/components/parameters/notificationSearchNextPagesKey"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
-        '400':
+                $ref: "#/components/schemas/NotificationSearchResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received
@@ -552,7 +551,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -574,7 +573,7 @@ paths:
         type: http_proxy
   /v1/notifications/received/delegated:
     get:
-      summary: 'Destinatario: ricerca notifiche delegate ricevute'
+      summary: "Destinatario: ricerca notifiche delegate ricevute"
       description: Questa operazione permette di ricercare le notifiche delegate ricevute.
       tags:
         - NotificationReceived
@@ -582,34 +581,34 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/notificationSearchStartDate'
-        - $ref: '#/components/parameters/notificationSearchEndDate'
-        - $ref: '#/components/parameters/notificationSearchSenderId'
-        - $ref: '#/components/parameters/notificationSearchRecipientId'
-        - $ref: '#/components/parameters/notificationSearchGroup'
-        - $ref: '#/components/parameters/BffNotificationSearchStatus'
-        - $ref: '#/components/parameters/notificationSearchIun'
-        - $ref: '#/components/parameters/notificationSearchPageSize'
-        - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+        - $ref: "#/components/parameters/notificationSearchStartDate"
+        - $ref: "#/components/parameters/notificationSearchEndDate"
+        - $ref: "#/components/parameters/notificationSearchSenderId"
+        - $ref: "#/components/parameters/notificationSearchRecipientId"
+        - $ref: "#/components/parameters/notificationSearchGroup"
+        - $ref: "#/components/parameters/BffNotificationSearchStatus"
+        - $ref: "#/components/parameters/notificationSearchIun"
+        - $ref: "#/components/parameters/notificationSearchPageSize"
+        - $ref: "#/components/parameters/notificationSearchNextPagesKey"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
-        '400':
+                $ref: "#/components/schemas/NotificationSearchResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/delegated
@@ -620,7 +619,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -652,33 +651,33 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/notificationSearchMandateId'
+        - $ref: "#/components/parameters/pathIun"
+        - $ref: "#/components/parameters/notificationSearchMandateId"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffFullNotificationV1'
-        '400':
+                $ref: "#/components/schemas/BffFullNotificationV1"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}
@@ -689,7 +688,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -722,37 +721,36 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/BffPathDocumentType'
-        - $ref: '#/components/parameters/queryMandateId'
-        - $ref: '#/components/parameters/BffQueryDocumentIdx'
-        - $ref: '#/components/parameters/BffQueryDocumentId'
-        - $ref: '#/components/parameters/BffQueryDocumentCategory'
+        - $ref: "#/components/parameters/pathIun"
+        - $ref: "#/components/parameters/BffPathDocumentType"
+        - $ref: "#/components/parameters/queryMandateId"
+        - $ref: "#/components/parameters/BffQueryDocumentIdx"
+        - $ref: "#/components/parameters/BffQueryDocumentId"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
-        '400':
+                $ref: "#/components/schemas/BffDocumentDownloadMetadataResponse"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/documents/{documentType}
@@ -763,7 +761,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -798,35 +796,35 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
-        - $ref: '#/components/parameters/pathAttachmentName'
-        - $ref: '#/components/parameters/queryMandateId'
-        - $ref: '#/components/parameters/attachmentIdx'
+        - $ref: "#/components/parameters/pathIun"
+        - $ref: "#/components/parameters/pathAttachmentName"
+        - $ref: "#/components/parameters/queryMandateId"
+        - $ref: "#/components/parameters/attachmentIdx"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
-        '400':
+                $ref: "#/components/schemas/BffDocumentDownloadMetadataResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/{iun}/payments/{attachmentName}
@@ -837,7 +835,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -876,20 +874,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestCheckAarMandateDto'
+              $ref: "#/components/schemas/RequestCheckAarMandateDto"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseCheckAarMandateDto'
-        '404':
+                $ref: "#/components/schemas/ResponseCheckAarMandateDto"
+        "404":
           description: QrCode reference Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
@@ -900,7 +898,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -953,24 +951,24 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffApiKeysResponse'
-        '400':
+                $ref: "#/components/schemas/BffApiKeysResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
@@ -981,7 +979,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1001,27 +999,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestNewApiKey'
+              $ref: "#/components/schemas/RequestNewApiKey"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseNewApiKey'
-        '400':
+                $ref: "#/components/schemas/ResponseNewApiKey"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys
@@ -1032,7 +1030,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1063,34 +1061,34 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathApiKey'
+        - $ref: "#/components/parameters/pathApiKey"
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. delete an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}
@@ -1101,7 +1099,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1133,40 +1131,40 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathApiKey'
+        - $ref: "#/components/parameters/pathApiKey"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestApiKeyStatus'
+              $ref: "#/components/schemas/RequestApiKeyStatus"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/api-keys/{id}/status
@@ -1177,7 +1175,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1231,30 +1229,30 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicKeysResponse'
-        '400':
+                $ref: "#/components/schemas/PublicKeysResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys
@@ -1265,7 +1263,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1285,27 +1283,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublicKeyRequest'
+              $ref: "#/components/schemas/PublicKeyRequest"
         required: true
       responses:
-        '201':
+        "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicKeyResponse'
-        '400':
+                $ref: "#/components/schemas/PublicKeyResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys
@@ -1316,7 +1314,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1347,40 +1345,40 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathKid'
+        - $ref: "#/components/parameters/pathKid"
       responses:
-        '204':
+        "204":
           description: No content
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. delete an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}
@@ -1391,7 +1389,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1425,41 +1423,41 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathKid'
-        - $ref: '#/components/parameters/queryStatus'
+        - $ref: "#/components/parameters/pathKid"
+        - $ref: "#/components/parameters/queryStatus"
       responses:
-        '204':
+        "204":
           description: No content
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/status
@@ -1470,7 +1468,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1502,50 +1500,50 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathKid'
+        - $ref: "#/components/parameters/pathKid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublicKeyRequest'
+              $ref: "#/components/schemas/PublicKeyRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicKeyResponse'
-        '400':
+                $ref: "#/components/schemas/PublicKeyResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/{kid}/rotate
@@ -1556,7 +1554,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1588,30 +1586,30 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPublicKeysCheckIssuerResponse'
-        '400':
+                $ref: "#/components/schemas/BffPublicKeysCheckIssuerResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/public-keys/check-issuer
@@ -1622,7 +1620,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1675,30 +1673,30 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VirtualKeysResponse'
-        '400':
+                $ref: "#/components/schemas/VirtualKeysResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys
@@ -1709,7 +1707,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1729,39 +1727,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestNewVirtualKey'
+              $ref: "#/components/schemas/RequestNewVirtualKey"
         required: true
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseNewVirtualKey'
-        '400':
+                $ref: "#/components/schemas/ResponseNewVirtualKey"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys
@@ -1772,7 +1770,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1803,40 +1801,40 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathKid'
+        - $ref: "#/components/parameters/pathKid"
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}
@@ -1847,7 +1845,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1879,46 +1877,46 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathKid'
+        - $ref: "#/components/parameters/pathKid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestVirtualKeyStatus'
+              $ref: "#/components/schemas/RequestVirtualKeyStatus"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '403':
+                $ref: "#/components/schemas/Problem"
+        "403":
           description: Forbidden
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '409':
+                $ref: "#/components/schemas/Problem"
+        "409":
           description: Wrong state transition (i.e. enable an enabled key)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/virtual-keys/{kid}/status
@@ -1929,7 +1927,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -1961,24 +1959,24 @@ paths:
       tags:
         - InfoPa
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffInstitutionList'
-        '400':
+                $ref: "#/components/schemas/BffInstitutionList"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions
@@ -1989,7 +1987,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2022,24 +2020,24 @@ paths:
       tags:
         - InfoPa
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffInstitutionProductList'
-        '400':
+                $ref: "#/components/schemas/BffInstitutionProductList"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/institutions/products
@@ -2050,7 +2048,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2086,26 +2084,26 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/PaGroupStatus'
+            $ref: "#/components/schemas/PaGroupStatus"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPaGroupList'
-        '400':
+                $ref: "#/components/schemas/BffPaGroupList"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
@@ -2116,7 +2114,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2145,24 +2143,24 @@ paths:
       tags:
         - InfoPa
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffAdditionalLanguages'
-        '400':
+                $ref: "#/components/schemas/AdditionalLanguages"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-languages
@@ -2173,7 +2171,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2193,27 +2191,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffAdditionalLanguages'
+              $ref: "#/components/schemas/BffAdditionalLanguages"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffAdditionalLanguages'
-        '400':
+                $ref: "#/components/schemas/BffAdditionalLanguages"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-languages
@@ -2224,7 +2222,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2260,26 +2258,26 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/PgGroupStatus'
+            $ref: "#/components/schemas/PgGroupStatus"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPgGroupList'
-        '400':
+                $ref: "#/components/schemas/BffPgGroupList"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/groups
@@ -2290,7 +2288,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2325,26 +2323,26 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/PaNameFilter'
+            $ref: "#/components/schemas/PaNameFilter"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaSummariesList'
-        '400':
+                $ref: "#/components/schemas/PaSummariesList"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa-list
@@ -2355,7 +2353,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2385,20 +2383,20 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
+        - $ref: "#/components/parameters/BffQueryTosPrivacyType"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffTosPrivacyConsent'
-        '400':
+                $ref: "#/components/schemas/BffTosPrivacyConsent"
+        "400":
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
@@ -2409,7 +2407,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2430,16 +2428,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffTosPrivacyBody'
+              $ref: "#/components/schemas/BffTosPrivacyBody"
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v2/tos-privacy
@@ -2450,7 +2448,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2481,20 +2479,20 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffQueryTosPrivacyType'
+        - $ref: "#/components/parameters/BffQueryTosPrivacyType"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffTosPrivacyConsent'
-        '400':
+                $ref: "#/components/schemas/BffTosPrivacyConsent"
+        "400":
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
@@ -2505,7 +2503,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2526,16 +2524,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffTosPrivacyBody'
+              $ref: "#/components/schemas/BffTosPrivacyBody"
       responses:
-        '200':
+        "200":
           description: OK
-        '400':
+        "400":
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pg/tos-privacy
@@ -2546,7 +2544,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2583,18 +2581,18 @@ paths:
         - api-key-read
         - log-downtime-read
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPnStatusResponse'
-        '400':
+                $ref: "#/components/schemas/BffPnStatusResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/status
@@ -2605,7 +2603,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2644,23 +2642,23 @@ paths:
         - api-key-read
         - log-downtime-read
       parameters:
-        - $ref: '#/components/parameters/BffQueryFromTime'
-        - $ref: '#/components/parameters/queryToTime'
-        - $ref: '#/components/parameters/queryPage'
-        - $ref: '#/components/parameters/querySize'
+        - $ref: "#/components/parameters/BffQueryFromTime"
+        - $ref: "#/components/parameters/queryToTime"
+        - $ref: "#/components/parameters/queryPage"
+        - $ref: "#/components/parameters/querySize"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PnDowntimeHistoryResponse'
-        '400':
+                $ref: "#/components/schemas/PnDowntimeHistoryResponse"
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/history
@@ -2671,7 +2669,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2714,26 +2712,26 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LegalFactDownloadMetadataResponse'
-        '204':
+                $ref: "#/components/schemas/LegalFactDownloadMetadataResponse"
+        "204":
           description: Not signed
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/legal-facts/{legalFactId}
@@ -2744,7 +2742,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2778,26 +2776,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaymentInfoRequests'
+              $ref: "#/components/schemas/PaymentInfoRequests"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPaymentInfoResponse'
-        '400':
+                $ref: "#/components/schemas/BffPaymentInfoResponse"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/info
@@ -2808,7 +2806,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2841,39 +2839,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaymentRequest'
+              $ref: "#/components/schemas/PaymentRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaymentResponse'
-        '400':
+                $ref: "#/components/schemas/PaymentResponse"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '422':
+                $ref: "#/components/schemas/Problem"
+        "422":
           description: Unprocessable Entity
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/payments/cart
@@ -2884,7 +2882,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2915,18 +2913,18 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffUserAddresses'
-        '400':
+                $ref: "#/components/schemas/BffUserAddresses"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses
@@ -2937,7 +2935,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -2973,37 +2971,37 @@ paths:
           description: Address type
           required: true
           schema:
-            $ref: '#/components/schemas/BffAddressType'
-        - $ref: '#/components/parameters/senderId'
+            $ref: "#/components/schemas/BffAddressType"
+        - $ref: "#/components/parameters/senderId"
         - in: path
           name: channelType
           description: Communication Channel type
           required: true
           schema:
-            $ref: '#/components/schemas/BffChannelType'
+            $ref: "#/components/schemas/BffChannelType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddressVerification'
+              $ref: "#/components/schemas/AddressVerification"
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddressVerificationResponse'
+                $ref: "#/components/schemas/AddressVerificationResponse"
           description: |
             Nell'oggetto c'è la motivazione di quanto richiesto per procedere
-        '204':
+        "204":
           description: successful operation
-        '400':
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '422':
+                $ref: "#/components/schemas/Problem"
+        "422":
           description: >
             This error is caused by one of this events: * Verification code
             failure: error.detail equals to
@@ -3015,7 +3013,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
@@ -3026,7 +3024,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3051,29 +3049,29 @@ paths:
           description: Address type
           required: true
           schema:
-            $ref: '#/components/schemas/BffAddressType'
-        - $ref: '#/components/parameters/senderId'
+            $ref: "#/components/schemas/BffAddressType"
+        - $ref: "#/components/parameters/senderId"
         - in: path
           name: channelType
           description: Communication Channel type
           required: true
           schema:
-            $ref: '#/components/schemas/BffChannelType'
+            $ref: "#/components/schemas/BffChannelType"
       responses:
-        '204':
+        "204":
           description: OK
-        '400':
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Digital Address not found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/addresses/{addressType}/{senderId}/{channelType}
@@ -3084,7 +3082,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3124,20 +3122,20 @@ paths:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       operationId: countMandatesByDelegateV1
       parameters:
-        - $ref: '#/components/parameters/BffQueryStatus'
+        - $ref: "#/components/parameters/BffQueryStatus"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MandateCountsDto'
-        '400':
+                $ref: "#/components/schemas/MandateCountsDto"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate/count
@@ -3148,7 +3146,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3181,16 +3179,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffNewMandateRequest'
+              $ref: "#/components/schemas/BffNewMandateRequest"
       responses:
-        '201':
+        "201":
           description: Created
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate
@@ -3201,7 +3199,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3231,22 +3229,22 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffPathMandateId'
+        - $ref: "#/components/parameters/BffPathMandateId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AcceptRequestDto'
+              $ref: "#/components/schemas/AcceptRequestDto"
       responses:
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/accept
@@ -3257,7 +3255,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3288,22 +3286,22 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffPathMandateId'
+        - $ref: "#/components/parameters/BffPathMandateId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateRequestDto'
+              $ref: "#/components/schemas/UpdateRequestDto"
       responses:
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/update
@@ -3314,7 +3312,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3345,16 +3343,16 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffPathMandateId'
+        - $ref: "#/components/parameters/BffPathMandateId"
       responses:
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/reject
@@ -3365,7 +3363,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3396,16 +3394,16 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffPathMandateId'
+        - $ref: "#/components/parameters/BffPathMandateId"
       responses:
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/{mandateId}/revoke
@@ -3416,7 +3414,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3450,22 +3448,22 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffQueryStatus'
+        - $ref: "#/components/parameters/BffQueryStatus"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MandateDto'
-        '400':
+                  $ref: "#/components/schemas/MandateDto"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate
@@ -3476,7 +3474,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3494,27 +3492,27 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/BffQuerySize'
-        - $ref: '#/components/parameters/BffQueryNextPageKey'
+        - $ref: "#/components/parameters/BffQuerySize"
+        - $ref: "#/components/parameters/BffQueryNextPageKey"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SearchMandateRequestDto'
+              $ref: "#/components/schemas/SearchMandateRequestDto"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchMandateResponseDto'
-        '400':
+                $ref: "#/components/schemas/SearchMandateResponseDto"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegate
@@ -3525,7 +3523,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3554,20 +3552,20 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MandateDto'
-        '400':
+                  $ref: "#/components/schemas/MandateDto"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/mandate/delegator
@@ -3578,7 +3576,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3607,35 +3605,35 @@ paths:
         - SenderDashboard
       operationId: getDashboardDataV1
       parameters:
-        - $ref: '#/components/parameters/BffSenderDashboardPathCxType'
-        - $ref: '#/components/parameters/BffSenderDashboardPathCxId'
-        - $ref: '#/components/parameters/BffSenderDashboardQueryStartDate'
-        - $ref: '#/components/parameters/BffSenderDashboardQueryEndDate'
+        - $ref: "#/components/parameters/BffSenderDashboardPathCxType"
+        - $ref: "#/components/parameters/BffSenderDashboardPathCxId"
+        - $ref: "#/components/parameters/BffSenderDashboardQueryStartDate"
+        - $ref: "#/components/parameters/BffSenderDashboardQueryEndDate"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffSenderDashboardDataResponse'
-        '400':
+                $ref: "#/components/schemas/BffSenderDashboardDataResponse"
+        "400":
           description: Invalid input
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
+                $ref: "#/components/schemas/Problem"
+        "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
+                $ref: "#/components/schemas/Problem"
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
@@ -3648,7 +3646,7 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
@@ -3699,14 +3697,14 @@ components:
       description: identificativo del destinatario
       schema:
         type: string
-        x-field-extra-annotation: '@lombok.ToString.Exclude'
+        x-field-extra-annotation: "@lombok.ToString.Exclude"
     BffNotificationSearchStatus:
       name: status
       in: query
       required: false
       description: stato della notifica
       schema:
-        $ref: '#/components/schemas/NotificationStatus'
+        $ref: "#/components/schemas/NotificationStatus"
     notificationSearchSubject:
       name: subjectRegExp
       description: >-
@@ -3758,7 +3756,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/BffDocumentType'
+        $ref: "#/components/schemas/BffDocumentType"
     BffQueryDocumentIdx:
       description: Indice del documento
       name: documentIdx
@@ -3775,15 +3773,6 @@ components:
         type: string
         pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
         maxLength: 1024
-    BffQueryDocumentCategory:
-      description: >-
-        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
-        disposizione dei suoi utenti.
-      name: documentCategory
-      in: query
-      required: false
-      schema:
-        $ref: '#/components/schemas/LegalFactCategory'
     pathRecipientIdx:
       name: recipientIdx
       description: indice del destinatario nella lista partendo da 0.
@@ -3871,7 +3860,7 @@ components:
       schema:
         type: array
         items:
-          $ref: '#/components/schemas/ConsentType'
+          $ref: "#/components/schemas/ConsentType"
     BffQueryFromTime:
       name: fromTime
       in: query
@@ -3975,7 +3964,7 @@ components:
       schema:
         type: string
         format: date
-        example: '2023-12-06'
+        example: "2023-12-06"
     BffSenderDashboardQueryEndDate:
       name: endDate
       in: query
@@ -3984,7 +3973,7 @@ components:
       schema:
         type: string
         format: date
-        example: '2023-12-06'
+        example: "2023-12-06"
   schemas:
     NotificationStatus:
       type: string
@@ -4021,7 +4010,7 @@ components:
       type: object
       properties:
         iun:
-          $ref: '#/components/schemas/IUN'
+          $ref: "#/components/schemas/IUN"
         paProtocolNumber:
           type: string
           description: Numero protocollo associato alla notifica da parte della PA
@@ -4036,13 +4025,13 @@ components:
           type: string
           description: Oggetto della notifica
         notificationStatus:
-          $ref: '#/components/schemas/NotificationStatus'
+          $ref: "#/components/schemas/NotificationStatus"
         recipients:
           description: >-
             Elenco delle denominazioni dei destinatari della notifica. <br/>
             __N.B:__ campo da utilizzare solo per visualizzazione.
           type: array
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           items:
             type: string
         requestAcceptedAt:
@@ -4069,7 +4058,7 @@ components:
           description: Una pagina di risultati della query
           type: array
           items:
-            $ref: '#/components/schemas/NotificationSearchRow'
+            $ref: "#/components/schemas/NotificationSearchRow"
         moreResult:
           description: Indica se sono presenti ulteriori pagine di risultati
           type: boolean
@@ -4136,21 +4125,21 @@ components:
           type: string
         timestamp:
           description: date and time referred to UTC
-          example: '2022-07-27T12:22:33.444Z'
+          example: "2022-07-27T12:22:33.444Z"
           type: string
           format: date-time
         errors:
           type: array
           minItems: 1
           items:
-            $ref: '#/components/schemas/ProblemError'
+            $ref: "#/components/schemas/ProblemError"
       required:
         - status
         - errors
     TaxId:
       description: C.F. persona fisica o persona giuridica
       type: string
-      x-field-extra-annotation: '@lombok.ToString.Exclude'
+      x-field-extra-annotation: "@lombok.ToString.Exclude"
       minLength: 11
       maxLength: 16
       pattern: >-
@@ -4161,7 +4150,7 @@ components:
         prevede i caratteri ISO LATIN 1, senza | e senza i caratteri di
         controllo, ovvero la seguente regexp: ^[ -{}~\u00A0-ÿ]*$
       type: string
-      x-field-extra-annotation: '@lombok.ToString.Exclude'
+      x-field-extra-annotation: "@lombok.ToString.Exclude"
       minLength: 1
       pattern: ^.*$
     NotificationDigitalAddress:
@@ -4178,7 +4167,7 @@ components:
             - PEC
         address:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           example: account@domain.it
           description: >-
             Indirizzo PEC o REM che il mittente della notifica intende
@@ -4195,26 +4184,26 @@ components:
       properties:
         at:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Campo "presso" dell'indirizzo
           pattern: ^.*$
           maxLength: 256
         address:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Indirizzo del domicilio fisico
           pattern: ^.*$
           minLength: 2
           maxLength: 1024
         addressDetails:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Seconda riga dell'indirizzo fisico
           pattern: ^.*$
           maxLength: 1024
         zip:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: >-
             Codice di avviamento postale. In caso di invio estero diventa
             facoltativo
@@ -4223,39 +4212,39 @@ components:
           pattern: ^(\w|\ |\-)*$
         municipality:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Comune
           pattern: ^.*$
           minLength: 2
           maxLength: 256
         municipalityDetails:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Frazione o località
           pattern: ^.*$
           maxLength: 256
         province:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Provincia
           pattern: ^.*$
           maxLength: 256
         foreignState:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           description: Denominazione paese estero
           pattern: ^.*$
           maxLength: 256
     noticeCode:
       description: Payment notice number  numero avviso
-      example: '302000100000019421'
+      example: "302000100000019421"
       type: string
       maxLength: 18
       minLength: 18
       pattern: ^\d+$
     paTaxId:
       description: Payment PA fiscal code
-      example: '77777777777'
+      example: "77777777777"
       type: string
       maxLength: 11
       minLength: 11
@@ -4302,7 +4291,7 @@ components:
         - ref
       properties:
         digests:
-          $ref: '#/components/schemas/NotificationAttachmentDigests'
+          $ref: "#/components/schemas/NotificationAttachmentDigests"
         contentType:
           type: string
           description: tipo di contenuto dell'allegato, supportato application/pdf
@@ -4310,11 +4299,11 @@ components:
           maxLength: 15
           pattern: ^application\/pdf$
         ref:
-          $ref: '#/components/schemas/NotificationAttachmentBodyRef'
+          $ref: "#/components/schemas/NotificationAttachmentBodyRef"
     NotificationPaymentAttachment:
       description: Un modulo di pagamento allegato alla notifica
       allOf:
-        - $ref: '#/components/schemas/NotificationAttachment'
+        - $ref: "#/components/schemas/NotificationAttachment"
     PagoPaPayment:
       title: Informazioni per effettuare il pagamento con sistema pagoPA
       description: >-
@@ -4332,9 +4321,9 @@ components:
         - applyCost
       properties:
         noticeCode:
-          $ref: '#/components/schemas/noticeCode'
+          $ref: "#/components/schemas/noticeCode"
         creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         applyCost:
           type: boolean
           nullable: false
@@ -4342,7 +4331,7 @@ components:
             Flag per indicare se l'avviso pagoPa deve contenere i costi di
             notifica
         attachment:
-          $ref: '#/components/schemas/NotificationPaymentAttachment'
+          $ref: "#/components/schemas/NotificationPaymentAttachment"
     NotificationMetadataAttachment:
       description: Un metadato allegato della notifica.
       type: object
@@ -4352,7 +4341,7 @@ components:
         - ref
       properties:
         digests:
-          $ref: '#/components/schemas/NotificationAttachmentDigests'
+          $ref: "#/components/schemas/NotificationAttachmentDigests"
         contentType:
           type: string
           description: tipo di contenuto dell'allegato, supportato application/json
@@ -4360,7 +4349,7 @@ components:
           maxLength: 16
           pattern: ^application\/json$
         ref:
-          $ref: '#/components/schemas/NotificationAttachmentBodyRef'
+          $ref: "#/components/schemas/NotificationAttachmentBodyRef"
     F24Payment:
       title: Informazioni per effettuare il pagamento tramite modello F24
       description: >-
@@ -4384,16 +4373,16 @@ components:
           nullable: false
           description: Flag per indicare se il modello F24 deve contere i costi di notifica
         metadataAttachment:
-          $ref: '#/components/schemas/NotificationMetadataAttachment'
+          $ref: "#/components/schemas/NotificationMetadataAttachment"
     NotificationPaymentItem:
       minProperties: 1
       additionalProperties: false
       nullable: false
       properties:
         pagoPa:
-          $ref: '#/components/schemas/PagoPaPayment'
+          $ref: "#/components/schemas/PagoPaPayment"
         f24:
-          $ref: '#/components/schemas/F24Payment'
+          $ref: "#/components/schemas/F24Payment"
     NotificationPayments:
       title: Pagamenti collegati alla notifica per il destinatario
       description: >-
@@ -4401,7 +4390,7 @@ components:
         essere pagamenti rateali o alternativi
       type: array
       items:
-        $ref: '#/components/schemas/NotificationPaymentItem'
+        $ref: "#/components/schemas/NotificationPaymentItem"
     NotificationRecipientV23:
       description: Informazioni sui destinatari
       required:
@@ -4421,22 +4410,22 @@ components:
             - PF
             - PG
         taxId:
-          $ref: '#/components/schemas/TaxId'
+          $ref: "#/components/schemas/TaxId"
         internalId:
           type: string
           description: id interno anonimizzato
         denomination:
-          $ref: '#/components/schemas/Denomination'
+          $ref: "#/components/schemas/Denomination"
         digitalDomicile:
-          $ref: '#/components/schemas/NotificationDigitalAddress'
+          $ref: "#/components/schemas/NotificationDigitalAddress"
         physicalAddress:
-          $ref: '#/components/schemas/NotificationPhysicalAddress'
+          $ref: "#/components/schemas/NotificationPhysicalAddress"
         payments:
-          $ref: '#/components/schemas/NotificationPayments'
+          $ref: "#/components/schemas/NotificationPayments"
     NotificationDocument:
       description: Un documento da notificare
       allOf:
-        - $ref: '#/components/schemas/NotificationAttachment'
+        - $ref: "#/components/schemas/NotificationAttachment"
         - type: object
           properties:
             title:
@@ -4495,17 +4484,17 @@ components:
           type: array
           description: Informazioni sui destinatari
           items:
-            $ref: '#/components/schemas/NotificationRecipientV23'
+            $ref: "#/components/schemas/NotificationRecipientV23"
         documents:
           type: array
           description: Documenti notificati
           items:
-            $ref: '#/components/schemas/NotificationDocument'
+            $ref: "#/components/schemas/NotificationDocument"
           minItems: 1
         notificationFeePolicy:
-          $ref: '#/components/schemas/NotificationFeePolicy'
+          $ref: "#/components/schemas/NotificationFeePolicy"
         cancelledIun:
-          $ref: '#/components/schemas/IUN'
+          $ref: "#/components/schemas/IUN"
         physicalCommunicationType:
           type: string
           description: Tipologia comunicazione fisica
@@ -4513,9 +4502,9 @@ components:
             - AR_REGISTERED_LETTER
             - REGISTERED_LETTER_890
         senderDenomination:
-          $ref: '#/components/schemas/Denomination'
+          $ref: "#/components/schemas/Denomination"
         senderTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         group:
           type: string
           description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
@@ -4623,18 +4612,18 @@ components:
           type: array
           description: Informazioni sui destinatari
           items:
-            $ref: '#/components/schemas/NotificationRecipientV23'
+            $ref: "#/components/schemas/NotificationRecipientV23"
           minItems: 1
         documents:
           type: array
           description: Documenti notificati
           items:
-            $ref: '#/components/schemas/NotificationDocument'
+            $ref: "#/components/schemas/NotificationDocument"
           minItems: 1
         notificationFeePolicy:
-          $ref: '#/components/schemas/NotificationFeePolicy'
+          $ref: "#/components/schemas/NotificationFeePolicy"
         cancelledIun:
-          $ref: '#/components/schemas/IUN'
+          $ref: "#/components/schemas/IUN"
         physicalCommunicationType:
           type: string
           description: Tipologia comunicazione fisica
@@ -4642,9 +4631,9 @@ components:
             - AR_REGISTERED_LETTER
             - REGISTERED_LETTER_890
         senderDenomination:
-          $ref: '#/components/schemas/Denomination'
+          $ref: "#/components/schemas/Denomination"
         senderTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         group:
           type: string
           description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
@@ -4672,9 +4661,9 @@ components:
             PIATTAFORMA NOTIFICHE
             DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
         paFee:
-          $ref: '#/components/schemas/PaFeeV23'
+          $ref: "#/components/schemas/PaFeeV23"
         vat:
-          $ref: '#/components/schemas/VatV23'
+          $ref: "#/components/schemas/VatV23"
         pagoPaIntMode:
           type: string
           description: >-
@@ -4688,7 +4677,7 @@ components:
     SentNotificationV23:
       description: Le informazioni riguardanti una richiesta di notifica accettata
       allOf:
-        - $ref: '#/components/schemas/NewNotificationRequestV23'
+        - $ref: "#/components/schemas/NewNotificationRequestV23"
         - type: object
           required:
             - iun
@@ -4702,13 +4691,13 @@ components:
               pattern: ^.*$
               maxLength: 256
             iun:
-              $ref: '#/components/schemas/IUN'
+              $ref: "#/components/schemas/IUN"
             sentAt:
               type: string
               description: Momento di ricezione della notifica da parte di PN
               format: date-time
             cancelledByIun:
-              $ref: '#/components/schemas/IUN'
+              $ref: "#/components/schemas/IUN"
             documentsAvailable:
               type: boolean
               description: Indica se i documenti notificati sono ancora disponibili.
@@ -4739,6 +4728,7 @@ components:
         - RECIPIENT_ACCESS
         - PEC_RECEIPT
         - ANALOG_FAILURE_DELIVERY
+        - NOTIFICATION_CANCELLED
     BffLegalFactId:
       type: object
       required:
@@ -4750,7 +4740,7 @@ components:
           pattern: ^(safestorage:\/\/)?[A-Za-z0-9._-]+$
           maxLength: 512
         category:
-          $ref: '#/components/schemas/BffLegalFactType'
+          $ref: "#/components/schemas/BffLegalFactType"
     TimelineElementCategoryV23:
       type: string
       description: |
@@ -4856,37 +4846,37 @@ components:
         - municipality
       properties:
         at:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Campo "presso" dell'indirizzo
         address:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Indirizzo del domicilio fisico
         addressDetails:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Seconda riga dell'indirizzo fisico
         zip:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: >-
             Codice di avviamento postale. In caso di invio estero diventa
             facoltativo
         municipality:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Comune in cui l'indirizzo si trova
         municipalityDetails:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Frazione o località
         province:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Provincia in cui si trova l'indirizzo
         foreignState:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: Denominazione paese estero
       description: Indirizzo fisico scoperto durante fase di consegna
@@ -4901,9 +4891,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         oldAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         normalizedAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
     NotificationRequestAcceptedDetails:
       type: object
       properties:
@@ -4932,7 +4922,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
     EndWorkflowStatus:
       type: string
       description: Stato chiusura workflow
@@ -4954,7 +4944,7 @@ components:
             Identificativo dell'atto opponibile a terzi del quale è stata
             richiesta la creazione
         endWorkflowStatus:
-          $ref: '#/components/schemas/EndWorkflowStatus'
+          $ref: "#/components/schemas/EndWorkflowStatus"
         completionWorkflowDate:
           type: string
           description: Data chiusura workflow
@@ -4979,11 +4969,11 @@ components:
       type: object
       properties:
         type:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: tipo di indirizzo PEC, REM, SERCQ, SMS, EMAIL, APPIO ...
         address:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           description: account@domain
     DigitalDeliveryCreationRequestDetails:
@@ -4996,9 +4986,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         endWorkflowStatus:
-          $ref: '#/components/schemas/EndWorkflowStatus'
+          $ref: "#/components/schemas/EndWorkflowStatus"
         completionWorkflowDate:
           type: string
           description: Data chiusura workflow
@@ -5027,7 +5017,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
     DigitalAddressSource:
       type: string
       description: sorgente indirizzo di invio della notifica
@@ -5047,7 +5037,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         isAvailable:
           type: boolean
           description: Disponibilità indirizzo
@@ -5077,7 +5067,7 @@ components:
           type: string
           maxLength: 128
         taxId:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           maxLength: 128
         operatorUuid:
@@ -5087,11 +5077,11 @@ components:
           type: string
           maxLength: 128
         denomination:
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           type: string
           maxLength: 128
         delegateType:
-          $ref: '#/components/schemas/RecipientType'
+          $ref: "#/components/schemas/RecipientType"
     NotificationViewedCreationRequestDetailsV23:
       type: object
       required:
@@ -5111,11 +5101,11 @@ components:
           description: Data ricezione richiesta visualizzazione notifica
           format: date-time
         raddType:
-          $ref: '#/components/schemas/RaddTypeV23'
+          $ref: "#/components/schemas/RaddTypeV23"
         raddTransactionId:
-          $ref: '#/components/schemas/RaddTransactionId'
+          $ref: "#/components/schemas/RaddTransactionId"
         delegateInfo:
-          $ref: '#/components/schemas/DelegateInfo'
+          $ref: "#/components/schemas/DelegateInfo"
     NotificationViewedDetailsV23:
       type: object
       required:
@@ -5131,11 +5121,11 @@ components:
           example: 1220
           type: number
         raddType:
-          $ref: '#/components/schemas/RaddTypeV23'
+          $ref: "#/components/schemas/RaddTypeV23"
         raddTransactionId:
-          $ref: '#/components/schemas/RaddTransactionId'
+          $ref: "#/components/schemas/RaddTransactionId"
         delegateInfo:
-          $ref: '#/components/schemas/DelegateInfo'
+          $ref: "#/components/schemas/DelegateInfo"
         eventTimestamp:
           type: string
           description: Data evento visualizzazione
@@ -5152,9 +5142,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         raddType:
-          $ref: '#/components/schemas/RaddTypeV23'
+          $ref: "#/components/schemas/RaddTypeV23"
         raddTransactionId:
-          $ref: '#/components/schemas/RaddTransactionId'
+          $ref: "#/components/schemas/RaddTransactionId"
         eventTimestamp:
           type: string
           description: Data evento
@@ -5184,9 +5174,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         deliveryMode:
-          $ref: '#/components/schemas/DeliveryMode'
+          $ref: "#/components/schemas/DeliveryMode"
         contactPhase:
-          $ref: '#/components/schemas/ContactPhase'
+          $ref: "#/components/schemas/ContactPhase"
         sentAttemptMade:
           type: number
           description: Numero di tentativi di notificazione già effettuati
@@ -5203,9 +5193,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
     RefinementDetailsV23:
       type: object
       required:
@@ -5253,7 +5243,7 @@ components:
           type: array
           description: Motivazioni che hanno portato al rifiuto della notifica
           items:
-            $ref: '#/components/schemas/NotificationRefusedErrorV23'
+            $ref: "#/components/schemas/NotificationRefusedErrorV23"
     ScheduleAnalogWorkflowDetailsV23:
       type: object
       required:
@@ -5278,9 +5268,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         sentAttemptMade:
           type: number
         lastAttemptDate:
@@ -5321,13 +5311,13 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         sendDate:
           type: string
           description: data invio messaggio di cortesia
           format: date-time
         ioSendMessageResult:
-          $ref: '#/components/schemas/IoSendMessageResult'
+          $ref: "#/components/schemas/IoSendMessageResult"
     PrepareDigitalDetails:
       type: object
       required:
@@ -5339,9 +5329,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         retryNumber:
           type: number
           description: numero dei tentativi effettuati
@@ -5350,7 +5340,7 @@ components:
           description: data tentativo precedente
           format: date-time
         nextDigitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         nextSourceAttemptsMade:
           type: number
           description: numero del prossimo tentativo da effettuare
@@ -5370,9 +5360,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         retryNumber:
           type: number
           description: numero dei tentativi effettuati
@@ -5405,9 +5395,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         responseStatus:
-          $ref: '#/components/schemas/ResponseStatus'
+          $ref: "#/components/schemas/ResponseStatus"
         notificationDate:
           type: string
           description: data notifica
@@ -5435,7 +5425,7 @@ components:
         sendingReceipts:
           type: array
           items:
-            $ref: '#/components/schemas/SendingReceipt'
+            $ref: "#/components/schemas/SendingReceipt"
     SendDigitalProgressDetailsV23:
       type: object
       properties:
@@ -5452,9 +5442,9 @@ components:
           type: boolean
           description: indica se il progress ha dato luogo ad un ritentativo
         digitalAddress:
-          $ref: '#/components/schemas/DigitalAddress'
+          $ref: "#/components/schemas/DigitalAddress"
         digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
+          $ref: "#/components/schemas/DigitalAddressSource"
         notificationDate:
           type: string
           description: data notifica
@@ -5462,7 +5452,7 @@ components:
         sendingReceipts:
           type: array
           items:
-            $ref: '#/components/schemas/SendingReceipt'
+            $ref: "#/components/schemas/SendingReceipt"
         retryNumber:
           type: number
           description: numero dei tentativi effettuati
@@ -5488,9 +5478,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         serviceLevel:
-          $ref: '#/components/schemas/ServiceLevel'
+          $ref: "#/components/schemas/ServiceLevel"
         sentAttemptMade:
           type: number
           description: numero dei tentativi effettuati
@@ -5510,9 +5500,9 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         serviceLevel:
-          $ref: '#/components/schemas/ServiceLevel'
+          $ref: "#/components/schemas/ServiceLevel"
         sentAttemptMade:
           type: number
           description: numero dei tentativi effettuati
@@ -5573,16 +5563,16 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         serviceLevel:
-          $ref: '#/components/schemas/ServiceLevel'
+          $ref: "#/components/schemas/ServiceLevel"
         sentAttemptMade:
           type: number
           description: numero dei tentativi effettuati
         newAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         responseStatus:
-          $ref: '#/components/schemas/ResponseStatus'
+          $ref: "#/components/schemas/ResponseStatus"
         notificationDate:
           type: string
           format: date-time
@@ -5643,7 +5633,7 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/AttachmentDetails'
+            $ref: "#/components/schemas/AttachmentDetails"
         sendRequestId:
           type: string
           description: RequestId della richiesta d'invio
@@ -5662,7 +5652,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
     SimpleRegisteredLetterDetails:
       type: object
       required:
@@ -5673,7 +5663,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         productType:
           type: string
           maxLength: 10
@@ -5757,14 +5747,14 @@ components:
           type: number
           description: Index destinatario che ha effettuato il pagamento della notifica
         recipientType:
-          $ref: '#/components/schemas/RecipientType'
+          $ref: "#/components/schemas/RecipientType"
         amount:
           type: number
           description: Importo di pagamento in eurocent
         creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         noticeCode:
-          $ref: '#/components/schemas/noticeCode'
+          $ref: "#/components/schemas/noticeCode"
         idF24:
           type: string
           description: un UUID che identifica un pagamento f24
@@ -5803,7 +5793,7 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/AttachmentDetails'
+            $ref: "#/components/schemas/AttachmentDetails"
         sendRequestId:
           type: string
           description: RequestId della richiesta d'invio
@@ -5813,7 +5803,7 @@ components:
           description: Codice della raccomandata
           maxLength: 128
         serviceLevel:
-          $ref: '#/components/schemas/ServiceLevel'
+          $ref: "#/components/schemas/ServiceLevel"
     SimpleRegisteredLetterProgressDetails:
       type: object
       required:
@@ -5836,7 +5826,7 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/AttachmentDetails'
+            $ref: "#/components/schemas/AttachmentDetails"
         sendRequestId:
           type: string
           description: RequestId della richiesta d'invio
@@ -5893,7 +5883,7 @@ components:
           type: number
           description: Index destinatario notifica digitale
         foundAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
+          $ref: "#/components/schemas/PhysicalAddress"
         failureCause:
           type: string
           maxLength: 10
@@ -5909,47 +5899,47 @@ components:
     TimelineElementDetailsV23:
       description: The raw event payload that will be different based on the event.
       oneOf:
-        - $ref: '#/components/schemas/SenderAckCreationRequestDetails'
-        - $ref: '#/components/schemas/NormalizedAddressDetails'
-        - $ref: '#/components/schemas/NotificationRequestAcceptedDetails'
-        - $ref: '#/components/schemas/AnalogFailureWorkflowDetails'
-        - $ref: '#/components/schemas/AnalogSuccessWorkflowDetails'
-        - $ref: '#/components/schemas/CompletelyUnreachableCreationRequestDetails'
-        - $ref: '#/components/schemas/CompletelyUnreachableDetails'
-        - $ref: '#/components/schemas/DigitalDeliveryCreationRequestDetails'
-        - $ref: '#/components/schemas/DigitalFailureWorkflowDetails'
-        - $ref: '#/components/schemas/DigitalSuccessWorkflowDetails'
-        - $ref: '#/components/schemas/GetAddressInfoDetails'
-        - $ref: '#/components/schemas/NotificationViewedCreationRequestDetailsV23'
-        - $ref: '#/components/schemas/NotificationViewedDetailsV23'
-        - $ref: '#/components/schemas/NotificationRADDRetrievedDetails'
-        - $ref: '#/components/schemas/PublicRegistryCallDetails'
-        - $ref: '#/components/schemas/PublicRegistryResponseDetails'
-        - $ref: '#/components/schemas/RefinementDetailsV23'
-        - $ref: '#/components/schemas/RequestRefusedDetailsV23'
-        - $ref: '#/components/schemas/ScheduleAnalogWorkflowDetailsV23'
-        - $ref: '#/components/schemas/ScheduleDigitalWorkflowDetailsV23'
-        - $ref: '#/components/schemas/ScheduleRefinementDetails'
-        - $ref: '#/components/schemas/SendCourtesyMessageDetails'
-        - $ref: '#/components/schemas/PrepareDigitalDetails'
-        - $ref: '#/components/schemas/SendDigitalDetails'
-        - $ref: '#/components/schemas/SendDigitalFeedbackDetails'
-        - $ref: '#/components/schemas/SendDigitalProgressDetailsV23'
-        - $ref: '#/components/schemas/BaseAnalogDetails'
-        - $ref: '#/components/schemas/SendAnalogDetails'
-        - $ref: '#/components/schemas/SendAnalogFeedbackDetails'
-        - $ref: '#/components/schemas/BaseRegisteredLetterDetails'
-        - $ref: '#/components/schemas/SimpleRegisteredLetterDetails'
-        - $ref: '#/components/schemas/AarCreationRequestDetails'
-        - $ref: '#/components/schemas/AarGenerationDetails'
-        - $ref: '#/components/schemas/NotHandledDetails'
-        - $ref: '#/components/schemas/NotificationPaidDetailsV23'
-        - $ref: '#/components/schemas/SendAnalogProgressDetailsV23'
-        - $ref: '#/components/schemas/SimpleRegisteredLetterProgressDetails'
-        - $ref: '#/components/schemas/ProbableDateAnalogWorkflowDetails'
-        - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
-        - $ref: '#/components/schemas/NotificationCancelledDetails'
-        - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
+        - $ref: "#/components/schemas/SenderAckCreationRequestDetails"
+        - $ref: "#/components/schemas/NormalizedAddressDetails"
+        - $ref: "#/components/schemas/NotificationRequestAcceptedDetails"
+        - $ref: "#/components/schemas/AnalogFailureWorkflowDetails"
+        - $ref: "#/components/schemas/AnalogSuccessWorkflowDetails"
+        - $ref: "#/components/schemas/CompletelyUnreachableCreationRequestDetails"
+        - $ref: "#/components/schemas/CompletelyUnreachableDetails"
+        - $ref: "#/components/schemas/DigitalDeliveryCreationRequestDetails"
+        - $ref: "#/components/schemas/DigitalFailureWorkflowDetails"
+        - $ref: "#/components/schemas/DigitalSuccessWorkflowDetails"
+        - $ref: "#/components/schemas/GetAddressInfoDetails"
+        - $ref: "#/components/schemas/NotificationViewedCreationRequestDetailsV23"
+        - $ref: "#/components/schemas/NotificationViewedDetailsV23"
+        - $ref: "#/components/schemas/NotificationRADDRetrievedDetails"
+        - $ref: "#/components/schemas/PublicRegistryCallDetails"
+        - $ref: "#/components/schemas/PublicRegistryResponseDetails"
+        - $ref: "#/components/schemas/RefinementDetailsV23"
+        - $ref: "#/components/schemas/RequestRefusedDetailsV23"
+        - $ref: "#/components/schemas/ScheduleAnalogWorkflowDetailsV23"
+        - $ref: "#/components/schemas/ScheduleDigitalWorkflowDetailsV23"
+        - $ref: "#/components/schemas/ScheduleRefinementDetails"
+        - $ref: "#/components/schemas/SendCourtesyMessageDetails"
+        - $ref: "#/components/schemas/PrepareDigitalDetails"
+        - $ref: "#/components/schemas/SendDigitalDetails"
+        - $ref: "#/components/schemas/SendDigitalFeedbackDetails"
+        - $ref: "#/components/schemas/SendDigitalProgressDetailsV23"
+        - $ref: "#/components/schemas/BaseAnalogDetails"
+        - $ref: "#/components/schemas/SendAnalogDetails"
+        - $ref: "#/components/schemas/SendAnalogFeedbackDetails"
+        - $ref: "#/components/schemas/BaseRegisteredLetterDetails"
+        - $ref: "#/components/schemas/SimpleRegisteredLetterDetails"
+        - $ref: "#/components/schemas/AarCreationRequestDetails"
+        - $ref: "#/components/schemas/AarGenerationDetails"
+        - $ref: "#/components/schemas/NotHandledDetails"
+        - $ref: "#/components/schemas/NotificationPaidDetailsV23"
+        - $ref: "#/components/schemas/SendAnalogProgressDetailsV23"
+        - $ref: "#/components/schemas/SimpleRegisteredLetterProgressDetails"
+        - $ref: "#/components/schemas/ProbableDateAnalogWorkflowDetails"
+        - $ref: "#/components/schemas/NotificationCancellationRequestDetails"
+        - $ref: "#/components/schemas/NotificationCancelledDetails"
+        - $ref: "#/components/schemas/PrepareAnalogDomicileFailureDetails"
     BffNotificationDetailTimeline:
       type: object
       required:
@@ -5967,11 +5957,11 @@ components:
         legalFactsIds:
           type: array
           items:
-            $ref: '#/components/schemas/BffLegalFactId'
+            $ref: "#/components/schemas/BffLegalFactId"
         category:
-          $ref: '#/components/schemas/TimelineElementCategoryV23'
+          $ref: "#/components/schemas/TimelineElementCategoryV23"
         details:
-          $ref: '#/components/schemas/TimelineElementDetailsV23'
+          $ref: "#/components/schemas/TimelineElementDetailsV23"
         hidden:
           type: boolean
         index:
@@ -5990,7 +5980,7 @@ components:
         - relatedTimelineElements
       properties:
         status:
-          $ref: '#/components/schemas/BffNotificationStatus'
+          $ref: "#/components/schemas/BffNotificationStatus"
         activeFrom:
           type: string
           format: date-time
@@ -6001,15 +5991,15 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/BffNotificationDetailTimeline'
+            $ref: "#/components/schemas/BffNotificationDetailTimeline"
         recipient:
           type: string
         deliveryMode:
-          $ref: '#/components/schemas/BffNotificationDeliveryMode'
+          $ref: "#/components/schemas/BffNotificationDeliveryMode"
     BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
-        - $ref: '#/components/schemas/NotificationMetadataAttachment'
+        - $ref: "#/components/schemas/NotificationMetadataAttachment"
         - type: object
           properties:
             title:
@@ -6032,7 +6022,7 @@ components:
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: '#/components/schemas/SentNotificationV23'
+        - $ref: "#/components/schemas/SentNotificationV23"
         - type: object
           required:
             - notificationStatusHistory
@@ -6042,40 +6032,25 @@ components:
             notificationStatusHistory:
               type: array
               items:
-                $ref: '#/components/schemas/BffNotificationStatusHistory'
+                $ref: "#/components/schemas/BffNotificationStatusHistory"
             notificationStatus:
-              $ref: '#/components/schemas/BffNotificationStatus'
+              $ref: "#/components/schemas/BffNotificationStatus"
             timeline:
               type: array
               items:
-                $ref: '#/components/schemas/BffNotificationDetailTimeline'
+                $ref: "#/components/schemas/BffNotificationDetailTimeline"
             radd:
-              $ref: '#/components/schemas/BffNotificationDetailTimeline'
+              $ref: "#/components/schemas/BffNotificationDetailTimeline"
             otherDocuments:
               type: array
               items:
-                $ref: '#/components/schemas/BffNotificationDetailDocument'
+                $ref: "#/components/schemas/BffNotificationDetailDocument"
     BffDocumentType:
       type: string
       enum:
         - ATTACHMENT
         - LEGAL_FACT
         - AAR
-    LegalFactCategory:
-      title: Tipi di atti opponibili a terzi
-      description: >-
-        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a
-        disposizione dei suoi utenti.
-          - _SENDER_ACK_: atto di "presa in carico" di una notifica
-          - _DIGITAL_DELIVERY_: ...
-      type: string
-      enum:
-        - SENDER_ACK
-        - DIGITAL_DELIVERY
-        - ANALOG_DELIVERY
-        - RECIPIENT_ACCESS
-        - PEC_RECEIPT
-        - ANALOG_FAILURE_DELIVERY
     BffDocumentDownloadMetadataResponse:
       type: object
       required:
@@ -6135,7 +6110,7 @@ components:
           type: array
           maxItems: 9999
           items:
-            $ref: '#/components/schemas/StatusDetail'
+            $ref: "#/components/schemas/StatusDetail"
       required:
         - status
     PreLoadRequest:
@@ -6236,7 +6211,7 @@ components:
         - iun
       properties:
         iun:
-          $ref: '#/components/schemas/IUN'
+          $ref: "#/components/schemas/IUN"
         mandateId:
           description: identificativo della delega
           type: string
@@ -6247,11 +6222,11 @@ components:
         id:
           type: string
           description: id del gruppo
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         name:
           type: string
           description: nome del gruppo
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
     BffApiKeyStatus:
       description: Stato dell'api key
       type: string
@@ -6264,7 +6239,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/BffApiKeyStatus'
+          $ref: "#/components/schemas/BffApiKeyStatus"
         date:
           type: string
           description: data a cui corrisponde il cambio di stato
@@ -6278,14 +6253,14 @@ components:
         id:
           type: string
           description: Id dell'api key
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         name:
           type: string
           description: Nome dell'api key
         value:
           type: string
           description: Valore dell'api key
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         lastUpdate:
           type: string
           description: Data ultima modifica
@@ -6293,14 +6268,14 @@ components:
         groups:
           type: array
           items:
-            $ref: '#/components/schemas/BffApiKeyGroup'
+            $ref: "#/components/schemas/BffApiKeyGroup"
         status:
-          $ref: '#/components/schemas/BffApiKeyStatus'
+          $ref: "#/components/schemas/BffApiKeyStatus"
         statusHistory:
           type: array
           description: Storico degli stati dell'api key
           items:
-            $ref: '#/components/schemas/BffApiKeyStatusHistory'
+            $ref: "#/components/schemas/BffApiKeyStatusHistory"
     BffApiKeysResponse:
       title: Elenco di api keys
       description: Dto contenente la lista delle api keys associate ad un utente.
@@ -6311,7 +6286,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/BffApiKeyRow'
+            $ref: "#/components/schemas/BffApiKeyRow"
         lastKey:
           type: string
         lastUpdate:
@@ -6346,11 +6321,11 @@ components:
         id:
           type: string
           description: id dell'api key appena generata
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         apiKey:
           type: string
           description: Valore dell'api key appena generata
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
     RequestApiKeyStatus:
       title: Richiesta di cambio stato per una api key
       description: Richiesta di cambio stato per una api key
@@ -6378,7 +6353,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/PublicKeyStatus'
+          $ref: "#/components/schemas/PublicKeyStatus"
         date:
           type: string
           description: data a cui corrisponde il cambio di stato
@@ -6392,11 +6367,11 @@ components:
         kid:
           type: string
           description: Id della public key
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         issuer:
           type: string
           description: Issuer della public key
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         name:
           type: string
           description: Nome della public key
@@ -6405,18 +6380,18 @@ components:
           description: >-
             Valore dell public key restituito solo se il query param
             showPublicKey == True
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         createdAt:
           type: string
           description: Data censimento public key
           format: date-time
         status:
-          $ref: '#/components/schemas/PublicKeyStatus'
+          $ref: "#/components/schemas/PublicKeyStatus"
         statusHistory:
           type: array
           description: Storico degli stati delle public key
           items:
-            $ref: '#/components/schemas/PublicKeyStatusHistory'
+            $ref: "#/components/schemas/PublicKeyStatusHistory"
     PublicKeysResponse:
       title: Elenco di public keys
       description: Dto contenente la lista delle public keys associate ad una pg.
@@ -6427,7 +6402,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/PublicKeyRow'
+            $ref: "#/components/schemas/PublicKeyRow"
         lastKey:
           type: string
         createdAt:
@@ -6479,7 +6454,7 @@ components:
           description: >-
             Kid della public key caricata da utilizzare nell'header kid del
             token JWT
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         issuer:
           type: string
           description: >-
@@ -6505,7 +6480,7 @@ components:
         - tosAccepted
       properties:
         issuer:
-          $ref: '#/components/schemas/PublicKeysIssuerResponse'
+          $ref: "#/components/schemas/PublicKeysIssuerResponse"
         tosAccepted:
           type: boolean
     UserDto:
@@ -6515,33 +6490,33 @@ components:
           properties:
             displayName:
               type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              x-field-extra-annotation: "@lombok.ToString.Exclude"
               maxLength: 80
               pattern: ^([\x20-\xFF]{1,80})$
             firstName:
               type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              x-field-extra-annotation: "@lombok.ToString.Exclude"
               maxLength: 80
               pattern: ^([\x20-\xFF]{1,80})$
             lastName:
               type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              x-field-extra-annotation: "@lombok.ToString.Exclude"
               maxLength: 80
               pattern: ^([\x20-\xFF]{1,80})$
             companyName:
               type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              x-field-extra-annotation: "@lombok.ToString.Exclude"
               maxLength: 250
               pattern: ^([\x20-\xFF]{1,250})$
             fiscalCode:
               type: string
-              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              x-field-extra-annotation: "@lombok.ToString.Exclude"
               maxLength: 16
               pattern: >-
                 ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
             person:
               type: boolean
-        - type: 'null'
+        - type: "null"
     VirtualKeyStatus:
       description: Stato della virtual key
       type: string
@@ -6569,9 +6544,9 @@ components:
           format: date-time
         user:
           type: object
-          $ref: '#/components/schemas/UserDto'
+          $ref: "#/components/schemas/UserDto"
         status:
-          $ref: '#/components/schemas/VirtualKeyStatus'
+          $ref: "#/components/schemas/VirtualKeyStatus"
     VirtualKeysResponse:
       title: Elenco di virtual keys
       description: Dto contenente la lista delle virtual keys associate ad un utente.
@@ -6582,7 +6557,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/VirtualKey'
+            $ref: "#/components/schemas/VirtualKey"
         lastKey:
           type: string
         lastUpdate:
@@ -6611,11 +6586,11 @@ components:
         id:
           type: string
           description: id della virtual key appena generata
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
         virtualKey:
           type: string
           description: Valore della virtual key appena generata
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
     RequestVirtualKeyStatus:
       title: Richiesta di cambio stato per una virtual key
       description: Richiesta di cambio stato per una virtual key
@@ -6660,7 +6635,7 @@ components:
       description: The list of institutions
       type: array
       items:
-        $ref: '#/components/schemas/BffInstitution'
+        $ref: "#/components/schemas/BffInstitution"
     BffInstitutionProduct:
       type: object
       required:
@@ -6681,7 +6656,7 @@ components:
       description: The list of products
       type: array
       items:
-        $ref: '#/components/schemas/BffInstitutionProduct'
+        $ref: "#/components/schemas/BffInstitutionProduct"
     PaGroupStatus:
       title: Status of group defined in Self Care
       description: Contains the name list of groups defined in SelfCare
@@ -6704,7 +6679,7 @@ components:
       description: Contains the list of groups defined in SelfCare
       type: array
       items:
-        $ref: '#/components/schemas/BffPaGroup'
+        $ref: "#/components/schemas/BffPaGroup"
     BffAdditionalLanguages:
       title: Additional languages
       description: Contains the list of additional languages
@@ -6741,13 +6716,13 @@ components:
         name:
           type: string
         status:
-          $ref: '#/components/schemas/PgGroupStatus'
+          $ref: "#/components/schemas/PgGroupStatus"
     BffPgGroupList:
       title: Groups defined in Self Care PG (Notifiche digitali)
       description: Contains the list of groups defined in SelfCare PG (Notifiche digitali)
       type: array
       items:
-        $ref: '#/components/schemas/BffPgGroup'
+        $ref: "#/components/schemas/BffPgGroup"
     PaNameFilter:
       title: Admitted character for PA denomination field
       type: string
@@ -6770,7 +6745,7 @@ components:
         - name
       properties:
         id:
-          $ref: '#/components/schemas/SelfCarePaId'
+          $ref: "#/components/schemas/SelfCarePaId"
         name:
           type: string
     PaSummariesList:
@@ -6778,7 +6753,7 @@ components:
       description: Contains a list of PA with minimal information
       type: array
       items:
-        $ref: '#/components/schemas/PaSummary'
+        $ref: "#/components/schemas/PaSummary"
     ConsentType:
       type: string
       description: type of consent
@@ -6804,17 +6779,17 @@ components:
           example: 123e4567-e89b-12d3-a456-426614174000
           type: string
         consentType:
-          $ref: '#/components/schemas/ConsentType'
+          $ref: "#/components/schemas/ConsentType"
         accepted:
           type: boolean
         consentVersion:
-          $ref: '#/components/schemas/ConsentVersion'
+          $ref: "#/components/schemas/ConsentVersion"
         isFirstAccept:
           type: boolean
     BffTosPrivacyConsent:
       type: array
       items:
-        $ref: '#/components/schemas/Consent'
+        $ref: "#/components/schemas/Consent"
     ConsentAction:
       type: object
       properties:
@@ -6830,17 +6805,17 @@ components:
         - action
         - type
       allOf:
-        - $ref: '#/components/schemas/ConsentAction'
+        - $ref: "#/components/schemas/ConsentAction"
         - type: object
           properties:
             version:
-              $ref: '#/components/schemas/ConsentVersion'
+              $ref: "#/components/schemas/ConsentVersion"
             type:
-              $ref: '#/components/schemas/ConsentType'
+              $ref: "#/components/schemas/ConsentType"
     BffTosPrivacyBody:
       type: array
       items:
-        $ref: '#/components/schemas/BffTosPrivacyActionBody'
+        $ref: "#/components/schemas/BffTosPrivacyActionBody"
     BffPnStatusResponse:
       type: object
       required:
@@ -6863,7 +6838,7 @@ components:
         - __NOTIFICATION_VISUALIZATION__: la possibilità di visualizzare le
         notifiche e scaricare gli atti. 
 
-        - __NOTIFICATION_WORKFLOW__: l'avanzamento del processo di notifica. 
+        - __NOTIFICATION_WORKFLOW__: l'avanzamento del processo di notifica.
       type: string
       enum:
         - NOTIFICATION_CREATE
@@ -6887,9 +6862,9 @@ components:
         - startDate
       properties:
         functionality:
-          $ref: '#/components/schemas/PnFunctionality'
+          $ref: "#/components/schemas/PnFunctionality"
         status:
-          $ref: '#/components/schemas/PnFunctionalityStatus'
+          $ref: "#/components/schemas/PnFunctionalityStatus"
         startDate:
           title: data inizio disservizio
           type: string
@@ -6923,7 +6898,7 @@ components:
           title: Elenco di disservizi
           type: array
           items:
-            $ref: '#/components/schemas/PnDowntimeEntry'
+            $ref: "#/components/schemas/PnDowntimeEntry"
         nextPage:
           title: prossima pagina di risultati
           description: >-
@@ -6968,9 +6943,9 @@ components:
       type: object
       properties:
         creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         noticeCode:
-          $ref: '#/components/schemas/noticeCode'
+          $ref: "#/components/schemas/noticeCode"
       required:
         - creditorTaxId
         - noticeCode
@@ -6980,7 +6955,7 @@ components:
       type: array
       minItems: 1
       items:
-        $ref: '#/components/schemas/PaymentInfoRequest'
+        $ref: "#/components/schemas/PaymentInfoRequest"
     PaymentStatus:
       title: Payment status
       example: REQUIRED
@@ -7035,15 +7010,15 @@ components:
         - noticeCode
       properties:
         creditorTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          $ref: "#/components/schemas/paTaxId"
         noticeCode:
-          $ref: '#/components/schemas/noticeCode'
+          $ref: "#/components/schemas/noticeCode"
         status:
-          $ref: '#/components/schemas/PaymentStatus'
+          $ref: "#/components/schemas/PaymentStatus"
         detail:
-          $ref: '#/components/schemas/Detail'
+          $ref: "#/components/schemas/Detail"
         detail_v2:
-          $ref: '#/components/schemas/DetailV2'
+          $ref: "#/components/schemas/DetailV2"
         errorCode:
           description: error code to show at the user
           type: string
@@ -7063,7 +7038,7 @@ components:
       type: array
       minItems: 1
       items:
-        $ref: '#/components/schemas/BffPaymentInfoItem'
+        $ref: "#/components/schemas/BffPaymentInfoItem"
     PaymentNotice:
       title: Request for a Payment Notice
       description: Information of a Payment Notice
@@ -7109,7 +7084,7 @@ components:
         - returnUrl
       properties:
         paymentNotice:
-          $ref: '#/components/schemas/PaymentNotice'
+          $ref: "#/components/schemas/PaymentNotice"
         returnUrl:
           description: Checkout base url used to make payment
           example: https://api.uat.platform.pagopa.it/checkout/auth/payments/v2
@@ -7151,7 +7126,7 @@ components:
           type: string
           description: name of the sender
         channelType:
-          $ref: '#/components/schemas/BffChannelType'
+          $ref: "#/components/schemas/BffChannelType"
         value:
           type: string
         codeValid:
@@ -7161,7 +7136,7 @@ components:
     BffUserAddresses:
       type: array
       items:
-        $ref: '#/components/schemas/BffUserAddress'
+        $ref: "#/components/schemas/BffUserAddress"
     BffAddressType:
       type: string
       enum:
@@ -7173,14 +7148,14 @@ components:
       minLength: 5
       maxLength: 5
       pattern: ^\d{5}$
-      example: '12345'
+      example: "12345"
     AddressVerification:
       type: object
       description: richiede value oppure requestId di un indirizzo in corso di validazione
       properties:
         value:
           type: string
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
           maxLength: 254
           pattern: >-
             ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO)|([a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+\??.*))$
@@ -7189,7 +7164,7 @@ components:
           maxLength: 64
           pattern: ^[ -~ ]*$
         verificationCode:
-          $ref: '#/components/schemas/VerificationCode'
+          $ref: "#/components/schemas/VerificationCode"
     AddressVerificationResponse:
       type: object
       required:
@@ -7223,7 +7198,7 @@ components:
               type: string
               maxLength: 50
               pattern: ^[ -~ ]*$
-        - type: 'null'
+        - type: "null"
     GroupDto:
       type: object
       properties:
@@ -7243,21 +7218,21 @@ components:
         - dateto
       properties:
         delegate:
-          $ref: '#/components/schemas/UserDto'
+          $ref: "#/components/schemas/UserDto"
         visibilityIds:
           description: Available always, not required on mandate creation.
           oneOf:
             - type: array
               items:
-                $ref: '#/components/schemas/OrganizationIdDto'
-            - type: 'null'
+                $ref: "#/components/schemas/OrganizationIdDto"
+            - type: "null"
         verificationCode:
           description: Available only for request where requesting user is the delegator
           oneOf:
             - type: string
               maxLength: 5
               pattern: ^[0-9]*$
-            - type: 'null'
+            - type: "null"
         dateto:
           type: string
           description: ISO 8601 format
@@ -7266,7 +7241,7 @@ components:
         groups:
           type: array
           items:
-            $ref: '#/components/schemas/GroupDto'
+            $ref: "#/components/schemas/GroupDto"
     AcceptRequestDto:
       type: object
       properties:
@@ -7300,11 +7275,11 @@ components:
               maxLength: 36
               pattern: >-
                 ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
-            - type: 'null'
+            - type: "null"
         delegator:
-          $ref: '#/components/schemas/UserDto'
+          $ref: "#/components/schemas/UserDto"
         delegate:
-          $ref: '#/components/schemas/UserDto'
+          $ref: "#/components/schemas/UserDto"
         status:
           description: Available always, not required on mandate creation.
           oneOf:
@@ -7315,21 +7290,21 @@ components:
                 - revoked
                 - rejected
                 - expired
-            - type: 'null'
+            - type: "null"
         visibilityIds:
           description: Available always, not required on mandate creation.
           oneOf:
             - type: array
               items:
-                $ref: '#/components/schemas/OrganizationIdDto'
-            - type: 'null'
+                $ref: "#/components/schemas/OrganizationIdDto"
+            - type: "null"
         verificationCode:
           description: Available only for request where requesting user is the delegator
           oneOf:
             - type: string
               maxLength: 5
               pattern: ^[0-9]*$
-            - type: 'null'
+            - type: "null"
         datefrom:
           type: string
           description: ISO 8601 format
@@ -7343,7 +7318,7 @@ components:
         groups:
           type: array
           items:
-            $ref: '#/components/schemas/GroupDto'
+            $ref: "#/components/schemas/GroupDto"
     SearchMandateRequestDto:
       type: object
       properties:
@@ -7371,7 +7346,7 @@ components:
         resultsPage:
           type: array
           items:
-            $ref: '#/components/schemas/MandateDto'
+            $ref: "#/components/schemas/MandateDto"
         moreResult:
           description: Indica se sono presenti ulteriori pagine di risultati
           type: boolean
@@ -7393,7 +7368,7 @@ components:
           description: YYYY-MM-DD invio delle notifiche
           type: string
           format: date
-          example: '2023-12-06'
+          example: "2023-12-06"
         notification_request_status:
           description: |-
             Stato richiesta notifica:
@@ -7488,7 +7463,7 @@ components:
           description: YYYY-MM-DD invio delle notifiche
           type: string
           format: date
-          example: '2023-12-06'
+          example: "2023-12-06"
         error_type:
           description: |-
             Tipo di errore:
@@ -7513,32 +7488,32 @@ components:
           description: Unique identifier for the sender
         genTimestamp:
           description: Index generation date and time referred to UTC
-          example: '2022-07-27T12:22:33.444Z'
+          example: "2022-07-27T12:22:33.444Z"
           type: string
           format: date-time
         lastDate:
           description: YYYY-MM-DD last date on DL files
           type: string
           format: date
-          example: '2023-12-06'
+          example: "2023-12-06"
         startDate:
           description: YYYY-MM-DD start date
           type: string
           format: date
-          example: '2023-12-06'
+          example: "2023-12-06"
         endDate:
           description: YYYY-MM-DD end date (included)
           type: string
           format: date
-          example: '2023-12-06'
+          example: "2023-12-06"
         notificationsOverview:
           type: array
           items:
-            $ref: '#/components/schemas/BffSenderDashboardNotificationOverview'
+            $ref: "#/components/schemas/BffSenderDashboardNotificationOverview"
         digitalNotificationFocus:
           type: array
           items:
-            $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
+            $ref: "#/components/schemas/BffSenderDashboardDigitalNotificationFocus"
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -7594,13 +7569,13 @@ tags:
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
   DEFAULT_4XX:
     responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
   BAD_REQUEST_PARAMETERS:
     responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":
@@ -7608,7 +7583,7 @@ x-amazon-apigateway-gateway-responses:
         "detail": "Validation errors: $context.error.validationErrorString" } ]}
   BAD_REQUEST_BODY:
     responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":

@@ -543,14 +543,14 @@ public class NotificationDetailRecipientMock {
         return timeline;
     }
 
-    public FullReceivedNotificationV23 getNotificationMultiRecipientMock() {
-        FullReceivedNotificationV23 bffFullNotificationV1Mock = new FullReceivedNotificationV23();
+    public FullReceivedNotificationV24 getNotificationMultiRecipientMock() {
+        FullReceivedNotificationV24 bffFullNotificationV1Mock = new FullReceivedNotificationV24();
 
         bffFullNotificationV1Mock.setAbstract("Abstract della notifica");
         bffFullNotificationV1Mock.setPaProtocolNumber("302011692956029071");
         bffFullNotificationV1Mock.setSubject("notifica analogica con cucumber");
         bffFullNotificationV1Mock.setNotificationFeePolicy(NotificationFeePolicy.FLAT_RATE);
-        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullReceivedNotificationV23.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullReceivedNotificationV24.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         bffFullNotificationV1Mock.setSenderDenomination("Comune di palermo");
         bffFullNotificationV1Mock.senderTaxId("80016350821");
         bffFullNotificationV1Mock.setGroup("000");
