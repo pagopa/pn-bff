@@ -57,7 +57,7 @@ components:
           description: The URL of the product
     
     BffPaGroupStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/ca9524208a0b6889d62e25b1cade35abfe0f74f7/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/5884e9696deb38dd3dbebe2f68324868ec743119/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
     
     BffPaGroupList:
       title: Groups defined in Self Care
@@ -75,3 +75,17 @@ components:
           type: string
         name:
           type: string
+
+    BffAdditionalLanguages:
+      title: Additional languages
+      description: Contains the list of additional languages
+      type: object
+      required:
+        - additionalLanguages
+      properties:
+        additionalLanguages:
+          description: Array of an element containing the additional language
+          type: array
+          items:
+            type: string
+          example: [ 'DE' ]
