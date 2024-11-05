@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.*;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.LanguageMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -24,6 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -187,4 +189,38 @@ class InfoPaControllerTest {
                 .expectStatus().isNotFound();
     }
 
+    @Test
+    void getAdditionalLanguages() {
+        BffAdditionalLanguages response = LanguageMapper.modelMapper.toBffAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock());
+        Mockito.when(infoPaService.getAdditionalLanguages(Mockito.anyString())).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.ADDITIONAL_LANGUAGES_PATH).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffAdditionalLanguages.class)
+                .isEqualTo(response);
+
+        Mockito.verify(infoPaService).getAdditionalLanguages(UserMock.PN_CX_ID);
+    }
+
+    @Test
+    void getAdditionalLanguagesError() {
+        Mockito.when(infoPaService.getAdditionalLanguages(Mockito.anyString()))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path(PnBffRestConstants.ADDITIONAL_LANGUAGES_PATH).build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(infoPaService).getAdditionalLanguages(UserMock.PN_CX_ID);
+    }
 }

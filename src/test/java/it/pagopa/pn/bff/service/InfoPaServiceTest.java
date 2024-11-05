@@ -5,11 +5,13 @@ import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffAdditionalLanguages;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitution;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffInstitutionProduct;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffPaGroup;
 import it.pagopa.pn.bff.mappers.infopa.GroupsMapper;
 import it.pagopa.pn.bff.mappers.infopa.InstitutionMapper;
+import it.pagopa.pn.bff.mappers.infopa.LanguageMapper;
 import it.pagopa.pn.bff.mappers.infopa.ProductMapper;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -26,6 +28,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
@@ -167,6 +170,32 @@ class InfoPaServiceTest {
                 UserMock.PN_CX_GROUPS,
                 null
         );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void getAdditionalLanguages() {
+        when(pnExternalRegistriesClient.getAdditionalLanguage(
+                Mockito.anyString()
+        )).thenReturn(Mono.just(paInfoMock.getAdditionalLanguagesMock()));
+
+        Mono<BffAdditionalLanguages> result = infoPaService.getAdditionalLanguages(UserMock.PN_CX_ID);
+
+        StepVerifier.create(result)
+                .expectNext(LanguageMapper.modelMapper.toBffAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getAdditionalLanguagesError() {
+        when(pnExternalRegistriesClient.getAdditionalLanguage(
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffAdditionalLanguages> result = infoPaService.getAdditionalLanguages(UserMock.PN_CX_ID);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)

@@ -83,15 +83,6 @@ components:
         pattern: ^(?:safestorage:\/\/)?[A-Za-z0-9._-]+$
         maxLength: 1024
 
-    BffQueryDocumentCategory:
-      description: >-
-        Tipi di atti opponibili a terzi che Piattaforma Notifiche mette a disposizione dei suoi utenti.
-      name: documentCategory
-      in: query
-      required: false
-      schema:
-        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/f5713da534974627738a4917c6724925f4c22fee/docs/openapi/schemas-pn-legal-facts.yaml#/components/schemas/LegalFactCategory'
-
     ############################################################################################
     ###                     PARAMETRI DOWLOAD PAGAMENTI NOTIFICA                             ###
     ############################################################################################
