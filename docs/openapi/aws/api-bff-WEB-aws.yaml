@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Oo10Apjau90IWjZKhMN7drLLMhxgGVin2XkuPxHZozg=
+  version: GTE9n8XIW6270RWg/Xt7TvPDC1t+udLVxkDfsWoq6Ns=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4187,7 +4187,6 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           description: Campo "presso" dell'indirizzo
           pattern: ^.*$
-          maxLength: 256
         address:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
@@ -4579,7 +4578,7 @@ components:
         <br/> Esempio vat al 22% -> 22 <br/>
       minimum: 0
       maximum: 100
-    NewNotificationRequestV23:
+    NewNotificationRequestV24:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
       required:
@@ -4684,10 +4683,25 @@ components:
             - NONE
             - SYNC
             - ASYNC
-    SentNotificationV23:
+        additionalLanguages:
+          description: >-
+            In questo campo è possibile definire la lingua addizionale (oltre a
+            quella italiana) da utilizzare per la generazione documenti, atti
+            opponibili a terzi ecc.<br/> Le lingue accettate e dunque i valori
+            possibili degli item dell'array sono: <br/> - DE <br/> - SI <br/> -
+            FR <br/> DE (tedesco), SI (sloveno), FR (francese) Attualmente è
+            possibile indicare un solo item e dunque una sola lingua aggiuntiva.
+            Se non vengono indicate lingue aggiuntive la lingua utilizzata per
+            generare <br/> documenti, atti opponibili a terzi ecc. sarà quella
+            italiana.
+          type: array
+          items:
+            type: string
+            maxItems: 1
+    SentNotificationV24:
       description: Le informazioni riguardanti una richiesta di notifica accettata
       allOf:
-        - $ref: '#/components/schemas/NewNotificationRequestV23'
+        - $ref: '#/components/schemas/NewNotificationRequestV24'
         - type: object
           required:
             - iun
@@ -6032,7 +6046,7 @@ components:
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: '#/components/schemas/SentNotificationV23'
+        - $ref: '#/components/schemas/SentNotificationV24'
         - type: object
           required:
             - notificationStatusHistory
