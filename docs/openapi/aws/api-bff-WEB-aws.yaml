@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: mgX3w3F8ygD56kNQJ7BPg1HB/cqpp9yEZZ2j/vV6rEA=
+  version: FyUB+RfN9qO7iRVjEPui8MntxW7Kpq/JLfCqH3N2yBs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2129,6 +2129,64 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/groups
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/pa/additional-lang:
+    get:
+      description: Retrieve the additional language info chosen by pa
+      operationId: getAdditionalLang
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoPa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdditionalLanguages'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-lang
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/pa/additional-lang API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-lang
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -6596,6 +6654,30 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffPaGroup'
+    PaId:
+      title: The PA id used by self care
+      description: An unique ID that identify a Public Administration
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: ^[ -~ ]*$
+    AdditionalLanguages:
+      title: Request Body for getLang
+      description: Retrieve the additional language info
+      type: object
+      properties:
+        paId:
+          $ref: '#/components/schemas/PaId'
+        additionalLanguages:
+          description: Array of an element containing the additional language
+          type: array
+          items:
+            type: string
+          example:
+            - DE
+      required:
+        - paId
+        - additionalLanguages
     PgGroupStatus:
       title: Status of group defined in Self Care PG (Notifiche digitali)
       description: >-

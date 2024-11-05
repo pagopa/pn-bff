@@ -121,3 +121,31 @@ paths:
             application/problem+json:
               schema:
                 $ref: 'common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/pa/additional-lang':
+    get:
+      description: Retrieve the additional language info chosen by pa
+      operationId: getAdditionalLang
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffAdditionalLanguages'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'

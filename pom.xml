@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <artifactId>pn-bff</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0-SNAPSHOT</version>
     <name>pn-bff</name>
     <description>Backend for frontend della piattaforma SEND</description>
     <scm>
@@ -904,6 +904,44 @@
                                 </apiPackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-EXTERNAL-REGISTRIES PRIVATE-->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-external-registries-private</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-external-registries/15e6dd9a3c7bd8e6ea04aac23d7f508804f71f26/docs/openapi/api-private-v1.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-private.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.external-registries-private.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

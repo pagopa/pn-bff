@@ -75,3 +75,17 @@ components:
           type: string
         name:
           type: string
+
+    BffAdditionalLanguages:
+      title: Additional languages
+      description: Contains the list of additional languages
+      type: object
+      required:
+        - additionalLanguages
+      properties:
+        additionalLanguages:
+          description: Array of an element containing the additional language
+          type: array
+          items:
+            type: string
+          example: [ 'DE' ]
