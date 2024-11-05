@@ -71,7 +71,7 @@ public class PnDeliveryClientRecipientImpl {
                                                                      List<String> xPagopaPnCxGroups, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
 
-        return recipientReadApi.getReceivedNotificationV23(
+        return recipientReadApi.getReceivedNotificationV24(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
