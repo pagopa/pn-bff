@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: KIXrlV2HHcEGBAJlNIo0UOj+9imZqhNnowzpFvGBK3E=
+  version: Oo10Apjau90IWjZKhMN7drLLMhxgGVin2XkuPxHZozg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4520,6 +4520,16 @@ components:
             nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
             PIATTAFORMA NOTIFICHE
             DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+        additionalLanguages:
+          type: array
+          description: >-
+            In questo campo è possibile definire la lingua addizionale (oltre a
+            quella italiana) da utilizzare per la generazione documenti, atti
+            opponibili a terzi ecc. Attualmente è possibile indicare un solo
+            item e dunque una sola lingua aggiuntiva.
+          items:
+            type: string
+            maxItems: 1
     NewNotificationResponse:
       title: Identificativi della richiesta di notifica
       description: >-
