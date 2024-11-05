@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: FyUB+RfN9qO7iRVjEPui8MntxW7Kpq/JLfCqH3N2yBs=
+  version: nYzR3oBwHd+tToj2F7+2xhqWH6tsP/LaWEQWpO2bNmw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2134,9 +2134,9 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
-  /v1/pa/additional-lang:
+  /v1/pa/additional-languages:
     get:
-      description: Retrieve the additional language info chosen by pa
+      description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
@@ -2163,7 +2163,58 @@ paths:
                 $ref: "#/components/schemas/Problem"
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-lang
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-languages
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-src-ch: "'WEB'"
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    put:
+      description: Update the additional language chosen by pa
+      operationId: changeAdditionalLang
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      tags:
+        - InfoPa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BffAdditionalLanguages"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BffAdditionalLanguages"
+        "400":
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-languages
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -2181,10 +2232,10 @@ paths:
         type: http_proxy
       parameters: []
     options:
-      operationId: Options for /v1/pa/additional-lang API CORS
+      operationId: Options for /v1/pa/additional-languages API CORS
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-lang
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pa/additional-languages
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -6629,20 +6680,13 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/BffPaGroup"
-    PaId:
-      title: The PA id used by self care
-      description: An unique ID that identify a Public Administration
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[ -~ ]*$
-    AdditionalLanguages:
-      title: Request Body for getLang
-      description: Retrieve the additional language info
+    BffAdditionalLanguages:
+      title: Additional languages
+      description: Contains the list of additional languages
       type: object
+      required:
+        - additionalLanguages
       properties:
-        paId:
-          $ref: "#/components/schemas/PaId"
         additionalLanguages:
           description: Array of an element containing the additional language
           type: array
@@ -6650,9 +6694,6 @@ components:
             type: string
           example:
             - DE
-      required:
-        - paId
-        - additionalLanguages
     PgGroupStatus:
       title: Status of group defined in Self Care PG (Notifiche digitali)
       description: >-

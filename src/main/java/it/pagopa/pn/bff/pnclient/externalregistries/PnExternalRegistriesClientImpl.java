@@ -96,4 +96,9 @@ public class PnExternalRegistriesClientImpl {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getAdditionalLang");
         return additionalLangApi.getAdditionalLang(paId);
     }
+
+    public Mono<AdditionalLanguages> changeAdditionalLanguages(AdditionalLanguages additionalLanguages) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "putAdditionalLang");
+        return additionalLangApi.putAdditionalLang(additionalLanguages);
+    }
 }

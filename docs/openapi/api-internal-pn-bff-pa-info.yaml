@@ -69,7 +69,7 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InfoPa
+        - InfoPa
       parameters: # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'        # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxTypeAuthFleet'     # NO EXTERNAL
@@ -145,6 +145,40 @@ paths:
         - InfoPa
       parameters: # NO EXTERNAL
         - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'                         # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffAdditionalLanguages'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+    put:
+      description: Update the additional language chosen by pa
+      operationId: changeAdditionalLang
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+      parameters: # NO EXTERNAL
+        - $ref: 'common-refs.yaml#/components/parameters/cxIdAuthFleet'                         # NO EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffAdditionalLanguages'
+        required: true
       responses:
         '200':
           description: OK
