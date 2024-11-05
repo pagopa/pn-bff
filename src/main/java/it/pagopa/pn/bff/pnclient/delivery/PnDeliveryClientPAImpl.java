@@ -48,12 +48,12 @@ public class PnDeliveryClientPAImpl {
         );
     }
 
-    public Mono<FullSentNotificationV24> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullSentNotificationV25> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun,
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV24");
 
-        return senderReadB2BApi.getSentNotificationV24(
+        return senderReadB2BApi.getSentNotificationV25(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -96,16 +96,16 @@ public class PnDeliveryClientPAImpl {
     }
 
     public Mono<NewNotificationResponse> newSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                             String xPagopaPnCxId, NewNotificationRequestV23 newNotificationRequestV23,
+                                                             String xPagopaPnCxId, NewNotificationRequestV24 newNotificationRequestV24,
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV23");
 
-        return newNotificationApi.sendNewNotificationV23(
+        return newNotificationApi.sendNewNotificationV24(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 "WEB",
-                newNotificationRequestV23,
+                newNotificationRequestV24,
                 xPagopaPnCxGroups,
                 null,
                 null
