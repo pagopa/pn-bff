@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.config.PnBffConfigs;
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.model.AdditionalLanguages;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.BffAdditionalLanguages;
@@ -202,4 +203,35 @@ class InfoPaServiceTest {
                 .verify();
     }
 
+    @Test
+    void changeAdditionalLanguages() {
+        when(pnExternalRegistriesClient.changeAdditionalLanguages(
+                Mockito.any(AdditionalLanguages.class)
+        )).thenReturn(Mono.just(paInfoMock.getAdditionalLanguagesMock()));
+
+        Mono<BffAdditionalLanguages> result = infoPaService.changeAdditionalLanguages(
+                UserMock.PN_CX_ID,
+                Mono.just(new BffAdditionalLanguages().additionalLanguages(List.of("en")))
+        );
+
+        StepVerifier.create(result)
+                .expectNext(LanguageMapper.modelMapper.toBffAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        when(pnExternalRegistriesClient.changeAdditionalLanguages(
+                Mockito.any(AdditionalLanguages.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffAdditionalLanguages> result = infoPaService.changeAdditionalLanguages(
+                UserMock.PN_CX_ID,
+                Mono.just(new BffAdditionalLanguages().additionalLanguages(List.of("en")))
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
 }

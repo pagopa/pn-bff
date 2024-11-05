@@ -64,7 +64,7 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InfoPa
+        - InfoPa
       responses:
         '200':
           description: OK
@@ -130,6 +130,38 @@ paths:
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
         - InfoPa
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffAdditionalLanguages'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+    put:
+      description: Update the additional language chosen by pa
+      operationId: changeAdditionalLang
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - InfoPa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './info-pa-schemas/info-pa.yaml#/components/schemas/BffAdditionalLanguages'
+        required: true
       responses:
         '200':
           description: OK

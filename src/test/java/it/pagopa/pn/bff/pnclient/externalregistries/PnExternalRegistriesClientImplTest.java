@@ -287,4 +287,24 @@ class PnExternalRegistriesClientImplTest {
         StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage("mock-pa-id"))
                 .expectError(WebClientResponseException.class).verify();
     }
+
+    @Test
+    void changeAdditionalLanguages() {
+        when(additionalLangApi.putAdditionalLang(
+                Mockito.any()
+        )).thenReturn(Mono.just(paInfoMock.getAdditionalLanguagesMock()));
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        when(additionalLangApi.putAdditionalLang(
+                Mockito.any()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectError(WebClientResponseException.class).verify();
+    }
 }

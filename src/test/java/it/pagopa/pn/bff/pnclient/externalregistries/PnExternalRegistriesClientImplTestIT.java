@@ -306,4 +306,29 @@ class PnExternalRegistriesClientImplTestIT {
         StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage(paId)).expectError().verify();
     }
 
+    @Test
+    void changeAdditionalLanguages() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(paInfoMock.getAdditionalLanguagesMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient
+                        .changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectError()
+                .verify();
+    }
+
 }
