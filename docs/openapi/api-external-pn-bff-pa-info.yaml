@@ -64,7 +64,7 @@ paths:
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
-      - InfoPa
+        - InfoPa
       responses:
         '200':
           description: OK
