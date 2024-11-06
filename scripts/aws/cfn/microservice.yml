@@ -192,6 +192,19 @@ Parameters:
     AllowedValues:
       - true
       - false
+  
+  BffMaxRequestPerThrottlingPeriod:
+    Type: Number
+    MinValue: 100 #to set to 25 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160  
+    MaxValue: 2000000000
+    Description: |
+      Number of request allowed in a duration of ThrottlingPeriodSeconds for each aggregation key
+      provided in the header x-pagopa-pn-custom-throttling-value 
+  
+  BffThrottlingPeriodSeconds:
+    Type: Number
+    AllowedValues: [60, 120, 300, 600]
+    Description: Throttling period duration
 
   # SelfCare parameters
   SelfCareBaseURL:
@@ -503,8 +516,8 @@ Resources:
         ApplicationLoadBalancerArn: !Ref ApplicationLoadBalancerArn
         ThrottledPathsRegexp: '(/bff/v1/addresses/.*)'
         ThrottlingGroupString: 'recapiti-by-cx-id'
-        MaxRequestPerThrottlingPeriod: 100 # to set to 25 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160  
-        ThrottlingPeriodSeconds: 600 # to set to 300 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160        
+        MaxRequestPerThrottlingPeriod: !Ref BffMaxRequestPerThrottlingPeriod #to set to 25 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160  
+        ThrottlingPeriodSeconds: !Ref BffThrottlingPeriodSeconds #to set to 300 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160        
 
   # DataIndexer Lambda
   SenderDashboardDataIndexer:
