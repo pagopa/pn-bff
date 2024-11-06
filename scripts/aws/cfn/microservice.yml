@@ -503,8 +503,8 @@ Resources:
         ApplicationLoadBalancerArn: !Ref ApplicationLoadBalancerArn
         ThrottledPathsRegexp: '(/bff/v1/addresses/.*)'
         ThrottlingGroupString: 'recapiti-by-cx-id'
-        MaxRequestPerThrottlingPeriod: 100
-        ThrottlingPeriodSeconds: 300         
+        MaxRequestPerThrottlingPeriod: 100 # to set to 25 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160  
+        ThrottlingPeriodSeconds: 600 # to set to 300 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160        
 
   # DataIndexer Lambda
   SenderDashboardDataIndexer:
