@@ -246,7 +246,7 @@ class RepositoryHelper {
            const {data: pullRequests} = await this.#octokit.rest.pulls.list({
              owner: github.context.repo.owner,
              repo: github.context.repo.repo,
-             head: branchName,
+             head: `${github.context.repo.owner}:${branchName}`,
              base: baseBranchName,
              per_page: 1
            });

@@ -5,6 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.api.AdditionalLangApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.model.AdditionalLanguages;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
@@ -26,6 +28,7 @@ public class PnExternalRegistriesClientImpl {
     private final InfoPaApi infoPaApi;
     private final InfoPgApi infoPgApi;
     private final PaymentInfoApi paymentInfoApi;
+    private final AdditionalLangApi additionalLangApi;
 
     public Flux<PaGroup> getPaGroups(String xPagopaPnUid,
                                      String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
@@ -89,5 +92,13 @@ public class PnExternalRegistriesClientImpl {
                 .checkoutCart(paymentRequest);
     }
 
+    public Mono<AdditionalLanguages> getAdditionalLanguage(String paId) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getAdditionalLang");
+        return additionalLangApi.getAdditionalLang(paId);
+    }
 
+    public Mono<AdditionalLanguages> changeAdditionalLanguages(AdditionalLanguages additionalLanguages) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "putAdditionalLang");
+        return additionalLangApi.putAdditionalLang(additionalLanguages);
+    }
 }

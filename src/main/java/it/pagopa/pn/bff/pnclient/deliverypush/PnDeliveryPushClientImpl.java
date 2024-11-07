@@ -47,18 +47,16 @@ public class PnDeliveryPushClientImpl {
                                                                 CxTypeAuthFleet xPagopaPnCxType,
                                                                 String xPagopaPnCxId,
                                                                 String iun,
-                                                                LegalFactCategory legalFactType,
                                                                 String legalFactId,
                                                                 List<String> xPagopaPnCxGroups,
                                                                 UUID mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY_PUSH, "getLegalFact");
 
-        return legalFactsApi.getLegalFact(
+        return legalFactsApi.getLegalFactById(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 iun,
-                legalFactType,
                 legalFactId,
                 xPagopaPnCxGroups,
                 mandateId

@@ -66,12 +66,12 @@ public class PnDeliveryClientRecipientImpl {
         );
     }
 
-    public Mono<FullReceivedNotificationV23> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullReceivedNotificationV24> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                      String xPagopaPnCxId, String iun,
                                                                      List<String> xPagopaPnCxGroups, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
 
-        return recipientReadApi.getReceivedNotificationV23(
+        return recipientReadApi.getReceivedNotificationV24(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -118,7 +118,7 @@ public class PnDeliveryClientRecipientImpl {
     public Mono<ResponseCheckAarMandateDto> checkAarQrCode(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                            String xPagopaPnCxId,
                                                            RequestCheckAarMandateDto requestCheckAarMandateDto,
-                                                           List<String> xPagopaPnCxGroups){
+                                                           List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "checkAarQrCode");
 
         return recipientReadApi.checkAarQrCode(

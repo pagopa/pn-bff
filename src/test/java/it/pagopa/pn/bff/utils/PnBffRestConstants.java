@@ -44,6 +44,7 @@ public class PnBffRestConstants {
     public static final String TOS_PG_PRIVACY_PATH = BFF_PATH + VERSION_1 + PG + "/tos-privacy";
     private static final String VERSION_2 = "/v2";
     public static final String TOS_PRIVACY_PATH = BFF_PATH + VERSION_2 + "/tos-privacy";
+    public static final String ADDITIONAL_LANGUAGES_PATH = BFF_PATH + VERSION_1 + "/pa/additional-languages";
 
     private PnBffRestConstants() {
     }
