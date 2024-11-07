@@ -19,7 +19,7 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <pagopa.codegen.version>v01.03.03</pagopa.codegen.version>
+        <pagopa.codegen.version>v01.10.00</pagopa.codegen.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
     </properties>
