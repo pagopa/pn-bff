@@ -2,6 +2,7 @@
 
 const DL_BUCKET_REGION_DEFAULT = 'eu-central-1';
 const PN_BUCKET_REGION_DEFAULT = 'eu-south-1';
+const N_ROWS_TO_LOG = '5';
 
 /**
  * Retrieves the value of an environment variable.
@@ -41,6 +42,11 @@ const getPnIndexObjectKey = () => getEnvironmentVariable('PN_INDEX_OBJECT_KEY');
 
 const getAlarmNDays = () => getEnvironmentVariable('ALARM_N_DAYS');
 
+const getMinBytesDataLakeFile = () =>
+  getEnvironmentVariable('MIN_BYTES_DATA_LAKE_FILE');
+
+const getRowsToLog = () => getEnvironmentVariable('ROWS_TO_LOG', N_ROWS_TO_LOG);
+
 module.exports = {
   getDlBucketName,
   getDlBucketRegion,
@@ -51,4 +57,6 @@ module.exports = {
   getPnBucketRegion,
   getPnIndexObjectKey,
   getAlarmNDays,
+  getMinBytesDataLakeFile,
+  getRowsToLog,
 };
