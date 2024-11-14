@@ -21,6 +21,6 @@
     "DataIndexerLambdaAlarmNDays": "5",
     "PnBffRetryMaxAttempts": "0",
     "DataIndexerMinBytesDataLakeFile": "1000000",
-    "DataIndexerRowsToLog": "5"
+    "DataIndexerRowsToLog": "10"
   }
 }

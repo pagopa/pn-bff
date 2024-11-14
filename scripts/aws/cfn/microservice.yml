@@ -246,12 +246,12 @@ Parameters:
 
   DataIndexerMinBytesDataLakeFile:
     Type: Number
-    Default: 0
+    Default: 1000000
     Description: Minimum bytes of the data lake files.
 
   DataIndexerRowsToLog:
     Type: Number
-    Default: 5
+    Default: 10
     Description: Number of rows to log in the data lake files.
 
   BffBucketArn:
