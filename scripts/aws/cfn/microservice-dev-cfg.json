@@ -21,6 +21,9 @@
     "DataIndexerLambdaAlarmNDays": "5",
     "PnBffRetryMaxAttempts": "0",
     "DataIndexerMinBytesDataLakeFile": "1000000",
-    "DataIndexerRowsToLog": "10"
+    "DataIndexerRowsToLog": "10",
+    "EnhancedWebSecurityEnabled": "true",
+    "BffMaxRequestPerThrottlingPeriod": "100",
+    "BffThrottlingPeriodSeconds": "600"
   }
 }
