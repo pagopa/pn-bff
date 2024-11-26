@@ -262,6 +262,16 @@ Parameters:
     Default: 5
     Description: Number of days to trigger the alarm.
 
+  DataIndexerMinBytesDataLakeFile:
+    Type: Number
+    Default: 1000000
+    Description: Minimum bytes of the data lake files.
+
+  DataIndexerRowsToLog:
+    Type: Number
+    Default: 10
+    Description: Number of rows to log in the data lake files.
+
   BffBucketArn:
     Type: String
     Description: PN bff bucket ARN.
@@ -545,6 +555,8 @@ Resources:
           PN_BUCKET_REGION: !Ref BffBucketRegion
           PN_INDEX_OBJECT_KEY: !Ref PnIndexObjectKey
           ALARM_N_DAYS: !Ref DataIndexerLambdaAlarmNDays
+          MIN_BYTES_DATA_LAKE_FILE: !Ref DataIndexerMinBytesDataLakeFile
+          ROWS_TO_LOG: !Ref DataIndexerRowsToLog
 
   SenderDashboardDataIndexerLambdaAlarms:
     Type: AWS::CloudFormation::Stack

@@ -6,13 +6,12 @@
 const checkLastDataDate = (index, alarmNDays) => {
   const referenceDate = new Date();
   const lastDate = new Date(index.lastDate);
-  const nAlarmDays = parseInt(alarmNDays, 10);
 
-  referenceDate.setDate(referenceDate.getDate() - nAlarmDays);
+  referenceDate.setDate(referenceDate.getDate() - alarmNDays);
 
   if (lastDate < referenceDate) {
     console.error(
-      `No data in the last ${nAlarmDays} days. Last data date: ${index.lastDate}`
+      `No data in the last ${alarmNDays} days. Last data date: ${index.lastDate}`
     );
   }
 };

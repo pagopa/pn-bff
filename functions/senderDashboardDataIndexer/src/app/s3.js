@@ -3,6 +3,7 @@ const {
   PutObjectCommand,
   HeadObjectCommand,
 } = require('@aws-sdk/client-s3');
+const { getRowsToLog } = require('./config.js');
 
 /**
  * Retrieves the metadata for an object in an S3 bucket using the HEAD operation.
@@ -55,6 +56,7 @@ const streamLines = async (
   lineCallback,
   versionId
 ) => {
+  const rowsToLog = getRowsToLog();
   const params = {
     Bucket: bucketName,
     Key: objectKey,
@@ -75,6 +77,7 @@ const streamLines = async (
 
   return await new Promise((resolve, reject) => {
     let numLines = 0;
+    let firstNRows = [];
 
     stream.on('data', (chunk) => {
       const chunkAsString = remainder + chunk.toString();
@@ -84,12 +87,16 @@ const streamLines = async (
       lines.forEach((line) => {
         endByte += line.length + 1; // Adds 1 for the newline character
         lineCallback(line, startByte, endByte);
+        if (numLines < rowsToLog) {
+          firstNRows.push(line);
+        }
         numLines++;
         startByte = endByte + 1;
       });
     });
 
     stream.on('end', () => {
+      console.log(`First ${rowsToLog} rows: ${firstNRows.join('\n')}`);
       /* istanbul ignore next */
       if (remainder) {
         endByte = startByte + remainder.length - 1;
