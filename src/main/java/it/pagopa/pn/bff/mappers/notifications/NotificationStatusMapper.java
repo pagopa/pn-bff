@@ -5,14 +5,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the bff NotificationStatus
- * to the delivery NotificationStatus
+ * Mapstruct mapper interface, used to map the bff NotificationStatusV26
+ * to the delivery NotificationStatusV26
  */
 @Mapper
 public interface NotificationStatusMapper {
     NotificationStatusMapper notificationStatusMapper = Mappers.getMapper(NotificationStatusMapper.class);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus convertDeliveryWebPANotificationStatus(NotificationStatus notificationStatus);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26 convertDeliveryWebPANotificationStatus(NotificationStatus notificationStatus);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus convertDeliveryRecipientNotificationStatus(NotificationStatus notificationStatus);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26 convertDeliveryRecipientNotificationStatus(NotificationStatus notificationStatus);
 }
