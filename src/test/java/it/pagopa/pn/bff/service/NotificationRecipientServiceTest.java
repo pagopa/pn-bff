@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
@@ -59,7 +59,7 @@ class NotificationRecipientServiceTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyString(),
@@ -98,7 +98,7 @@ class NotificationRecipientServiceTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyString(),
@@ -139,7 +139,7 @@ class NotificationRecipientServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyInt(),
@@ -178,7 +178,7 @@ class NotificationRecipientServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyInt(),

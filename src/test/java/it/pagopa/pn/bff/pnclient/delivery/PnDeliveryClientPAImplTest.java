@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderRea
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +50,7 @@ class PnDeliveryClientPAImplTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -65,7 +65,7 @@ class PnDeliveryClientPAImplTest {
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
@@ -83,7 +83,7 @@ class PnDeliveryClientPAImplTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -98,7 +98,7 @@ class PnDeliveryClientPAImplTest {
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
@@ -108,7 +108,7 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void getSentNotificationV24() throws RestClientException {
-        when(senderReadB2BApi.getSentNotificationV25(
+        when(senderReadB2BApi.getSentNotificationV26(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -127,7 +127,7 @@ class PnDeliveryClientPAImplTest {
 
     @Test
     void getSentNotificationV24Error() {
-        when(senderReadB2BApi.getSentNotificationV25(
+        when(senderReadB2BApi.getSentNotificationV26(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),

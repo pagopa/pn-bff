@@ -59,7 +59,7 @@ public class NotificationsPAService {
                                                                   List<String> xPagopaPnCxGroups,
                                                                   String iun,
                                                                   String senderId,
-                                                                  NotificationStatus status,
+                                                                  NotificationStatusV26 status,
                                                                   String subjectRegExp,
                                                                   OffsetDateTime startDate,
                                                                   OffsetDateTime endDate,

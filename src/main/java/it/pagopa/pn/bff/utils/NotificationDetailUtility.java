@@ -107,7 +107,9 @@ public class NotificationDetailUtility {
                     BffTimelineCategory.SEND_ANALOG_FEEDBACK,
                     BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
                     // PN-7743
-                    BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE
+                    BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
+                    // PN-13346
+                    BffTimelineCategory.ANALOG_WORKFLOW_RECIPIENT_DECEASED
             );
 
     /**

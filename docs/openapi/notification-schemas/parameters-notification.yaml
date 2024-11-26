@@ -27,7 +27,7 @@ components:
       required: false
       description: stato della notifica
       schema:
-        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/a164e17d9c8d020d07b423f48a4d6b017b84e2be/docs/openapi/remote-refs.yaml#/components/schemas/NotificationStatus'
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/a164e17d9c8d020d07b423f48a4d6b017b84e2be/docs/openapi/remote-refs.yaml#/components/schemas/NotificationStatusV26'
 
     BffNotificationSearchSubject:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/a164e17d9c8d020d07b423f48a4d6b017b84e2be/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchSubject'

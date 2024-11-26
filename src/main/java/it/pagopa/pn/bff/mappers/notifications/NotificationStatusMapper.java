@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 public interface NotificationStatusMapper {
     NotificationStatusMapper notificationStatusMapper = Mappers.getMapper(NotificationStatusMapper.class);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26 convertDeliveryWebPANotificationStatus(NotificationStatus notificationStatus);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26 convertDeliveryWebPANotificationStatus(NotificationStatusV26 notificationStatus);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26 convertDeliveryRecipientNotificationStatus(NotificationStatus notificationStatus);
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26 convertDeliveryRecipientNotificationStatus(NotificationStatusV26 notificationStatus);
 }

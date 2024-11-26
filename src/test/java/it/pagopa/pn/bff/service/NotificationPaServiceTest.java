@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PreLoadResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.*;
@@ -56,7 +56,7 @@ class NotificationPaServiceTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -70,7 +70,7 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
@@ -93,7 +93,7 @@ class NotificationPaServiceTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -107,7 +107,7 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
