@@ -19,6 +19,11 @@
     "WebLandingBucketPrefix": "static/documents",
     "RaddStoreRegistryGenerationConfigParameter": "/pn-radd-store-registry-lambda/generation-config",
     "DataIndexerLambdaAlarmNDays": "5",
-    "PnBffRetryMaxAttempts": "0"
+    "PnBffRetryMaxAttempts": "0",
+    "DataIndexerMinBytesDataLakeFile": "1000000",
+    "DataIndexerRowsToLog": "10",
+    "EnhancedWebSecurityEnabled": "true",
+    "BffMaxRequestPerThrottlingPeriod": "100",
+    "BffThrottlingPeriodSeconds": "600"
   }
 }
