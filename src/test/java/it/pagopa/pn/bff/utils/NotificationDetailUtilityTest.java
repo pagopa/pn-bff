@@ -92,10 +92,14 @@ class NotificationDetailUtilityTest {
                         .recIndex(0)
                         .documentId(AARTimelineElements.get(0).getDetails().getGeneratedAarUrl())
                         .documentType("AAR")
-                        .title("Avviso di avvenuta ricezione")
+                        .title("")
                         .digests(new NotificationAttachmentDigests().sha256(""))
                         .ref(new NotificationAttachmentBodyRef().key("").versionToken(""))
-                        .contentType(""),
+                        .contentType("")
+                        .recipient(new BffDocumentRecipientData()
+                                .denomination(notificationDTO.getRecipients().get(0).getDenomination())
+                                .taxId(notificationDTO.getRecipients().get(0).getTaxId())
+                        ),
                 calculatedParsedNotification.getOtherDocuments().get(0)
         );
 
@@ -114,13 +118,14 @@ class NotificationDetailUtilityTest {
                             .recIndex(element.getDetails().getRecIndex())
                             .documentId(element.getDetails().getGeneratedAarUrl())
                             .documentType("AAR")
-                            .title("Avviso di avvenuta ricezione - " +
-                                    notificationDTOMultiRecipient.getRecipients().get(element.getDetails().getRecIndex()).getDenomination() +
-                                    "(" + notificationDTOMultiRecipient.getRecipients().get(element.getDetails().getRecIndex()).getTaxId() + ")"
-                            )
+                            .title("")
                             .digests(new NotificationAttachmentDigests().sha256(""))
                             .ref(new NotificationAttachmentBodyRef().key("").versionToken(""))
-                            .contentType(""),
+                            .contentType("")
+                            .recipient(new BffDocumentRecipientData()
+                                    .denomination(notificationDTOMultiRecipient.getRecipients().get(element.getDetails().getRecIndex()).getDenomination())
+                                    .taxId(notificationDTOMultiRecipient.getRecipients().get(element.getDetails().getRecIndex()).getTaxId())
+                            ),
                     calculatedParsedNotification.getOtherDocuments().get(index)
             );
             index++;

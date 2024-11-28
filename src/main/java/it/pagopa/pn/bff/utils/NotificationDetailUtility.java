@@ -238,21 +238,23 @@ public class NotificationDetailUtility {
                 .toList();
 
         if (!timelineFiltered.isEmpty()) {
-            final boolean isMultiRecipient = timelineFiltered.size() > 1;
+
 
             for (BffNotificationDetailTimeline timeline : timelineFiltered) {
+                final BffDocumentRecipientData recipientData = new BffDocumentRecipientData();
+
                 final Integer recIndex = timeline.getDetails().getRecIndex();
                 final List<NotificationRecipientV23> recipients = bffFullNotificationV1.getRecipients();
-                final String recipientData = isMultiRecipient && recIndex != null
-                        ? " - " + recipients.get(recIndex).getDenomination() + "(" + recipients.get(recIndex).getTaxId() + ")"
-                        : "";
-                final String title = "Avviso di avvenuta ricezione" + recipientData;
+                if(recIndex != null){
+                    recipientData.setDenomination(recipients.get(recIndex).getDenomination());
+                    recipientData.setTaxId(recipients.get(recIndex).getTaxId());
+                }
 
                 BffNotificationDetailDocument document = new BffNotificationDetailDocument()
                         .recIndex(recIndex)
                         .documentId(timeline.getDetails().getGeneratedAarUrl())
                         .documentType(BffLegalFactType.AAR.toString())
-                        .title(title)
+                        .title("")
                         .digests(
                                 new NotificationAttachmentDigests()
                                         .sha256("")
@@ -262,7 +264,8 @@ public class NotificationDetailUtility {
                                         .key("")
                                         .versionToken("")
                         )
-                        .contentType("");
+                        .contentType("")
+                        .recipient(recipientData);
                 otherDocuments.add(document);
             }
         }
