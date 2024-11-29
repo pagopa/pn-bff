@@ -254,7 +254,7 @@ public class NotificationDetailUtility {
                         .recIndex(recIndex)
                         .documentId(timeline.getDetails().getGeneratedAarUrl())
                         .documentType(BffLegalFactType.AAR.toString())
-                        .title("")
+                        .title(null)
                         .digests(
                                 new NotificationAttachmentDigests()
                                         .sha256("")
