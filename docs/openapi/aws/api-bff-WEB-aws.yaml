@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: iRIumzwStKBH9vD4FobvT3Zj5Hyr6Plhn8kgfAWGaUI=
+  version: qwVk1UFhmG9KegQjSj1pq1TY0n9t4ck3v2N5sE0+B7s=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2171,10 +2171,10 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -2222,10 +2222,10 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -6026,6 +6026,16 @@ components:
           type: string
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
+    BffDocumentRecipientData:
+      type: object
+      required:
+        - denomination
+        - taxId
+      properties:
+        denomination:
+          type: string
+        taxId:
+          type: string
     BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
@@ -6049,6 +6059,8 @@ components:
               type: string
             recIndex:
               type: number
+            recipient:
+              $ref: '#/components/schemas/BffDocumentRecipientData'
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
