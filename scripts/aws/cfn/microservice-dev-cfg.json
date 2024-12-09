@@ -24,6 +24,7 @@
     "DataIndexerRowsToLog": "10",
     "EnhancedWebSecurityEnabled": "true",
     "BffMaxRequestPerThrottlingPeriod": "100",
-    "BffThrottlingPeriodSeconds": "600"
+    "BffThrottlingPeriodSeconds": "600",
+    "ApiAlarmSegmentation": "true"
   }
 }
