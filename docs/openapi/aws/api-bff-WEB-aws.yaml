@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: qwVk1UFhmG9KegQjSj1pq1TY0n9t4ck3v2N5sE0+B7s=
+  version: veTWHotpenRYoB9TuE6QTF/Tc4wkbA3WgSq/CasbHtw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3708,7 +3708,7 @@ components:
       required: false
       description: stato della notifica
       schema:
-        $ref: '#/components/schemas/NotificationStatus'
+        $ref: '#/components/schemas/NotificationStatusV26'
     notificationSearchSubject:
       name: subjectRegExp
       description: >-
@@ -3979,7 +3979,7 @@ components:
         format: date
         example: '2023-12-06'
   schemas:
-    NotificationStatus:
+    NotificationStatusV26:
       type: string
       description: |
         stato di avanzamento del processo di notifica:
@@ -3993,6 +3993,7 @@ components:
           * `UNREACHABLE` - Il destinatario non è reperibile
           * `CANCELLED` - L'ente ha annullato l'invio della notifica
           * `PAID` - [DEPRECATO] Uno dei destinatari ha pagato la notifica
+          * `RETURNED_TO_SENDER` - La notifica è stata restituita al mittente
       enum:
         - IN_VALIDATION
         - ACCEPTED
@@ -4004,6 +4005,7 @@ components:
         - PAID
         - UNREACHABLE
         - CANCELLED
+        - RETURNED_TO_SENDER
     IUN:
       description: Identificativo Univoco Notifica
       type: string
@@ -4029,7 +4031,7 @@ components:
           type: string
           description: Oggetto della notifica
         notificationStatus:
-          $ref: '#/components/schemas/NotificationStatus'
+          $ref: '#/components/schemas/NotificationStatusV26'
         recipients:
           description: >-
             Elenco delle denominazioni dei destinatari della notifica. <br/>
@@ -4746,6 +4748,7 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
+        - RETURNED_TO_SENDER
     BffLegalFactType:
       type: string
       enum:
@@ -4769,7 +4772,7 @@ components:
           maxLength: 512
         category:
           $ref: '#/components/schemas/BffLegalFactType'
-    TimelineElementCategoryV23:
+    TimelineElementCategoryV26:
       type: string
       description: |
         stato di avanzamento del processo di notifica:`
@@ -4815,6 +4818,7 @@ components:
           * `NOTIFICATION_CANCELLED` - Notifica annullata
           * `PREPARE_ANALOG_DOMICILE_FAILURE` - Fallimento della richiesta di prepare (preparazione ad invio) cartaceo a paperChannel
           * `NOTIFICATION_RADD_RETRIEVED` - Accesso alla notifica tramite la rete RADD. Non perfeziona la notifica.
+          * `ANALOG_WORKFLOW_RECIPIENT_DECEASED` - Destinatario deceduto
       enum:
         - SENDER_ACK_CREATION_REQUEST
         - VALIDATE_NORMALIZE_ADDRESSES_REQUEST
@@ -4858,6 +4862,7 @@ components:
         - NOTIFICATION_CANCELLED
         - PREPARE_ANALOG_DOMICILE_FAILURE
         - NOTIFICATION_RADD_RETRIEVED
+        - ANALOG_WORKFLOW_RECIPIENT_DECEASED
     SenderAckCreationRequestDetails:
       type: object
       properties:
@@ -5926,7 +5931,24 @@ components:
           type: string
           description: RequestId della richiesta di prepare
           maxLength: 512
-    TimelineElementDetailsV25:
+    AnalogWorkflowRecipientDeceasedDetailsV26:
+      type: object
+      required:
+        - recIndex
+        - physicalAddress
+      properties:
+        recIndex:
+          type: number
+          description: Index destinatario notifica digitale
+        physicalAddress:
+          $ref: '#/components/schemas/PhysicalAddress'
+        notificationCost:
+          description: >-
+            costo notifica in euro cents, può essere nullo se la notifica è
+            stata precedentemente visualizzata
+          example: 1220
+          type: number
+    TimelineElementDetailsV26:
       description: The raw event payload that will be different based on the event.
       oneOf:
         - $ref: '#/components/schemas/SenderAckCreationRequestDetails'
@@ -5970,6 +5992,7 @@ components:
         - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
         - $ref: '#/components/schemas/NotificationCancelledDetails'
         - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
+        - $ref: '#/components/schemas/AnalogWorkflowRecipientDeceasedDetailsV26'
     BffNotificationDetailTimeline:
       type: object
       required:
@@ -5989,9 +6012,9 @@ components:
           items:
             $ref: '#/components/schemas/BffLegalFactId'
         category:
-          $ref: '#/components/schemas/TimelineElementCategoryV23'
+          $ref: '#/components/schemas/TimelineElementCategoryV26'
         details:
-          $ref: '#/components/schemas/TimelineElementDetailsV25'
+          $ref: '#/components/schemas/TimelineElementDetailsV26'
         hidden:
           type: boolean
         index:

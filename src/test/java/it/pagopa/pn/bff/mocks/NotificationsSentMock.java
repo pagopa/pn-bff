@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestSt
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.StatusDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class NotificationsSentMock {
     public static final String SENDER_ID = "SENDER_ID";
     public static final String SUBJECT_REG_EXP = "SUBJECT";
     public static final String IUN_MATCH = "IUN";
-    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED;
+    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26 STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED;
     public static final int SIZE = 10;
     public static final String START_DATE = "2014-04-30T00:00:00.000Z";
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";
@@ -32,7 +32,7 @@ public class NotificationsSentMock {
         notificationSearchRowOne.setSender("Sender One");
         notificationSearchRowOne.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowOne.setSubject("Subject One");
-        notificationSearchRowOne.setNotificationStatus(NotificationStatus.ACCEPTED);
+        notificationSearchRowOne.setNotificationStatus(NotificationStatusV26.ACCEPTED);
         notificationSearchRowOne.setRecipients(new ArrayList<>(Arrays.asList("Person 1", "Person 2")));
         notificationSearchRowOne.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowOne.setGroup("Group One");
@@ -42,7 +42,7 @@ public class NotificationsSentMock {
         notificationSearchRowTwo.setSender("Sender Two");
         notificationSearchRowTwo.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowTwo.setSubject("Subject Two");
-        notificationSearchRowTwo.setNotificationStatus(NotificationStatus.ACCEPTED);
+        notificationSearchRowTwo.setNotificationStatus(NotificationStatusV26.ACCEPTED);
         notificationSearchRowTwo.setRecipients(new ArrayList<>(Arrays.asList("Person 3", "Person 4")));
         notificationSearchRowTwo.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowTwo.setGroup("Group Two");
