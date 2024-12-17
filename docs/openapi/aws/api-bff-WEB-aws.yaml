@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: j+8Q9H3QCgSVVwj7rHLwZP3O4x6NjL3Cdg3KYQHi0uQ=
+  version: qwVk1UFhmG9KegQjSj1pq1TY0n9t4ck3v2N5sE0+B7s=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2171,10 +2171,10 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -2222,10 +2222,10 @@ paths:
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
           integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
           integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
-          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
           integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
           integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -3708,7 +3708,7 @@ components:
       required: false
       description: stato della notifica
       schema:
-        $ref: '#/components/schemas/NotificationStatusV26'
+        $ref: '#/components/schemas/NotificationStatus'
     notificationSearchSubject:
       name: subjectRegExp
       description: >-
@@ -3979,7 +3979,7 @@ components:
         format: date
         example: '2023-12-06'
   schemas:
-    NotificationStatusV26:
+    NotificationStatus:
       type: string
       description: |
         stato di avanzamento del processo di notifica:
@@ -3993,7 +3993,6 @@ components:
           * `UNREACHABLE` - Il destinatario non è reperibile
           * `CANCELLED` - L'ente ha annullato l'invio della notifica
           * `PAID` - [DEPRECATO] Uno dei destinatari ha pagato la notifica
-          * `RETURNED_TO_SENDER` - La notifica è stata restituita al mittente
       enum:
         - IN_VALIDATION
         - ACCEPTED
@@ -4005,7 +4004,6 @@ components:
         - PAID
         - UNREACHABLE
         - CANCELLED
-        - RETURNED_TO_SENDER
     IUN:
       description: Identificativo Univoco Notifica
       type: string
@@ -4031,7 +4029,7 @@ components:
           type: string
           description: Oggetto della notifica
         notificationStatus:
-          $ref: '#/components/schemas/NotificationStatusV26'
+          $ref: '#/components/schemas/NotificationStatus'
         recipients:
           description: >-
             Elenco delle denominazioni dei destinatari della notifica. <br/>
@@ -4748,7 +4746,6 @@ components:
         - CANCELLED
         - REFUSED
         - CANCELLATION_IN_PROGRESS
-        - RETURNED_TO_SENDER
     BffLegalFactType:
       type: string
       enum:
@@ -4772,7 +4769,7 @@ components:
           maxLength: 512
         category:
           $ref: '#/components/schemas/BffLegalFactType'
-    TimelineElementCategoryV26:
+    TimelineElementCategoryV23:
       type: string
       description: |
         stato di avanzamento del processo di notifica:`
@@ -4818,7 +4815,6 @@ components:
           * `NOTIFICATION_CANCELLED` - Notifica annullata
           * `PREPARE_ANALOG_DOMICILE_FAILURE` - Fallimento della richiesta di prepare (preparazione ad invio) cartaceo a paperChannel
           * `NOTIFICATION_RADD_RETRIEVED` - Accesso alla notifica tramite la rete RADD. Non perfeziona la notifica.
-          * `ANALOG_WORKFLOW_RECIPIENT_DECEASED` - Destinatario deceduto
       enum:
         - SENDER_ACK_CREATION_REQUEST
         - VALIDATE_NORMALIZE_ADDRESSES_REQUEST
@@ -4862,7 +4858,6 @@ components:
         - NOTIFICATION_CANCELLED
         - PREPARE_ANALOG_DOMICILE_FAILURE
         - NOTIFICATION_RADD_RETRIEVED
-        - ANALOG_WORKFLOW_RECIPIENT_DECEASED
     SenderAckCreationRequestDetails:
       type: object
       properties:
@@ -5931,24 +5926,7 @@ components:
           type: string
           description: RequestId della richiesta di prepare
           maxLength: 512
-    AnalogWorkflowRecipientDeceasedDetailsV26:
-      type: object
-      required:
-        - recIndex
-        - physicalAddress
-      properties:
-        recIndex:
-          type: number
-          description: Index destinatario notifica digitale
-        physicalAddress:
-          $ref: '#/components/schemas/PhysicalAddress'
-        notificationCost:
-          description: >-
-            costo notifica in euro cents, può essere nullo se la notifica è
-            stata precedentemente visualizzata
-          example: 1220
-          type: number
-    TimelineElementDetailsV26:
+    TimelineElementDetailsV25:
       description: The raw event payload that will be different based on the event.
       oneOf:
         - $ref: '#/components/schemas/SenderAckCreationRequestDetails'
@@ -5992,7 +5970,6 @@ components:
         - $ref: '#/components/schemas/NotificationCancellationRequestDetails'
         - $ref: '#/components/schemas/NotificationCancelledDetails'
         - $ref: '#/components/schemas/PrepareAnalogDomicileFailureDetails'
-        - $ref: '#/components/schemas/AnalogWorkflowRecipientDeceasedDetailsV26'
     BffNotificationDetailTimeline:
       type: object
       required:
@@ -6012,9 +5989,9 @@ components:
           items:
             $ref: '#/components/schemas/BffLegalFactId'
         category:
-          $ref: '#/components/schemas/TimelineElementCategoryV26'
+          $ref: '#/components/schemas/TimelineElementCategoryV23'
         details:
-          $ref: '#/components/schemas/TimelineElementDetailsV26'
+          $ref: '#/components/schemas/TimelineElementDetailsV25'
         hidden:
           type: boolean
         index:
@@ -6049,6 +6026,16 @@ components:
           type: string
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
+    BffDocumentRecipientData:
+      type: object
+      required:
+        - denomination
+        - taxId
+      properties:
+        denomination:
+          type: string
+        taxId:
+          type: string
     BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
@@ -6072,6 +6059,8 @@ components:
               type: string
             recIndex:
               type: number
+            recipient:
+              $ref: '#/components/schemas/BffDocumentRecipientData'
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:

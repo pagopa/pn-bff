@@ -106,6 +106,19 @@ components:
               type: string
             recIndex:
               type: integer
+            recipient:
+              $ref: '#/components/schemas/BffDocumentRecipientData'
+
+    BffDocumentRecipientData:
+      type: object
+      required:
+        - denomination
+        - taxId
+      properties:
+        denomination:
+          type: string
+        taxId:
+          type: string
 
     BffLegalFactId:
       type: object
