@@ -529,6 +529,29 @@ Resources:
         MaxRequestPerThrottlingPeriod: !Ref BffMaxRequestPerThrottlingPeriod #to set to 25 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160  
         ThrottlingPeriodSeconds: !Ref BffThrottlingPeriodSeconds #to set to 300 after resolution of aws cloudformation bug: https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/2160        
 
+  # Dashboard
+  BffMicroserviceCloudWatchDashboard:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/microservice-cloudwatch-dashboard.yaml"
+      Parameters:
+        DashboardName: !Sub '${ProjectName}-bff'
+        LambdaArns: !Join
+          - ','
+          - - !GetAtt SenderDashboardDataIndexer.Arn
+            - !GetAtt RaddStoreRegistryLambda.Arn
+        RestApiStageArns: !GetAtt BffMicroservicePublicWebAPI.Outputs.RestApiStageArn
+        RestApiNames: !GetAtt BffMicroservicePublicWebAPI.Outputs.RestApiName
+        AlarmArns: !Join
+          - ','
+          - - !Ref SenderDashboardDataIndexerDurationAlarm
+            - !Ref RaddStoreRegistryLambdaAlarms
+        LogGroupsNames: !Join
+          - ','
+          - - !Sub "/aws/ecs/${ProjectName}-bff"
+            - !Sub "/aws/lambda/${DataIndexerLambdaName}"
+            - !Sub "/aws/lambda/${RaddStoreRegistryLambdaName}"
+
   # DataIndexer Lambda
   SenderDashboardDataIndexer:
     Type: AWS::Lambda::Function
