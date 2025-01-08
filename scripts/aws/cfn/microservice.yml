@@ -544,8 +544,8 @@ Resources:
         RestApiNames: !GetAtt BffMicroservicePublicWebAPI.Outputs.RestApiName
         AlarmArns: !Join
           - ","
-          - - !GetAtt SenderDashboardDataIndexerDurationAlarm
-            - !GetAtt RaddStoreRegistryLambdaAlarms
+          - - !GetAtt SenderDashboardDataIndexerDurationAlarm.Arn
+            - !GetAtt RaddStoreRegistryLambdaAlarms.Arn
         LogGroupsNames: !Join
           - ","
           - - !Sub "/aws/ecs/${ProjectName}-bff"
