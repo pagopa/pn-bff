@@ -32,6 +32,6 @@ components:
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###
     ############################################################################################
     Problem:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/f5a6055921668998387f0637b06b95145df3de0c/docs/openapi/pn-errors.yaml#/components/schemas/Problem'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/41e1d860bf1b1592c3039bffd7ccb1d5fbd8daff/docs/openapi/pn-errors.yaml#/components/schemas/Problem'
     ProblemError:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/f5a6055921668998387f0637b06b95145df3de0c/docs/openapi/pn-errors.yaml#/components/schemas/ProblemError'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/41e1d860bf1b1592c3039bffd7ccb1d5fbd8daff/docs/openapi/pn-errors.yaml#/components/schemas/ProblemError'

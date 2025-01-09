@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV24;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV25;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the FullReceivedNotificationV24
+ * Mapstruct mapper interface, used to map the FullReceivedNotificationV25
  * to the BffFullNotificationV1
  */
 @Mapper(uses = {RecipientNotificationTimelineMapper.class})
@@ -20,12 +20,12 @@ public interface NotificationReceivedDetailMapper {
     NotificationReceivedDetailMapper modelMapper = Mappers.getMapper(NotificationReceivedDetailMapper.class);
 
     /**
-     * Maps a FullReceivedNotificationV24 to a BffFullNotificationV1
+     * Maps a FullReceivedNotificationV25 to a BffFullNotificationV1
      *
-     * @param notification the FullReceivedNotificationV24 to map
+     * @param notification the FullReceivedNotificationV25 to map
      * @return the mapped BffFullNotificationV1
      */
-    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV24 notification);
+    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV25 notification);
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#cleanRelatedTimelineElements(BffFullNotificationV1)

@@ -51,7 +51,7 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                     OffsetDateTime endDate,
                                                                                     List<String> xPagopaPnCxGroups,
                                                                                     String recipientId,
-                                                                                    NotificationStatus status,
+                                                                                    NotificationStatusV26 status,
                                                                                     String subjectRegExp,
                                                                                     String iunMatch,
                                                                                     Integer size,

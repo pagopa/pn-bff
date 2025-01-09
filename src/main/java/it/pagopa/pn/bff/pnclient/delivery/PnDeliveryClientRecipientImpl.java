@@ -21,7 +21,7 @@ public class PnDeliveryClientRecipientImpl {
 
     public Mono<NotificationSearchResponse> searchReceivedNotifications(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                         String xPagopaPnCxId, String iunMatch, List<String> xPagopaPnCxGroups,
-                                                                        String mandateId, String senderId, NotificationStatus status, OffsetDateTime startDate, OffsetDateTime endDate,
+                                                                        String mandateId, String senderId, NotificationStatusV26 status, OffsetDateTime startDate, OffsetDateTime endDate,
                                                                         String subjectRegExp,
                                                                         int size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchReceivedNotification");
@@ -45,7 +45,7 @@ public class PnDeliveryClientRecipientImpl {
 
     public Mono<NotificationSearchResponse> searchReceivedDelegatedNotifications(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                                  String xPagopaPnCxId, String iunMatch, List<String> xPagopaPnCxGroups,
-                                                                                 String senderId, String recipientId, String group, NotificationStatus status,
+                                                                                 String senderId, String recipientId, String group, NotificationStatusV26 status,
                                                                                  OffsetDateTime startDate, OffsetDateTime endDate, int size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchReceivedDelegatedNotification");
 
@@ -66,12 +66,12 @@ public class PnDeliveryClientRecipientImpl {
         );
     }
 
-    public Mono<FullReceivedNotificationV24> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullReceivedNotificationV25> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                      String xPagopaPnCxId, String iun,
                                                                      List<String> xPagopaPnCxGroups, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
 
-        return recipientReadApi.getReceivedNotificationV24(
+        return recipientReadApi.getReceivedNotificationV25(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
