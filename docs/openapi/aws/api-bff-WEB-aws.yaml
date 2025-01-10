@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: veTWHotpenRYoB9TuE6QTF/Tc4wkbA3WgSq/CasbHtw=
+  version: ZQxBzxbhDdzrcNJPAYribIw7vZooirPQ9XjzFjh5PFo=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2770,6 +2770,7 @@ paths:
       tags:
         - Payments
       operationId: getPaymentsInfoV1
+      x-pagopa-monitoring-group: payment-payments
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -2833,6 +2834,7 @@ paths:
       tags:
         - Payments
       operationId: paymentsCartV1
+      x-pagopa-monitoring-group: payment-payments
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:

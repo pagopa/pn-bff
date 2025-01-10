@@ -389,6 +389,14 @@ Parameters:
     Description: Custom max retry attempts
     Default: 0
 
+  ApiAlarmSegmentation:
+    Type: String
+    Default: 'false'
+    Description: Enable Api alarm segmentation and grouping based on OpenApi spec. file.
+    AllowedValues:
+      - 'true'
+      - 'false'
+
 Conditions:
   CreateFakeDLRole:
     Fn::Not:
@@ -505,6 +513,8 @@ Resources:
         CloudwatchLogKinesisStreamArn: !Ref LogsKinesisSourceStreamArn
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
+        TemplateBucketBaseUrl: !Ref TemplateBucketBaseUrl
+        ApiAlarmSegmentation: !Ref ApiAlarmSegmentation 
   
   BffMicroservicePublicWebApiWaf:
     Type: AWS::CloudFormation::Stack
