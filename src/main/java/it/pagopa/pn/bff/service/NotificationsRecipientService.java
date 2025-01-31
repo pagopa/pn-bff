@@ -7,11 +7,13 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentD
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV25;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,7 @@ public class NotificationsRecipientService {
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final PnEmdClientImpl pnEmdClient;
 
     /**
      * Search received notifications for a recipient user.
@@ -323,5 +326,16 @@ public class NotificationsRecipientService {
                         xPagopaPnCxGroups
                 ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         ).map(NotificationAarQrCodeMapper.modelMapper::toBffResponseCheckAarMandateDto);
+    }
+
+    /**
+     * Check the TPP.
+     *
+     * @param retrievalId the id of the retrieval
+     * @return the response of the check
+     */
+    public Mono<RetrievalPayload> checkTpp(String retrievalId) {
+        log.info("Checking TPP - ID: {}", retrievalId);
+        return pnEmdClient.checkTpp(retrievalId);
     }
 }

@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
@@ -243,6 +244,17 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
 
         Mono<BffCheckAarResponse> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffCheckAarRequest, xPagopaPnCxGroups);
 
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /* check Tpp
+        POST bff/v1/notifications/received/check-tpp: Check TPP
+        * @param retrievalId       Retrieval Id
+        * @return the response of the check Tpp
+     */
+    @Override
+    public Mono<ResponseEntity<RetrievalPayload>> checkTppV1(String retrievalId, ServerWebExchange exchange) {
+        Mono<RetrievalPayload> serviceResponse = notificationsRecipientService.checkTpp(retrievalId);
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

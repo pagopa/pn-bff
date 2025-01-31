@@ -253,3 +253,26 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+  '/bff/v1/notifications/received/check-tpp':
+    get:
+      summary: Servizio per la verifica del retrievalId inviato da app di terze parti
+      tags:
+        - [Check TPP]
+      operationId: emdCheckTPP
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/notification.yaml#/components/parameters/BffCheckTPPRetrievalId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckTPPResponse'
+        '404':
+          description: Retrieval Id reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

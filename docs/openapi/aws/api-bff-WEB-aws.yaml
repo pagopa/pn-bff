@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ZQxBzxbhDdzrcNJPAYribIw7vZooirPQ9XjzFjh5PFo=
+  version: APs1DtX8Mpq57wBGoFFS44jS16aP2UrqYaap2b+Nqx4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -912,6 +912,59 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-aar-qr-code
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/received/check-tpp:
+    get:
+      summary: Servizio per la verifica del retrievalId inviato da app di terze parti
+      tags:
+        - - Check TPP
+      operationId: emdCheckTPP
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/retrievalId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalPayload'
+        '404':
+          description: Retrieval Id reference Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-tpp
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''WEB'''
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/received/check-tpp API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/received/check-tpp
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters: {}
@@ -3833,6 +3886,17 @@ components:
       schema:
         type: string
         format: uuid
+    retrievalId:
+      name: retrievalId
+      in: query
+      required: true
+      schema:
+        type: string
+        description: Unique ID that identify retrieval payload
+        pattern: ^[ -~]{1,50}$
+        minLength: 50
+        maxLength: 50
+        example: 0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920
     pathApiKey:
       description: Identificativo univoco dell'api key
       name: id
@@ -6282,6 +6346,52 @@ components:
         mandateId:
           description: identificativo della delega
           type: string
+    RetrievalPayload:
+      type: object
+      required:
+        - retrievalId
+      description: Retrieval Response information
+      properties:
+        retrievalId:
+          type: string
+          description: Unique ID that identify retrieval payload
+          pattern: ^[ -~]{1,50}$
+          minLength: 50
+          maxLength: 50
+          example: 0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920
+        tppId:
+          type: string
+          description: Unique ID that identify TPP on PagoPA systems
+          pattern: ^[ -~]{1,50}$
+          minLength: 50
+          maxLength: 50
+          example: 0e3bee29-8753-447c-b0da-1f7965558ec2-1706867960900
+        deeplink:
+          type: string
+          description: >-
+            Represents the deep link (DeepLink) that allows direct redirection
+            to a specific section or feature of the TPP app. It must be an
+            alphanumeric string respecting a specific format and be between 48
+            and 128 characters in length.
+          pattern: ^[a-zA-Z0-9._~:/?#\[\]@!$&'()*+,;=-]{48,128}$
+          minLength: 10
+          maxLength: 128
+          example: >-
+            https://example.com/deeplink/123e4567-e89b-12d3-a456-426614174000?userId=1234567890&session=abcdef
+        paymentButton:
+          type: string
+          description: Payment button label (e.g., the name of the payment provider).
+          pattern: ^[a-zA-Z0-9 ]{1,15}$
+          minLength: 1
+          maxLength: 15
+          example: Banca1
+        originId:
+          type: string
+          description: ID of the original message
+          pattern: ^[ -~]{24,36}$
+          minLength: 24
+          maxLength: 36
+          example: XRUZ-GZAJ-ZUEJ-202407-W-1
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object
