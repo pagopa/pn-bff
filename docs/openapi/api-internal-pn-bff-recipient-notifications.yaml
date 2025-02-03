@@ -282,8 +282,8 @@ paths:
     get:
       summary: Servizio per la verifica del retrievalId inviato da app di terze parti
       tags:
-        - [Check TPP]
-      operationId: emdCheckTPP
+        - NotificationReceived
+      operationId: checkTPP
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

@@ -7,7 +7,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentD
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV25;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
@@ -334,8 +333,10 @@ public class NotificationsRecipientService {
      * @param retrievalId the id of the retrieval
      * @return the response of the check
      */
-    public Mono<RetrievalPayload> checkTpp(String retrievalId) {
+    public Mono<BffCheckTPPResponse> checkTpp(String retrievalId) {
         log.info("Checking TPP - ID: {}", retrievalId);
-        return pnEmdClient.checkTpp(retrievalId);
+        return pnEmdClient.checkTpp(retrievalId)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                .map(NotificationRetrievalIdMapper.modelMapper::toBffCheckTPPResponse);
     }
 }

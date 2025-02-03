@@ -247,14 +247,14 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 
-    /* check Tpp
-        POST bff/v1/notifications/received/check-tpp: Check TPP
-        * @param retrievalId       Retrieval Id
-        * @return the response of the check Tpp
-     */
+    /*
+         POST bff/v1/notifications/received/check-tpp: Check TPP
+         * @param retrievalId
+         * @return the response of the check Tpp
+      */
     @Override
-    public Mono<ResponseEntity<RetrievalPayload>> checkTppV1(String retrievalId, ServerWebExchange exchange) {
-        Mono<RetrievalPayload> serviceResponse = notificationsRecipientService.checkTpp(retrievalId);
+    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTPP(String retrievalId, ServerWebExchange exchange) {
+        Mono<BffCheckTPPResponse> serviceResponse = notificationsRecipientService.checkTpp(retrievalId);
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }
