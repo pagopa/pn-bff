@@ -11,6 +11,7 @@ public class PnBffRestConstants {
     private static final String VERSION_1 = "/v1";
     public static final String NOTIFICATIONS_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received";
     public static final String NOTIFICATION_AAR_QR_CODE_PATH = NOTIFICATIONS_RECEIVED_PATH + "/check-aar-qr-code";
+    public static final String NOTIFICATION_RETRIEVAL_ID_PATH = NOTIFICATIONS_RECEIVED_PATH + "/check-tpp";
     public static final String NOTIFICATIONS_RECEIVED_DELEGATED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/delegated";
     public static final String NOTIFICATION_RECEIVED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/{iun}";
     public static final String NOTIFICATION_RECEIVED_DOCUMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/documents/{documentType}";

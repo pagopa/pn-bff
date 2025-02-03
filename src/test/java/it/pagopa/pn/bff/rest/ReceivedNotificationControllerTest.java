@@ -788,4 +788,46 @@ class ReceivedNotificationControllerTest {
                 eq(UserMock.PN_CX_GROUPS)
         );
     }
+
+    @Test
+    void checkTPP() {
+        BffCheckTPPResponse response = new BffCheckTPPResponse();
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffCheckTPPResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString());
+    }
+
+    @Test
+    void checkTPPError() {
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString());
+    }
+
 }

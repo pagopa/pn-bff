@@ -6,10 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
+import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
@@ -614,4 +611,17 @@ class NotificationRecipientServiceTest {
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void checkTpp() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.just(notificationsReceivedMock.getRetrievalPayloadMock()));
+
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString());
+
+        StepVerifier.create(result)
+                .expectNext(NotificationRetrievalIdMapper.modelMapper.toBffCheckTPPResponse(notificationsReceivedMock.getRetrievalPayloadMock()))
+                .verifyComplete();
+    }
+
 }
