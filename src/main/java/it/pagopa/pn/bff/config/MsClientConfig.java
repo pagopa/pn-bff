@@ -9,6 +9,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.Notificatio
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.api.CheckTppApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.api.AdditionalLangApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
@@ -244,4 +245,16 @@ public class MsClientConfig extends CommonBaseClient {
         apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
         return new AdditionalLangApi(apiClient);
     }
+
+    @Bean
+    @Primary
+    CheckTppApi checkTppApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getEmdBaseUrl());
+        return new CheckTppApi(apiClient);
+    }
+
 }
