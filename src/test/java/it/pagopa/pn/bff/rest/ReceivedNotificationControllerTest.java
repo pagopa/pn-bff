@@ -11,6 +11,7 @@ import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
+import it.pagopa.pn.bff.utils.EmdUtility;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
@@ -802,6 +803,7 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
+                .header(EmdUtility.HEADER_SOURCE_CHANNEL, EmdUtility.SourceChannel.TPP.name())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -823,6 +825,7 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
+                .header(EmdUtility.HEADER_SOURCE_CHANNEL, EmdUtility.SourceChannel.TPP.name())
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -830,4 +833,17 @@ class ReceivedNotificationControllerTest {
         Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString());
     }
 
+    @Test
+    void checkTPPErrorHeader() {
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
 }
