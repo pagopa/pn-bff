@@ -288,6 +288,8 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './notification-schemas/notification.yaml#/components/parameters/BffCheckTPPRetrievalId'
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'                 # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'          # NO EXTERNAL
       responses:
         '200':
           description: OK

@@ -5,7 +5,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
-import it.pagopa.pn.bff.utils.EmdUtility;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -254,11 +254,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
          * @param exchange
          * @return the response of the check Tpp
       */
+
     @Override
-    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTPP(String retrievalId, ServerWebExchange exchange) {
-        String channel = exchange.getRequest().getHeaders().getFirst(EmdUtility.HEADER_SOURCE_CHANNEL);
-        if (!EmdUtility.SourceChannel.TPP.name().equals(channel)) {
-            throw new PnBffException(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Missing the required parameter 'TPP' in " + EmdUtility.HEADER_SOURCE_CHANNEL, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString());
+    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTPP(String retrievalId, String xPagopaPnSrcCh, String xPagopaPnSrcChDetails, final ServerWebExchange exchange) {
+        if (!CommonUtility.SourceChannel.TPP.name().equals(xPagopaPnSrcCh)) {
+            throw new PnBffException(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Missing the required parameter 'TPP' in xPagopaPnSrcCh", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString());
         }
         Mono<BffCheckTPPResponse> serviceResponse = notificationsRecipientService.checkTpp(retrievalId);
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

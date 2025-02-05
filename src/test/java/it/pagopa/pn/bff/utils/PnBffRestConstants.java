@@ -7,6 +7,7 @@ public class PnBffRestConstants {
     public static final String CX_TYPE_HEADER = "x-pagopa-pn-cx-type";
     public static final String CX_GROUPS_HEADER = "x-pagopa-pn-cx-groups";
     public static final String CX_ROLE_HEADER = "x-pagopa-pn-cx-role";
+    public static final String SOURCE_CHANNEL_HEADER = "x-pagopa-pn-src-ch";
     private static final String BFF_PATH = "/bff";
     private static final String VERSION_1 = "/v1";
     public static final String NOTIFICATIONS_RECEIVED_PATH = BFF_PATH + VERSION_1 + "/notifications/received";

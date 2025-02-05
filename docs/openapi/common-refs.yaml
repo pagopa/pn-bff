@@ -26,7 +26,22 @@ components:
         # ASCII printable characters
         pattern: ^[ -~]*$
         maxLength: 64
-
+    headerSourceChannel:                                                              # NO EXTERNAL
+      name: x-pagopa-pn-src-ch                                                        # NO EXTERNAL
+      in: header                                                                      # NO EXTERNAL
+      description: Source channel                                                     # NO EXTERNAL
+      required: true                                                                  # NO EXTERNAL
+      schema:                                                                         # NO EXTERNAL
+        type: string                                                                  # NO EXTERNAL
+        maxLength: 3                                                                  # NO EXTERNAL
+        pattern: "B2B|WEB|TPP"                                                        # NO EXTERNAL
+    headerSourceChannelDetails:                                                       # NO EXTERNAL
+      name: x-pagopa-pn-src-ch-details                                                # NO EXTERNAL
+      in: header                                                                      # NO EXTERNAL
+      description: Source channel details                                             # NO EXTERNAL
+      required: false                                                                 # NO EXTERNAL
+      schema:                                                                         # NO EXTERNAL
+        type: string                                                                  # NO EXTERNAL
   schemas:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###
