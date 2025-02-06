@@ -259,7 +259,7 @@ paths:
       summary: Servizio per la verifica del retrievalId inviato da app di terze parti
       tags:
         - NotificationReceived
-      operationId: checkTPPV1
+      operationId: checkTppV1
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

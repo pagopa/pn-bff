@@ -256,7 +256,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
       */
 
     @Override
-    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTPPV1(String retrievalId, String xPagopaPnSrcCh, String xPagopaPnSrcChDetails, final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTppV1(String retrievalId, String xPagopaPnSrcCh, String xPagopaPnSrcChDetails, final ServerWebExchange exchange) {
         if (!CommonUtility.SourceChannel.TPP.name().equals(xPagopaPnSrcCh)) {
             throw new PnBffException(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Missing the required parameter 'TPP' in xPagopaPnSrcCh", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString());
         }

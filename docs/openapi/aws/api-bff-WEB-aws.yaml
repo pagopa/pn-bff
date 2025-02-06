@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: APs1DtX8Mpq57wBGoFFS44jS16aP2UrqYaap2b+Nqx4=
+  version: lajhctI6v5VwpObuT3prOmDLJyzcLflhT0itxyFRaiw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -923,8 +923,8 @@ paths:
     get:
       summary: Servizio per la verifica del retrievalId inviato da app di terze parti
       tags:
-        - - Check TPP
-      operationId: emdCheckTPP
+        - NotificationReceived
+      operationId: checkTppV1
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
