@@ -271,9 +271,27 @@ paths:
             application/json:
               schema:
                 $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckTPPResponse'
-        '404':
-          description: Retrieval Id reference Not Found
+        '400':
+          description: Bad request
           content:
-            application/problem+json:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found (TPP not found or retrieval inactive)
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Server error
+          content:
+            application/json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
