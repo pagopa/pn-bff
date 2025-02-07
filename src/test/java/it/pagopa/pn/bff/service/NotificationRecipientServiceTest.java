@@ -624,4 +624,16 @@ class NotificationRecipientServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void checkTppError() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.error(new RuntimeException("Error")));
+
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString());
+
+        StepVerifier.create(result)
+                .expectError(RuntimeException.class)
+                .verify();
+    }
+
 }
