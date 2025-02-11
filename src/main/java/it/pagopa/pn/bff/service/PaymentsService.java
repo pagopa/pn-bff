@@ -8,6 +8,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationRetrievalIdMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
+import it.pagopa.pn.bff.mappers.payments.PaymentsTppMapper;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -80,6 +81,6 @@ public class PaymentsService {
         log.info("Get payment cart tpp");
         return pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .map(PaymentsCartMapper.modelMapper::mapPaymentTppResponse);
+                .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse);
     }
 }

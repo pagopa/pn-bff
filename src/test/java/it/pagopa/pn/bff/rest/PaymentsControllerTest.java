@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
+import it.pagopa.pn.bff.mappers.payments.PaymentsTppMapper;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.PaymentsService;
@@ -155,6 +156,66 @@ class PaymentsControllerTest {
 
         Mockito.verify(paymentsService).paymentsCart(
                 argThat(new MonoMatcher<>(Mono.just(request)))
+        );
+    }
+
+    @Test
+    void paymentsTpp() {
+        BffPaymentTppResponse response = PaymentsTppMapper.modelMapper.mapPaymentTppResponse(paymentsMock.getPaymentUrlResponse());
+
+        when(paymentsService.paymentsTpp(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.PAYMENTS_TPP_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .queryParam("noticeCode", "333333333333333333")
+                                .queryParam("paTaxId", "77777777777")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffPaymentTppResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(paymentsService).paymentsTpp(
+                eq("0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920"),
+                eq("333333333333333333"),
+                eq("77777777777")
+        );
+    }
+
+    @Test
+    void paymentsTppError() {
+        when(paymentsService.paymentsTpp(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.PAYMENTS_TPP_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .queryParam("noticeCode", "333333333333333333")
+                                .queryParam("paTaxId", "77777777777")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(paymentsService).paymentsTpp(
+                eq("0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920"),
+                eq("333333333333333333"),
+                eq("77777777777")
         );
     }
 }

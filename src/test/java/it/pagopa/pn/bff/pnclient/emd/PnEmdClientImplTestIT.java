@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.emd;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
+import it.pagopa.pn.bff.mocks.PaymentsMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +28,9 @@ class PnEmdClientImplTestIT {
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
+    private final PaymentsMock paymentsMock = new PaymentsMock();
     private final String checkTppPath = "/emd-integration-private/emd/check-tpp";
+    private final String paymentTppPath = "/emd-integration-private/payment-url";
 
     @Autowired
     private PnEmdClientImpl pnEmdClient;
@@ -77,5 +80,33 @@ class PnEmdClientImplTestIT {
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnEmdClient.checkTpp("retrievalId")).expectError().verify();
+    }
+
+    @Test
+    void testPayment() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(paymentsMock.getPaymentUrlResponse());
+
+        mockServerClient.when(request().withMethod("GET").withPath(paymentTppPath)
+                        .withQueryStringParameter("retrievalId", "retrievalId")
+                        .withQueryStringParameter("noticeCode", "noticeCode")
+                        .withQueryStringParameter("paTaxId", "paTaxId"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId"))
+                .expectNextMatches(paymentUrlResponse ->
+                        "https://checkout-tpp-url.com".equals(paymentUrlResponse.getPaymentUrl()))
+                .verifyComplete();
+    }
+
+    @Test
+    void testPaymentError() {
+        mockServerClient.when(request().withMethod("GET").withPath(paymentTppPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId")).expectError().verify();
     }
 }

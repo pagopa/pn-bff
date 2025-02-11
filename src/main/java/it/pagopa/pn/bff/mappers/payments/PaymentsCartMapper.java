@@ -31,6 +31,4 @@ public interface PaymentsCartMapper {
      * @return the mapped BffPaymentResponse
      */
     BffPaymentResponse mapPaymentResponse(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse response);
-
-    BffPaymentTppResponse mapPaymentTppResponse(it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse response);
 }
