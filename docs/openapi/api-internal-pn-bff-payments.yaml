@@ -110,3 +110,41 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+  /bff/v1/payments/tpp:
+    get:
+      summary: Retrieve the payment url tpp given payment informations
+      tags:
+        - Payments
+      operationId: paymentsTppV1
+      x-pagopa-monitoring-group: payment-payments
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppRetrievalId'
+        - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppNoticeCode'
+        - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppPaTaxId'
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: './payments-schemas/payments.yaml#/components/schemas/BffPaymentTppResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
