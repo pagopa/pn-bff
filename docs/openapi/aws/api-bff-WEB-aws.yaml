@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ivzcbmjdRfb6IiLldfRbL2D6oXXumV5Gugc0PUSkKag=
+  version: XhiOw4bXAXanqVNK3blPoBYZwnCl+tFc7EnTtrNv5DA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2995,7 +2995,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BffPaymentTppResponse'
+                $ref: '#/components/schemas/PaymentUrlResponse'
         '400':
           description: Bad request
           content:
@@ -7393,7 +7393,7 @@ components:
         checkoutUrl:
           type: string
           description: The Checkout callback URL
-    BffPaymentTppResponse:
+    PaymentUrlResponse:
       type: object
       description: Payment URL
       properties:
