@@ -255,7 +255,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param exchange
      * @return the response of the check Tpp
      */
-
     @Override
     public Mono<ResponseEntity<BffCheckTPPResponse>> checkTppV1(String retrievalId, String xPagopaPnSrcCh, String xPagopaPnSrcChDetails, final ServerWebExchange exchange) {
         if (!CommonUtility.SourceChannel.TPP.name().equals(xPagopaPnSrcCh)) {
