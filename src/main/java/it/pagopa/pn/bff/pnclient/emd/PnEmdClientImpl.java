@@ -18,8 +18,6 @@ public class PnEmdClientImpl {
     private final CheckTppApi checkTppApi;
     private final PaymentApi paymentApi;
 
-    private final String serviceName = "pn-emd-integration";
-
     public Mono<RetrievalPayload> checkTpp(String retrievalId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EMD_INTEGRATION, "checkTpp");
 
