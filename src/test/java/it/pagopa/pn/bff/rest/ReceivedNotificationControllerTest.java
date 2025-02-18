@@ -794,7 +794,7 @@ class ReceivedNotificationControllerTest {
     @Test
     void checkTPP() {
         BffCheckTPPResponse response = new BffCheckTPPResponse();
-        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString()))
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(Mono.just(response));
 
         webTestClient.get()
@@ -811,12 +811,12 @@ class ReceivedNotificationControllerTest {
                 .expectBody(BffCheckTPPResponse.class)
                 .isEqualTo(response);
 
-        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString());
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString(), Mockito.anyString());
     }
 
     @Test
     void checkTPPError() {
-        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString()))
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
@@ -831,7 +831,7 @@ class ReceivedNotificationControllerTest {
                 .expectStatus()
                 .isNotFound();
 
-        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString());
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString(), Mockito.anyString());
     }
 
     @Test

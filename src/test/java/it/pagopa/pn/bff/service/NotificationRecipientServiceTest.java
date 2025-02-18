@@ -14,6 +14,7 @@ import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -617,7 +618,7 @@ class NotificationRecipientServiceTest {
         when(pnEmdClient.checkTpp(Mockito.anyString()))
                 .thenReturn(Mono.just(notificationsReceivedMock.getRetrievalPayloadMock()));
 
-        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString());
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString(), CommonUtility.SourceChannel.TPP.name());
 
         StepVerifier.create(result)
                 .expectNext(NotificationRetrievalIdMapper.modelMapper.toBffCheckTPPResponse(notificationsReceivedMock.getRetrievalPayloadMock()))
@@ -629,10 +630,20 @@ class NotificationRecipientServiceTest {
         when(pnEmdClient.checkTpp(Mockito.anyString()))
                 .thenReturn(Mono.error(new RuntimeException("Error")));
 
-        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString());
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString(), CommonUtility.SourceChannel.TPP.name());
 
         StepVerifier.create(result)
                 .expectError(RuntimeException.class)
+                .verify();
+    }
+
+    @Test
+    void checkTppSourceError() {
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp("retrievalId", "source-wrong");
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400)
                 .verify();
     }
 
