@@ -1,11 +1,15 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationRetrievalIdMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
+import it.pagopa.pn.bff.mappers.payments.PaymentsTppMapper;
+import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ public class PaymentsService {
 
     private final PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final PnEmdClientImpl pnEmdClient;
 
     /**
      * Get payments info.
@@ -62,5 +67,20 @@ public class PaymentsService {
 
             return paymentResponse.map(PaymentsCartMapper.modelMapper::mapPaymentResponse);
         });
+    }
+
+    /**
+     * Payments tpp.
+     *
+     * @param retrievalId The retrieval id
+     * @param noticeCode  The notice code
+     * @param paTaxId     The pa tax id
+     * @return the tpp response
+     */
+    public Mono<BffPaymentTppResponse> paymentsTpp(String retrievalId, String noticeCode, String paTaxId) {
+        log.info("Get payment cart tpp");
+        return pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse);
     }
 }

@@ -1,8 +1,10 @@
 package it.pagopa.pn.bff.mappers.payments;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentTppResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

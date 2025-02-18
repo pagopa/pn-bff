@@ -52,3 +52,14 @@ components:
 
     BffPaymentResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/b3cbe5b1f9cdb4af800355f780414fd02412fde8/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentResponse'
+
+    BffPaymentTppResponse:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/bb35455e5c61ca2c3c1dff088d45a42dc897cb1b/docs/openapi/api-private.yaml#/components/schemas/PaymentUrlResponse'
+
+  parameters:
+    BffPaymentTppRetrievalId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/bb35455e5c61ca2c3c1dff088d45a42dc897cb1b/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
+    BffPaymentTppNoticeCode:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/bb35455e5c61ca2c3c1dff088d45a42dc897cb1b/docs/openapi/api-private.yaml#/components/parameters/noticeCode'
+    BffPaymentTppPaTaxId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/bb35455e5c61ca2c3c1dff088d45a42dc897cb1b/docs/openapi/api-private.yaml#/components/parameters/paTaxId'

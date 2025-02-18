@@ -11,6 +11,7 @@ import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
 import it.pagopa.pn.bff.utils.helpers.MonoMatcher;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static it.pagopa.pn.bff.utils.PnBffRestConstants.SOURCE_CHANNEL_HEADER;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -787,5 +789,62 @@ class ReceivedNotificationControllerTest {
                 argThat(new MonoMatcher<>(Mono.just(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()))),
                 eq(UserMock.PN_CX_GROUPS)
         );
+    }
+
+    @Test
+    void checkTPP() {
+        BffCheckTPPResponse response = new BffCheckTPPResponse();
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(SOURCE_CHANNEL_HEADER, CommonUtility.SourceChannel.TPP.name())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffCheckTPPResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString(), Mockito.anyString());
+    }
+
+    @Test
+    void checkTPPError() {
+        Mockito.when(notificationsRecipientService.checkTpp(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(SOURCE_CHANNEL_HEADER, CommonUtility.SourceChannel.TPP.name())
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).checkTpp(Mockito.anyString(), Mockito.anyString());
+    }
+
+    @Test
+    void checkTPPErrorHeader() {
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RETRIEVAL_ID_PATH)
+                                .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
+                                .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
     }
 }

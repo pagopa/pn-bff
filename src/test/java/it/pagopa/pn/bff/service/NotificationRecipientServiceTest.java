@@ -6,16 +6,15 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
-import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
+import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,6 +36,7 @@ class NotificationRecipientServiceTest {
     private static PnDeliveryClientRecipientImpl pnDeliveryClientRecipient;
     private static PnDeliveryPushClientImpl pnDeliveryPushClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
+    private static PnEmdClientImpl pnEmdClient;
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
@@ -46,7 +46,8 @@ class NotificationRecipientServiceTest {
         pnDeliveryClientRecipient = mock(PnDeliveryClientRecipientImpl.class);
         pnDeliveryPushClient = mock(PnDeliveryPushClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility);
+        pnEmdClient = mock(PnEmdClientImpl.class);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient);
     }
 
     @Test
@@ -611,4 +612,39 @@ class NotificationRecipientServiceTest {
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
     }
+
+    @Test
+    void checkTpp() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.just(notificationsReceivedMock.getRetrievalPayloadMock()));
+
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString(), CommonUtility.SourceChannel.TPP.name());
+
+        StepVerifier.create(result)
+                .expectNext(NotificationRetrievalIdMapper.modelMapper.toBffCheckTPPResponse(notificationsReceivedMock.getRetrievalPayloadMock()))
+                .verifyComplete();
+    }
+
+    @Test
+    void checkTppError() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.error(new RuntimeException("Error")));
+
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp(Mockito.anyString(), CommonUtility.SourceChannel.TPP.name());
+
+        StepVerifier.create(result)
+                .expectError(RuntimeException.class)
+                .verify();
+    }
+
+    @Test
+    void checkTppSourceError() {
+        Mono<BffCheckTPPResponse> result = notificationsRecipientService.checkTpp("retrievalId", "source-wrong");
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 400)
+                .verify();
+    }
+
 }

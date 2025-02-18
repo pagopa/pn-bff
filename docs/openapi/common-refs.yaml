@@ -26,7 +26,10 @@ components:
         # ASCII printable characters
         pattern: ^[ -~]*$
         maxLength: 64
-
+    headerSourceChannel:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/f671c2deffb30af86c87d9526d37ba3116d2b6e6/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannel'
+    headerSourceChannelDetails:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/f671c2deffb30af86c87d9526d37ba3116d2b6e6/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannelDetails'
   schemas:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###

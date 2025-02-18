@@ -4,6 +4,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
 
 import java.time.OffsetDateTime;
@@ -66,5 +68,15 @@ public class NotificationsReceivedMock {
         BffCheckAarRequest bffRequestCheckAarMandateDto = new BffCheckAarRequest();
         bffRequestCheckAarMandateDto.setAarQrCodeValue("S0FVRC1XTUFLLUdLTVktMjAyNDAzLU4tMV9QRi0zNzY1NDU2MS00NDZhLTRjODgtYjMyOC02Njk5YTgzMjJiMzNfZGI0YmJiZDktM2UwNy00YWJlLTk2ZTktOGY4ZTVlMzRkYWM2");
         return bffRequestCheckAarMandateDto;
+    }
+
+    public RetrievalPayload getRetrievalPayloadMock() {
+        RetrievalPayload retrievalPayload = new RetrievalPayload();
+        retrievalPayload.setRetrievalId("retrievalId");
+        retrievalPayload.deeplink("deeplink");
+        retrievalPayload.tppId("tppId");
+        retrievalPayload.paymentButton("paymentButton");
+        retrievalPayload.originId("originId");
+        return retrievalPayload;
     }
 }

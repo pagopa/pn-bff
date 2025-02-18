@@ -1,5 +1,7 @@
 package it.pagopa.pn.bff.mocks;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentRequest;
 
@@ -107,5 +109,11 @@ public class PaymentsMock {
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setCheckoutUrl("https://checkout-url.com");
         return paymentResponse;
+    }
+
+    public PaymentUrlResponse getPaymentUrlResponse() {
+        PaymentUrlResponse paymentUrlResponse = new PaymentUrlResponse();
+        paymentUrlResponse.paymentUrl("https://checkout-tpp-url.com");
+        return paymentUrlResponse;
     }
 }
