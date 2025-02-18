@@ -37,6 +37,7 @@ class PnExternalRegistriesClientImplTestIT {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
+    private final String paId = "mock-pa-id";
     private final String pathInstitutions = "/ext-registry/pa/v1/institutions";
     private final String pathUserInstitutions = "/ext-registry/pa/v1/user-institutions";
     private final String pathGroupsPa = "/ext-registry/pa/v1/groups";
@@ -44,6 +45,7 @@ class PnExternalRegistriesClientImplTestIT {
     private final String pathPaList = "/ext-registry/pa/v1/activated-on-pn";
     private final String pathPaymentInfo = "/ext-registry/pagopa/v2.1/paymentinfo";
     private final String pathCheckoutCart = "/ext-registry/pagopa/v1/checkout-cart";
+    private final String pathAdditionalLanguages = "/ext-registry-private/pa/v1/additional-lang";
     private final PaInfoMock paInfoMock = new PaInfoMock();
     private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
@@ -281,4 +283,52 @@ class PnExternalRegistriesClientImplTestIT {
 
         StepVerifier.create(pnExternalRegistriesClient.getPaList(null)).expectError().verify();
     }
+
+    @Test
+    void getAdditionalLanguages() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(paInfoMock.getAdditionalLanguagesMock());
+        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages + "/" + paId))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage(paId))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void getAdditionalLanguagesError() {
+        mockServerClient.when(request().withMethod("GET").withPath(pathAdditionalLanguages + "/" + paId))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage(paId)).expectError().verify();
+    }
+
+    @Test
+    void changeAdditionalLanguages() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(paInfoMock.getAdditionalLanguagesMock());
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        mockServerClient.when(request().withMethod("PUT").withPath(pathAdditionalLanguages))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnExternalRegistriesClient
+                        .changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectError()
+                .verify();
+    }
+
 }

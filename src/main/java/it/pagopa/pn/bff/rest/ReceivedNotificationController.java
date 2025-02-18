@@ -1,9 +1,11 @@
 package it.pagopa.pn.bff.rest;
 
 
+import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.NotificationReceivedApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.service.NotificationsRecipientService;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +56,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                         List<String> xPagopaPnCxGroups,
                                                                                         String mandateId,
                                                                                         String senderId,
-                                                                                        NotificationStatus status,
+                                                                                        NotificationStatusV26 status,
                                                                                         String subjectRegExp,
                                                                                         String iunMatch,
                                                                                         Integer size,
@@ -110,7 +112,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                  String senderId,
                                                                                                  String recipientId,
                                                                                                  String group,
-                                                                                                 NotificationStatus status,
+                                                                                                 NotificationStatusV26 status,
                                                                                                  String iunMatch,
                                                                                                  Integer size,
                                                                                                  String nextPagesKey,
@@ -175,7 +177,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param documentType      the document type (aar, attachment or legal fact)
      * @param documentIdx       the document index if attachment
      * @param documentId        the document id if aar or legal fact
-     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @return the requested document
      */
@@ -189,12 +190,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                                        UUID mandateId,
                                                                                                        Integer documentIdx,
                                                                                                        String documentId,
-                                                                                                       LegalFactCategory documentCategory,
                                                                                                        final ServerWebExchange exchange) {
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
-                documentCategory, xPagopaPnCxGroups, mandateId
+                xPagopaPnCxGroups, mandateId
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -245,6 +245,22 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
 
         Mono<BffCheckAarResponse> serviceResponse = notificationsRecipientService.checkAarQrCode(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, bffCheckAarRequest, xPagopaPnCxGroups);
 
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
+     * POST bff/v1/notifications/received/check-tpp: Check TPP
+     *
+     * @param retrievalId
+     * @param exchange
+     * @return the response of the check Tpp
+     */
+    @Override
+    public Mono<ResponseEntity<BffCheckTPPResponse>> checkTppV1(String retrievalId, String xPagopaPnSrcCh, String xPagopaPnSrcChDetails, final ServerWebExchange exchange) {
+        if (!CommonUtility.SourceChannel.TPP.name().equals(xPagopaPnSrcCh)) {
+            throw new PnBffException(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Missing the required parameter 'TPP' in xPagopaPnSrcCh", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString());
+        }
+        Mono<BffCheckTPPResponse> serviceResponse = notificationsRecipientService.checkTpp(retrievalId, xPagopaPnSrcCh);
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
 }

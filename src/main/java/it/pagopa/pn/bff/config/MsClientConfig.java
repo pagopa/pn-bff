@@ -9,7 +9,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.Notificatio
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.api.CheckTppApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.api.PaymentApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.api.PaymentInfoApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.api.AdditionalLangApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
@@ -34,7 +37,7 @@ public class MsClientConfig extends CommonBaseClient {
     public void setRetryMaxAttempts(@Value("${pn.bff.retry.max-attempts}") int retryMaxAttempts) {
         super.setRetryMaxAttempts(retryMaxAttempts);
     }
-    
+
     @Bean
     @Primary
     RecipientReadApi recipientReadApi(PnBffConfigs cfg) {
@@ -232,4 +235,38 @@ public class MsClientConfig extends CommonBaseClient {
         apiClient.setBasePath(cfg.getApikeyManagerBaseUrl());
         return new VirtualKeysApi(apiClient);
     }
+
+    @Bean
+    @Primary
+    AdditionalLangApi additionalLangApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getExternalRegistriesBaseUrl());
+        return new AdditionalLangApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    CheckTppApi checkTppApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getEmdBaseUrl());
+        return new CheckTppApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    PaymentApi paymentApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.emd.ApiClient.buildWebClientBuilder())
+                );
+        apiClient.setBasePath(cfg.getEmdBaseUrl());
+        return new PaymentApi(apiClient);
+    }
+
 }

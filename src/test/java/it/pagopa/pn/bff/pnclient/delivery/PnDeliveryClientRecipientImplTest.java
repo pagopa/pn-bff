@@ -2,7 +2,7 @@ package it.pagopa.pn.bff.pnclient.delivery;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -47,7 +47,7 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -62,7 +62,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
@@ -82,7 +82,7 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -97,7 +97,7 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
@@ -119,7 +119,7 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationsReceivedMock.getNotificationReceivedPNMock()));
@@ -133,7 +133,7 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.SENDER_ID,
                 NotificationsReceivedMock.RECIPIENT_ID,
                 NotificationsReceivedMock.GROUP,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
@@ -154,7 +154,7 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
@@ -168,7 +168,7 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.SENDER_ID,
                 NotificationsReceivedMock.RECIPIENT_ID,
                 NotificationsReceivedMock.GROUP,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
@@ -177,8 +177,8 @@ class PnDeliveryClientRecipientImplTest {
     }
 
     @Test
-    void getReceivedNotificationV23() throws RestClientException {
-        when(recipientReadApi.getReceivedNotificationV23(
+    void getReceivedNotificationV25() throws RestClientException {
+        when(recipientReadApi.getReceivedNotificationV25(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -198,8 +198,8 @@ class PnDeliveryClientRecipientImplTest {
     }
 
     @Test
-    void getReceivedNotificationV23Error() {
-        when(recipientReadApi.getReceivedNotificationV23(
+    void getReceivedNotificationV25Error() {
+        when(recipientReadApi.getReceivedNotificationV25(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),

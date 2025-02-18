@@ -2,8 +2,10 @@ package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
 
 import java.time.OffsetDateTime;
@@ -18,7 +20,7 @@ public class NotificationsReceivedMock {
     public static final String MANDATE_ID = "MANDATE_ID";
     public static final String SUBJECT_REG_EXP = "SUBJECT";
     public static final String IUN_MATCH = "IUN";
-    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED;
+    public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26 STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED;
     public static final int SIZE = 10;
     public static final String START_DATE = "2014-04-30T00:00:00.000Z";
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";
@@ -34,7 +36,7 @@ public class NotificationsReceivedMock {
         notificationSearchRowOne.setSender("Sender One");
         notificationSearchRowOne.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowOne.setSubject("Subject One");
-        notificationSearchRowOne.setNotificationStatus(NotificationStatus.ACCEPTED);
+        notificationSearchRowOne.setNotificationStatus(NotificationStatusV26.ACCEPTED);
         notificationSearchRowOne.setRecipients(new ArrayList<>(Arrays.asList("Person 1", "Person 2")));
         notificationSearchRowOne.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowOne.setGroup("Group One");
@@ -44,7 +46,7 @@ public class NotificationsReceivedMock {
         notificationSearchRowTwo.setSender("Sender Two");
         notificationSearchRowTwo.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowTwo.setSubject("Subject Two");
-        notificationSearchRowTwo.setNotificationStatus(NotificationStatus.ACCEPTED);
+        notificationSearchRowTwo.setNotificationStatus(NotificationStatusV26.ACCEPTED);
         notificationSearchRowTwo.setRecipients(new ArrayList<>(Arrays.asList("Person 3", "Person 4")));
         notificationSearchRowTwo.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowTwo.setGroup("Group Two");
@@ -66,5 +68,15 @@ public class NotificationsReceivedMock {
         BffCheckAarRequest bffRequestCheckAarMandateDto = new BffCheckAarRequest();
         bffRequestCheckAarMandateDto.setAarQrCodeValue("S0FVRC1XTUFLLUdLTVktMjAyNDAzLU4tMV9QRi0zNzY1NDU2MS00NDZhLTRjODgtYjMyOC02Njk5YTgzMjJiMzNfZGI0YmJiZDktM2UwNy00YWJlLTk2ZTktOGY4ZTVlMzRkYWM2");
         return bffRequestCheckAarMandateDto;
+    }
+
+    public RetrievalPayload getRetrievalPayloadMock() {
+        RetrievalPayload retrievalPayload = new RetrievalPayload();
+        retrievalPayload.setRetrievalId("retrievalId");
+        retrievalPayload.deeplink("deeplink");
+        retrievalPayload.tppId("tppId");
+        retrievalPayload.paymentButton("paymentButton");
+        retrievalPayload.originId("originId");
+        return retrievalPayload;
     }
 }

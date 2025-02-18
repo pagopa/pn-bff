@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentRequest;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.api.AdditionalLangApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
@@ -43,6 +44,8 @@ class PnExternalRegistriesClientImplTest {
     private InfoPgApi infoPgApi;
     @MockBean
     private PaymentInfoApi paymentInfoApi;
+    @MockBean
+    private AdditionalLangApi additionalLangApi;
 
     @Test
     void getInstitutions() {
@@ -262,6 +265,46 @@ class PnExternalRegistriesClientImplTest {
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnExternalRegistriesClient.getPaList("Comune di Milano"))
+                .expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void getAdditionalLanguages() {
+        when(additionalLangApi.getAdditionalLang(
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.just(paInfoMock.getAdditionalLanguagesMock()));
+
+        StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage("mock-pa-id"))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void getAdditionalLanguagesError() {
+        when(additionalLangApi.getAdditionalLang(
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.getAdditionalLanguage("mock-pa-id"))
+                .expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void changeAdditionalLanguages() {
+        when(additionalLangApi.putAdditionalLang(
+                Mockito.any()
+        )).thenReturn(Mono.just(paInfoMock.getAdditionalLanguagesMock()));
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
+                .expectNext(paInfoMock.getAdditionalLanguagesMock()).verifyComplete();
+    }
+
+    @Test
+    void changeAdditionalLanguagesError() {
+        when(additionalLangApi.putAdditionalLang(
+                Mockito.any()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
                 .expectError(WebClientResponseException.class).verify();
     }
 }

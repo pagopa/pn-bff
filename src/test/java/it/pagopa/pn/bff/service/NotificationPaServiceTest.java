@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PreLoadResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactCategory;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.mocks.*;
@@ -57,7 +56,7 @@ class NotificationPaServiceTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -71,7 +70,7 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
@@ -94,7 +93,7 @@ class NotificationPaServiceTest {
                 Mockito.any(OffsetDateTime.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyInt(),
@@ -108,7 +107,7 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatus.ACCEPTED,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
@@ -191,7 +190,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -221,7 +219,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -240,7 +237,6 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.AAR,
-                null,
                 null,
                 null,
                 UserMock.PN_CX_GROUPS
@@ -262,7 +258,6 @@ class NotificationPaServiceTest {
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(LegalFactCategory.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.nullable(UUID.class)
@@ -276,7 +271,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -292,7 +286,6 @@ class NotificationPaServiceTest {
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(LegalFactCategory.class),
                 Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.nullable(UUID.class)
@@ -306,7 +299,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -327,7 +319,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 null,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -336,30 +327,6 @@ class NotificationPaServiceTest {
                         && ((PnBffException) throwable).getProblem().getStatus() == 400
                         && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
                         && ((PnBffException) throwable).getProblem().getDetail().equals("The legal fact id is missed")
-                )
-                .verify();
-    }
-
-    @Test
-    void getNotificationDocumentLegalFactNoLegalFactCategory() {
-
-        Mono<BffDocumentDownloadMetadataResponse> result = notificationsPAService.getSentNotificationDocument(
-                UserMock.PN_UID,
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PA,
-                UserMock.PN_CX_ID,
-                "IUN",
-                BffDocumentType.LEGAL_FACT,
-                null,
-                "legal-fact-id",
-                null,
-                UserMock.PN_CX_GROUPS
-        );
-
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof PnBffException
-                        && ((PnBffException) throwable).getProblem().getStatus() == 400
-                        && Objects.equals(((PnBffException) throwable).getProblem().getType(), "GENERIC_ERROR")
-                        && ((PnBffException) throwable).getProblem().getDetail().equals("The legal fact category is missed")
                 )
                 .verify();
     }
@@ -382,7 +349,6 @@ class NotificationPaServiceTest {
                 "IUN",
                 BffDocumentType.ATTACHMENT,
                 0,
-                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );
@@ -411,7 +377,6 @@ class NotificationPaServiceTest {
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
-                null,
                 UserMock.PN_CX_GROUPS
         );
 
@@ -429,7 +394,6 @@ class NotificationPaServiceTest {
                 UserMock.PN_CX_ID,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
-                null,
                 null,
                 null,
                 UserMock.PN_CX_GROUPS
@@ -556,7 +520,7 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24.class),
                 Mockito.anyList()
         )).thenReturn(Mono.just(newSentNotificationMock.getNewSentNotificationResponse()));
 
@@ -579,7 +543,7 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
-                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV23.class),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24.class),
                 Mockito.anyList()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 

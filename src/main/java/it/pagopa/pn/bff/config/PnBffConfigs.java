@@ -27,6 +27,7 @@ public class PnBffConfigs {
     private String mandateBaseUrl;
     private String selfcareBaseUrl;
     private String selfcareSendProdId;
+    private String emdBaseUrl;
     // Sender dashboard
     private String dlBucketName;
     private String dlBucketRegion;

@@ -4,7 +4,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV23;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV25;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
@@ -12,6 +12,8 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
+import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_DOCUMENTIDNOTFOUND;
-import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class NotificationsRecipientService {
     private final PnDeliveryClientRecipientImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final PnEmdClientImpl pnEmdClient;
 
     /**
      * Search received notifications for a recipient user.
@@ -61,7 +63,7 @@ public class NotificationsRecipientService {
                                                                       List<String> xPagopaPnCxGroups,
                                                                       String mandateId,
                                                                       String senderId,
-                                                                      NotificationStatus status,
+                                                                      NotificationStatusV26 status,
                                                                       OffsetDateTime startDate,
                                                                       OffsetDateTime endDate,
                                                                       String subjectRegExp,
@@ -115,7 +117,7 @@ public class NotificationsRecipientService {
                                                                                String senderId,
                                                                                String recipientId,
                                                                                String group,
-                                                                               NotificationStatus status,
+                                                                               NotificationStatusV26 status,
                                                                                OffsetDateTime startDate,
                                                                                OffsetDateTime endDate,
                                                                                Integer size,
@@ -159,7 +161,7 @@ public class NotificationsRecipientService {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
-        Mono<FullReceivedNotificationV23> notificationDetail = pnDeliveryClient.getReceivedNotification(
+        Mono<FullReceivedNotificationV25> notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -181,7 +183,6 @@ public class NotificationsRecipientService {
      * @param documentType      the document type (aar, attachment or legal fact)
      * @param documentIdx       the document index if attachment
      * @param documentId        the document id if aar or legal fact
-     * @param documentCategory  the legal fact category (required only if the documentType is legal fact)
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
      * @return the requested document
@@ -192,7 +193,6 @@ public class NotificationsRecipientService {
                                                                                      BffDocumentType documentType,
                                                                                      Integer documentIdx,
                                                                                      String documentId,
-                                                                                     LegalFactCategory documentCategory,
                                                                                      List<String> xPagopaPnCxGroups,
                                                                                      UUID mandateId
     ) {
@@ -250,22 +250,12 @@ public class NotificationsRecipientService {
                         ERROR_CODE_BFF_DOCUMENTIDNOTFOUND
                 ));
             }
-            if (documentCategory == null) {
-                log.error("Legal fact category not found");
-                return Mono.error(new PnBffException(
-                        "Legal fact category not found",
-                        "The legal fact category is missed",
-                        HttpStatus.BAD_REQUEST.value(),
-                        ERROR_CODE_BFF_LEGALFACTCATEGORYNOTFOUND
-                ));
-            }
             // others legal fact case
             Mono<it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse> legalFact = pnDeliveryPushClient.getLegalFact(
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
                     iun,
-                    NotificationParamsMapper.modelMapper.mapLegalFactCategory(documentCategory),
                     documentId,
                     xPagopaPnCxGroups,
                     mandateId
@@ -336,5 +326,28 @@ public class NotificationsRecipientService {
                         xPagopaPnCxGroups
                 ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
         ).map(NotificationAarQrCodeMapper.modelMapper::toBffResponseCheckAarMandateDto);
+    }
+
+    /**
+     * Check the TPP.
+     *
+     * @param retrievalId   the id of the retrieval
+     * @param sourceChannel the source channel from header xPagopaPnSrcCh
+     * @return the response of the check
+     */
+    public Mono<BffCheckTPPResponse> checkTpp(String retrievalId, String sourceChannel) {
+        log.info("Checking TPP - ID: {}, sourceChannel: {}", retrievalId, sourceChannel);
+        if (!sourceChannel.equals(CommonUtility.SourceChannel.TPP.name())) {
+            return Mono.error(new PnBffException(
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Missing the required parameter 'TPP' in xPagopaPnSrcCh",
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.toString()
+            ));
+        }
+
+        return pnEmdClient.checkTpp(retrievalId)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                .map(NotificationRetrievalIdMapper.modelMapper::toBffCheckTPPResponse);
     }
 }

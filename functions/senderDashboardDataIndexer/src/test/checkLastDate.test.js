@@ -22,7 +22,7 @@ describe('checkLastDate', () => {
 
   it('should call console.error when the lastDate is older than the referenceDate', () => {
     const index = { lastDate: '2024-08-05' }; // pastDate
-    const alarmNDays = '5';
+    const alarmNDays = 5;
 
     checkLastDataDate(index, alarmNDays);
 
@@ -34,7 +34,7 @@ describe('checkLastDate', () => {
 
   it('should not call console.error when the lastDate is within the alarm days', () => {
     const index = { lastDate: new Date().toISOString().split('T')[0] }; // today
-    const alarmNDays = '5';
+    const alarmNDays = 5;
 
     checkLastDataDate(index, alarmNDays);
 

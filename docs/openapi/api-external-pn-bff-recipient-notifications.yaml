@@ -161,7 +161,6 @@ paths:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentIdx'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentId'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryDocumentCategory'
       responses:
         '200':
           description: OK
@@ -252,5 +251,47 @@ paths:
           description: QrCode reference Not Found
           content:
             application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/received/check-tpp':
+    get:
+      summary: Servizio per la verifica del retrievalId inviato da app di terze parti
+      tags:
+        - NotificationReceived
+      operationId: checkTppV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/notification.yaml#/components/parameters/BffCheckTPPRetrievalId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification.yaml#/components/schemas/BffCheckTPPResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found (TPP not found or retrieval inactive)
+          content:
+            application/json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Server error
+          content:
+            application/json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'

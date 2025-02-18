@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -36,10 +36,10 @@ class PnDeliveryClientPAImplTestIT {
     private final Integer recipientIdx = 0;
     private final String attachmentName = "PAGOPA";
     private final String notificationsListPath = "/delivery/notifications/sent";
-    private final String notificationDetailPath = "/delivery/v2.4/notifications/sent/" + iun;
+    private final String notificationDetailPath = "/delivery/v2.6/notifications/sent/" + iun;
     private final String documentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
-    private final String newNotificationPath = "/delivery/v2.3/requests";
+    private final String newNotificationPath = "/delivery/v2.4/requests";
     private final String preloadRequestPath = "/delivery/attachments/preload";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
@@ -85,7 +85,7 @@ class PnDeliveryClientPAImplTestIT {
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
@@ -106,7 +106,7 @@ class PnDeliveryClientPAImplTestIT {
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,

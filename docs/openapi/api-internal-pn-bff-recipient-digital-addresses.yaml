@@ -65,6 +65,8 @@ paths:
       operationId: createOrUpdateAddressV1
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      x-pagopa-pn-custom-throttling-group: 'recapiti-by-cx-id'
+      x-pagopa-pn-custom-throttling-value: 'context.authorizer.cx_id'
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL

@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.model.AdditionalLanguages;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.InstitutionResourcePN;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroup;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
@@ -86,5 +87,16 @@ public class PaInfoMock {
         // fourth group
         paGroups.add(getPaGroupMock("mock-id-4", "mock-group-4", PaGroupStatus.ACTIVE));
         return paGroups;
+    }
+
+    public AdditionalLanguages getAdditionalLanguagesMock() {
+        List<String> languages = new ArrayList<>();
+        languages.add("de");
+
+        AdditionalLanguages additionalLanguages = new AdditionalLanguages();
+        additionalLanguages.setAdditionalLanguages(languages);
+        additionalLanguages.setPaId("mock-pa-id");
+
+        return additionalLanguages;
     }
 }

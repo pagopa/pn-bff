@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -41,7 +41,7 @@ class PnDeliveryClientRecipientImplTestIT {
     private final Integer docIdx = 0;
     private final String attachmentName = "PAGOPA";
     private final String notificationListPath = "/delivery/notifications/received";
-    private final String notificationDetailPath = "/delivery/v2.3/notifications/received/" + iun;
+    private final String notificationDetailPath = "/delivery/v2.5/notifications/received/" + iun;
     private final String notificationQrCodePath = "/delivery/notifications/received/check-aar-qr-code";
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
@@ -88,7 +88,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
@@ -110,7 +110,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
@@ -138,7 +138,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationsReceivedMock.SENDER_ID,
                 NotificationsReceivedMock.RECIPIENT_ID,
                 NotificationsReceivedMock.GROUP,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
@@ -160,7 +160,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationsReceivedMock.SENDER_ID,
                 NotificationsReceivedMock.RECIPIENT_ID,
                 NotificationsReceivedMock.GROUP,
-                NotificationStatus.ACCEPTED,
+                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,

@@ -48,7 +48,7 @@ class SentNotificationControllerTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
@@ -105,7 +105,7 @@ class SentNotificationControllerTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(NotificationStatus.class),
+                Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
                 Mockito.any(OffsetDateTime.class),
                 Mockito.any(OffsetDateTime.class),
@@ -235,7 +235,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.just(response));
@@ -265,7 +264,6 @@ class SentNotificationControllerTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS
         );
     }
@@ -281,7 +279,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -310,7 +307,6 @@ class SentNotificationControllerTest {
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
-                null,
                 UserMock.PN_CX_GROUPS
         );
     }
@@ -326,7 +322,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.just(response));
@@ -336,7 +331,6 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentId", "legal-fact-id")
-                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -357,7 +351,6 @@ class SentNotificationControllerTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
     }
@@ -372,7 +365,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -383,7 +375,6 @@ class SentNotificationControllerTest {
                         uriBuilder
                                 .path(PnBffRestConstants.NOTIFICATION_SENT_DOCUMENT_PATH)
                                 .queryParam("documentId", "legal-fact-id")
-                                .queryParam("documentCategory", LegalFactCategory.ANALOG_DELIVERY)
                                 .build(IUN, BffDocumentType.LEGAL_FACT))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -402,7 +393,6 @@ class SentNotificationControllerTest {
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
-                LegalFactCategory.ANALOG_DELIVERY,
                 UserMock.PN_CX_GROUPS
         );
     }
@@ -419,7 +409,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.just(response));
@@ -449,7 +438,6 @@ class SentNotificationControllerTest {
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
-                null,
                 UserMock.PN_CX_GROUPS
         );
     }
@@ -464,7 +452,6 @@ class SentNotificationControllerTest {
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
-                        Mockito.nullable(LegalFactCategory.class),
                         Mockito.anyList()
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -492,7 +479,6 @@ class SentNotificationControllerTest {
                 IUN,
                 BffDocumentType.ATTACHMENT,
                 0,
-                null,
                 null,
                 UserMock.PN_CX_GROUPS
         );

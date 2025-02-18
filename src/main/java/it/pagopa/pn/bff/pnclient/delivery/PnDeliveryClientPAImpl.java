@@ -5,7 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderRea
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV26;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PnDeliveryClientPAImpl {
     public Mono<NotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                     String xPagopaPnCxId, OffsetDateTime startDate,
                                                                     OffsetDateTime endDate, List<String> xPagopaPnCxGroups,
-                                                                    String recipientId, NotificationStatus status, String subjectRegExp,
+                                                                    String recipientId, NotificationStatusV26 status, String subjectRegExp,
                                                                     String iunMatch, Integer size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchSentNotification");
 
@@ -48,12 +49,12 @@ public class PnDeliveryClientPAImpl {
         );
     }
 
-    public Mono<FullSentNotificationV24> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullSentNotificationV26> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun,
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV24");
 
-        return senderReadB2BApi.getSentNotificationV24(
+        return senderReadB2BApi.getSentNotificationV26(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -96,16 +97,16 @@ public class PnDeliveryClientPAImpl {
     }
 
     public Mono<NewNotificationResponse> newSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                             String xPagopaPnCxId, NewNotificationRequestV23 newNotificationRequestV23,
+                                                             String xPagopaPnCxId, NewNotificationRequestV24 newNotificationRequestV24,
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV23");
 
-        return newNotificationApi.sendNewNotificationV23(
+        return newNotificationApi.sendNewNotificationV24(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 "WEB",
-                newNotificationRequestV23,
+                newNotificationRequestV24,
                 xPagopaPnCxGroups,
                 null,
                 null

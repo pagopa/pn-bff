@@ -11,6 +11,7 @@ import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
 import it.pagopa.pn.bff.pnclient.externalregistries.PnExternalRegistriesClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 class PaymentsServiceTest {
     private static PaymentsService paymentsService;
     private static PnExternalRegistriesClientImpl pnExternalRegistriesClient;
+    private static PnEmdClientImpl pnEmdClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private final PaymentsMock paymentsMock = new PaymentsMock();
 
@@ -36,7 +38,7 @@ class PaymentsServiceTest {
     public static void setup() {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        paymentsService = new PaymentsService(pnExternalRegistriesClient, pnBffExceptionUtility);
+        paymentsService = new PaymentsService(pnExternalRegistriesClient, pnBffExceptionUtility, pnEmdClient);
     }
 
     @Test

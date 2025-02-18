@@ -55,4 +55,21 @@ public class PaymentsController implements PaymentsApi {
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
     }
+
+    /**
+     * POST bff/v1/payments/tpp: payments tpp
+     * Get the tpp url for the payment
+     *
+     * @param retrievalId The id of the payment
+     * @param noticeCode  The notice code
+     * @param paTaxId     The tax id of the public administration
+     * @return the payment tpp
+     */
+    @Override
+    public Mono<ResponseEntity<BffPaymentTppResponse>> paymentsTppV1(String retrievalId, String noticeCode, String paTaxId, final ServerWebExchange exchange) {
+
+        Mono<BffPaymentTppResponse> serviceResponse = paymentsService.paymentsTpp(retrievalId, noticeCode, paTaxId);
+
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
 }
