@@ -215,7 +215,9 @@ class NotificationRecipientServiceTest {
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationMultiRecipientMock()));
 
@@ -223,8 +225,10 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 "MANDATE_ID"
         );
 
@@ -240,7 +244,9 @@ class NotificationRecipientServiceTest {
                 Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -248,8 +254,10 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 "MANDATE_ID"
         );
 
@@ -276,11 +284,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -306,11 +316,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -326,11 +338,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.AAR,
                 null,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -359,11 +373,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -388,11 +404,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -408,11 +426,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.LEGAL_FACT,
                 null,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -432,8 +452,10 @@ class NotificationRecipientServiceTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class)
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
 
@@ -441,11 +463,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -461,8 +485,10 @@ class NotificationRecipientServiceTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -470,11 +496,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -490,11 +518,13 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 BffDocumentType.ATTACHMENT,
                 null,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         );
 
@@ -515,7 +545,9 @@ class NotificationRecipientServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class),
                 Mockito.anyInt()
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
@@ -524,9 +556,11 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         );
@@ -544,7 +578,9 @@ class NotificationRecipientServiceTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class),
                 Mockito.anyInt()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
@@ -553,9 +589,11 @@ class NotificationRecipientServiceTest {
                 UserMock.PN_UID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         );

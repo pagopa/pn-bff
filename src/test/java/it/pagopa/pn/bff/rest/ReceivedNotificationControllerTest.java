@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static it.pagopa.pn.bff.utils.PnBffRestConstants.SOURCE_CHANNEL_DETAILS_HEADER;
 import static it.pagopa.pn.bff.utils.PnBffRestConstants.SOURCE_CHANNEL_HEADER;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -293,7 +294,9 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.any()
                 ))
                 .thenReturn(Mono.just(response));
@@ -309,6 +312,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -319,8 +324,10 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -332,7 +339,9 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.any()
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -348,6 +357,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -356,8 +367,10 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -370,10 +383,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.just(response));
@@ -389,6 +404,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -399,11 +416,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -415,10 +434,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -435,6 +456,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -443,11 +466,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.AAR,
                 null,
                 "aar-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -460,10 +485,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.just(response));
@@ -479,6 +506,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -489,11 +518,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -505,10 +536,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -525,6 +558,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -533,11 +568,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.LEGAL_FACT,
                 null,
                 "legal-fact-id",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -550,10 +587,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.just(response));
@@ -569,6 +608,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -579,11 +620,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -595,10 +638,12 @@ class ReceivedNotificationControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.any(BffDocumentType.class),
                         Mockito.nullable(Integer.class),
                         Mockito.nullable(String.class),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class)
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -615,6 +660,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -623,11 +670,13 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 BffDocumentType.ATTACHMENT,
                 0,
                 null,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null
         );
     }
@@ -641,7 +690,9 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class),
                         Mockito.anyInt()
                 ))
@@ -658,6 +709,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -668,9 +721,11 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null,
                 0
         );
@@ -684,7 +739,9 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.anyString(),
+                        Mockito.anyString(),
                         Mockito.anyList(),
+                        Mockito.anyString(),
                         Mockito.nullable(UUID.class),
                         Mockito.anyInt()
                 ))
@@ -702,6 +759,8 @@ class ReceivedNotificationControllerTest {
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -710,9 +769,11 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 IUN,
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 null,
                 0
         );

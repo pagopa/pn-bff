@@ -182,8 +182,10 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 NotificationsReceivedMock.MANDATE_ID
         )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
@@ -197,8 +199,10 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 NotificationsReceivedMock.MANDATE_ID
         )).expectError(WebClientResponseException.class).verify();
     }
@@ -217,9 +221,11 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 docIdx,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
     }
@@ -233,9 +239,11 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 docIdx,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         )).expectError().verify();
     }
@@ -254,9 +262,11 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 attachmentName,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
@@ -271,9 +281,11 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 iun,
                 attachmentName,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         )).expectError().verify();
