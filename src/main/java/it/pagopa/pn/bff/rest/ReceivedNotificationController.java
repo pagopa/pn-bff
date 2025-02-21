@@ -154,13 +154,15 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
     public Mono<ResponseEntity<BffFullNotificationV1>> getReceivedNotificationV1(String xPagopaPnUid,
                                                                                  CxTypeAuthFleet xPagopaPnCxType,
                                                                                  String xPagopaPnCxId,
+                                                                                 String xPagopaPnSrcCh,
                                                                                  String iun,
                                                                                  List<String> xPagopaPnCxGroups,
+                                                                                 String xPagopaPnSrcChDetails,
                                                                                  String mandateId,
                                                                                  final ServerWebExchange exchange) {
 
         Mono<BffFullNotificationV1> serviceResponse = notificationsRecipientService.getNotificationDetail(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, xPagopaPnCxGroups, mandateId
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun, xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -184,17 +186,19 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
     public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getReceivedNotificationDocumentV1(String xPagopaPnUid,
                                                                                                        CxTypeAuthFleet xPagopaPnCxType,
                                                                                                        String xPagopaPnCxId,
+                                                                                                       String xPagopaPnSrcCh,
                                                                                                        String iun,
                                                                                                        BffDocumentType documentType,
                                                                                                        List<String> xPagopaPnCxGroups,
+                                                                                                       String xPagopaPnSrcChDetails,
                                                                                                        UUID mandateId,
                                                                                                        Integer documentIdx,
                                                                                                        String documentId,
                                                                                                        final ServerWebExchange exchange) {
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationDocument(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, documentType, documentIdx, documentId,
-                xPagopaPnCxGroups, mandateId
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun, documentType, documentIdx, documentId,
+                xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -216,13 +220,13 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      */
     @Override
     public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getReceivedNotificationPaymentV1(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                                                      String xPagopaPnCxId, String iun,
-                                                                                                      String attachmentName, List<String> xPagopaPnCxGroups,
+                                                                                                      String xPagopaPnCxId, String xPagopaPnSrcCh, String iun,
+                                                                                                      String attachmentName, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails,
                                                                                                       UUID mandateId, Integer attachmentIdx,
                                                                                                       final ServerWebExchange exchange) {
 
         Mono<BffDocumentDownloadMetadataResponse> serviceResponse = notificationsRecipientService.getReceivedNotificationPayment(
-                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, iun, attachmentName, xPagopaPnCxGroups, mandateId, attachmentIdx
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun, attachmentName, xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId, attachmentIdx
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

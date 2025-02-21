@@ -183,7 +183,9 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationMultiRecipientMock()));
 
@@ -191,8 +193,10 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 NotificationsReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 "MANDATE_ID"
         )).expectNext(notificationDetailRecipientMock.getNotificationMultiRecipientMock()).verifyComplete();
     }
@@ -204,7 +208,9 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -212,8 +218,10 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 NotificationsReceivedMock.IUN_MATCH,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 "MANDATE_ID"
         )).expectError(WebClientResponseException.class).verify();
     }
@@ -225,8 +233,10 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class)
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
 
@@ -234,9 +244,11 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 0,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
     }
@@ -248,8 +260,10 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
@@ -257,9 +271,11 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 0,
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID()
         )).expectError(WebClientResponseException.class).verify();
     }
@@ -272,7 +288,9 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class),
                 Mockito.anyInt()
         )).thenReturn(Mono.just(notificationDownloadDocumentMock.getRecipientAttachmentMock()));
@@ -281,9 +299,11 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         )).expectNext(notificationDownloadDocumentMock.getRecipientAttachmentMock()).verifyComplete();
@@ -297,7 +317,9 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.any(UUID.class),
                 Mockito.anyInt()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
@@ -306,9 +328,11 @@ class PnDeliveryClientRecipientImplTest {
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 "IUN",
                 "PAGOPA",
                 UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
                 UUID.randomUUID(),
                 0
         )).expectError(WebClientResponseException.class).verify();

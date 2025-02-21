@@ -67,39 +67,43 @@ public class PnDeliveryClientRecipientImpl {
     }
 
     public Mono<FullReceivedNotificationV25> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                     String xPagopaPnCxId, String iun,
-                                                                     List<String> xPagopaPnCxGroups, String mandateId) {
+                                                                     String xPagopaPnCxId, String xPagopaPnSrcCh, String iun,
+                                                                     List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, String mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV23");
 
         return recipientReadApi.getReceivedNotificationV25(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
+                xPagopaPnSrcCh,
                 iun,
                 xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
                 mandateId
         );
     }
 
     public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedNotificationDocument(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                                                String xPagopaPnCxId, String iun, Integer docIdx,
-                                                                                                List<String> xPagopaPnCxGroups, UUID mandateId) {
+                                                                                                String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, Integer docIdx,
+                                                                                                List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, UUID mandateId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationDocument");
 
         return recipientReadApi.getReceivedNotificationDocument(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
+                xPagopaPnSrcCh,
                 iun,
                 docIdx,
                 xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
                 mandateId
         );
     }
 
     public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                                               String xPagopaPnCxId, String iun, String attachmentName,
-                                                                                               List<String> xPagopaPnCxGroups, UUID mandateId,
+                                                                                               String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, String attachmentName,
+                                                                                               List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, UUID mandateId,
                                                                                                Integer attachmentIdx) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationAttachment");
 
@@ -107,9 +111,11 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
+                xPagopaPnSrcCh,
                 iun,
                 attachmentName,
                 xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
                 mandateId,
                 attachmentIdx
         );

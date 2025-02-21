@@ -156,7 +156,7 @@ public class NotificationsRecipientService {
      * @return the detail of the notification with a specific IUN
      */
     public Mono<BffFullNotificationV1> getNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                             String xPagopaPnCxId, String iun, List<String> xPagopaPnCxGroups,
+                                                             String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails,
                                                              String mandateId) {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
@@ -165,8 +165,10 @@ public class NotificationsRecipientService {
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
+                xPagopaPnSrcCh,
                 iun,
                 xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
                 mandateId
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
@@ -189,11 +191,12 @@ public class NotificationsRecipientService {
      */
     public Mono<BffDocumentDownloadMetadataResponse> getReceivedNotificationDocument(String xPagopaPnUid,
                                                                                      CxTypeAuthFleet xPagopaPnCxType,
-                                                                                     String xPagopaPnCxId, String iun,
+                                                                                     String xPagopaPnCxId, String xPagopaPnSrcCh, String iun,
                                                                                      BffDocumentType documentType,
                                                                                      Integer documentIdx,
                                                                                      String documentId,
                                                                                      List<String> xPagopaPnCxGroups,
+                                                                                     String xPagopaPnSrcChDetails,
                                                                                      UUID mandateId
     ) {
         log.info("Get notification document - senderId: {} - type: {} - groups: {} - iun: {}",
@@ -213,9 +216,11 @@ public class NotificationsRecipientService {
                     xPagopaPnUid,
                     CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                     xPagopaPnCxId,
+                    xPagopaPnSrcCh,
                     iun,
                     documentIdx,
                     xPagopaPnCxGroups,
+                    xPagopaPnSrcChDetails,
                     mandateId
             ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
             return attachment.map(NotificationDownloadDocumentMapper.modelMapper::mapReceivedAttachmentDownloadResponse);
@@ -278,8 +283,8 @@ public class NotificationsRecipientService {
      * @return the payment for the notification with a specific IUN
      */
     public Mono<BffDocumentDownloadMetadataResponse> getReceivedNotificationPayment(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                                                    String xPagopaPnCxId, String iun, String attachmentName,
-                                                                                    List<String> xPagopaPnCxGroups, UUID mandateId,
+                                                                                    String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, String attachmentName,
+                                                                                    List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, UUID mandateId,
                                                                                     Integer attachmentIdx
     ) {
         log.info("Get notification payment - senderId: {} - type: {} - groups: {} - iun: {}",
@@ -289,9 +294,11 @@ public class NotificationsRecipientService {
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,
+                xPagopaPnSrcCh,
                 iun,
                 attachmentName,
                 xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
                 mandateId,
                 attachmentIdx
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);

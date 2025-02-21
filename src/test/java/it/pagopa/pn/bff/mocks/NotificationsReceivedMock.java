@@ -26,6 +26,8 @@ public class NotificationsReceivedMock {
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";
     public static final String GROUP = "GROUP";
     public static final String NEXT_PAGES_KEY = "NEXT_PAGES_KEY";
+    public static final String SOURCE_CHANNEL = "WEB";
+    public static final String SOURCE_CHANNEL_DETAILS = "WEB_DETAILS";
 
     public NotificationSearchResponse getNotificationReceivedPNMock() {
         NotificationSearchResponse notificationSearchResponse = new NotificationSearchResponse();

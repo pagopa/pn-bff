@@ -126,10 +126,12 @@ paths:
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'               # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'            # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'              # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'          # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
       responses:
@@ -172,6 +174,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentType'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
@@ -216,6 +220,8 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathAttachmentName'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryMandateId'
