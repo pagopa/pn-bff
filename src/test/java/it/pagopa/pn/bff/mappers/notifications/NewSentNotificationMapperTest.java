@@ -31,12 +31,12 @@ class NewSentNotificationMapperTest {
         assertEquals(mappedRequest.getSenderTaxId(), request.getSenderTaxId());
         assertEquals(mappedRequest.getGroup(), request.getGroup());
         assertEquals(mappedRequest.getTaxonomyCode(), request.getTaxonomyCode());
-        assertNull(mappedRequest.getAmount());
-        assertNull(mappedRequest.getIdempotenceToken());
-        assertNull(mappedRequest.getPaFee());
-        assertNull(mappedRequest.getPagoPaIntMode());
-        assertNull(mappedRequest.getPaymentExpirationDate());
-        assertNull(mappedRequest.getVat());
+        assertEquals(mappedRequest.getAmount(), request.getAmount());
+        assertEquals(mappedRequest.getIdempotenceToken(), request.getIdempotenceToken());
+        assertEquals(mappedRequest.getPaFee(), request.getPaFee());
+        assertEquals(mappedRequest.getPagoPaIntMode(), request.getPagoPaIntMode());
+        assertEquals(mappedRequest.getPaymentExpirationDate(), request.getPaymentExpirationDate());
+        assertEquals(mappedRequest.getVat(), request.getVat());
 
         NewNotificationRequestV24 mappedRequestNull = NewSentNotificationMapper.modelMapper.mapRequest(null);
         assertNull(mappedRequestNull);
