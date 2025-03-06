@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: UbfzbnjZHKVt53gkM7FA+fgY4PBSDQyMM0opVxrKwgE=
+  version: MIn9uygAxvA/+caY6Fuhs7zZFJh9O4z22l66UmpE42k=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -85,7 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BffNewNotificationRequest'
+              $ref: '#/components/schemas/NewNotificationRequestV24'
       responses:
         '202':
           description: Accepted
@@ -4218,6 +4218,7 @@ components:
           description: Data accettazione notifica
           type: string
           format: date-time
+          deprecated: true
         group:
           type: string
           description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
@@ -4630,111 +4631,6 @@ components:
       enum:
         - FLAT_RATE
         - DELIVERY_MODE
-    BffNewNotificationRequest:
-      description: I campi utilizzati per la creazione di una nuova Notifica.
-      type: object
-      required:
-        - paProtocolNumber
-        - subject
-        - recipients
-        - documents
-        - physicalCommunicationType
-        - notificationFeePolicy
-        - senderDenomination
-        - senderTaxId
-        - taxonomyCode
-      properties:
-        paProtocolNumber:
-          description: Numero di protocollo che la PA mittente assegna alla notifica stessa
-          type: string
-          pattern: ^.*$
-          maxLength: 256
-        subject:
-          type: string
-          description: titolo della notifica
-          maxLength: 134
-          pattern: ^.*$
-        abstract:
-          type: string
-          description: descrizione sintetica della notifica
-          pattern: ^.*$
-          maxLength: 1024
-        recipients:
-          type: array
-          description: Informazioni sui destinatari
-          items:
-            $ref: '#/components/schemas/NotificationRecipientV23'
-        documents:
-          type: array
-          description: Documenti notificati
-          items:
-            $ref: '#/components/schemas/NotificationDocument'
-          minItems: 1
-        notificationFeePolicy:
-          $ref: '#/components/schemas/NotificationFeePolicy'
-        cancelledIun:
-          $ref: '#/components/schemas/IUN'
-        physicalCommunicationType:
-          type: string
-          description: Tipologia comunicazione fisica
-          enum:
-            - AR_REGISTERED_LETTER
-            - REGISTERED_LETTER_890
-        senderDenomination:
-          $ref: '#/components/schemas/Denomination'
-        senderTaxId:
-          $ref: '#/components/schemas/paTaxId'
-        group:
-          type: string
-          description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
-          pattern: ^[ -~]*$
-          maxLength: 1024
-        taxonomyCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: ^([0-9]{6}[A-Z]{1})$
-          description: >-
-            Codice tassonomico della notifica basato sulla definizione presente
-            nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
-            PIATTAFORMA NOTIFICHE
-            DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
-        additionalLanguages:
-          type: array
-          description: >-
-            In questo campo è possibile definire la lingua addizionale (oltre a
-            quella italiana) da utilizzare per la generazione documenti, atti
-            opponibili a terzi ecc. Attualmente è possibile indicare un solo
-            item e dunque una sola lingua aggiuntiva.
-          items:
-            type: string
-            maxItems: 1
-    NewNotificationResponse:
-      title: Identificativi della richiesta di notifica
-      description: >-
-        Contiene le informazioni per identificare una richiesta di invio
-        notifica che non è ancora stata accettata da Piattaforma notifiche.
-      type: object
-      required:
-        - notificationRequestId
-        - paProtocolNumber
-      properties:
-        notificationRequestId:
-          type: string
-          description: >-
-            identificativo univoco di una richiesta di invio notifica, non è lo
-            IUN
-          maxLength: 36
-          pattern: ^[A-Za-z0-9+/=]{36}$
-        paProtocolNumber:
-          type: string
-          description: Identificativo inviato dalla pubblica amministrazione
-        idempotenceToken:
-          description: >-
-            Ripetizione del token usato per disambiguare "richieste di
-            notificazione"  effettuate con lo stesso numero di protocollo (campo
-            _paProtocolNumber_).
-          type: string
     PaFeeV23:
       type: number
       description: >-
@@ -4878,6 +4774,32 @@ components:
           items:
             type: string
             maxItems: 1
+    NewNotificationResponse:
+      title: Identificativi della richiesta di notifica
+      description: >-
+        Contiene le informazioni per identificare una richiesta di invio
+        notifica che non è ancora stata accettata da Piattaforma notifiche.
+      type: object
+      required:
+        - notificationRequestId
+        - paProtocolNumber
+      properties:
+        notificationRequestId:
+          type: string
+          description: >-
+            identificativo univoco di una richiesta di invio notifica, non è lo
+            IUN
+          maxLength: 36
+          pattern: ^[A-Za-z0-9+/=]{36}$
+        paProtocolNumber:
+          type: string
+          description: Identificativo inviato dalla pubblica amministrazione
+        idempotenceToken:
+          description: >-
+            Ripetizione del token usato per disambiguare "richieste di
+            notificazione"  effettuate con lo stesso numero di protocollo (campo
+            _paProtocolNumber_).
+          type: string
     SentNotificationV24:
       description: Le informazioni riguardanti una richiesta di notifica accettata
       allOf:
@@ -7828,7 +7750,7 @@ components:
         authorizerUri: >-
           arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-jwtAuthorizerLambda/invocations
         authorizerResultTtlInSeconds: 300
-        identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-]+)$
+        identityValidationExpression: ^Bearer\s([a-zA-Z0-9_]+)\.([a-zA-Z0-9\-_]+)\.([a-zA-Z0-9_\-]+)$
         type: token
 tags:
   - name: NotificationSent
