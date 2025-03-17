@@ -16,9 +16,7 @@ This action does the work for us. It updates the commitIds of chosen microservic
 
 ## How it works
 
-The action takes as input the list of microservices to update.
-
-For those microservices, it gets the last tag and so the related commitId.
+For all microservices in `src/dependencies.js`, it gets the last tag and so the related commitId.
 
 After that it gets the pom version (on the default branch `develop`) and create a branch with
 name `update-dependencies/{pomVersion}`. If the branch already exists, it skips the creation step.
@@ -34,19 +32,6 @@ conflicts or bugs introduced by the update.
 
 After that the pull request can be merged.
 
-## Inputs
-
-**Required** `token` - the token used to do authenticated request to git-hub\
-**Required** `ref` - the branch from where create the pull request branch\
-**Required** `pn-auth-fleet` - a flag to set if you want to update the pn-auth-fleet dependency\
-**Required** `pn-delivery` - a flag to set if you want to update the pn-delivery dependency\
-**Required** `pn-apikey-manager` - a flag to set if you want to update the pn-apikey-manager dependency\
-**Required** `pn-external-registries` - a flag to set if you want to update the pn-external-registries dependency\
-**Required** `pn-user-attributes` - a flag to set if you want to update the pn-user-attributes dependency\
-**Required** `pn-downtime-logs` - a flag to set if you want to update the pn-downtime-logs dependency\
-**Required** `pn-delivery-push` - a flag to set if you want to update the pn-delivery-push dependency\
-**Required** `pn-mandate` - a flag to set if you want to update the pn-mandate dependency\
-
 ## Example usage
 
 ```yaml
@@ -54,12 +39,4 @@ uses: ./.github/workflows/actions/update-dependencies
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   ref: 'develop'
-  pn-auth-fleet: true
-  pn-delivery: true
-  pn-apikey-manager: false
-  pn-external-registries: false
-  pn-user-attributes: true
-  pn-downtime-logs: false
-  pn-delivery-push: false
-  pn-mandate: false
 ```
