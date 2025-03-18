@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: MIn9uygAxvA/+caY6Fuhs7zZFJh9O4z22l66UmpE42k=
+  version: ib+AnJ/k8I1eKsnRgqQfkD4Yhf7rVPZGx0uAqAYKVgs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -85,7 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewNotificationRequestV24'
+              $ref: '#/components/schemas/NewNotificationRequestV25'
       responses:
         '202':
           description: Accepted
@@ -4571,13 +4571,12 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/NotificationPaymentItem'
-    NotificationRecipientV23:
+    NotificationRecipientV24:
       description: Informazioni sui destinatari
       required:
         - denomination
         - recipientType
         - taxId
-        - physicalAddress
       type: object
       additionalProperties: false
       properties:
@@ -4654,7 +4653,7 @@ components:
         <br/> Esempio vat al 22% -> 22 <br/>
       minimum: 0
       maximum: 100
-    NewNotificationRequestV24:
+    NewNotificationRequestV25:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
       required:
@@ -4697,7 +4696,7 @@ components:
           type: array
           description: Informazioni sui destinatari
           items:
-            $ref: '#/components/schemas/NotificationRecipientV23'
+            $ref: '#/components/schemas/NotificationRecipientV24'
           minItems: 1
         documents:
           type: array
@@ -4800,10 +4799,15 @@ components:
             notificazione"  effettuate con lo stesso numero di protocollo (campo
             _paProtocolNumber_).
           type: string
-    SentNotificationV24:
+    UsedServices:
+      type: object
+      properties:
+        physicalAddressLookup:
+          type: boolean
+    SentNotificationV25:
       description: Le informazioni riguardanti una richiesta di notifica accettata
       allOf:
-        - $ref: '#/components/schemas/NewNotificationRequestV24'
+        - $ref: '#/components/schemas/NewNotificationRequestV25'
         - type: object
           required:
             - iun
@@ -4830,6 +4834,8 @@ components:
             version:
               type: string
               description: Indica la versione della notifica
+            usedServices:
+              $ref: '#/components/schemas/UsedServices'
     BffNotificationStatus:
       type: string
       enum:
@@ -6183,7 +6189,7 @@ components:
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: '#/components/schemas/SentNotificationV24'
+        - $ref: '#/components/schemas/SentNotificationV25'
         - type: object
           required:
             - notificationStatusHistory
