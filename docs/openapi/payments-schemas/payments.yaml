@@ -24,9 +24,9 @@ components:
         - noticeCode
       properties:
         creditorTaxId:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/866ae13b5e39f21ca3afe871c8a3c804f5c62ce8/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/ac7b6df25491e7f19bb239c6966a04edc1c62530/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId'
         noticeCode:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/866ae13b5e39f21ca3afe871c8a3c804f5c62ce8/docs/openapi/schemas-pn-notification.yaml#/components/schemas/noticeCode'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/ac7b6df25491e7f19bb239c6966a04edc1c62530/docs/openapi/schemas-pn-notification.yaml#/components/schemas/noticeCode'
         status:
           $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/b3cbe5b1f9cdb4af800355f780414fd02412fde8/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentStatus'
         detail:

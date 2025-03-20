@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ib+AnJ/k8I1eKsnRgqQfkD4Yhf7rVPZGx0uAqAYKVgs=
+  version: BsEewjyVooX81DRWXgNE+DQclBUEUy0ojU0L4fMXi48=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4800,6 +4800,7 @@ components:
             _paProtocolNumber_).
           type: string
     UsedServices:
+      description: Servizi utilizzati per la creazione della notifica
       type: object
       properties:
         physicalAddressLookup:
