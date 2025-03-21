@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV24;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV25;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNewNotificationRequest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNewNotificationResponse;
@@ -15,9 +15,9 @@ class NewSentNotificationMapperTest {
 
     @Test
     void testNewNotificationRequestMapper() {
-        NewNotificationRequestV24 request = newSentNotificationMock.getNewSentNotificationRequest();
+        NewNotificationRequestV25 request = newSentNotificationMock.getNewSentNotificationRequest();
         BffNewNotificationRequest bffRequest = newSentNotificationMock.getBffNewSentNotificationRequest();
-        NewNotificationRequestV24 mappedRequest = NewSentNotificationMapper.modelMapper.mapRequest(bffRequest);
+        NewNotificationRequestV25 mappedRequest = NewSentNotificationMapper.modelMapper.mapRequest(bffRequest);
         assertNotNull(mappedRequest);
         assertEquals(mappedRequest.getCancelledIun(), request.getCancelledIun());
         assertEquals(mappedRequest.getPaProtocolNumber(), request.getPaProtocolNumber());
@@ -38,7 +38,7 @@ class NewSentNotificationMapperTest {
         assertEquals(mappedRequest.getPaymentExpirationDate(), request.getPaymentExpirationDate());
         assertEquals(mappedRequest.getVat(), request.getVat());
 
-        NewNotificationRequestV24 mappedRequestNull = NewSentNotificationMapper.modelMapper.mapRequest(null);
+        NewNotificationRequestV25 mappedRequestNull = NewSentNotificationMapper.modelMapper.mapRequest(null);
         assertNull(mappedRequestNull);
     }
 
