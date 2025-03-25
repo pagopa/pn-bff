@@ -52,7 +52,7 @@ public class PnDeliveryClientPAImpl {
     public Mono<FullSentNotificationV27> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun,
                                                              List<String> xPagopaPnCxGroups) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV25");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV27");
 
         return senderReadB2BApi.getSentNotificationV27(
                 xPagopaPnUid,
@@ -99,7 +99,7 @@ public class PnDeliveryClientPAImpl {
     public Mono<NewNotificationResponse> newSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, NewNotificationRequestV25 NewNotificationRequestV25,
                                                              List<String> xPagopaPnCxGroups) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV23");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV25");
 
         return newNotificationApi.sendNewNotificationV25(
                 xPagopaPnUid,
