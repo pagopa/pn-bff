@@ -213,6 +213,9 @@ Parameters:
   SelfCareSendProdId:
       Type: String
       Description: 'SelfCare send prod id'
+  SelfCareCdnURL:
+    Type: String
+    Description: 'SelfCare CDN URL'
 
   # Logging parameters
   WireTapLogActivation:
