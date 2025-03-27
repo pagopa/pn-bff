@@ -41,7 +41,7 @@ class PnDeliveryClientRecipientImplTestIT {
     private final Integer docIdx = 0;
     private final String attachmentName = "PAGOPA";
     private final String notificationListPath = "/delivery/notifications/received";
-    private final String notificationDetailPath = "/delivery/v2.5/notifications/received/" + iun;
+    private final String notificationDetailPath = "/delivery/v2.6/notifications/received/" + iun;
     private final String notificationQrCodePath = "/delivery/notifications/received/check-aar-qr-code";
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
