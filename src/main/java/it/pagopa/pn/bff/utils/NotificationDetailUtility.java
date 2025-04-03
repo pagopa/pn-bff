@@ -244,7 +244,7 @@ public class NotificationDetailUtility {
                 final BffDocumentRecipientData recipientData = new BffDocumentRecipientData();
 
                 final Integer recIndex = timeline.getDetails().getRecIndex();
-                final List<NotificationRecipientV23> recipients = bffFullNotificationV1.getRecipients();
+                final List<NotificationRecipientV24> recipients = bffFullNotificationV1.getRecipients();
                 if(recIndex != null){
                     recipientData.setDenomination(recipients.get(recIndex).getDenomination());
                     recipientData.setTaxId(recipients.get(recIndex).getTaxId());

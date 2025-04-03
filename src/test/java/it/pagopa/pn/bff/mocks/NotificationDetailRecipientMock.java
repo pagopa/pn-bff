@@ -77,8 +77,8 @@ public class NotificationDetailRecipientMock {
         return notificationPaymentItems;
     }
 
-    private NotificationRecipientV23 getRecipientMock(NotificationRecipientV23.RecipientTypeEnum recipientType, String taxId, String denomination) {
-        NotificationRecipientV23 recipient = new NotificationRecipientV23();
+    private NotificationRecipientV24 getRecipientMock(NotificationRecipientV24.RecipientTypeEnum recipientType, String taxId, String denomination) {
+        NotificationRecipientV24 recipient = new NotificationRecipientV24();
         recipient.setRecipientType(recipientType);
         recipient.setTaxId(taxId);
         recipient.setDenomination(denomination);
@@ -98,13 +98,13 @@ public class NotificationDetailRecipientMock {
         return recipient;
     }
 
-    private ArrayList<NotificationRecipientV23> getRecipientsMock() {
-        ArrayList<NotificationRecipientV23> recipients = new ArrayList<>();
-        recipients.add(new NotificationRecipientV23()
-                .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF));
-        recipients.add(new NotificationRecipientV23()
-                .recipientType(NotificationRecipientV23.RecipientTypeEnum.PF));
-        recipients.add(getRecipientMock(NotificationRecipientV23.RecipientTypeEnum.PF, "LVLDAA85T50G702B", "Ada Lovelace"));
+    private ArrayList<NotificationRecipientV24> getRecipientsMock() {
+        ArrayList<NotificationRecipientV24> recipients = new ArrayList<>();
+        recipients.add(new NotificationRecipientV24()
+                .recipientType(NotificationRecipientV24.RecipientTypeEnum.PF));
+        recipients.add(new NotificationRecipientV24()
+                .recipientType(NotificationRecipientV24.RecipientTypeEnum.PF));
+        recipients.add(getRecipientMock(NotificationRecipientV24.RecipientTypeEnum.PF, "LVLDAA85T50G702B", "Ada Lovelace"));
         return recipients;
     }
 
@@ -543,14 +543,14 @@ public class NotificationDetailRecipientMock {
         return timeline;
     }
 
-    public FullReceivedNotificationV25 getNotificationMultiRecipientMock() {
-        FullReceivedNotificationV25 bffFullNotificationV1Mock = new FullReceivedNotificationV25();
+    public FullReceivedNotificationV26 getNotificationMultiRecipientMock() {
+        FullReceivedNotificationV26 bffFullNotificationV1Mock = new FullReceivedNotificationV26();
 
         bffFullNotificationV1Mock.setAbstract("Abstract della notifica");
         bffFullNotificationV1Mock.setPaProtocolNumber("302011692956029071");
         bffFullNotificationV1Mock.setSubject("notifica analogica con cucumber");
         bffFullNotificationV1Mock.setNotificationFeePolicy(NotificationFeePolicy.FLAT_RATE);
-        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullReceivedNotificationV25.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullReceivedNotificationV26.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         bffFullNotificationV1Mock.setSenderDenomination("Comune di palermo");
         bffFullNotificationV1Mock.senderTaxId("80016350821");
         bffFullNotificationV1Mock.setGroup("000");
