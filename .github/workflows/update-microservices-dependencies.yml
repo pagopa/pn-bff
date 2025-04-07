@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@4.2.2
+        uses: actions/checkout@v4
         with:
           ref: 'develop'
           fetch-depth: 0
@@ -33,11 +33,3 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'develop'
-          pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
-          pn-delivery: ${{ inputs.pn-delivery }}
-          pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
-          pn-external-registries: ${{ inputs.pn-external-registries }}
-          pn-user-attributes: ${{ inputs.pn-user-attributes }}
-          pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
-          pn-delivery-push: ${{ inputs.pn-delivery-push }}
-          pn-mandate: ${{ inputs.pn-mandate }}
