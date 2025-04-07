@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: MIn9uygAxvA/+caY6Fuhs7zZFJh9O4z22l66UmpE42k=
+  version: eBd6WuShNmls3cu9wOBiEnbO7QHGLaIieKsdLnofekY=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7321,10 +7321,10 @@ components:
       properties:
         paymentUrl:
           type: string
-          description: URL to the payment page
+          description: URL to the payment page of third party partner's service
       example:
         paymentUrl: >-
-          https://example.com/payment/123e4567-e89b-12d3-a456-426614174000?fiscalCode=1234567890&noticeNumber=302000100000019421
+          https://example.com/payment?retrievalId=123e4567-e89b-12d3-a456-426614174000&fiscalCode=1234567890&noticeNumber=302000100000019421
     BffChannelType:
       type: string
       enum:
