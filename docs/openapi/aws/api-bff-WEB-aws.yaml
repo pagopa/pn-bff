@@ -7321,10 +7321,10 @@ components:
       properties:
         paymentUrl:
           type: string
-          description: URL to the payment page
+          description: URL to the payment page of third party partner's service
       example:
         paymentUrl: >-
-          https://example.com/payment/123e4567-e89b-12d3-a456-426614174000?fiscalCode=1234567890&noticeNumber=302000100000019421
+          https://example.com/payment?retrievalId=123e4567-e89b-12d3-a456-426614174000&fiscalCode=1234567890&noticeNumber=302000100000019421
     BffChannelType:
       type: string
       enum:
