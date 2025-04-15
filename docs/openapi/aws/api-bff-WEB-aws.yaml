@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: eBd6WuShNmls3cu9wOBiEnbO7QHGLaIieKsdLnofekY=
+  version: O1LO2E6B1AOsRC5EAbw2lvOqyaVCHFeYF8It1Aexpis=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7795,13 +7795,16 @@ x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
   DEFAULT_4XX:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
   BAD_REQUEST_PARAMETERS:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
       gatewayresponse.header.Access-Control-Expose-Headers: '''x-amzn-trace-id'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":
@@ -7811,6 +7814,7 @@ x-amazon-apigateway-gateway-responses:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
       gatewayresponse.header.Access-Control-Expose-Headers: '''x-amzn-trace-id'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":
