@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: RyfacUxQ3k9MKLzYkJsaoI0/nED9pvqFpc92f9ZSUKc=
+  version: pGN61LmNSnXehq1x0T7p2C4VRXXACUbTPak5Fws6CPc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7220,6 +7220,7 @@ components:
         - timeReferenceStartDate
         - endDate
         - timeReferenceEndDate
+        - description
       properties:
         startDate:
           type: string
@@ -7228,6 +7229,8 @@ components:
         endDate:
           type: string
         timeReferenceEndDate:
+          type: string
+        description:
           type: string
     PaymentInfoRequest:
       title: Request for a payment info
@@ -7828,6 +7831,7 @@ components:
         Content-Disposition:
           description: Disposizione del contenuto per il download come allegato
           schema:
+            x-field-extra-annotation: '@lombok.ToString.Exclude'
             type: string
             example: attachment; filename="document.pdf"
       content:

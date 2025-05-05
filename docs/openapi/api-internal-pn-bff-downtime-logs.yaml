@@ -142,8 +142,6 @@ paths:
 #      security:                                                                                         # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
       operationId: getMalfunctionPreviewV1
-      parameters:                                                                                        # NO EXTERNAL
-        - $ref: 'common-refs.yaml#/components/parameters/uidAuthFleet'                                   # NO EXTERNAL
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
