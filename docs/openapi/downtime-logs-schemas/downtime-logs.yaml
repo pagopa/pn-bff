@@ -41,3 +41,7 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
     BffLegalFactDownloadMetadataResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
+    BffPnDowntimeMalfunctionLegalFact:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/2b9784b8c5882c0fe79bb597d770a83423f914f3/docs/openapi/remote-refs.yaml#/components/schemas/MalfunctionLegalFact'
+    BffPnDowntimeSuccessResponsePDF:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/2b9784b8c5882c0fe79bb597d770a83423f914f3/docs/openapi/remote-refs.yaml#/components/schemas/SuccessResponsePDF'

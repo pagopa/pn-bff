@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: O1LO2E6B1AOsRC5EAbw2lvOqyaVCHFeYF8It1Aexpis=
+  version: RyfacUxQ3k9MKLzYkJsaoI0/nED9pvqFpc92f9ZSUKc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2831,6 +2831,67 @@ paths:
         httpMethod: ANY
         requestParameters:
           integration.request.path.legalFactId: method.request.path.legalFactId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/downtime/legal-facts/malfunction/preview:
+    put:
+      summary: Preview AO3 malfunzionamento
+      description: >-
+        Ritorna il pdf per la preview dell'atto opponibile a terzi per il
+        malfunzionamento
+      tags:
+        - Downtime
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      operationId: getMalfunctionPreviewV1
+      x-api-permissions:
+        - api-key-read
+        - log-downtime-read
+      requestBody:
+        description: Parametri necessari per generare il documento
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MalfunctionLegalFact'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponsePDF'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/legal-facts/malfunction/preview
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /v1/downtime/legal-facts/malfunction/preview API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/downtime/legal-facts/malfunction/preview
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
         passthroughBehavior: when_no_match
         connectionType: VPC_LINK
         timeoutInMillis: 29000
@@ -7152,6 +7213,22 @@ components:
           description: >-
             Stima del numero di secondi da aspettare prima che il contenuto del 
             documento sia scaricabile.
+    MalfunctionLegalFact:
+      type: object
+      required:
+        - startDate
+        - timeReferenceStartDate
+        - endDate
+        - timeReferenceEndDate
+      properties:
+        startDate:
+          type: string
+        timeReferenceStartDate:
+          type: string
+        endDate:
+          type: string
+        timeReferenceEndDate:
+          type: string
     PaymentInfoRequest:
       title: Request for a payment info
       description: Object containing sender and payment id
@@ -7739,7 +7816,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
-  responses: {}
+  responses:
+    SuccessResponsePDF:
+      description: Ok
+      headers:
+        Content-Type:
+          description: Tipo di contenuto del documento
+          schema:
+            type: string
+            example: application/pdf
+        Content-Disposition:
+          description: Disposizione del contenuto per il download come allegato
+          schema:
+            type: string
+            example: attachment; filename="document.pdf"
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
       type: apiKey

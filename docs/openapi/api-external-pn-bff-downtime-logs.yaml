@@ -132,3 +132,32 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+  "/bff/v1/downtime/legal-facts/malfunction/preview":
+    put:
+      summary: Preview AO3 malfunzionamento
+      description: >-
+        Ritorna il pdf per la preview dell'atto opponibile a terzi per il malfunzionamento
+      tags:
+        - Downtime
+      security:                                                                                         # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
+      operationId: getMalfunctionPreviewV1
+      x-api-permissions:
+        - 'api-key-read'
+        - 'log-downtime-read'
+      requestBody:
+        description: Parametri necessari per generare il documento
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/schemas/BffPnDowntimeMalfunctionLegalFact'
+      responses:
+        '200':
+          $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/schemas/BffPnDowntimeSuccessResponsePDF'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
