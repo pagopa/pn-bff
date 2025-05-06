@@ -1,15 +1,26 @@
-const { S3Client, ListObjectVersionsCommand, CopyObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  ListObjectVersionsCommand,
+  CopyObjectCommand,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
 
 const client = new S3Client({
   region: process.env.AWS_REGION,
-  forcePathStyle: true
+  forcePathStyle: true,
 });
 
 const getLatestVersion = async (bffBucketS3Key) => {
   try {
     const bffBucketName = process.env.BFF_BUCKET_NAME;
-    console.log(`Listing object versions for bucket: ${bffBucketName}, file: ${bffBucketS3Key}`);
-    const command = new ListObjectVersionsCommand({ Bucket: bffBucketName, Prefix: bffBucketS3Key, MaxKeys: 1});
+    console.log(
+      `Listing object versions for bucket: ${bffBucketName}, file: ${bffBucketS3Key}`
+    );
+    const command = new ListObjectVersionsCommand({
+      Bucket: bffBucketName,
+      Prefix: bffBucketS3Key,
+      MaxKeys: 1,
+    });
     const response = await client.send(command);
 
     if (!response.Versions || response.Versions.length === 0) {
@@ -19,7 +30,6 @@ const getLatestVersion = async (bffBucketS3Key) => {
     const latestVersion = response.Versions[0];
     console.log(`Latest version found: ${latestVersion.VersionId}`);
     return latestVersion;
-
   } catch (error) {
     console.error('Error listing object versions:', error);
     throw new Error('Failed to list object versions');
@@ -33,7 +43,7 @@ function generateS3Key(configVersion, toWebLandingBucket) {
   }
 
   let s3Key;
-  if(!toWebLandingBucket){
+  if (!toWebLandingBucket) {
     const bffBucketPrefix = process.env.BFF_BUCKET_PREFIX;
     s3Key = `${bffBucketPrefix}/${fileName}_${configVersion}.csv`;
   } else {
@@ -50,7 +60,7 @@ const uploadFile = async (bffBucketName, key, fileContent) => {
     const command = new PutObjectCommand({
       Bucket: bffBucketName,
       Key: key,
-      Body: fileContent
+      Body: fileContent,
     });
 
     const response = await client.send(command);
@@ -61,13 +71,20 @@ const uploadFile = async (bffBucketName, key, fileContent) => {
   }
 };
 
-const copyObject = async (sourceBucket, sourceKey, destinationBucket, destinationKey) => {
+const copyObject = async (
+  sourceBucket,
+  sourceKey,
+  destinationBucket,
+  destinationKey
+) => {
   try {
-    console.log(`Copying object from ${sourceBucket}/${sourceKey} to ${destinationBucket}/${destinationKey}`);
+    console.log(
+      `Copying object from ${sourceBucket}/${sourceKey} to ${destinationBucket}/${destinationKey}`
+    );
     const command = new CopyObjectCommand({
       CopySource: `${sourceBucket}/${sourceKey}`,
       Bucket: destinationBucket,
-      Key: destinationKey
+      Key: destinationKey,
     });
 
     const response = await client.send(command);
@@ -78,18 +95,27 @@ const copyObject = async (sourceBucket, sourceKey, destinationBucket, destinatio
   }
 };
 
-async function uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent) {
-  	const bffBucketName = process.env.BFF_BUCKET_NAME;
+async function uploadVersionedFile(
+  sendToWebLanding,
+  bffBucketS3Key,
+  csvContent
+) {
+  const bffBucketName = process.env.BFF_BUCKET_NAME;
 
-    await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
-    console.log('File uploaded to S3:', bffBucketS3Key);
+  await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
+  console.log('File uploaded to S3:', bffBucketS3Key);
 
-    if (sendToWebLanding) {
-      const  webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
-      const webLandingS3Key = generateS3Key(null, true);
-      await copyObject(bffBucketName, bffBucketS3Key, webLandingBucketName, webLandingS3Key);
-      console.log('File copied to site bucket:', webLandingS3Key);
-    }
+  if (sendToWebLanding) {
+    const webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
+    const webLandingS3Key = generateS3Key(null, true);
+    await copyObject(
+      bffBucketName,
+      bffBucketS3Key,
+      webLandingBucketName,
+      webLandingS3Key
+    );
+    console.log('File copied to site bucket:', webLandingS3Key);
+  }
 }
 
 module.exports = { getLatestVersion, generateS3Key, uploadVersionedFile };
