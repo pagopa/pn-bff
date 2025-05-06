@@ -1,15 +1,15 @@
 package it.pagopa.pn.bff.pnclient.downtimelogs;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.*;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -37,8 +37,12 @@ public class PnDowntimeLogsClientImpl {
     }
 
     public Mono<LegalFactDownloadMetadataResponse> getLegalFact(String legalFactId) {
-        log.logInvokingExternalService(serviceName, "getLegalFact");
         return downtimeApi.getLegalFact(legalFactId)
                 ;
+    }
+
+    public Mono<File> getMalfunctionPreview(MalfunctionLegalFact malfunctionLegalFact) {
+        log.logInvokingExternalService(serviceName, "getMalfunctionPreview");
+        return downtimeApi.getMalfunctionPreview(malfunctionLegalFact);
     }
 }

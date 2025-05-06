@@ -1,11 +1,9 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.LegalFactDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnFunctionality;
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeHistoryResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeMalfunctionLegalFact;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnStatusResponse;
 import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
@@ -24,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -81,5 +80,14 @@ public class DowntimeLogsService {
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return legalFactDownloadMetadataResponse.map(LegalFactDownloadResponseMapper.modelMapper::mapLegalFactDownloadMetadataResponse);
+    }
+
+    public Mono<File> getMalfunctionPreview(MalfunctionLegalFact malfunctionLegalFact) {
+        log.info("Get malfunction preview");
+
+        Mono<File> preview = pnDowntimeLogsClient.getMalfunctionPreview(malfunctionLegalFact)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return preview;
     }
 }

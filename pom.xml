@@ -1039,7 +1039,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/api-internal-v1.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-downtime-logs/56917416bdcd5c1607beebb0b3ed3528d0c915be/docs/openapi/api-internal-v1.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

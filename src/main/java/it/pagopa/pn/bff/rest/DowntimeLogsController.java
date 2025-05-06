@@ -3,15 +3,20 @@ package it.pagopa.pn.bff.rest;
 import it.pagopa.pn.bff.generated.openapi.server.v1.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeHistoryResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeMalfunctionLegalFact;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnStatusResponse;
+import it.pagopa.pn.bff.mappers.downtimelogs.MalfunctionLegalFactMapper;
 import it.pagopa.pn.bff.service.DowntimeLogsService;
 import lombok.CustomLog;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.time.OffsetDateTime;
 
 @CustomLog
@@ -71,5 +76,15 @@ public class DowntimeLogsController implements DowntimeApi {
         Mono<BffLegalFactDownloadMetadataResponse> serviceResponse = downtimeLogsService.getLegalFact(legalFactId);
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    @Override
+    public Mono<ResponseEntity<org.springframework.core.io.Resource>> getMalfunctionPreviewV1(Mono<BffPnDowntimeMalfunctionLegalFact> bffPnDowntimeMalfunctionLegalFact, final ServerWebExchange exchange) {
+        return bffPnDowntimeMalfunctionLegalFact
+                .map(MalfunctionLegalFactMapper.modelMapper::mapBffPnDowntimeMalfunctionLegalFact)
+                .flatMap(downtimeLogsService::getMalfunctionPreview)
+                .map(response -> {
+                    return ResponseEntity.status(HttpStatus.OK).body(new FileSystemResource(response));
+                });
     }
 }

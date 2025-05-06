@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: pGN61LmNSnXehq1x0T7p2C4VRXXACUbTPak5Fws6CPc=
+  version: 2lxA09S6x9dOaMKiLij7p0o2Fcsg/OLMzqoswNb4Gic=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2858,7 +2858,7 @@ paths:
               $ref: '#/components/schemas/MalfunctionLegalFact'
       responses:
         '200':
-          $ref: '#/components/responses/SuccessResponsePDF'
+          $ref: '#/components/responses/BffPnDowntimeSuccessResponsePDF'
         '400':
           description: Bad request
           content:
@@ -7820,7 +7820,7 @@ components:
           items:
             $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
   responses:
-    SuccessResponsePDF:
+    BffPnDowntimeSuccessResponsePDF:
       description: Ok
       headers:
         Content-Type:
