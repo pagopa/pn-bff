@@ -4,9 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.*;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
@@ -43,6 +41,8 @@ public class PnDowntimeLogsClientImpl {
 
     public Mono<File> getMalfunctionPreview(MalfunctionLegalFact malfunctionLegalFact) {
         log.logInvokingExternalService(serviceName, "getMalfunctionPreview");
-        return downtimeApi.getMalfunctionPreview(malfunctionLegalFact);
+        // TODO remove
+        // return downtimeApi.getMalfunctionPreview(malfunctionLegalFact);
+        return Mono.just(new File("src/main/resources/dummy.pdf"));
     }
 }

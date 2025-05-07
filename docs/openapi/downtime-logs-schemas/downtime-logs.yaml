@@ -43,23 +43,6 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
 
     BffPnDowntimeMalfunctionLegalFact:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/56917416bdcd5c1607beebb0b3ed3528d0c915be/docs/openapi/remote-refs.yaml#/components/schemas/MalfunctionLegalFact'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/e6a450951f4cbe067ea1d6d9395d14902c76cb33/docs/openapi/remote-refs.yaml#/components/schemas/MalfunctionLegalFact'
     BffPnDowntimeSuccessResponsePDF:
-      description: Ok
-      headers:
-        Content-Type:
-          description: Tipo di contenuto del documento
-          schema:
-            type: string
-            example: application/pdf
-        Content-Disposition:
-          description: Disposizione del contenuto per il download come allegato
-          schema:
-            x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
-            type: string
-            example: attachment; filename="document.pdf"
-      content:
-        application/pdf:
-          schema:
-            type: string
-            format: binary
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/e6a450951f4cbe067ea1d6d9395d14902c76cb33/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/MalfunctionResponsePDF'

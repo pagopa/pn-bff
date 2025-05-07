@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 2lxA09S6x9dOaMKiLij7p0o2Fcsg/OLMzqoswNb4Gic=
+  version: upfEWQFcgyBglSptdnfAslykP9l2EslvtWvWECIXZHs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2858,7 +2858,7 @@ paths:
               $ref: '#/components/schemas/MalfunctionLegalFact'
       responses:
         '200':
-          $ref: '#/components/responses/BffPnDowntimeSuccessResponsePDF'
+          $ref: '#/components/responses/MalfunctionResponsePDF'
         '400':
           description: Bad request
           content:
@@ -7220,7 +7220,7 @@ components:
         - timeReferenceStartDate
         - endDate
         - timeReferenceEndDate
-        - description
+        - htmlDescription
       properties:
         startDate:
           type: string
@@ -7230,7 +7230,7 @@ components:
           type: string
         timeReferenceEndDate:
           type: string
-        description:
+        htmlDescription:
           type: string
     PaymentInfoRequest:
       title: Request for a payment info
@@ -7820,7 +7820,7 @@ components:
           items:
             $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
   responses:
-    BffPnDowntimeSuccessResponsePDF:
+    MalfunctionResponsePDF:
       description: Ok
       headers:
         Content-Type:
