@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: upfEWQFcgyBglSptdnfAslykP9l2EslvtWvWECIXZHs=
+  version: KdVXHAFMt+a233BDtiNaP7YdIv9JCLIq6iadEZkgFt4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2861,6 +2861,12 @@ paths:
           $ref: '#/components/responses/MalfunctionResponsePDF'
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
           content:
             application/problem+json:
               schema:
