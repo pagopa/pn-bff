@@ -3,7 +3,6 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffLegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeHistoryResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeMalfunctionLegalFact;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnStatusResponse;
 import it.pagopa.pn.bff.mappers.downtimelogs.DowntimeHistoryResponseMapper;
 import it.pagopa.pn.bff.mappers.downtimelogs.LegalFactDownloadResponseMapper;
@@ -16,13 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -82,12 +81,10 @@ public class DowntimeLogsService {
         return legalFactDownloadMetadataResponse.map(LegalFactDownloadResponseMapper.modelMapper::mapLegalFactDownloadMetadataResponse);
     }
 
-    public Mono<File> getMalfunctionPreview(MalfunctionLegalFact malfunctionLegalFact) {
+    public Mono<File> getMalfunctionPreview(PnStatusUpdateEvent pnStatusUpdateEvent) {
         log.info("Get malfunction preview");
 
-        Mono<File> preview = pnDowntimeLogsClient.getMalfunctionPreview(malfunctionLegalFact)
+        return pnDowntimeLogsClient.getMalfunctionPreview(pnStatusUpdateEvent)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
-
-        return preview;
     }
 }

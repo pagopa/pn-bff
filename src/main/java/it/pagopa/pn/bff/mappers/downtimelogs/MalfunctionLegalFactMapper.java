@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.downtimelogs;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.MalfunctionLegalFact;
+import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.model.PnStatusUpdateEvent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.downtime_logs.BffPnDowntimeMalfunctionLegalFact;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,6 +13,6 @@ public interface MalfunctionLegalFactMapper {
     // Instance of the mapper
     MalfunctionLegalFactMapper modelMapper = Mappers.getMapper(MalfunctionLegalFactMapper.class);
 
-    MalfunctionLegalFact mapBffPnDowntimeMalfunctionLegalFact(BffPnDowntimeMalfunctionLegalFact malfunctionLegalFact);
+    PnStatusUpdateEvent mapBffPnDowntimeMalfunctionLegalFact(BffPnDowntimeMalfunctionLegalFact malfunctionLegalFact);
 }
 

@@ -20,8 +20,7 @@ public class PnDowntimeLogsClientImpl {
 
     public Mono<PnStatusResponse> getCurrentStatus() {
         log.logInvokingExternalService(serviceName, "currentStatus");
-        return downtimeApi.currentStatus()
-                ;
+        return downtimeApi.currentStatus();
     }
 
     public Mono<PnDowntimeHistoryResponse> getStatusHistory(OffsetDateTime fromTime,
@@ -30,19 +29,17 @@ public class PnDowntimeLogsClientImpl {
                                                             String page,
                                                             String size) {
         log.logInvokingExternalService(serviceName, "statusHistory");
-        return downtimeApi.statusHistory(fromTime, toTime, functionalities, page, size)
-                ;
+        return downtimeApi.statusHistory(fromTime, toTime, functionalities, page, size);
     }
 
     public Mono<LegalFactDownloadMetadataResponse> getLegalFact(String legalFactId) {
-        return downtimeApi.getLegalFact(legalFactId)
-                ;
+        return downtimeApi.getLegalFact(legalFactId);
     }
 
-    public Mono<File> getMalfunctionPreview(MalfunctionLegalFact malfunctionLegalFact) {
+    public Mono<File> getMalfunctionPreview(PnStatusUpdateEvent pnStatusUpdateEvent) {
         log.logInvokingExternalService(serviceName, "getMalfunctionPreview");
-        // TODO remove
-        // return downtimeApi.getMalfunctionPreview(malfunctionLegalFact);
-        return Mono.just(new File("src/main/resources/dummy.pdf"));
+        // TODO remove sample pdf
+        // return Mono.just(new File("src/main/resources/dummy.pdf"));
+        return downtimeApi.getMalfunctionPreview(pnStatusUpdateEvent);
     }
 }
