@@ -12,6 +12,7 @@
 | GENERATE_INTERVAL                      | 7                       |      no      |
 | RADD_STORE_GENERATION_CONFIG_PARAMETER |                         |      no      |
 | RADD_STORE_REGISTRY_API_URL            |                         |     yes      |
+| AWS_LOCATION_REGION                    | eu-central-1            |     yes      |
 
 ## Istruzioni per la gestione delle configurazioni per il csv dello store locator
 
