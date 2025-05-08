@@ -104,7 +104,12 @@ describe('geocodeUtils tests', function () {
       'Roma'
     );
 
-    expect(result).to.be.null;
+    expect(result).to.deep.equal({
+      longitude: null,
+      latitude: null,
+      address: 'Via Pippo, Roma, RM 00100, Italy',
+      score: 0.5,
+    });
   });
 
   it('should handle missing MatchScores.Overall', async () => {
