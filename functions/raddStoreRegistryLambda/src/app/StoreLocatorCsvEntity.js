@@ -143,6 +143,19 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
   }
 
+  // const coordinatesResponse = getCoordinatesForAddress(
+  //   registry.addressRow,
+  //   registry.pr,
+  //   registry.cap,
+  //   registry.city
+  // );
+
+  // if (coordinatesResponse) {
+  // check string similarity (registry.address and coordinatesResponse.address)
+  // se they are similar (using score?), set the coordinates
+  // otherwise, add this resgistry to another CSV file (with aws address and score)
+  // }
+
   return storeLocatorCsvEntity;
 };
 

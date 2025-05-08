@@ -86,6 +86,7 @@ function validateEnvironmentVariables() {
     'GENERATE_INTERVAL',
     'RADD_STORE_GENERATION_CONFIG_PARAMETER',
     'RADD_STORE_REGISTRY_API_URL',
+    'AWS_LOCATION_REGION'
   ];
 
   requiredEnvVars.forEach((envVar) => {

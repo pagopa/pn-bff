@@ -399,6 +399,16 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+  
+  AwsLocationRegion:
+    Type: String
+    Default: 'eu-central-1'
+    Description: AWS location region
+    AllowedValues:
+      - 'eu-central-1'
+      - 'eu-west-1'
+      - 'eu-west-2'
+      - 'eu-north-1'
 
 Conditions:
   CreateFakeDLRole:
@@ -747,6 +757,7 @@ Resources:
           GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
           RADD_STORE_GENERATION_CONFIG_PARAMETER: !Ref RaddStoreRegistryGenerationConfigParameter
           RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
+          AWS_LOCATION_REGION: !Ref AwsLocationRegion
       Layers:
         - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
 
