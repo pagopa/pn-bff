@@ -399,6 +399,15 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+      
+  AWSLocationRegion:
+    Type: String
+    Default: 'eu-central-1'
+    Description: 'Region for AWS Location Service in EU (Frankfurt, Ireland, Stockholm)'
+    AllowedValues:
+      - 'eu-central-1'  # Frankfurt
+      - 'eu-west-1'     # Ireland
+      - 'eu-north-1'    # Stockholm
 
 Conditions:
   CreateFakeDLRole:
@@ -804,6 +813,18 @@ Resources:
                 Resource:
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryCsvConfigurationParameter}'
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryGenerationConfigParameter}'
+        - PolicyName: AccessAWSLocationService
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - geo:SearchPlaceIndexForText
+                  - geo:GetPlace
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: "${AWSLocationRegion}"
 
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:
