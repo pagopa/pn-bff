@@ -819,13 +819,8 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - geo:SearchPlaceIndexForText
-                  - geo:GetPlace
-                Resource: "*"
-                Condition:
-                  StringEquals:
-                    aws:RequestedRegion: "${AWSLocationRegion}"
-
+                  - geo-places:Geocode
+                Resource: !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:
     Type: AWS::CloudWatch::Alarm
