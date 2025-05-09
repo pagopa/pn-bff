@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: HZ7GwL9A2agg/ML0gP5dFYXyDrcdWjXcdErEMBvlYr4=
+  version: BwqzvXrHvQCesMfgcScDlFh2CqqATvK7lr6UELjClkc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7410,10 +7410,10 @@ components:
       properties:
         paymentUrl:
           type: string
-          description: URL to the payment page
+          description: URL to the payment page of third party partner's service
       example:
         paymentUrl: >-
-          https://example.com/payment/123e4567-e89b-12d3-a456-426614174000?fiscalCode=1234567890&noticeNumber=302000100000019421
+          https://example.com/payment?retrievalId=123e4567-e89b-12d3-a456-426614174000&fiscalCode=1234567890&noticeNumber=302000100000019421
     BffChannelType:
       type: string
       enum:
@@ -7884,13 +7884,16 @@ x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
   DEFAULT_4XX:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
   BAD_REQUEST_PARAMETERS:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
       gatewayresponse.header.Access-Control-Expose-Headers: '''x-amzn-trace-id'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":
@@ -7900,6 +7903,7 @@ x-amazon-apigateway-gateway-responses:
     responseParameters:
       gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
       gatewayresponse.header.Access-Control-Expose-Headers: '''x-amzn-trace-id'''
+      gatewayresponse.header.Strict-Transport-Security: '''max-age=31536000; includeSubDomains; preload'''
     responseTemplates:
       application/json: >-
         {"status": 400, "title": "VALIDATION ERROR", "traceId":

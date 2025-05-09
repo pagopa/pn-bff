@@ -213,6 +213,9 @@ Parameters:
   SelfCareSendProdId:
       Type: String
       Description: 'SelfCare send prod id'
+  SelfCareCdnURL:
+    Type: String
+    Description: 'SelfCare CDN URL'
 
   # Logging parameters
   WireTapLogActivation:
@@ -455,6 +458,7 @@ Resources:
         ContainerEnvEntry21: !Sub 'PN_BFF_DL_FOCUS_OBJECT_KEY=${DlFocusObjectKey}'
         ContainerEnvEntry22: !Sub 'PN_BFF_RETRY_MAXATTEMPTS=${PnBffRetryMaxAttempts}'
         ContainerEnvEntry23: !Sub 'PN_BFF_EMD_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry24: !Sub 'PN_BFF_SELFCARE_CDN_URL=${SelfCareCdnURL}'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds

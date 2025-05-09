@@ -35,7 +35,7 @@ public class InstitutionMapperTest {
         assertEquals(bffInstitution.getProductRole(), institutionResourcePN.getUserProductRoles().get(0));
         assertEquals(bffInstitution.getParentName(), institutionResourcePN.getRootParent().getDescription());
         assertEquals(bffInstitution.getEntityUrl(), pnBffConfigs.getSelfcareBaseUrl() + "/token-exchange?institutionId=" + institutionResourcePN.getId() + "&productId=" + pnBffConfigs.getSelfcareSendProdId());
-        assertNull(bffInstitution.getLogoUrl());
+        assertEquals(bffInstitution.getLogoUrl(), pnBffConfigs.getSelfcareCdnUrl() + "/institutions/" + institutionResourcePN.getId() + "/logo.png");
 
         BffInstitution bffInstitutionNull = InstitutionMapper.modelMapper.toBffInstitution(null, pnBffConfigs);
         assertNull(bffInstitutionNull);

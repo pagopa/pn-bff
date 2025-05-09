@@ -25,6 +25,7 @@
     "EnhancedWebSecurityEnabled": "true",
     "BffMaxRequestPerThrottlingPeriod": "100",
     "BffThrottlingPeriodSeconds": "600",
-    "ApiAlarmSegmentation": "true"
+    "ApiAlarmSegmentation": "true",
+    "SelfCareCdnURL": "https://selcucheckoutsa.z6.web.core.windows.net"
   }
 }

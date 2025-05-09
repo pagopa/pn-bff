@@ -2,47 +2,6 @@ name: Update Microservices Dependencies
 
 on:
   workflow_dispatch:
-    inputs:
-      pn-auth-fleet:
-        description: Update pn-auth-fleet dependency
-        required: true
-        type: boolean
-        default: false
-      pn-delivery:
-        description: Update pn-delivery dependency
-        required: true
-        type: boolean
-        default: false
-      pn-apikey-manager:
-        description: Update pn-apikey-manager dependency
-        required: true
-        type: boolean
-        default: false
-      pn-external-registries:
-        description: Update pn-external-registries dependency
-        required: true
-        type: boolean
-        default: false
-      pn-user-attributes:
-        description: Update pn-user-attributes dependency
-        required: true
-        type: boolean
-        default: false
-      pn-downtime-logs:
-        description: Update pn-downtime-logs dependency
-        required: true
-        type: boolean
-        default: false
-      pn-delivery-push:
-        description: Update pn-delivery-push dependency
-        required: true
-        type: boolean
-        default: false
-      pn-mandate:
-        description: Update pn-mandate dependency
-        required: true
-        type: boolean
-        default: false
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -59,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@4.2.2
+        uses: actions/checkout@v4
         with:
           ref: 'develop'
           fetch-depth: 0
@@ -74,11 +33,3 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: 'develop'
-          pn-auth-fleet: ${{ inputs.pn-auth-fleet }}
-          pn-delivery: ${{ inputs.pn-delivery }}
-          pn-apikey-manager: ${{ inputs.pn-apikey-manager }}
-          pn-external-registries: ${{ inputs.pn-external-registries }}
-          pn-user-attributes: ${{ inputs.pn-user-attributes }}
-          pn-downtime-logs: ${{ inputs.pn-downtime-logs }}
-          pn-delivery-push: ${{ inputs.pn-delivery-push }}
-          pn-mandate: ${{ inputs.pn-mandate }}
