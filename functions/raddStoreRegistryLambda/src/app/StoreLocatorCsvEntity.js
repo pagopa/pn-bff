@@ -1,3 +1,5 @@
+const { getCoordinatesForAddress } = require('./geocodeUtils');
+
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
@@ -15,6 +17,7 @@ class StoreLocatorCsvEntity {
     this.sunday = '';
     this.latitude = '';
     this.longitude = '';
+    this.type = '';
   }
 
   setDescription(description) {
@@ -70,15 +73,19 @@ class StoreLocatorCsvEntity {
   }
 
   setLatitude(latitude) {
-    if (latitude != null) this.latitude = latitude;
+    if (latitude != null) this.latitude = latitude.toString();
   }
 
   setLongitude(longitude) {
-    if (longitude != null) this.longitude = longitude;
+    if (longitude != null) this.longitude = longitude.toString();
+  }
+
+  setType(type) {
+    if (type != null) this.type = type;
   }
 }
 
-const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   const getOpeningTimeByDay = (fullOpeningTime) => {
     const times = new Array(7).fill(null);
     if (fullOpeningTime) {
@@ -138,23 +145,23 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  if (registry.geoLocation) {
-    storeLocatorCsvEntity.setLatitude(registry.geoLocation.latitude);
-    storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
+  try {
+    const coordinatesResponse = await getCoordinatesForAddress(
+      registry.addressRow,
+      registry.pr,
+      registry.cap,
+      registry.city
+    );
+
+    if (coordinatesResponse) {
+      storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
+      storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
+    }
+  } catch (e) {
+    console.log(e);
   }
 
-  // const coordinatesResponse = getCoordinatesForAddress(
-  //   registry.addressRow,
-  //   registry.pr,
-  //   registry.cap,
-  //   registry.city
-  // );
-
-  // if (coordinatesResponse) {
-  // check string similarity (registry.address and coordinatesResponse.address)
-  // se they are similar (using score?), set the coordinates
-  // otherwise, add this resgistry to another CSV file (with aws address and score)
-  // }
+  storeLocatorCsvEntity.setType('CAF');
 
   return storeLocatorCsvEntity;
 };
