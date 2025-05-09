@@ -54,9 +54,10 @@ exports.handleEvent = async () => {
         'Fetched API registries response size:',
         apiResponse.registries.length
       );
-      const records = apiResponse.registries.map((registry) =>
+      const recordPromises = apiResponse.registries.map((registry) =>
         storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
       );
+      const records = await Promise.all(recordPromises);
       csvContent += csvUtils.createCSVContent(
         csvConfiguration.configs,
         records
@@ -86,7 +87,7 @@ function validateEnvironmentVariables() {
     'GENERATE_INTERVAL',
     'RADD_STORE_GENERATION_CONFIG_PARAMETER',
     'RADD_STORE_REGISTRY_API_URL',
-    'AWS_LOCATION_REGION'
+    'AWS_LOCATION_REGION',
   ];
 
   requiredEnvVars.forEach((envVar) => {
