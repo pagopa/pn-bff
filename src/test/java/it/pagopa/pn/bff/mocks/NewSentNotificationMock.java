@@ -33,8 +33,8 @@ public class NewSentNotificationMock {
         return document;
     }
 
-    private NotificationRecipientV23 getRecipientMock(int index, NotificationRecipientV23.RecipientTypeEnum recipientType) {
-        NotificationRecipientV23 recipient = new NotificationRecipientV23();
+    private NotificationRecipientV24 getRecipientMock(int index, NotificationRecipientV24.RecipientTypeEnum recipientType) {
+        NotificationRecipientV24 recipient = new NotificationRecipientV24();
         recipient.setRecipientType(recipientType);
         recipient.setDenomination("Recipient " + index);
         recipient.setTaxId("LVLDAA85T50G70" + index + "B");
@@ -93,8 +93,8 @@ public class NewSentNotificationMock {
         return payment;
     }
 
-    public NewNotificationRequestV24 getNewSentNotificationRequest() {
-        NewNotificationRequestV24 request = new NewNotificationRequestV24();
+    public NewNotificationRequestV25 getNewSentNotificationRequest() {
+        NewNotificationRequestV25 request = new NewNotificationRequestV25();
         request.setAbstract("Description of mocked notification");
         request.setSubject("Title of mocked notification");
         request.setAmount(999);
@@ -104,28 +104,28 @@ public class NewSentNotificationMock {
         request.setNotificationFeePolicy(NotificationFeePolicy.DELIVERY_MODE);
         request.setPaFee(99);
         request.setVat(9);
-        request.setPagoPaIntMode(NewNotificationRequestV24.PagoPaIntModeEnum.NONE);
+        request.setPagoPaIntMode(NewNotificationRequestV25.PagoPaIntModeEnum.NONE);
         request.setPaymentExpirationDate("2024-11-23");
         request.setPaProtocolNumber("12345678910");
         request.setSenderTaxId("77777777777");
         request.setTaxonomyCode("010801N");
-        request.setPhysicalCommunicationType(NewNotificationRequestV24.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        request.setPhysicalCommunicationType(NewNotificationRequestV25.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         List<NotificationDocument> documents = new ArrayList<>();
         documents.add(getDocumentMock(0));
         documents.add(getDocumentMock(1));
         request.setDocuments(documents);
-        List<NotificationRecipientV23> recipients = new ArrayList<>();
-        NotificationRecipientV23 recipient1 = getRecipientMock(0, NotificationRecipientV23.RecipientTypeEnum.PF);
+        List<NotificationRecipientV24> recipients = new ArrayList<>();
+        NotificationRecipientV24 recipient1 = getRecipientMock(0, NotificationRecipientV24.RecipientTypeEnum.PF);
         List<NotificationPaymentItem> payments1 = new ArrayList<>();
         payments1.add(getPaymentMock(0, 0, true, true));
         payments1.add(getPaymentMock(0, 1, true, true));
         recipient1.setPayments(payments1);
-        NotificationRecipientV23 recipient2 = getRecipientMock(1, NotificationRecipientV23.RecipientTypeEnum.PG);
+        NotificationRecipientV24 recipient2 = getRecipientMock(1, NotificationRecipientV24.RecipientTypeEnum.PG);
         List<NotificationPaymentItem> payments2 = new ArrayList<>();
         payments2.add(getPaymentMock(1, 0, false, true));
         payments2.add(getPaymentMock(1, 1, false, true));
         recipient2.setPayments(payments2);
-        NotificationRecipientV23 recipient3 = getRecipientMock(2, NotificationRecipientV23.RecipientTypeEnum.PF);
+        NotificationRecipientV24 recipient3 = getRecipientMock(2, NotificationRecipientV24.RecipientTypeEnum.PF);
         List<NotificationPaymentItem> payments3 = new ArrayList<>();
         payments3.add(getPaymentMock(2, 0, true, false));
         payments3.add(getPaymentMock(2, 1, false, true));
@@ -138,7 +138,7 @@ public class NewSentNotificationMock {
     }
 
     public BffNewNotificationRequest getBffNewSentNotificationRequest() {
-        NewNotificationRequestV24 msRequest = getNewSentNotificationRequest();
+        NewNotificationRequestV25 msRequest = getNewSentNotificationRequest();
         return mapper.convertValue(msRequest, BffNewNotificationRequest.class);
     }
 

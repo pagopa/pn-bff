@@ -1,9 +1,9 @@
 package it.pagopa.pn.bff.utils;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NotificationStatusHistoryElementV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
@@ -26,11 +26,11 @@ class NotificationDetailUtilityTest {
 
     @Test
     void cleanRelatedTimelineElementsTest() {
-        FullSentNotificationV26 notificationDTO = notificationDetailPaMock.getOneRecipientNotification();
+        FullSentNotificationV27 notificationDTO = notificationDetailPaMock.getOneRecipientNotification();
         // copy status history and timeline
         BffFullNotificationV1 bffNotificationDTO = new BffFullNotificationV1();
         List<BffNotificationDetailTimeline> timeline = new ArrayList<>();
-        for (TimelineElementV26 timelineElement : notificationDTO.getTimeline()) {
+        for (TimelineElementV27 timelineElement : notificationDTO.getTimeline()) {
             BffNotificationDetailTimeline bffTimelineElem = new BffNotificationDetailTimeline();
             BeanUtils.copyProperties(timelineElement, bffTimelineElem);
             timeline.add(bffTimelineElem);
@@ -51,7 +51,7 @@ class NotificationDetailUtilityTest {
             BffNotificationStatusHistory bffNotificationStatusHistory = bffNotificationDTO.getNotificationStatusHistory().get(i);
             for (int j = 0; j < notificationStatusHistory.getRelatedTimelineElements().size(); j++) {
                 String relatedTimelineElement = notificationStatusHistory.getRelatedTimelineElements().get(j);
-                TimelineElementV26 timelineElement = notificationDTO.getTimeline()
+                TimelineElementV27 timelineElement = notificationDTO.getTimeline()
                         .stream()
                         .filter(el -> el.getElementId().equals(relatedTimelineElement))
                         .findFirst()
@@ -67,21 +67,21 @@ class NotificationDetailUtilityTest {
 
     @Test
     void populateOtherDocumentsTest() {
-        FullSentNotificationV26 notificationDTOMultiRecipient = notificationDetailPaMock.getNotificationMultiRecipientMock();
-        FullSentNotificationV26 notificationDTO = notificationDetailPaMock.getOneRecipientNotification();
+        FullSentNotificationV27 notificationDTOMultiRecipient = notificationDetailPaMock.getNotificationMultiRecipientMock();
+        FullSentNotificationV27 notificationDTO = notificationDetailPaMock.getOneRecipientNotification();
 
-        FullSentNotificationV26 noAARNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 noAARNotification = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDTOMultiRecipient, noAARNotification);
         noAARNotification.setTimeline(noAARNotification.getTimeline().stream().filter(
-                t -> t.getCategory() != TimelineElementCategoryV26.AAR_GENERATION
+                t -> t.getCategory() != TimelineElementCategoryV27.AAR_GENERATION
         ).collect(Collectors.toList()));
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(noAARNotification);
 
         assertTrue(calculatedParsedNotification.getOtherDocuments().isEmpty());
 
-        ArrayList<TimelineElementV26> AARTimelineElements = notificationDTO.getTimeline().stream().filter(
-                t -> t.getCategory() == TimelineElementCategoryV26.AAR_GENERATION
+        ArrayList<TimelineElementV27> AARTimelineElements = notificationDTO.getTimeline().stream().filter(
+                t -> t.getCategory() == TimelineElementCategoryV27.AAR_GENERATION
         ).collect(Collectors.toCollection(ArrayList::new));
 
         calculatedParsedNotification = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
@@ -104,8 +104,8 @@ class NotificationDetailUtilityTest {
         );
 
         // MULTI RECIPIENT
-        ArrayList<TimelineElementV26> AARTimelineElementsMultiRecipient = notificationDTOMultiRecipient.getTimeline().stream().filter(
-                t -> t.getCategory() == TimelineElementCategoryV26.AAR_GENERATION
+        ArrayList<TimelineElementV27> AARTimelineElementsMultiRecipient = notificationDTOMultiRecipient.getTimeline().stream().filter(
+                t -> t.getCategory() == TimelineElementCategoryV27.AAR_GENERATION
         ).collect(Collectors.toCollection(ArrayList::new));
 
         calculatedParsedNotification = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTOMultiRecipient);
@@ -113,7 +113,7 @@ class NotificationDetailUtilityTest {
         assertEquals(calculatedParsedNotification.getOtherDocuments().size(), AARTimelineElementsMultiRecipient.size());
 
         int index = 0;
-        for (TimelineElementV26 element : AARTimelineElementsMultiRecipient) {
+        for (TimelineElementV27 element : AARTimelineElementsMultiRecipient) {
             assertEquals(new BffNotificationDetailDocument()
                             .recIndex(element.getDetails().getRecIndex())
                             .documentId(element.getDetails().getGeneratedAarUrl())
@@ -156,13 +156,13 @@ class NotificationDetailUtilityTest {
 
     @Test
     void insertCancelledStatusInTimeline() {
-        FullSentNotificationV26 cancellationInProgressNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 cancellationInProgressNotification = new FullSentNotificationV27();
 
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), cancellationInProgressNotification);
 
         cancellationInProgressNotification.getTimeline().add(
                 notificationDetailPaMock.getTimelineElem(
-                        TimelineElementCategoryV26.NOTIFICATION_CANCELLATION_REQUEST,
+                        TimelineElementCategoryV27.NOTIFICATION_CANCELLATION_REQUEST,
                         null
                 )
         );
@@ -183,22 +183,22 @@ class NotificationDetailUtilityTest {
 
     @Test
     void setTimelineHidden() {
-        TimelineElementV26 sendAnalogProgress = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.SEND_ANALOG_PROGRESS,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26().recIndex(0)
+        TimelineElementV27 sendAnalogProgress = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.SEND_ANALOG_PROGRESS,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27().recIndex(0)
         );
 
-        TimelineElementV26 sendAnalogFeedback = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.SEND_ANALOG_FEEDBACK,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26().recIndex(0).deliveryDetailCode("RECAG003C")
+        TimelineElementV27 sendAnalogFeedback = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.SEND_ANALOG_FEEDBACK,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27().recIndex(0).deliveryDetailCode("RECAG003C")
         );
 
-        TimelineElementV26 sendAnalogRegisteredLetter = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26().recIndex(0).deliveryDetailCode("NTINCLCD")
+        TimelineElementV27 sendAnalogRegisteredLetter = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27().recIndex(0).deliveryDetailCode("NTINCLCD")
         );
 
-        FullSentNotificationV26 analogNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 analogNotification = new FullSentNotificationV27();
 
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), analogNotification);
 
@@ -235,14 +235,14 @@ class NotificationDetailUtilityTest {
 
     @Test
     void populateLegalFactsOfAnalogFailureStep() {
-        TimelineElementV26 analogFailure = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.ANALOG_FAILURE_WORKFLOW,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 analogFailure = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.ANALOG_FAILURE_WORKFLOW,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
                         .generatedAarUrl("https://www.aar.com")
         );
 
-        FullSentNotificationV26 analogFailureNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 analogFailureNotification = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), analogFailureNotification);
         analogFailureNotification.getTimeline().add(analogFailure);
 
@@ -297,20 +297,20 @@ class NotificationDetailUtilityTest {
 
     @Test
     void deliveryModeAnalog() {
-        FullSentNotificationV26 notificationDTO = new FullSentNotificationV26();
+        FullSentNotificationV27 notificationDTO = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), notificationDTO);
 
-        TimelineElementV26 digitalSuccess = new TimelineElementV26();
+        TimelineElementV27 digitalSuccess = new TimelineElementV27();
 
         digitalSuccess = notificationDTO.getTimeline()
                 .stream()
                 .filter((timelineElem) ->
                         String.valueOf(timelineElem.getCategory())
-                                .equals(String.valueOf(TimelineElementCategoryV26.DIGITAL_SUCCESS_WORKFLOW)))
+                                .equals(String.valueOf(TimelineElementCategoryV27.DIGITAL_SUCCESS_WORKFLOW)))
                 .findFirst()
                 .orElseThrow();
 
-        digitalSuccess.setCategory(TimelineElementCategoryV26.SEND_SIMPLE_REGISTERED_LETTER);
+        digitalSuccess.setCategory(TimelineElementCategoryV27.SEND_SIMPLE_REGISTERED_LETTER);
 
         BffFullNotificationV1 calculatedParsedNotification = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
         BffNotificationStatusHistory deliveredStep = calculatedParsedNotification.getNotificationStatusHistory()
@@ -324,14 +324,14 @@ class NotificationDetailUtilityTest {
 
     @Test
     void deliveryModeNotAssigned() {
-        FullSentNotificationV26 notificationDTO = new FullSentNotificationV26();
+        FullSentNotificationV27 notificationDTO = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), notificationDTO);
         notificationDTO.setTimeline(
                 notificationDTO.getTimeline()
                         .stream()
                         .filter((timelineElem) ->
                                 !String.valueOf(timelineElem.getCategory())
-                                        .equals(String.valueOf(TimelineElementCategoryV26.DIGITAL_SUCCESS_WORKFLOW)))
+                                        .equals(String.valueOf(TimelineElementCategoryV27.DIGITAL_SUCCESS_WORKFLOW)))
                         .toList()
         );
 
@@ -347,7 +347,7 @@ class NotificationDetailUtilityTest {
 
     @Test
     void checkFillingOfMacroSteps() {
-        FullSentNotificationV26 notificationDTO = new FullSentNotificationV26();
+        FullSentNotificationV27 notificationDTO = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), notificationDTO);
         BffFullNotificationV1 calculatedParsedNotification = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTO);
 
@@ -425,15 +425,15 @@ class NotificationDetailUtilityTest {
 
     @Test
     void hideAppIOEvent() {
-        TimelineElementV26 sendCourtesy = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.SEND_COURTESY_MESSAGE,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 sendCourtesy = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.SEND_COURTESY_MESSAGE,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
                         .digitalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.DigitalAddress().type("APPIO").address(""))
                         .ioSendMessageResult(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.IoSendMessageResult.SENT_OPTIN)
         );
 
-        FullSentNotificationV26 ioNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 ioNotification = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), ioNotification);
         ioNotification.getTimeline().add(sendCourtesy);
 
@@ -462,26 +462,26 @@ class NotificationDetailUtilityTest {
 
     @Test
     void shiftStepsFromDeliveredToDelivering() {
-        FullSentNotificationV26 notificationDTO = new FullSentNotificationV26();
+        FullSentNotificationV27 notificationDTO = new FullSentNotificationV27();
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), notificationDTO);
-        TimelineElementV26 digitalFailure = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.DIGITAL_FAILURE_WORKFLOW,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 digitalFailure = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.DIGITAL_FAILURE_WORKFLOW,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
         );
         int digitalSuccessIndex = -1;
         for (int i = 0; i < notificationDTO.getTimeline().size(); i++) {
             if (String.valueOf(notificationDTO.getTimeline().get(i).getCategory())
-                    .equals(String.valueOf(TimelineElementCategoryV26.DIGITAL_SUCCESS_WORKFLOW))) {
+                    .equals(String.valueOf(TimelineElementCategoryV27.DIGITAL_SUCCESS_WORKFLOW))) {
                 digitalSuccessIndex = i;
                 break;
             }
         }
 
 
-        TimelineElementV26 prepareLetter = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.PREPARE_SIMPLE_REGISTERED_LETTER,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 prepareLetter = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.PREPARE_SIMPLE_REGISTERED_LETTER,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
                         .productType("RN_RS")
                         .physicalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PhysicalAddress()
@@ -491,9 +491,9 @@ class NotificationDetailUtilityTest {
                         )
         );
 
-        TimelineElementV26 sendLetter = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.SEND_SIMPLE_REGISTERED_LETTER,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 sendLetter = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.SEND_SIMPLE_REGISTERED_LETTER,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
                         .productType("RN_RS")
                         .physicalAddress(new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.PhysicalAddress()
@@ -570,13 +570,13 @@ class NotificationDetailUtilityTest {
 
     @Test
     void viewedByRecipient() {
-        FullSentNotificationV26 viewedNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 viewedNotification = new FullSentNotificationV27();
 
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), viewedNotification);
 
-        TimelineElementV26 viewedTimelineElement = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.NOTIFICATION_VIEWED,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 viewedTimelineElement = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.NOTIFICATION_VIEWED,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
         );
         // add viewed timeline element
@@ -607,7 +607,7 @@ class NotificationDetailUtilityTest {
 
     @Test
     void viewedByDelegate() {
-        FullSentNotificationV26 viewedNotification = new FullSentNotificationV26();
+        FullSentNotificationV27 viewedNotification = new FullSentNotificationV27();
 
         BeanUtils.copyProperties(notificationDetailPaMock.getOneRecipientNotification(), viewedNotification);
 
@@ -617,9 +617,9 @@ class NotificationDetailUtilityTest {
                         .denomination("Galileo Galilei")
                         .delegateType(it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.RecipientType.PF);
 
-        TimelineElementV26 viewedTimelineElement = notificationDetailPaMock.getTimelineElem(
-                TimelineElementCategoryV26.NOTIFICATION_VIEWED,
-                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV26()
+        TimelineElementV27 viewedTimelineElement = notificationDetailPaMock.getTimelineElem(
+                TimelineElementCategoryV27.NOTIFICATION_VIEWED,
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementDetailsV27()
                         .recIndex(0)
                         .delegateInfo(delegate)
         );
