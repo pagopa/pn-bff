@@ -4,13 +4,13 @@ components:
   schemas:
 
     BffNotificationsResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
 
     BffFullNotificationV1:
       description: >-
         Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV25'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/schemas-pn-notification.yaml#/components/schemas/SentNotificationV25'
         - type: object
           required:
             - notificationStatusHistory
@@ -86,7 +86,7 @@ components:
       description: >-
         Documento della notifica.
       allOf:
-        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
+        - $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationMetadataAttachment'
         - type: object
           properties:
             title:
@@ -173,31 +173,31 @@ components:
           type: integer
 
     BffTimelineCategory:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/4ee82b66f7005df1ad14b7c611e3004f1accae4c/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV26'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/264a6f3c993dec945375be40479d75f6def955c7/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementCategoryV27'
 
     BffNotificationDetailTimelineDetails:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/4ee82b66f7005df1ad14b7c611e3004f1accae4c/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementDetailsV26'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/264a6f3c993dec945375be40479d75f6def955c7/docs/openapi/schemas-pn-timeline.yaml#/components/schemas/TimelineElementDetailsV27'
     
     BffRequestStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/4ee82b66f7005df1ad14b7c611e3004f1accae4c/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/264a6f3c993dec945375be40479d75f6def955c7/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
     
     BffCheckAarRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
     
     BffCheckAarResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/ResponseCheckAarMandateDto'
 
     BffNewNotificationRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NewNotificationRequestV25'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NewNotificationRequestV25'
 
     BffNewNotificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/NewNotificationResponse'
 
     BffPreLoadRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadRequest'
 
     BffPreLoadResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8584ca04a65851db9427b0652e84e8a53a09c174/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8bacc5e096b128b836656565ed0273b939996aae/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'
 
     BffCheckTPPResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/bb35455e5c61ca2c3c1dff088d45a42dc897cb1b/docs/openapi/api-private.yaml#/components/schemas/RetrievalPayload'
