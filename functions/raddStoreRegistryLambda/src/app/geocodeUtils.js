@@ -24,6 +24,9 @@ const getCoordinatesForAddress = async (
   const params = {
     QueryText: address,
     MaxResults: 1,
+    Filter: {
+       IncludeCountries: ["IT"],
+    },
     QueryComponents: {
       Country: 'IT',
       SubRegion: province,
