@@ -742,7 +742,7 @@ Resources:
       VpcConfig: # required for mock connection but useful also for the future addition of network firewall
         SecurityGroupIds:
           - !GetAtt RaddStoreRegistryLambdaSecGroup.GroupId
-        SubnetIds: !Ref SubnetsIds
+        SubnetIds: !Split [",", !Ref VpcEgressSubnetsIds]
       MemorySize: !Ref RaddStoreRegistryLambdaMemory
       Timeout: 900
       Environment:
