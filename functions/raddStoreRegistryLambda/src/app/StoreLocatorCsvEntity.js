@@ -145,15 +145,18 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  try {
+try {
     const coordinatesResponse = await getCoordinatesForAddress(
-      registry.addressRow,
-      registry.pr,
-      registry.cap,
-      registry.city
+      registry.address.addressRow,
+      registry.address.pr,
+      registry.address.cap,
+      registry.address.city
     );
 
     if (coordinatesResponse) {
+      // check string similarity (registry.address and coordinatesResponse.address)
+      // se they are similar (using score?), set the coordinates
+      // otherwise, add this resgistry to another CSV file (with aws address and score)
       storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
       storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
     }

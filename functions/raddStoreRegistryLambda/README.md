@@ -4,15 +4,16 @@
 | **Environment Variable**               | **Default**             | **Required** |
 |----------------------------------------|-------------------------|:------------:|
 | BFF_BUCKET_NAME                        |                         |     yes      |
-| BFF_BUCKET_PREFIX                      | radd/store              |      no      |
+| BFF_BUCKET_PREFIX                      | radd/store              |     no       |
 | WEB_LANDING_BUCKET_NAME                |                         |     yes      |
-| WEB_LANDING_BUCKET_PREFIX              | public/static/documents |      no      |
-| FILE_NAME                              | radd-store-registry     |      no      |
+| WEB_LANDING_BUCKET_PREFIX              | public/static/documents |     no       |
+| FILE_NAME                              | radd-store-registry     |     no       |
 | CSV_CONFIGURATION_PARAMETER            |                         |     yes      |
-| GENERATE_INTERVAL                      | 7                       |      no      |
-| RADD_STORE_GENERATION_CONFIG_PARAMETER |                         |      no      |
+| GENERATE_INTERVAL                      | 7                       |     no       |
+| RADD_STORE_GENERATION_CONFIG_PARAMETER |                         |     no       |
 | RADD_STORE_REGISTRY_API_URL            |                         |     yes      |
 | AWS_LOCATION_REGION                    | eu-central-1            |     yes      |
+| AWS_LOCATION_REQUESTS_PER_SECOND       | 95                      |     no       |
 
 ## Istruzioni per la gestione delle configurazioni per il csv dello store locator
 
