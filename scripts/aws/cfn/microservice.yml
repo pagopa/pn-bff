@@ -409,6 +409,11 @@ Parameters:
       - 'eu-west-1'
       - 'eu-west-2'
       - 'eu-north-1'
+  
+  AWSLocationRequestsPerSecond: 
+    Type: Number
+    Description: Aws Location Rate Limit API
+    default: 95
 
 Conditions:
   CreateFakeDLRole:
@@ -758,6 +763,7 @@ Resources:
           RADD_STORE_GENERATION_CONFIG_PARAMETER: !Ref RaddStoreRegistryGenerationConfigParameter
           RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
           AWS_LOCATION_REGION: !Ref AwsLocationRegion
+          AWS_LOCATION_REQUESTS_PER_SECOND: !Ref AWSLocationRequestsPerSecond
       Layers:
         - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
 

@@ -55,13 +55,16 @@ describe('geocodeUtils tests', function () {
     expect(commandCalls[0].args[0].input).to.deep.include({
       QueryText: 'Via Roma 123, Milano, MI 20100',
       MaxResults: 1,
-      Language: 'it',
+      Filter: {
+        IncludeCountries: ['IT'],
+      },
       QueryComponents: {
         Country: 'IT',
         SubRegion: 'MI',
         PostalCode: '20100',
         Locality: 'Milano',
       },
+      Language: 'it',
     });
   });
 

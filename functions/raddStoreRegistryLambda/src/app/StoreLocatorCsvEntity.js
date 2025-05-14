@@ -78,7 +78,7 @@ class StoreLocatorCsvEntity {
   }
 }
 
-const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   const getOpeningTimeByDay = (fullOpeningTime) => {
     const times = new Array(7).fill(null);
     if (fullOpeningTime) {
@@ -143,18 +143,24 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
   }
 
-  // const coordinatesResponse = getCoordinatesForAddress(
-  //   registry.addressRow,
-  //   registry.pr,
-  //   registry.cap,
-  //   registry.city
-  // );
+  try {
+    const coordinatesResponse = await getCoordinatesForAddress(
+      registry.address.addressRow,
+      registry.address.pr,
+      registry.address.cap,
+      registry.address.city
+    );
 
-  // if (coordinatesResponse) {
-  // check string similarity (registry.address and coordinatesResponse.address)
-  // se they are similar (using score?), set the coordinates
-  // otherwise, add this resgistry to another CSV file (with aws address and score)
-  // }
+    if (coordinatesResponse) {
+      // check string similarity (registry.address and coordinatesResponse.address)
+      // se they are similar (using score?), set the coordinates
+      // otherwise, add this resgistry to another CSV file (with aws address and score)
+      storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
+      storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 
   return storeLocatorCsvEntity;
 };

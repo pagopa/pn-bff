@@ -5,6 +5,12 @@ const apiClient = require('./raddClient');
 const utils = require('./utils');
 const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const REQUESTS_PER_SECOND = Number(process.env.AWS_LOCATION_REQUESTS_PER_SECOND) || 95;
+const BATCH_SIZE = REQUESTS_PER_SECOND / 2;
+const DELAY_MS = 1000 / (REQUESTS_PER_SECOND / BATCH_SIZE);
+
 exports.handleEvent = async () => {
   console.log('Handler invoked');
   validateEnvironmentVariables();
@@ -50,17 +56,34 @@ exports.handleEvent = async () => {
     let lastKey = null;
     do {
       const apiResponse = await apiClient.fetchApi(lastKey, null);
+      const registries = apiResponse.registries;
       console.log(
         'Fetched API registries response size:',
         apiResponse.registries.length
       );
-      const records = apiResponse.registries.map((registry) =>
-        storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
-      );
-      csvContent += csvUtils.createCSVContent(
-        csvConfiguration.configs,
-        records
-      );
+
+      for (let i = 0; i < registries.length; i += BATCH_SIZE) {
+        const batch = registries.slice(i, i + BATCH_SIZE);
+
+        const recordPromises = batch.map((registry) =>
+          storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(
+            registry
+          )
+        );
+
+        const records = await Promise.all(recordPromises);
+
+        csvContent += csvUtils.createCSVContent(
+          csvConfiguration.configs,
+          records
+        );
+
+        if (i + BATCH_SIZE < registries.length || apiResponse.lastKey) {
+          console.log(`Sleep for ${DELAY_MS}`);
+          await sleep(DELAY_MS);
+        }
+      }
+
       lastKey = apiResponse.lastKey;
       console.log('Processed records, lastKey:', lastKey);
     } while (lastKey);
@@ -86,7 +109,8 @@ function validateEnvironmentVariables() {
     'GENERATE_INTERVAL',
     'RADD_STORE_GENERATION_CONFIG_PARAMETER',
     'RADD_STORE_REGISTRY_API_URL',
-    'AWS_LOCATION_REGION'
+    'AWS_LOCATION_REGION',
+    'AWS_LOCATION_REQUESTS_PER_SECOND'
   ];
 
   requiredEnvVars.forEach((envVar) => {

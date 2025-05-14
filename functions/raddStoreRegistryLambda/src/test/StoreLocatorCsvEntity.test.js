@@ -11,7 +11,7 @@ describe('StoreLocatorCsvEntity', () => {
     sinon.restore();
   });
 
-  it('should map API response correctly', () => {
+  it('should map API response correctly', async () => {
     const registry = {
       description: 'Test Store',
       address: {
@@ -29,7 +29,7 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -48,7 +48,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('98.765432');
   });
 
-  it('should map API response correctly when there is only one day in openingTime', () => {
+  it('should map API response correctly when there is only one day in openingTime', async () => {
     const registry = {
       description: 'Test Store',
       address: {
@@ -65,7 +65,7 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -84,7 +84,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('98.765432');
   });
 
-  it('should handle missing optional fields gracefully', () => {
+  it('should handle missing optional fields gracefully', async () => {
     const registry = {
       description: 'Test Store',
       address: {
@@ -96,7 +96,7 @@ describe('StoreLocatorCsvEntity', () => {
       phoneNumber: '123/456/7890',
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -115,7 +115,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('');
   });
 
-  it('should handle null values correctly', () => {
+  it('should handle null values correctly', async () => {
     const registry = {
       description: null,
       address: null,
@@ -124,7 +124,7 @@ describe('StoreLocatorCsvEntity', () => {
       geoLocation: null,
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
