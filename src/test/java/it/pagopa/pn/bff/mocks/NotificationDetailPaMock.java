@@ -90,8 +90,8 @@ public class NotificationDetailPaMock {
         return notificationPaymentItems;
     }
 
-    private NotificationRecipientV23 getRecipientMock(NotificationRecipientV23.RecipientTypeEnum recipientType, String taxId, String denomination, ArrayList<NotificationPaymentItem> payments) {
-        NotificationRecipientV23 recipient = new NotificationRecipientV23();
+    private NotificationRecipientV24 getRecipientMock(NotificationRecipientV24.RecipientTypeEnum recipientType, String taxId, String denomination, ArrayList<NotificationPaymentItem> payments) {
+        NotificationRecipientV24 recipient = new NotificationRecipientV24();
         recipient.setRecipientType(recipientType);
         recipient.setTaxId(taxId);
         recipient.setDenomination(denomination);
@@ -111,10 +111,10 @@ public class NotificationDetailPaMock {
         return recipient;
     }
 
-    private ArrayList<NotificationRecipientV23> getRecipientsMock() {
-        ArrayList<NotificationRecipientV23> recipients = new ArrayList<>();
-        recipients.add(getRecipientMock(NotificationRecipientV23.RecipientTypeEnum.PF, "LVLDAA85T50G702B", "Ada Lovelace", getPaymentsMockRec0()));
-        recipients.add(getRecipientMock(NotificationRecipientV23.RecipientTypeEnum.PF, "FRMTTR76M06B715E", "Ettore Fieramosca", getPaymentsMockRec1()));
+    private ArrayList<NotificationRecipientV24> getRecipientsMock() {
+        ArrayList<NotificationRecipientV24> recipients = new ArrayList<>();
+        recipients.add(getRecipientMock(NotificationRecipientV24.RecipientTypeEnum.PF, "LVLDAA85T50G702B", "Ada Lovelace", getPaymentsMockRec0()));
+        recipients.add(getRecipientMock(NotificationRecipientV24.RecipientTypeEnum.PF, "FRMTTR76M06B715E", "Ettore Fieramosca", getPaymentsMockRec1()));
         return recipients;
     }
 
@@ -186,24 +186,24 @@ public class NotificationDetailPaMock {
         return notificationStatusHistory;
     }
 
-    private ArrayList<TimelineElementV26> getTimelineMock() {
-        ArrayList<TimelineElementV26> timeline = new ArrayList<>();
+    private ArrayList<TimelineElementV27> getTimelineMock() {
+        ArrayList<TimelineElementV27> timeline = new ArrayList<>();
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("REQUEST_ACCEPTED.IUN_RTRD-UDGU-QTQY-202308-P-1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:34:58.041398918Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.REQUEST_ACCEPTED)
+                        .category(TimelineElementCategoryV27.REQUEST_ACCEPTED)
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("AAR_GEN.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:27.328299384Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.AAR_GENERATION)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.AAR_GENERATION)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .generatedAarUrl("PN_AAR-7e3c456307f743669b42105aa9357dae.pdf")
                                 .numberOfPages(1)
@@ -211,12 +211,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("AAR_GEN.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:27.34501351Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.AAR_GENERATION)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.AAR_GENERATION)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .generatedAarUrl("PN_AAR-6dc9aa2aceec4a18b4b073df09a1ed12.pdf")
                                 .numberOfPages(1)
@@ -224,12 +224,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SEND_COURTESY_MESSAGE.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.COURTESYADDRESSTYPE_SMS")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:28.673819084Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.SEND_COURTESY_MESSAGE)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_COURTESY_MESSAGE)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .sendDate(OffsetDateTime.parse("2023-08-25T09:35:28.673626121Z"))
                                 .digitalAddress(new DigitalAddress().type("SMS").address("+393889533897"))
@@ -237,12 +237,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("GET_ADDRESS.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.SOURCE_PLATFORM.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:37.430018585Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.GET_ADDRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.GET_ADDRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .digitalAddressSource(DigitalAddressSource.PLATFORM)
                                 .isAvailable(false)
@@ -251,12 +251,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("GET_ADDRESS.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1.SOURCE_PLATFORM.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:37.438177621Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.GET_ADDRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.GET_ADDRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddressSource(DigitalAddressSource.PLATFORM)
                                 .isAvailable(false)
@@ -265,12 +265,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("GET_ADDRESS.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.SOURCE_SPECIAL.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:37.459264115Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.GET_ADDRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.GET_ADDRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
                                 .isAvailable(true)
@@ -280,12 +280,12 @@ public class NotificationDetailPaMock {
 
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("GET_ADDRESS.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1.SOURCE_SPECIAL.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:37.467148235Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.GET_ADDRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.GET_ADDRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
                                 .isAvailable(true)
@@ -294,12 +294,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SEND_DIGITAL.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:37.972607129Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_DOMICILE)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_DOMICILE)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .digitalAddress(new DigitalAddress().type("PEC").address("notifichedigitali-uat@pec.pagopa.it"))
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
@@ -308,12 +308,12 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SEND_DIGITAL.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:40.989759156Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_DOMICILE)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_DOMICILE)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddress(new DigitalAddress().type("PEC").address("testpagopa3@pec.pagopa.it"))
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
@@ -322,15 +322,15 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("DIGITAL_PROG.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0.IDX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:48.01877805Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_EXTERNAL_LEGAL_FACTS-bf46b5cb7617404095595a4ed53a4022.xml")
                                 .category("PEC_RECEIPT")
                         ))
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_PROGRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_PROGRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .digitalAddress(new DigitalAddress().type("PEC").address("notifichedigitali-uat@pec.pagopa.it"))
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
@@ -341,15 +341,15 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("DIGITAL_PROG.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0.IDX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:50.895375375Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_EXTERNAL_LEGAL_FACTS-10446363e8904ff9b93cc1835e8f6253.xml")
                                 .category("PEC_RECEIPT")
                         ))
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_PROGRESS)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_PROGRESS)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddress(new DigitalAddress().type("PEC").address("testpagopa3@pec.pagopa.it"))
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
@@ -360,15 +360,15 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SEND_DIGITAL_FEEDBACK.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:35:58.40995459Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_EXTERNAL_LEGAL_FACTS-d0b33189dcb24f51bdd50363e14c001d.xml")
                                 .category("PEC_RECEIPT")
                         ))
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_FEEDBACK)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_FEEDBACK)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .sendDate(OffsetDateTime.parse("2023-08-25T09:35:53.20063392Z"))
                                 .digitalAddress(new DigitalAddress().type("EMAIL").address("notifichedigitali-uat@pec.pagopa.it"))
@@ -380,25 +380,25 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SCHEDULE_REFINEMENT_WORKFLOW.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:36:00.079496693Z"))
-                        .category(TimelineElementCategoryV26.SCHEDULE_REFINEMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SCHEDULE_REFINEMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SEND_DIGITAL_FEEDBACK.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1.SOURCE_SPECIAL.REPEAT_false.ATTEMPT_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:36:01.184038269Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_EXTERNAL_LEGAL_FACTS-3d98741cbeeb4712a3fc709261f83241.xml")
                                 .category("PEC_RECEIPT")
                         ))
-                        .category(TimelineElementCategoryV26.SEND_DIGITAL_FEEDBACK)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SEND_DIGITAL_FEEDBACK)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddress(new DigitalAddress().type("PEC").address("testpagopa3@pec.pagopa.it"))
                                 .digitalAddressSource(DigitalAddressSource.SPECIAL)
@@ -409,71 +409,71 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("SCHEDULE_REFINEMENT_WORKFLOW.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:36:02.927741692Z"))
-                        .category(TimelineElementCategoryV26.SCHEDULE_REFINEMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.SCHEDULE_REFINEMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("DIGITAL_SUCCESS_WORKFLOW.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:36:17.520532258Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_LEGAL_FACTS-4ba554c616344022838ff39a617ab0df.pdf")
                                 .category("DIGITAL_DELIVERY")
                         ))
-                        .category(TimelineElementCategoryV26.DIGITAL_SUCCESS_WORKFLOW)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.DIGITAL_SUCCESS_WORKFLOW)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .digitalAddress(new DigitalAddress().type("EMAIL").address("notifichedigitali-uat@pec.pagopa.it"))
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("DIGITAL_SUCCESS_WORKFLOW.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:36:17.545859567Z"))
                         .legalFactsIds(List.of(new LegalFactsIdV20()
                                 .key("PN_LEGAL_FACTS-b7d638d7b3eb407fac78160b7e1e92d5.pdf")
                                 .category("DIGITAL_DELIVERY")
                         ))
-                        .category(TimelineElementCategoryV26.DIGITAL_SUCCESS_WORKFLOW)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.DIGITAL_SUCCESS_WORKFLOW)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .digitalAddress(new DigitalAddress().type("EMAIL").address("testpagopa3@pec.pagopa.it"))
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("REFINEMENT.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_0")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:39:07.843258714Z"))
-                        .category(TimelineElementCategoryV26.REFINEMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.REFINEMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("REFINEMENT.IUN_RTRD-UDGU-QTQY-202308-P-1.RECINDEX_1")
                         .timestamp(OffsetDateTime.parse("2023-08-25T09:39:07.855372374Z"))
-                        .category(TimelineElementCategoryV26.REFINEMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.REFINEMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                         )
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("NOTIFICATION_PAID.IUN_RTRD-UDGU-QTQY-202308-P-1.CODE_PPA30201169295602908877777777777")
                         .timestamp(OffsetDateTime.parse("2023-08-25T11:36:32.24Z"))
-                        .category(TimelineElementCategoryV26.PAYMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.PAYMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(0)
                                 .recipientType(RecipientType.PF)
                                 .amount(200)
@@ -484,11 +484,11 @@ public class NotificationDetailPaMock {
         );
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("NOTIFICATION_PAID.IUN_RTRD-UDGU-QTQY-202308-P-1.CODE_PPA30201169295602909677777777777")
                         .timestamp(OffsetDateTime.parse("2023-08-25T11:38:05.392Z"))
-                        .category(TimelineElementCategoryV26.PAYMENT)
-                        .details(new TimelineElementDetailsV26()
+                        .category(TimelineElementCategoryV27.PAYMENT)
+                        .details(new TimelineElementDetailsV27()
                                 .recIndex(1)
                                 .recipientType(RecipientType.PF)
                                 .amount(200)
@@ -502,19 +502,19 @@ public class NotificationDetailPaMock {
         return timeline;
     }
 
-    private ArrayList<TimelineElementV26> getTimelineRADDMock() {
-        ArrayList<TimelineElementV26> timeline = new ArrayList<>();
+    private ArrayList<TimelineElementV27> getTimelineRADDMock() {
+        ArrayList<TimelineElementV27> timeline = new ArrayList<>();
 
         BeanUtils.copyProperties(getTimelineMock(), timeline);
 
         timeline.add(
-                new TimelineElementV26()
+                new TimelineElementV27()
                         .elementId("NOTIFICATION_RADD_RETRIEVED_mock")
                         .timestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                         .legalFactsIds(new ArrayList<>())
-                        .category(TimelineElementCategoryV26.NOTIFICATION_RADD_RETRIEVED)
+                        .category(TimelineElementCategoryV27.NOTIFICATION_RADD_RETRIEVED)
                         .details(
-                                new TimelineElementDetailsV26()
+                                new TimelineElementDetailsV27()
                                         .recIndex(1)
                                         .eventTimestamp(OffsetDateTime.parse("2022-06-21T11:44:28Z"))
                                         .raddType("ALT")
@@ -525,14 +525,14 @@ public class NotificationDetailPaMock {
         return timeline;
     }
 
-    public FullSentNotificationV26 getNotificationMultiRecipientMock() {
-        FullSentNotificationV26 bffFullNotificationV1Mock = new FullSentNotificationV26();
+    public FullSentNotificationV27 getNotificationMultiRecipientMock() {
+        FullSentNotificationV27 bffFullNotificationV1Mock = new FullSentNotificationV27();
 
         bffFullNotificationV1Mock.setAbstract("Abstract della notifica");
         bffFullNotificationV1Mock.setPaProtocolNumber("302011692956029071");
         bffFullNotificationV1Mock.setSubject("notifica analogica con cucumber");
         bffFullNotificationV1Mock.setNotificationFeePolicy(NotificationFeePolicy.FLAT_RATE);
-        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullSentNotificationV26.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        bffFullNotificationV1Mock.setPhysicalCommunicationType(FullSentNotificationV27.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         bffFullNotificationV1Mock.setSenderDenomination("Comune di palermo");
         bffFullNotificationV1Mock.senderTaxId("80016350821");
         bffFullNotificationV1Mock.setGroup("000");
@@ -549,8 +549,8 @@ public class NotificationDetailPaMock {
         return bffFullNotificationV1Mock;
     }
 
-    public FullSentNotificationV26 getOneRecipientNotification() {
-        FullSentNotificationV26 oneRecipientNotification = getNotificationMultiRecipientMock();
+    public FullSentNotificationV27 getOneRecipientNotification() {
+        FullSentNotificationV27 oneRecipientNotification = getNotificationMultiRecipientMock();
         oneRecipientNotification.setRecipients(Collections.singletonList(oneRecipientNotification.getRecipients().get(0)));
         oneRecipientNotification.setTimeline(oneRecipientNotification.getTimeline()
                 .stream()
@@ -568,13 +568,13 @@ public class NotificationDetailPaMock {
     }
 
     public BffFullNotificationV1 notificationToFERADD() {
-        FullSentNotificationV26 notificationDTORadd = getNotificationMultiRecipientMock();
+        FullSentNotificationV27 notificationDTORadd = getNotificationMultiRecipientMock();
         notificationDTORadd.setTimeline(getTimelineRADDMock());
         return NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd);
     }
 
-    public TimelineElementV26 getTimelineElem(TimelineElementCategoryV26 category, TimelineElementDetailsV26 details) {
-        return new TimelineElementV26()
+    public TimelineElementV27 getTimelineElem(TimelineElementCategoryV27 category, TimelineElementDetailsV27 details) {
+        return new TimelineElementV27()
                 .category(category)
                 .elementId(category + ".IUN_RTRD-UDGU-QTQY-202308-P-1")
                 .timestamp(OffsetDateTime.parse("2023-08-25T11:38:05.392Z"))
