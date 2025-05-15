@@ -46,7 +46,7 @@ components:
   schemas:
 
     BffMandatesCount:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateCountsDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateCountsDto'
 
     BffNewMandateRequest:
       type: object
@@ -56,13 +56,13 @@ components:
         - dateto
       properties:
         delegate:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UserDto'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UserDto'
         visibilityIds:
           type: array
           description: Available always, not required on mandate creation.
           nullable: true
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/OrganizationIdDto'
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/OrganizationIdDto'
         verificationCode:
           type: string
           maxLength: 5
@@ -77,19 +77,19 @@ components:
         groups:
           type: array
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/GroupDto'
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/GroupDto'
 
     BffAcceptRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/AcceptRequestDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/AcceptRequestDto'
 
     BffUpdateRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UpdateRequestDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/UpdateRequestDto'
 
     BffMandate:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/MandateDto'
 
     BffSearchMandateRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateRequestDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateRequestDto'
 
     BffSearchMandateResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/19e79a9da8128c6caaad08755801990075668a3a/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateResponseDto'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-mandate/b2087518c2dc76da88f552515f6e4f43be8434d7/docs/openapi/pn-mandate-internal.yaml#/components/schemas/SearchMandateResponseDto'
