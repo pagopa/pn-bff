@@ -1,3 +1,5 @@
+const { getCoordinatesForAddress } = require('./geocodeUtils');
+
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
@@ -15,6 +17,7 @@ class StoreLocatorCsvEntity {
     this.sunday = '';
     this.latitude = '';
     this.longitude = '';
+    this.type = '';
   }
 
   setDescription(description) {
@@ -70,11 +73,15 @@ class StoreLocatorCsvEntity {
   }
 
   setLatitude(latitude) {
-    if (latitude != null) this.latitude = latitude;
+    if (latitude != null) this.latitude = latitude.toString();
   }
 
   setLongitude(longitude) {
-    if (longitude != null) this.longitude = longitude;
+    if (longitude != null) this.longitude = longitude.toString();
+  }
+
+  setType(type) {
+    if (type != null) this.type = type;
   }
 }
 
@@ -138,12 +145,7 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  if (registry.geoLocation) {
-    storeLocatorCsvEntity.setLatitude(registry.geoLocation.latitude);
-    storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
-  }
-
-  try {
+try {
     const coordinatesResponse = await getCoordinatesForAddress(
       registry.address.addressRow,
       registry.address.pr,
@@ -161,6 +163,8 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   } catch (e) {
     console.log(e);
   }
+
+  storeLocatorCsvEntity.setType('CAF');
 
   return storeLocatorCsvEntity;
 };
