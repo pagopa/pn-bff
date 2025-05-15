@@ -399,6 +399,15 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+      
+  AWSLocationRegion:
+    Type: String
+    Default: 'eu-central-1'
+    Description: 'Region for AWS Location Service in EU (Frankfurt, Ireland, Stockholm)'
+    AllowedValues:
+      - 'eu-central-1'  # Frankfurt
+      - 'eu-west-1'     # Ireland
+      - 'eu-north-1'    # Stockholm
 
 Conditions:
   CreateFakeDLRole:
@@ -733,7 +742,7 @@ Resources:
       VpcConfig: # required for mock connection but useful also for the future addition of network firewall
         SecurityGroupIds:
           - !GetAtt RaddStoreRegistryLambdaSecGroup.GroupId
-        SubnetIds: !Ref SubnetsIds
+        SubnetIds: !Split [",", !Ref VpcEgressSubnetsIds]
       MemorySize: !Ref RaddStoreRegistryLambdaMemory
       Timeout: 900
       Environment:
@@ -804,7 +813,14 @@ Resources:
                 Resource:
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryCsvConfigurationParameter}'
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryGenerationConfigParameter}'
-
+        - PolicyName: AccessAWSLocationService
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - geo-places:Geocode
+                Resource: !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:
     Type: AWS::CloudWatch::Alarm
