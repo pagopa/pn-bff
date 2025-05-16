@@ -1,4 +1,5 @@
 const { getCoordinatesForAddress } = require('./geocodeUtils');
+const { addRowToWrongAddressCSV } = require('./csvUtils');
 
 class StoreLocatorCsvEntity {
   constructor() {
@@ -85,7 +86,10 @@ class StoreLocatorCsvEntity {
   }
 }
 
-const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = async (
+  registry,
+  wrongAddressesArray
+) => {
   const getOpeningTimeByDay = (fullOpeningTime) => {
     const times = new Array(7).fill(null);
     if (fullOpeningTime) {
@@ -145,7 +149,9 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-try {
+  storeLocatorCsvEntity.setType('CAF');
+
+  try {
     const coordinatesResponse = await getCoordinatesForAddress(
       registry.address.addressRow,
       registry.address.pr,
@@ -154,17 +160,23 @@ try {
     );
 
     if (coordinatesResponse) {
-      // check string similarity (registry.address and coordinatesResponse.address)
-      // se they are similar (using score?), set the coordinates
-      // otherwise, add this resgistry to another CSV file (with aws address and score)
-      storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
-      storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
+      if (
+        coordinatesResponse.awsScore > 0.8 &&
+        coordinatesResponse.awsLatitude &&
+        coordinatesResponse.awsLongitude
+      ) {
+        storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
+        storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+      } else {
+        addRowToWrongAddressCSV(
+          { ...storeLocatorCsvEntity, ...coordinatesResponse },
+          wrongAddressesArray
+        );
+      }
     }
   } catch (e) {
     console.log(e);
   }
-
-  storeLocatorCsvEntity.setType('CAF');
 
   return storeLocatorCsvEntity;
 };

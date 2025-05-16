@@ -197,4 +197,58 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal('');
     expect(result.type).to.equal('CAF');
   });
+
+  it('should add address to wrongAddressesArray when AWS score is below 0.8', async () => {
+    const registry = {
+      description: 'CAF UIL',
+      address: {
+        city: 'Milano',
+        addressRow: 'Via Carlo Magno 1',
+        pr: 'MI',
+        cap: '20100',
+      },
+    };
+
+    mockGeoPlacesResponse(9.19, 45.4642, 0.7);
+
+    const wrongAddressesArray = [];
+    await mapApiResponseToStoreLocatorCsvEntities(
+      registry,
+      wrongAddressesArray
+    );
+
+    expect(wrongAddressesArray.length).to.equal(1);
+
+    const row = wrongAddressesArray[0];
+    expect(row).to.include('CAF UIL');
+    expect(row).to.include('Via Carlo Magno 1');
+    expect(row).to.include('Milano');
+    expect(row).to.include('MI');
+    expect(row).to.include('Via Roma 123, Milano (MI), 20100');
+    expect(row).to.include('0.7');
+    expect(row).to.include('45.4642');
+    expect(row).to.include('9.19');
+  });
+
+  it('should not add address to wrongAddressesArray when AWS score is above 0.8', async () => {
+    const registry = {
+      description: 'CAF CGIL',
+      address: {
+        city: 'Roma',
+        addressRow: 'Via Nazionale 42',
+        pr: 'RM',
+        cap: '00100',
+      },
+    };
+
+    mockGeoPlacesResponse(12.4964, 41.9028, 0.9);
+
+    const wrongAddressesArray = [];
+    await mapApiResponseToStoreLocatorCsvEntities(
+      registry,
+      wrongAddressesArray
+    );
+
+    expect(wrongAddressesArray.length).to.equal(0);
+  });
 });

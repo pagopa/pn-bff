@@ -1,7 +1,3 @@
-const fs = require('fs');
-const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
-
 const validFieldValue = [
   'description',
   'city',
@@ -19,6 +15,21 @@ const validFieldValue = [
   'latitude',
   'longitude',
 ];
+
+const wrongAddressesConfig = [
+  { header: 'descrizione', field: 'description' },
+  { header: 'indirizzo', field: 'address' },
+  { header: 'citta', field: 'city' },
+  { header: 'provincia', field: 'province' },
+  { header: 'indirizzo AWS', field: 'awsAddress' },
+  { header: 'score AWS', field: 'awsScore' },
+  { header: 'latitudine', field: 'awsLatitude' },
+  { header: 'longitudine', field: 'awsLongitude' },
+];
+
+const wrongAddressesCsvHeader = wrongAddressesConfig
+  .map((config) => config.header)
+  .join(';');
 
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
@@ -53,4 +64,14 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
-module.exports = { validateCsvConfiguration, createCSVContent };
+function addRowToWrongAddressCSV(data, wrongAddressArray) {
+  const newRow = wrongAddressesConfig.map((conf) => data[conf.field] || '');
+  wrongAddressArray.push(newRow.join(';'));
+}
+
+module.exports = {
+  validateCsvConfiguration,
+  createCSVContent,
+  wrongAddressesCsvHeader,
+  addRowToWrongAddressCSV,
+};
