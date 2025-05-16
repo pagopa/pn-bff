@@ -22,16 +22,15 @@ const getCoordinatesForAddress = async (
   municipality
 ) => {
   const params = {
-    QueryText: address,
     MaxResults: 1,
     Filter: {
-       IncludeCountries: ["IT"],
+      IncludeCountries: ['IT'],
     },
     QueryComponents: {
-      Country: 'IT',
       SubRegion: province,
       PostalCode: zip,
       Locality: municipality,
+      Street: address,
     },
     Language: 'it',
   };
@@ -55,10 +54,10 @@ const getCoordinatesForAddress = async (
       }
 
       return {
-        longitude: coordinates[0] || null,
-        latitude: coordinates[1] || null,
-        address: response.ResultItems[0].Title,
-        score: score,
+        awsLongitude: coordinates[0] || null,
+        awsLatitude: coordinates[1] || null,
+        awsAddress: response.ResultItems[0].Title,
+        awsScore: score,
       };
     } else {
       return null;
