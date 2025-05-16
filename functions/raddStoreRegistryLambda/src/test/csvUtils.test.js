@@ -1,6 +1,8 @@
 const {
   validateCsvConfiguration,
   createCSVContent,
+  addRowToWrongAddressCSV,
+  wrongAddressesCsvHeader,
 } = require('../app/csvUtils');
 const chai = require('chai');
 const expect = chai.expect;
@@ -67,5 +69,73 @@ describe('createCSVContent', () => {
     ];
     const expectedContent = '\ndesc1;\ndesc2;city2';
     expect(createCSVContent(configs, data)).equal(expectedContent);
+  });
+});
+
+describe('wrongAddressesCsvHeader', () => {
+  it('should return the correct header string', () => {
+    const expectedHeader =
+      'descrizione;indirizzo;citta;provincia;indirizzo AWS;score AWS;latitudine;longitudine';
+    expect(wrongAddressesCsvHeader).to.equal(expectedHeader);
+  });
+});
+
+describe('addRowToWrongAddressCSV', () => {
+  const sampleRegistry = {
+    description: 'CAF CGIL',
+    address: 'Via Roma 10',
+    city: 'Roma',
+    province: 'RM',
+    awsAddress: 'Via Roma 10, 20100 RM, ROMA',
+    awsScore: '0.9',
+    awsLatitude: '41.9028',
+    awsLongitude: '12.4964',
+  };
+
+  it('should add a row to the wrongAddressArray with correct values', () => {
+    const wrongAddressArray = [];
+    addRowToWrongAddressCSV(sampleRegistry, wrongAddressArray);
+
+    const expectedRow =
+      'CAF CGIL;Via Roma 10;Roma;RM;Via Roma 10, 20100 RM, ROMA;0.9;41.9028;12.4964';
+    expect(wrongAddressArray.length).to.equal(1);
+    expect(wrongAddressArray[0]).to.equal(expectedRow);
+  });
+
+  it('should handle missing data fields by inserting empty strings', () => {
+    // missing city and coordinates
+    const { city, awsLatitude, awsLongitude, ...incompleteData } =
+      sampleRegistry;
+
+    const wrongAddressArray = [];
+    addRowToWrongAddressCSV(incompleteData, wrongAddressArray);
+
+    const expectedRow =
+      'CAF CGIL;Via Roma 10;;RM;Via Roma 10, 20100 RM, ROMA;0.9;;';
+    expect(wrongAddressArray.length).to.equal(1);
+    expect(wrongAddressArray[0]).to.equal(expectedRow);
+  });
+
+  it('should append multiple rows correctly', () => {
+    const sampleRegistry2 = {
+      ...sampleRegistry,
+      description: 'CAF UIL',
+      address: 'Via Nazionale 15',
+      awsAddress: 'Via Nazionale 15, 20100 RM, ROMA',
+      awsLatitude: '42.6741',
+      awsLongitude: '11.9082',
+    };
+
+    const wrongAddressArray = [];
+    addRowToWrongAddressCSV(sampleRegistry, wrongAddressArray);
+    addRowToWrongAddressCSV(sampleRegistry2, wrongAddressArray);
+
+    expect(wrongAddressArray.length).to.equal(2);
+    expect(wrongAddressArray[0]).to.equal(
+      'CAF CGIL;Via Roma 10;Roma;RM;Via Roma 10, 20100 RM, ROMA;0.9;41.9028;12.4964'
+    );
+    expect(wrongAddressArray[1]).to.equal(
+      'CAF UIL;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;11.9082'
+    );
   });
 });
