@@ -22,12 +22,16 @@ describe('checkIfIntervalPassed', () => {
   it('throws error when GENERATE_INTERVAL is invalid', () => {
     process.env.GENERATE_INTERVAL = '-1';
     const latestFile = { LastModified: new Date() };
-    expect(() => checkIfIntervalPassed(latestFile)).throw('Invalid or missing GENERATE_INTERVAL environment variable');
+    expect(() => checkIfIntervalPassed(latestFile)).throw(
+      'Invalid or missing GENERATE_INTERVAL environment variable'
+    );
   });
 
   it('throws error when GENERATE_INTERVAL is missing', () => {
     delete process.env.GENERATE_INTERVAL;
     const latestFile = { LastModified: new Date() };
-    expect(() => checkIfIntervalPassed(latestFile)).throw('Invalid or missing GENERATE_INTERVAL environment variable');
+    expect(() => checkIfIntervalPassed(latestFile)).throw(
+      'Invalid or missing GENERATE_INTERVAL environment variable'
+    );
   });
 });

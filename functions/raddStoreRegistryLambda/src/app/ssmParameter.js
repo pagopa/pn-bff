@@ -4,33 +4,34 @@ const axios = require('axios');
 const client = new SSMClient({ region: process.env.AWS_REGION });
 
 const retrieveGenerationConfigParameter = async () => {
-  const generationConfigName = process.env.RADD_STORE_GENERATION_CONFIG_PARAMETER;
+  const generationConfigName =
+    process.env.RADD_STORE_GENERATION_CONFIG_PARAMETER;
   console.log('Fetching generation config parameter:', generationConfigName);
-  try{
+  try {
     return JSON.parse(await getParameterFromLayer(generationConfigName));
   } catch (error) {
     console.error('Error retrieving SSM parameter:', error);
   }
-}
+};
 
-const retrieveCsvConfiguration = async() => {
+const retrieveCsvConfiguration = async () => {
   const csvConfigParamName = process.env.CSV_CONFIGURATION_PARAMETER;
   console.log('Fetching configuration parameter:', csvConfigParamName);
-  try{
+  try {
     return JSON.parse(await getParameterFromLayer(csvConfigParamName));
   } catch (error) {
     console.error('Error retrieving SSM parameter:', error);
     throw error;
   }
-}
+};
 
 const getParameter = async (parameterName) => {
-    console.log(`Retrieving parameter: ${parameterName}`);
-    const command = new GetParameterCommand({ Name: parameterName });
-    const response = await client.send(command);
-    console.log(`Successfully retrieved parameter: ${parameterName}`);
-    return response.Parameter.Value;
-}
+  console.log(`Retrieving parameter: ${parameterName}`);
+  const command = new GetParameterCommand({ Name: parameterName });
+  const response = await client.send(command);
+  console.log(`Successfully retrieved parameter: ${parameterName}`);
+  return response.Parameter.Value;
+};
 
 async function getParameterFromLayer(parameterName) {
   try {
@@ -40,15 +41,18 @@ async function getParameterFromLayer(parameterName) {
       )}`,
       {
         headers: {
-          "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN,
+          'X-Aws-Parameters-Secrets-Token': process.env.AWS_SESSION_TOKEN,
         },
       }
     );
     return response.data.Parameter.Value;
   } catch (err) {
-    console.error("Unable to get SSM parameter ", err);
-    throw new Error("Error retrieving SSM parameter");
+    console.error('Unable to get SSM parameter ', err);
+    throw new Error('Error retrieving SSM parameter');
   }
 }
 
-module.exports = { retrieveGenerationConfigParameter, retrieveCsvConfiguration };
+module.exports = {
+  retrieveGenerationConfigParameter,
+  retrieveCsvConfiguration,
+};

@@ -1,8 +1,17 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const { mockClient } = require('aws-sdk-client-mock');
-const { S3Client, ListObjectVersionsCommand, PutObjectCommand, CopyObjectCommand } = require('@aws-sdk/client-s3');
-const { getLatestVersion, generateS3Key, uploadVersionedFile } = require('../app/s3Utils');
+const {
+  S3Client,
+  ListObjectVersionsCommand,
+  PutObjectCommand,
+  CopyObjectCommand,
+} = require('@aws-sdk/client-s3');
+const {
+  getLatestVersion,
+  generateS3Key,
+  uploadVersionedFile,
+} = require('../app/s3Utils');
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -23,10 +32,12 @@ describe('s3Utils tests', function () {
       // Given
       const bffBucketS3Key = 'testKey';
       const latestVersion = [
-        { Key: 'file1.txt', VersionId: '1', IsLatest: true }
+        { Key: 'file1.txt', VersionId: '1', IsLatest: true },
       ];
-      
-      s3Mock.on(ListObjectVersionsCommand).resolves({ Versions: latestVersion });
+
+      s3Mock
+        .on(ListObjectVersionsCommand)
+        .resolves({ Versions: latestVersion });
 
       // When
       const result = await getLatestVersion(bffBucketS3Key);
@@ -37,12 +48,11 @@ describe('s3Utils tests', function () {
       expect(result.IsLatest).to.be.equal(true);
     });
 
-    
     it('should return null if no versions found', async () => {
       // Given
       const bffBucketS3Key = 'testKey';
       s3Mock.on(ListObjectVersionsCommand).resolves({
-        Versions: []
+        Versions: [],
       });
 
       // When
@@ -51,7 +61,7 @@ describe('s3Utils tests', function () {
       // Then
       expect(result).to.be.null;
     });
-    
+
     it('should throw an error if listing object versions fails', async () => {
       // Given
       const bffBucketS3Key = 'testKey';
@@ -59,7 +69,9 @@ describe('s3Utils tests', function () {
       s3Mock.on(ListObjectVersionsCommand).rejects(new Error(errorMessage));
 
       // When/Then
-      await expect(getLatestVersion(bffBucketS3Key)).to.be.rejectedWith(errorMessage);
+      await expect(getLatestVersion(bffBucketS3Key)).to.be.rejectedWith(
+        errorMessage
+      );
     });
   });
 
@@ -98,9 +110,10 @@ describe('s3Utils tests', function () {
       delete process.env.FILE_NAME;
 
       // When/Then
-      expect(() => generateS3Key('testVersion', false)).to.throw('FILE_NAME environment variable is missing');
+      expect(() => generateS3Key('testVersion', false)).to.throw(
+        'FILE_NAME environment variable is missing'
+      );
     });
-
   });
 
   describe('uploadVersionedFile', function () {
@@ -124,12 +137,12 @@ describe('s3Utils tests', function () {
       expect(s3Mock.calls(PutObjectCommand)[0].args[0].input).to.deep.equal({
         Bucket: 'bffBucket',
         Key: 'testKey',
-        Body: 'testContent'
+        Body: 'testContent',
       });
       expect(s3Mock.calls(CopyObjectCommand)[1].args[0].input).to.deep.equal({
         Bucket: 'webLandingBucket',
         CopySource: 'bffBucket/testKey',
-        Key: 'testWebLandingPrefix/testFile.csv'
+        Key: 'testWebLandingPrefix/testFile.csv',
       });
     });
 
@@ -139,7 +152,7 @@ describe('s3Utils tests', function () {
       const bffBucketS3Key = 'testKey';
       const csvContent = 'testContent';
       process.env.BFF_BUCKET_NAME = 'bffBucket';
-      
+
       s3Mock.on(PutObjectCommand).resolves({});
 
       // When
@@ -150,9 +163,8 @@ describe('s3Utils tests', function () {
       expect(s3Mock.calls()[0].args[0].input).to.deep.equal({
         Bucket: 'bffBucket',
         Key: 'testKey',
-        Body: 'testContent'
+        Body: 'testContent',
       });
-  
     });
 
     it('should upload file to bffBucket with error on upload', async () => {
@@ -166,8 +178,9 @@ describe('s3Utils tests', function () {
       s3Mock.on(PutObjectCommand).rejects(new Error(errorMessage));
 
       // Then
-      await expect(uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent)).to.be.rejectedWith(errorMessage);
-  
+      await expect(
+        uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent)
+      ).to.be.rejectedWith(errorMessage);
     });
 
     it('should upload file to bffBucket and copy to webLandingBucket with error on copy', async () => {
@@ -184,9 +197,10 @@ describe('s3Utils tests', function () {
 
       s3Mock.on(PutObjectCommand).resolves({});
       s3Mock.on(CopyObjectCommand).rejects(new Error(errorMessage));
-      
-      await expect(uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent)).to.be.rejectedWith(errorMessage);
+
+      await expect(
+        uploadVersionedFile(sendToWebLanding, bffBucketS3Key, csvContent)
+      ).to.be.rejectedWith(errorMessage);
     });
   });
-
 });
