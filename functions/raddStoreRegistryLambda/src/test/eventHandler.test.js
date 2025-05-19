@@ -142,6 +142,43 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
   });
 
+  it('properly handles batching and sleep timing between batches', async () => {
+    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
+    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
+      forceGenerate: true,
+      sendToWebLanding: true,
+    });
+
+    const firstBatch = {
+      registries: Array(5).fill({ id: 'batch1' }),
+      lastKey: 'next',
+    };
+    const secondBatch = {
+      registries: Array(5).fill({ id: 'batch2' }),
+      lastKey: null,
+    };
+
+    if (api.fetchApi.restore) {
+      api.fetchApi.restore();
+    }
+
+    const fetchApiStub = sinon.stub(api, 'fetchApi');
+    fetchApiStub.onCall(0).resolves(firstBatch);
+    fetchApiStub.onCall(1).resolves(secondBatch);
+
+    const clock = sinon.useFakeTimers();
+
+    const handlePromise = handleEvent({});
+    await Promise.resolve();
+    await clock.tickAsync(1000);
+    await handlePromise;
+
+    sinon.assert.calledTwice(api.fetchApi);
+    sinon.assert.calledTwice(csvUtils.createCSVContent);
+
+    clock.restore();
+  });
+
   it('generates new file and uploads malformed addresses CSV when found', async () => {
     sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
 
