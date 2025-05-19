@@ -37,23 +37,22 @@ describe('geocodeUtils tests', function () {
     placesClientMock.on(GeocodeCommand).resolves(mockResponse);
 
     const result = await getCoordinatesForAddress(
-      'Via Roma 123, Milano, MI 20100',
+      'Via Roma 123',
       'MI',
       '20100',
       'Milano'
     );
 
     expect(result).to.deep.equal({
-      longitude: 9.1876,
-      latitude: 45.4669,
-      address: 'Via Roma 123, Milano (MI), 20100',
-      score: 0.96,
+      awsLongitude: 9.1876,
+      awsLatitude: 45.4669,
+      awsAddress: 'Via Roma 123, Milano (MI), 20100',
+      awsScore: 0.96,
     });
 
     const commandCalls = placesClientMock.commandCalls(GeocodeCommand);
     expect(commandCalls.length).to.equal(1);
     expect(commandCalls[0].args[0].input).to.deep.include({
-      QueryText: 'Via Roma 123, Milano, MI 20100',
       MaxResults: 1,
       Filter: {
         IncludeCountries: ['IT'],
@@ -63,6 +62,7 @@ describe('geocodeUtils tests', function () {
         SubRegion: 'MI',
         PostalCode: '20100',
         Locality: 'Milano',
+        Street: 'Via Roma 123',
       },
       Language: 'it',
     });
@@ -76,7 +76,7 @@ describe('geocodeUtils tests', function () {
     placesClientMock.on(GeocodeCommand).resolves(mockResponse);
 
     const result = await getCoordinatesForAddress(
-      'Via Insesistente, ROMA (RM), 00100',
+      'Via Insesistente',
       'RM',
       '00100',
       'Roma'
@@ -101,17 +101,17 @@ describe('geocodeUtils tests', function () {
     placesClientMock.on(GeocodeCommand).resolves(mockResponse);
 
     const result = await getCoordinatesForAddress(
-      'Via Pippo, ROMA (RM), 00100',
+      'Via Pippo',
       'RM',
       '00100',
       'Roma'
     );
 
     expect(result).to.deep.equal({
-      longitude: null,
-      latitude: null,
-      address: 'Via Pippo, Roma, RM 00100, Italy',
-      score: 0.5,
+      awsLongitude: null,
+      awsLatitude: null,
+      awsAddress: 'Via Pippo, Roma, RM 00100, Italy',
+      awsScore: 0.5,
     });
   });
 
@@ -129,17 +129,17 @@ describe('geocodeUtils tests', function () {
     placesClientMock.on(GeocodeCommand).resolves(mockResponse);
 
     const result = await getCoordinatesForAddress(
-      'Via Nazionale 45 Roma 00187',
+      'Via Nazionale 45',
       'RM',
       '00187',
       'Roma'
     );
 
     expect(result).to.deep.equal({
-      longitude: 12.4845,
-      latitude: 41.9056,
-      address: 'Via Nazionale 45, Roma, RM 00187, Italy',
-      score: 0,
+      awsLongitude: 12.4845,
+      awsLatitude: 41.9056,
+      awsAddress: 'Via Nazionale 45, Roma, RM 00187, Italy',
+      awsScore: 0,
     });
   });
 
