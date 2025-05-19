@@ -1,3 +1,5 @@
+const { getCoordinatesForAddress } = require('./geocodeUtils');
+
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
