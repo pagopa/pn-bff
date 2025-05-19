@@ -6,6 +6,17 @@ const ssmUtils = require('../app/ssmParameter');
 const utils = require('../app/utils');
 const sinon = require('sinon');
 const assert = require('node:assert/strict');
+const storeLocatorCsvEntity = require('../app/StoreLocatorCsvEntity');
+const {
+  raddAltApiResponse,
+  mockGeocodeResponse,
+} = require('../__mocks__/registries.mock');
+const { csvConfigurationMock } = require('../__mocks__/csvConfiguration.mock');
+const { mockClient } = require('aws-sdk-client-mock');
+const {
+  GeoPlacesClient,
+  GeocodeCommand,
+} = require('@aws-sdk/client-geo-places');
 
 function setupEnv() {
   // Mock the environment variables
@@ -30,31 +41,37 @@ function setupEnv() {
     AWS_PROFILE_NAME: 'default',
     AWS_ENDPOINT_URL: 'http://localhost:4566/',
     AWS_LOCATION_REGION: 'eu-central-1',
-    AWS_LOCATION_REQUESTS_PER_SECOND: '95'
+    AWS_LOCATION_REQUESTS_PER_SECOND: '95',
   };
 }
 
 describe('handler generates new file', () => {
+  let placesClientMock;
+
   beforeEach(() => {
     setupEnv();
 
-    sinon.stub(ssmUtils, 'retrieveCsvConfiguration').resolves({
-      configurationVersion: '1.0',
-      configs: [],
-    });
+    sinon
+      .stub(ssmUtils, 'retrieveCsvConfiguration')
+      .resolves(csvConfigurationMock);
 
     sinon.stub(api, 'fetchApi').resolves({
-      registries: Array(10).fill({ id: 'test' }),
+      registries: raddAltApiResponse,
       lastKey: null,
     });
 
     sinon.stub(csvUtils, 'validateCsvConfiguration').returns();
     sinon.stub(csvUtils, 'createCSVContent').returns('');
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
+
+    placesClientMock = mockClient(GeoPlacesClient);
+
+    placesClientMock.on(GeocodeCommand).resolves(mockGeocodeResponse);
   });
 
   afterEach(() => {
     sinon.restore();
+    placesClientMock.reset();
   });
 
   it('generates new file when forceGenerate is true', async () => {
@@ -123,6 +140,47 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
     sinon.assert.calledOnce(csvUtils.createCSVContent);
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
+  });
+
+  it('generates new file and uploads malformed addresses CSV when found', async () => {
+    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
+
+    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
+      forceGenerate: true,
+      sendToWebLanding: true,
+    });
+
+    sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
+
+    sinon
+      .stub(storeLocatorCsvEntity, 'mapApiResponseToStoreLocatorCsvEntities')
+      .callsFake((registry, wrongAddressesCsvContent) => {
+        wrongAddressesCsvContent.push(
+          'CAF UIL;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;11.9082'
+        );
+        return registry;
+      });
+
+    await handleEvent({});
+
+    sinon.assert.callCount(s3Utils.uploadVersionedFile, 2);
+
+    const malformedAddressCall = s3Utils.uploadVersionedFile.secondCall;
+
+    // sendToWebLanding
+    assert.strictEqual(malformedAddressCall.args[0], false);
+
+    // bffBucketS3Key
+    assert.strictEqual(
+      malformedAddressCall.args[1],
+      `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`
+    );
+
+    // csvContent
+    assert.match(
+      malformedAddressCall.args[2],
+      /CAF UIL;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;11.9082/
+    );
   });
 });
 

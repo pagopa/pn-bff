@@ -12,8 +12,6 @@ const REQUESTS_PER_SECOND =
 const BATCH_SIZE = REQUESTS_PER_SECOND / 2;
 const DELAY_MS = 1000 / (REQUESTS_PER_SECOND / BATCH_SIZE);
 
-const malformedAddressS3Key = `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`;
-
 exports.handleEvent = async () => {
   console.log('Handler invoked');
   validateEnvironmentVariables();
@@ -22,6 +20,7 @@ exports.handleEvent = async () => {
   let sendToWebLanding = false;
 
   const generationConfig = await ssmUtils.retrieveGenerationConfigParameter();
+  const malformedAddressS3Key = `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`;
 
   if (generationConfig) {
     console.log('Configuration fetched:', generationConfig);
@@ -99,11 +98,13 @@ exports.handleEvent = async () => {
       csvContent
     );
 
-    await s3Utils.uploadVersionedFile(
-      false,
-      malformedAddressS3Key,
-      wrongAddressesCsvContent.join('\n')
-    );
+    if (wrongAddressesCsvContent.length > 1) {
+      await s3Utils.uploadVersionedFile(
+        false,
+        malformedAddressS3Key,
+        wrongAddressesCsvContent.join('\n')
+      );
+    }
   } else {
     console.log('No need to generate file.');
   }
