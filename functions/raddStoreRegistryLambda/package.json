@@ -13,6 +13,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@aws-sdk/client-geo-places": "^3.803.0",
     "@aws-sdk/client-s3": "^3.583.0",
     "@aws-sdk/client-ssm": "^3.583.0",
     "@aws-sdk/client-sts": "^3.567.0",
