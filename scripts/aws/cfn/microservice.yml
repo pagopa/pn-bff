@@ -413,6 +413,13 @@ Parameters:
     Type: Number
     Description: Aws Location Rate Limit API
     default: 95
+  
+  MalformedAddressThreshold:
+    Type: Number
+    Description: Threshold for considering an address as malformed
+    Default: 0.7
+    MinValue: 0
+    MaxValue: 1
 
 Conditions:
   CreateFakeDLRole:
@@ -763,6 +770,7 @@ Resources:
           RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
           AWS_LOCATION_REGION: !Ref AWSLocationRegion
           AWS_LOCATION_REQUESTS_PER_SECOND: !Ref AWSLocationRequestsPerSecond
+          MALFORMED_ADDRESS_THRESHOLD: !Ref MalformedAddressThreshold
       Layers:
         - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
 

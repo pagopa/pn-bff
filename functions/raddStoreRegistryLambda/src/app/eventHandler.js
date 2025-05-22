@@ -7,7 +7,8 @@ const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const REQUESTS_PER_SECOND = Number(process.env.AWS_LOCATION_REQUESTS_PER_SECOND) || 95;
+const REQUESTS_PER_SECOND =
+  Number(process.env.AWS_LOCATION_REQUESTS_PER_SECOND) || 95;
 const BATCH_SIZE = REQUESTS_PER_SECOND / 2;
 const DELAY_MS = 1000 / (REQUESTS_PER_SECOND / BATCH_SIZE);
 
@@ -19,6 +20,7 @@ exports.handleEvent = async () => {
   let sendToWebLanding = false;
 
   const generationConfig = await ssmUtils.retrieveGenerationConfigParameter();
+  const malformedAddressS3Key = `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`;
 
   if (generationConfig) {
     console.log('Configuration fetched:', generationConfig);
@@ -52,6 +54,7 @@ exports.handleEvent = async () => {
       .map((conf) => conf.header)
       .join(';');
     let csvContent = csvHeader;
+    let wrongAddressesCsvContent = [csvUtils.wrongAddressesCsvHeader];
 
     let lastKey = null;
     do {
@@ -67,7 +70,8 @@ exports.handleEvent = async () => {
 
         const recordPromises = batch.map((registry) =>
           storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(
-            registry
+            registry,
+            wrongAddressesCsvContent
           )
         );
 
@@ -93,6 +97,14 @@ exports.handleEvent = async () => {
       bffBucketS3Key,
       csvContent
     );
+
+    if (wrongAddressesCsvContent.length > 1) {
+      await s3Utils.uploadVersionedFile(
+        false,
+        malformedAddressS3Key,
+        wrongAddressesCsvContent.join('\n')
+      );
+    }
   } else {
     console.log('No need to generate file.');
   }
@@ -110,7 +122,8 @@ function validateEnvironmentVariables() {
     'RADD_STORE_GENERATION_CONFIG_PARAMETER',
     'RADD_STORE_REGISTRY_API_URL',
     'AWS_LOCATION_REGION',
-    'AWS_LOCATION_REQUESTS_PER_SECOND'
+    'AWS_LOCATION_REQUESTS_PER_SECOND',
+    'MALFORMED_ADDRESS_THRESHOLD',
   ];
 
   requiredEnvVars.forEach((envVar) => {

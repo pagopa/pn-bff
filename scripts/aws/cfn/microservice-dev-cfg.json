@@ -28,6 +28,7 @@
     "ApiAlarmSegmentation": "true",
     "SelfCareCdnURL": "https://selcucheckoutsa.z6.web.core.windows.net",
     "AWSLocationRegion": "eu-central-1",
-    "AWSLocationRequestsPerSecond": "95"
+    "AWSLocationRequestsPerSecond": "95",
+    "MalformedAddressThreshold": "0.7"
   }
 }
