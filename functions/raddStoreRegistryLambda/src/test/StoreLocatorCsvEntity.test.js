@@ -8,11 +8,13 @@ const {
   GeoPlacesClient,
   GeocodeCommand,
 } = require('@aws-sdk/client-geo-places');
+const { setupEnv } = require('./utils/test.utils');
 
 describe('StoreLocatorCsvEntity', () => {
   let placesClientMock;
 
   beforeEach(() => {
+    setupEnv();
     placesClientMock = mockClient(GeoPlacesClient);
   });
 
@@ -230,7 +232,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(row).to.include('9.19');
   });
 
-  it('should not add address to wrongAddressesArray when AWS score is above 0.8', async () => {
+  it('should not add address to wrongAddressesArray when AWS score is above malformed address threshold', async () => {
     const registry = {
       description: 'CAF CGIL',
       address: {

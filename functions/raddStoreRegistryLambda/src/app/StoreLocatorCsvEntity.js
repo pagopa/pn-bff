@@ -90,6 +90,10 @@ const mapApiResponseToStoreLocatorCsvEntities = async (
   registry,
   wrongAddressesArray
 ) => {
+  const malformedAddressThreshold = Number(
+    process.env.MALFORMED_ADDRESS_THRESHOLD
+  );
+
   const getOpeningTimeByDay = (fullOpeningTime) => {
     const times = new Array(7).fill(null);
     if (fullOpeningTime) {
@@ -161,7 +165,7 @@ const mapApiResponseToStoreLocatorCsvEntities = async (
 
     if (coordinatesResponse) {
       if (
-        coordinatesResponse.awsScore > 0.8 &&
+        coordinatesResponse.awsScore > malformedAddressThreshold &&
         coordinatesResponse.awsLatitude &&
         coordinatesResponse.awsLongitude
       ) {

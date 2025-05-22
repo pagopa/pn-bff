@@ -123,6 +123,7 @@ function validateEnvironmentVariables() {
     'RADD_STORE_REGISTRY_API_URL',
     'AWS_LOCATION_REGION',
     'AWS_LOCATION_REQUESTS_PER_SECOND',
+    'MALFORMED_ADDRESS_THRESHOLD',
   ];
 
   requiredEnvVars.forEach((envVar) => {
