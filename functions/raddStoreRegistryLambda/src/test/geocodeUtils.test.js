@@ -30,6 +30,11 @@ describe('geocodeUtils tests', function () {
           MatchScores: {
             Overall: 0.96,
           },
+          Address: {
+            Region: {
+              Name: 'Lombardia',
+            },
+          },
         },
       ],
     };
@@ -47,6 +52,7 @@ describe('geocodeUtils tests', function () {
       awsLongitude: 9.1876,
       awsLatitude: 45.4669,
       awsAddress: 'Via Roma 123, Milano (MI), 20100',
+      awsAddressRegion: 'Lombardia',
       awsScore: 0.96,
     });
 
@@ -93,6 +99,11 @@ describe('geocodeUtils tests', function () {
           MatchScores: {
             Overall: 0.5,
           },
+          Address: {
+            Region: {
+              Name: 'Lazio',
+            },
+          },
         },
       ],
     };
@@ -110,6 +121,7 @@ describe('geocodeUtils tests', function () {
       awsLongitude: null,
       awsLatitude: null,
       awsAddress: 'Via Pippo, Roma, RM 00100, Italy',
+      awsAddressRegion: 'Lazio',
       awsScore: 0.5,
     });
   });
@@ -138,6 +150,7 @@ describe('geocodeUtils tests', function () {
       awsLongitude: 12.4845,
       awsLatitude: 41.9056,
       awsAddress: 'Via Nazionale 45, Roma, RM 00187, Italy',
+      awsAddressRegion: '',
       awsScore: 0,
     });
   });

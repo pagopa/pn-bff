@@ -6,7 +6,9 @@ class StoreLocatorCsvEntity {
     this.description = '';
     this.city = '';
     this.address = '';
+    this.awsAddress = '';
     this.province = '';
+    this.region = '';
     this.zipCode = '';
     this.phoneNumber = '';
     this.monday = '';
@@ -18,7 +20,6 @@ class StoreLocatorCsvEntity {
     this.sunday = '';
     this.latitude = '';
     this.longitude = '';
-    this.type = '';
   }
 
   setDescription(description) {
@@ -33,8 +34,16 @@ class StoreLocatorCsvEntity {
     if (address != null) this.address = address;
   }
 
+  setAwsAddress(awsAddress) {
+    if (awsAddress != null) this.awsAddress = awsAddress;
+  }
+
   setProvince(province) {
     if (province != null) this.province = province;
+  }
+
+  setRegion(region) {
+    if (region != null) this.region = region;
   }
 
   setZipCode(zipCode) {
@@ -79,10 +88,6 @@ class StoreLocatorCsvEntity {
 
   setLongitude(longitude) {
     if (longitude != null) this.longitude = longitude.toString();
-  }
-
-  setType(type) {
-    if (type != null) this.type = type;
   }
 }
 
@@ -153,8 +158,6 @@ const mapApiResponseToStoreLocatorCsvEntities = async (
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  storeLocatorCsvEntity.setType('CAF');
-
   try {
     const coordinatesResponse = await getCoordinatesForAddress(
       registry.address.addressRow,
@@ -171,6 +174,8 @@ const mapApiResponseToStoreLocatorCsvEntities = async (
       ) {
         storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
         storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+        storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
+        storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
       } else {
         addRowToWrongAddressCSV(
           { ...storeLocatorCsvEntity, ...coordinatesResponse },

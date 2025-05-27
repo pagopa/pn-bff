@@ -32,6 +32,11 @@ describe('StoreLocatorCsvEntity', () => {
           MatchScores: {
             Overall: score,
           },
+          Address: {
+            Region: {
+              Name: 'Lombardia',
+            },
+          },
         },
       ],
     });
@@ -53,7 +58,6 @@ describe('StoreLocatorCsvEntity', () => {
       phoneNumber: '123/456/7890',
       openingTime:
         'MON 09:00-17:00#TUE 09:00-17:00#WED 09:00-17:00#THU 09:00-17:00#FRI 09:00-17:00#SAT 10:00-14:00#SUN closed',
-      type: 'CAF',
     };
 
     mockGeoPlacesResponse(9.1876, 45.4669, 1);
@@ -74,7 +78,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.sunday).to.equal('closed');
     expect(result.longitude).to.equal('9.1876');
     expect(result.latitude).to.equal('45.4669');
-    expect(result.type).to.equal('CAF');
+    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
+    expect(result.region).to.equal('Lombardia');
   });
 
   it('should map API response correctly when there is only one day in openingTime', async () => {
@@ -108,7 +113,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.sunday).to.equal('');
     expect(result.longitude).to.equal('9.1876');
     expect(result.latitude).to.equal('45.4669');
-    expect(result.type).to.equal('CAF');
+    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
+    expect(result.region).to.equal('Lombardia');
   });
 
   it('should handle missing optional fields gracefully', async () => {
@@ -141,7 +147,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.sunday).to.equal('');
     expect(result.longitude).to.equal('9.1876');
     expect(result.latitude).to.equal('45.4669');
-    expect(result.type).to.equal('CAF');
+    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
+    expect(result.region).to.equal('Lombardia');
   });
 
   it('should handle null values correctly', async () => {
@@ -171,7 +178,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.sunday).to.equal('');
     expect(result.latitude).to.equal('');
     expect(result.longitude).to.equal('');
-    expect(result.type).to.equal('CAF');
+    expect(result.awsAddress).to.equal('');
+    expect(result.region).to.equal('');
   });
 
   it('should handle error in geolocate function', async () => {
@@ -197,7 +205,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.phoneNumber).to.equal('123 456 7890');
     expect(result.longitude).to.equal('');
     expect(result.latitude).to.equal('');
-    expect(result.type).to.equal('CAF');
+    expect(result.awsAddress).to.equal('');
+    expect(result.region).to.equal('');
   });
 
   it('should add address to wrongAddressesArray when AWS score is below 0.8', async () => {
