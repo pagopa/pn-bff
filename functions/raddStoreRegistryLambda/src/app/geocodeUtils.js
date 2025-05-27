@@ -57,7 +57,8 @@ const getCoordinatesForAddress = async (
       return {
         awsLongitude: coordinates[0] || null,
         awsLatitude: coordinates[1] || null,
-        awsAddress: response.ResultItems[0].Title,
+        awsAddress: response.ResultItems[0].Title || '',
+        awsAddressRegion: response.ResultItems[0].Address?.Region?.Name || '',
         awsScore: score,
       };
     } else {

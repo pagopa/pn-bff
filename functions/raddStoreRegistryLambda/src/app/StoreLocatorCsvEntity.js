@@ -5,7 +5,9 @@ class StoreLocatorCsvEntity {
     this.description = '';
     this.city = '';
     this.address = '';
+    this.awsAddress = '';
     this.province = '';
+    this.region = '';
     this.zipCode = '';
     this.phoneNumber = '';
     this.monday = '';
@@ -17,7 +19,6 @@ class StoreLocatorCsvEntity {
     this.sunday = '';
     this.latitude = '';
     this.longitude = '';
-    this.type = '';
   }
 
   setDescription(description) {
@@ -32,8 +33,16 @@ class StoreLocatorCsvEntity {
     if (address != null) this.address = address;
   }
 
+  setAwsAddress(awsAddress) {
+    if (awsAddress != null) this.awsAddress = awsAddress;
+  }
+
   setProvince(province) {
     if (province != null) this.province = province;
+  }
+
+  setRegion(region) {
+    if (region != null) this.region = region;
   }
 
   setZipCode(zipCode) {
@@ -78,10 +87,6 @@ class StoreLocatorCsvEntity {
 
   setLongitude(longitude) {
     if (longitude != null) this.longitude = longitude.toString();
-  }
-
-  setType(type) {
-    if (type != null) this.type = type;
   }
 }
 
@@ -145,7 +150,7 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-try {
+  try {
     const coordinatesResponse = await getCoordinatesForAddress(
       registry.address.addressRow,
       registry.address.pr,
@@ -154,17 +159,14 @@ try {
     );
 
     if (coordinatesResponse) {
-      // check string similarity (registry.address and coordinatesResponse.address)
-      // se they are similar (using score?), set the coordinates
-      // otherwise, add this resgistry to another CSV file (with aws address and score)
-      storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
-      storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
+      storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
+      storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+      storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
+      storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
     }
   } catch (e) {
     console.log(e);
   }
-
-  storeLocatorCsvEntity.setType('CAF');
 
   return storeLocatorCsvEntity;
 };
