@@ -1,12 +1,10 @@
-const fs = require('fs');
-const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
-
 const validFieldValue = [
   'description',
   'city',
   'address',
+  'awsAddress',
   'province',
+  'region',
   'zipCode',
   'phoneNumber',
   'monday',
@@ -42,7 +40,7 @@ function validateCsvConfiguration(csvConfiguration) {
 function createCSVContent(configs, data) {
   console.log('Creating CSV content');
   let csvContent = '';
-  data.forEach((record, index) => {
+  data.forEach((record) => {
     csvContent += '\n';
     const row = configs
       .map((conf) => (conf.field ? record[conf.field] || '' : ''))
