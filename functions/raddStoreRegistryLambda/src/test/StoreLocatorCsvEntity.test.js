@@ -74,8 +74,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('09:00-17:00');
     expect(result.saturday).to.equal('10:00-14:00');
     expect(result.sunday).to.equal('closed');
-    expect(result.longitude).to.equal('9.1876');
-    expect(result.latitude).to.equal('45.4669');
+    expect(result.longitude).to.equal(9.1876);
+    expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
   });
@@ -109,8 +109,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.longitude).to.equal('9.1876');
-    expect(result.latitude).to.equal('45.4669');
+    expect(result.longitude).to.equal(9.1876);
+    expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
   });
@@ -143,8 +143,8 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.longitude).to.equal('9.1876');
-    expect(result.latitude).to.equal('45.4669');
+    expect(result.longitude).to.equal(9.1876);
+    expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
   });

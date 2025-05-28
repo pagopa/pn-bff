@@ -82,11 +82,11 @@ class StoreLocatorCsvEntity {
   }
 
   setLatitude(latitude) {
-    if (latitude != null) this.latitude = latitude.toString();
+    if (latitude != null) this.latitude = latitude;
   }
 
   setLongitude(longitude) {
-    if (longitude != null) this.longitude = longitude.toString();
+    if (longitude != null) this.longitude = longitude;
   }
 }
 
