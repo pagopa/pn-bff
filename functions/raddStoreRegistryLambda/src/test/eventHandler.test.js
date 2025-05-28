@@ -15,17 +15,20 @@ function setupEnv() {
     WEB_LANDING_BUCKET_NAME: 'web-landing-store-locator',
     WEB_LANDING_BUCKET_PREFIX: 'web-landing',
     FILE_NAME: 'test-csv-file',
-    CSV_CONFIGURATION_PARAMETER: '/pn-radd-store-registry-lambda/csv-configuration',
-    RADD_STORE_GENERATION_CONFIG_PARAMETER: '/pn-radd-store-registry-lambda/send-to-web-landing',
+    CSV_CONFIGURATION_PARAMETER:
+      '/pn-radd-store-registry-lambda/csv-configuration',
+    RADD_STORE_GENERATION_CONFIG_PARAMETER:
+      '/pn-radd-store-registry-lambda/send-to-web-landing',
     GENERATE_INTERVAL: '1',
-    RADD_STORE_REGISTRY_API_URL: 'http://0.0.0.0:3000/radd-net-private/api/v1/store',
+    RADD_STORE_REGISTRY_API_URL:
+      'http://0.0.0.0:3000/radd-net-private/api/v1/store',
     REGISTRY_PAGINATION_LIMIT: '1000',
     AWS_REGION: 'us-east-1',
     AWS_XRAY_CONTEXT_MISSING: 'IGNORE_ERROR',
     AWS_SECRET_ACCESS_KEY: 'TEST',
     AWS_ACCESS_KEY_ID: 'TEST',
     AWS_PROFILE_NAME: 'default',
-    AWS_ENDPOINT_URL: 'http://localhost:4566/'
+    AWS_ENDPOINT_URL: 'http://localhost:4566/',
   };
 }
 
@@ -35,30 +38,29 @@ describe('handler generates new file', () => {
 
     sinon.stub(ssmUtils, 'retrieveCsvConfiguration').resolves({
       configurationVersion: '1.0',
-      configs: []
+      configs: [],
     });
 
     sinon.stub(api, 'fetchApi').resolves({
       registries: [],
-      lastKey: null
+      lastKey: null,
     });
 
-    
     sinon.stub(csvUtils, 'validateCsvConfiguration').returns();
     sinon.stub(csvUtils, 'createCSVContent').returns('');
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
   });
 
-	afterEach(() => {
+  afterEach(() => {
     sinon.restore();
   });
 
   it('generates new file when forceGenerate is true', async () => {
-		sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
+    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
 
-    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({ 
-      forceGenerate: true, 
-      sendToWebLanding: true 
+    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
+      forceGenerate: true,
+      sendToWebLanding: true,
     });
 
     sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
@@ -75,7 +77,7 @@ describe('handler generates new file', () => {
   });
 
   it('generates new file when doesnt find generationConfiguration and there is no previous file on bucket', async () => {
-		sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
+    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
 
     sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves(null);
 
@@ -104,10 +106,10 @@ describe('handler generates new file', () => {
       },
       Size: 123,
       StorageClass: 'STANDARD',
-  });
+    });
 
     sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves(null);
-    
+
     sinon.stub(utils, 'checkIfIntervalPassed').returns(true);
 
     await handleEvent({});
@@ -128,22 +130,21 @@ describe('handler doesnt generate new file', () => {
 
     sinon.stub(ssmUtils, 'retrieveCsvConfiguration').resolves({
       configurationVersion: '1.0',
-      configs: []
+      configs: [],
     });
 
     sinon.stub(api, 'fetchApi');
 
-    
     sinon.stub(csvUtils, 'validateCsvConfiguration');
     sinon.stub(csvUtils, 'createCSVContent');
   });
 
-	afterEach(() => {
+  afterEach(() => {
     sinon.restore();
   });
 
   it('doesnt generate new file when interval is not passed', async () => {
-		sinon.stub(s3Utils, 'getLatestVersion').resolves({
+    sinon.stub(s3Utils, 'getLatestVersion').resolves({
       Key: 'your-key',
       VersionId: 'your-version-id',
       IsLatest: true,
@@ -154,11 +155,11 @@ describe('handler doesnt generate new file', () => {
       },
       Size: 123,
       StorageClass: 'STANDARD',
-  	});
+    });
 
-    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({ 
-      forceGenerate: false, 
-      sendToWebLanding: true 
+    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
+      forceGenerate: false,
+      sendToWebLanding: true,
     });
 
     sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
@@ -175,11 +176,11 @@ describe('handler doesnt generate new file', () => {
   });
 });
 
-
 describe('handler throws error for missing required env', () => {
   it('throws error when BFF_BUCKET_NAME is missing', async () => {
     process.env = {};
-    await assert.rejects(handleEvent({}), { message: 'Missing required environment variable: BFF_BUCKET_NAME' });
+    await assert.rejects(handleEvent({}), {
+      message: 'Missing required environment variable: BFF_BUCKET_NAME',
+    });
   });
-
 });
