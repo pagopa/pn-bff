@@ -90,40 +90,40 @@ class StoreLocatorCsvEntity {
   }
 }
 
-const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
-  const getOpeningTimeByDay = (fullOpeningTime) => {
-    const times = new Array(7).fill(null);
-    if (fullOpeningTime) {
-      const days = fullOpeningTime.split('#');
-      for (let day of days) {
-        switch (day.substring(0, 3).toUpperCase()) {
-          case 'MON':
-            times[0] = day.substring(4);
-            break;
-          case 'TUE':
-            times[1] = day.substring(4);
-            break;
-          case 'WED':
-            times[2] = day.substring(4);
-            break;
-          case 'THU':
-            times[3] = day.substring(4);
-            break;
-          case 'FRI':
-            times[4] = day.substring(4);
-            break;
-          case 'SAT':
-            times[5] = day.substring(4);
-            break;
-          case 'SUN':
-            times[6] = day.substring(4);
-            break;
-        }
+const getOpeningTimeByDay = (fullOpeningTime) => {
+  const times = new Array(7).fill(null);
+  if (fullOpeningTime) {
+    const days = fullOpeningTime.split('#');
+    for (let day of days) {
+      switch (day.substring(0, 3).toUpperCase()) {
+        case 'MON':
+          times[0] = day.substring(4);
+          break;
+        case 'TUE':
+          times[1] = day.substring(4);
+          break;
+        case 'WED':
+          times[2] = day.substring(4);
+          break;
+        case 'THU':
+          times[3] = day.substring(4);
+          break;
+        case 'FRI':
+          times[4] = day.substring(4);
+          break;
+        case 'SAT':
+          times[5] = day.substring(4);
+          break;
+        case 'SUN':
+          times[6] = day.substring(4);
+          break;
       }
     }
-    return times;
-  };
+  }
+  return times;
+};
 
+const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
   storeLocatorCsvEntity.setDescription(registry.description);
