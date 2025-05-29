@@ -39,75 +39,78 @@ exports.handleEvent = async () => {
 
   const latestFile = await s3Utils.getLatestVersion(bffBucketS3Key);
 
-  let generateFile = false;
+  const shouldGenerateFile =
+    forceGenerate || !latestFile || utils.checkIfIntervalPassed(latestFile);
 
-  if (forceGenerate || !latestFile || utils.checkIfIntervalPassed(latestFile)) {
-    generateFile = true;
+  if (!shouldGenerateFile) {
+    console.log('No need to generate file.');
+    return;
   }
 
-  if (generateFile) {
-    console.log('Generating new file...');
+  console.log('Generating new file...');
 
-    csvUtils.validateCsvConfiguration(csvConfiguration);
+  csvUtils.validateCsvConfiguration(csvConfiguration);
 
-    const csvHeader = csvConfiguration.configs
-      .map((conf) => conf.header)
-      .join(';');
-    let csvContent = csvHeader;
-    let wrongAddressesCsvContent = [csvUtils.wrongAddressesCsvHeader];
+  const csvHeader = csvConfiguration.configs
+    .map((conf) => conf.header)
+    .join(';');
+  let csvContent = csvHeader;
+  let wrongAddressesCsvContent = csvUtils.wrongAddressesCsvHeader;
 
-    let lastKey = null;
-    do {
-      const apiResponse = await apiClient.fetchApi(lastKey, null);
-      const registries = apiResponse.registries;
-      console.log(
-        'Fetched API registries response size:',
-        apiResponse.registries.length
+  let lastKey = null;
+
+  do {
+    const apiResponse = await apiClient.fetchApi(lastKey, null);
+    const registries = apiResponse.registries;
+    console.log(
+      'Fetched API registries response size:',
+      apiResponse.registries.length
+    );
+
+    for (let i = 0; i < registries.length; i += BATCH_SIZE) {
+      const batch = registries.slice(i, i + BATCH_SIZE);
+
+      const recordPromises = batch.map((registry) =>
+        storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
       );
 
-      for (let i = 0; i < registries.length; i += BATCH_SIZE) {
-        const batch = registries.slice(i, i + BATCH_SIZE);
+      const results = await Promise.all(recordPromises);
 
-        const recordPromises = batch.map((registry) =>
-          storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(
-            registry,
-            wrongAddressesCsvContent
-          )
-        );
-
-        const records = await Promise.all(recordPromises);
-
-        csvContent += csvUtils.createCSVContent(
-          csvConfiguration.configs,
-          records
-        );
-
-        if (i + BATCH_SIZE < registries.length || apiResponse.lastKey) {
-          console.log(`Sleep for ${DELAY_MS}`);
-          await sleep(DELAY_MS);
+      for (let result of results) {
+        if (result.malformedRecord) {
+          wrongAddressesCsvContent += csvUtils.createCSVContent(
+            csvConfiguration.wrongAddressesConfig,
+            [result.malformedRecord]
+          );
+        }
+        if (result.storeRecord) {
+          csvContent += csvUtils.createCSVContent(csvConfiguration.configs, [
+            result.storeRecord,
+          ]);
         }
       }
 
-      lastKey = apiResponse.lastKey;
-      console.log('Processed records, lastKey:', lastKey);
-    } while (lastKey);
-
-    await s3Utils.uploadVersionedFile(
-      sendToWebLanding,
-      bffBucketS3Key,
-      csvContent
-    );
-
-    if (wrongAddressesCsvContent.length > 1) {
-      await s3Utils.uploadVersionedFile(
-        false,
-        malformedAddressS3Key,
-        wrongAddressesCsvContent.join('\n')
-      );
+      if (i + BATCH_SIZE < registries.length || apiResponse.lastKey) {
+        console.log(`Sleep for ${DELAY_MS}`);
+        await sleep(DELAY_MS);
+      }
     }
-  } else {
-    console.log('No need to generate file.');
-  }
+
+    lastKey = apiResponse.lastKey;
+    console.log('Processed records, lastKey:', lastKey);
+  } while (lastKey);
+
+  await s3Utils.uploadVersionedFile(
+    sendToWebLanding,
+    bffBucketS3Key,
+    csvContent
+  );
+
+  await s3Utils.uploadVersionedFile(
+    false,
+    malformedAddressS3Key,
+    wrongAddressesCsvContent
+  );
 };
 
 function validateEnvironmentVariables() {

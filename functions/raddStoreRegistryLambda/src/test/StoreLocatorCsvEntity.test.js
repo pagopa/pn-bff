@@ -61,7 +61,8 @@ describe('StoreLocatorCsvEntity', () => {
     };
 
     mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { storeRecord: result, malformedRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -80,6 +81,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
+    expect(malformedRecord).to.be.null;
   });
 
   it('should map API response correctly when there is only one day in openingTime', async () => {
@@ -96,7 +98,8 @@ describe('StoreLocatorCsvEntity', () => {
     };
 
     mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { storeRecord: result, malformedRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -115,6 +118,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
+    expect(malformedRecord).to.be.null;
   });
 
   it('should handle missing optional fields gracefully', async () => {
@@ -130,7 +134,8 @@ describe('StoreLocatorCsvEntity', () => {
     };
 
     mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { storeRecord: result, malformedRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -149,20 +154,26 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal(45.4669);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.region).to.equal('Lombardia');
+    expect(malformedRecord).to.be.null;
   });
 
   it('should handle null values correctly', async () => {
     const registry = {
       description: null,
-      address: null,
+      address: {
+        addressRow: '',
+        pr: '',
+        cap: '',
+        city: '',
+      },
       phoneNumber: null,
       openingTime: null,
-      geoLocation: null,
     };
 
-    mockGeoPlacesResponse(null, null, 1);
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
-
+    mockGeoPlacesResponse(9.1876, 45.4669, 1);
+    const { storeRecord: result, malformedRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
+    console.log(result);
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
     expect(result.address).to.equal('');
@@ -176,10 +187,11 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.latitude).to.equal('');
-    expect(result.longitude).to.equal('');
-    expect(result.awsAddress).to.equal('');
-    expect(result.region).to.equal('');
+    expect(result.latitude).to.equal(45.4669);
+    expect(result.longitude).to.equal(9.1876);
+    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
+    expect(result.region).to.equal('Lombardia');
+    expect(malformedRecord).to.be.null;
   });
 
   it('should handle error in geolocate function', async () => {
@@ -195,7 +207,8 @@ describe('StoreLocatorCsvEntity', () => {
     };
 
     mockGeoPlacesErrorResponse();
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { storeRecord: result, malformedRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
     expect(result.city).to.equal('Test City');
@@ -207,9 +220,10 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal('');
     expect(result.awsAddress).to.equal('');
     expect(result.region).to.equal('');
+    expect(malformedRecord).to.be.null;
   });
 
-  it('should add address to wrongAddressesArray when AWS score is below 0.8', async () => {
+  it('should add address to wrongAddressesArray when AWS score is below 0.7', async () => {
     const registry = {
       description: 'CAF UIL',
       address: {
@@ -222,44 +236,26 @@ describe('StoreLocatorCsvEntity', () => {
 
     mockGeoPlacesResponse(9.19, 45.4642, 0.7);
 
-    const wrongAddressesArray = [];
-    await mapApiResponseToStoreLocatorCsvEntities(
-      registry,
-      wrongAddressesArray
-    );
+    const { malformedRecord: result, storeRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
 
-    expect(wrongAddressesArray.length).to.equal(1);
-
-    const row = wrongAddressesArray[0];
-    expect(row).to.include('CAF UIL');
-    expect(row).to.include('Via Carlo Magno 1');
-    expect(row).to.include('Milano');
-    expect(row).to.include('MI');
-    expect(row).to.include('Via Roma 123, Milano (MI), 20100');
-    expect(row).to.include('0.7');
-    expect(row).to.include('45.4642');
-    expect(row).to.include('9.19');
-  });
-
-  it('should not add address to wrongAddressesArray when AWS score is above malformed address threshold', async () => {
-    const registry = {
-      description: 'CAF CGIL',
-      address: {
-        city: 'Roma',
-        addressRow: 'Via Nazionale 42',
-        pr: 'RM',
-        cap: '00100',
-      },
-    };
-
-    mockGeoPlacesResponse(12.4964, 41.9028, 0.9);
-
-    const wrongAddressesArray = [];
-    await mapApiResponseToStoreLocatorCsvEntities(
-      registry,
-      wrongAddressesArray
-    );
-
-    expect(wrongAddressesArray.length).to.equal(0);
+    expect(result.description).to.equal('CAF UIL');
+    expect(result.city).to.equal('Milano');
+    expect(result.address).to.equal('Via Carlo Magno 1');
+    expect(result.province).to.equal('MI');
+    expect(result.zipCode).to.equal('20100');
+    expect(result.phoneNumber).to.equal('');
+    expect(result.monday).to.equal('');
+    expect(result.tuesday).to.equal('');
+    expect(result.wednesday).to.equal('');
+    expect(result.thursday).to.equal('');
+    expect(result.friday).to.equal('');
+    expect(result.saturday).to.equal('');
+    expect(result.sunday).to.equal('');
+    expect(result.awsLongitude).to.equal(9.19);
+    expect(result.awsLatitude).to.equal(45.4642);
+    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
+    expect(result.awsAddressRegion).to.equal('Lombardia');
+    expect(storeRecord).to.be.null;
   });
 });

@@ -1,5 +1,4 @@
 const { getCoordinatesForAddress } = require('./geocodeUtils');
-const { addRowToWrongAddressCSV } = require('./csvUtils');
 
 class StoreLocatorCsvEntity {
   constructor() {
@@ -124,7 +123,15 @@ const getOpeningTimeByDay = (fullOpeningTime) => {
   return times;
 };
 
+/**
+ * returns an object with: storeRecord if awsScore is over the malformedAddressThreshold otherwise
+ * returns a malformedRecord that will be added to malformed addresses CSV.
+ */
 const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
+  const malformedAddressThreshold = Number(
+    process.env.MALFORMED_ADDRESS_THRESHOLD
+  );
+
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
   storeLocatorCsvEntity.setDescription(registry.description);
@@ -170,33 +177,23 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
         storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
         storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
       } else {
-        addRowToWrongAddressCSV(
-          { ...storeLocatorCsvEntity, ...coordinatesResponse },
-          wrongAddressesArray
-        );
+        return {
+          storeRecord: null,
+          malformedRecord: {
+            ...storeLocatorCsvEntity,
+            ...coordinatesResponse,
+          },
+        };
       }
     }
   } catch (e) {
     console.log(e);
   }
 
-  try {
-    const coordinatesResponse = await getCoordinatesForAddress(
-      registry.address.addressRow,
-      registry.address.pr,
-      registry.address.cap,
-      registry.address.city
-    );
-
-    if (coordinatesResponse) {
-      storeLocatorCsvEntity.setLatitude(coordinatesResponse.latitude);
-      storeLocatorCsvEntity.setLongitude(coordinatesResponse.longitude);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-
-  return storeLocatorCsvEntity;
+  return {
+    storeRecord: storeLocatorCsvEntity,
+    malformedRecord: null,
+  };
 };
 
 module.exports = { mapApiResponseToStoreLocatorCsvEntities };

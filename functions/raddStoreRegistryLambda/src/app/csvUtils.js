@@ -66,14 +66,9 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
-function addRowToWrongAddressCSV(data, wrongAddressArray) {
-  const newRow = wrongAddressesConfig.map((conf) => data[conf.field] || '');
-  wrongAddressArray.push(newRow.join(';'));
-}
-
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
   wrongAddressesCsvHeader,
-  addRowToWrongAddressCSV,
+  wrongAddressesConfig,
 };
