@@ -4,7 +4,7 @@ const raddStoreRegistryApiUrl = process.env.RADD_STORE_REGISTRY_API_URL;
 async function fetchApi(lastKey, limit) {
   const params = {
     limit: limit || 1000,
-    lastKey: lastKey || null
+    lastKey: lastKey || null,
   };
 
   console.log('Fetching API data with params:', params);
