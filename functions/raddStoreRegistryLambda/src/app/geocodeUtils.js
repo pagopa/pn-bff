@@ -27,7 +27,6 @@ const getCoordinatesForAddress = async (
       IncludeCountries: ['IT'],
     },
     QueryComponents: {
-      Country: 'IT',
       SubRegion: province,
       PostalCode: zip,
       Locality: municipality,

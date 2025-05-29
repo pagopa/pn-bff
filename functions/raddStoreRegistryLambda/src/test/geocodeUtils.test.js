@@ -64,7 +64,6 @@ describe('geocodeUtils tests', function () {
         IncludeCountries: ['IT'],
       },
       QueryComponents: {
-        Country: 'IT',
         SubRegion: 'MI',
         PostalCode: '20100',
         Locality: 'Milano',

@@ -18,6 +18,21 @@ const validFieldValue = [
   'longitude',
 ];
 
+const wrongAddressesConfig = [
+  { header: 'descrizione', field: 'description' },
+  { header: 'indirizzo', field: 'address' },
+  { header: 'citta', field: 'city' },
+  { header: 'provincia', field: 'province' },
+  { header: 'indirizzo AWS', field: 'awsAddress' },
+  { header: 'score AWS', field: 'awsScore' },
+  { header: 'latitudine', field: 'awsLatitude' },
+  { header: 'longitudine', field: 'awsLongitude' },
+];
+
+const wrongAddressesCsvHeader = wrongAddressesConfig
+  .map((config) => config.header)
+  .join(';');
+
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
   if (!csvConfiguration) throw new Error('Configuration is missing');
@@ -51,4 +66,9 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
-module.exports = { validateCsvConfiguration, createCSVContent };
+module.exports = {
+  validateCsvConfiguration,
+  createCSVContent,
+  wrongAddressesCsvHeader,
+  wrongAddressesConfig,
+};
