@@ -5,7 +5,9 @@ class StoreLocatorCsvEntity {
     this.description = '';
     this.city = '';
     this.address = '';
+    this.awsAddress = '';
     this.province = '';
+    this.region = '';
     this.zipCode = '';
     this.phoneNumber = '';
     this.monday = '';
@@ -31,8 +33,16 @@ class StoreLocatorCsvEntity {
     if (address != null) this.address = address;
   }
 
+  setAwsAddress(awsAddress) {
+    if (awsAddress != null) this.awsAddress = awsAddress;
+  }
+
   setProvince(province) {
     if (province != null) this.province = province;
+  }
+
+  setRegion(region) {
+    if (region != null) this.region = region;
   }
 
   setZipCode(zipCode) {
@@ -140,9 +150,22 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  if (registry.geoLocation) {
-    storeLocatorCsvEntity.setLatitude(registry.geoLocation.latitude);
-    storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
+  try {
+    const coordinatesResponse = await getCoordinatesForAddress(
+      registry.address.addressRow,
+      registry.address.pr,
+      registry.address.cap,
+      registry.address.city
+    );
+
+    if (coordinatesResponse) {
+      storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
+      storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+      storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
+      storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
+    }
+  } catch (e) {
+    console.log(e);
   }
 
   try {
