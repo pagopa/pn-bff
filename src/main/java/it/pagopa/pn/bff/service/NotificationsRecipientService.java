@@ -4,7 +4,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV25;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV26;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
@@ -161,7 +161,7 @@ public class NotificationsRecipientService {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
-        Mono<FullReceivedNotificationV25> notificationDetail = pnDeliveryClient.getReceivedNotification(
+        Mono<FullReceivedNotificationV26> notificationDetail = pnDeliveryClient.getReceivedNotification(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
                 xPagopaPnCxId,

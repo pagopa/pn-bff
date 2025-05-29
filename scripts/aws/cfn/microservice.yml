@@ -772,7 +772,7 @@ Resources:
           AWS_LOCATION_REQUESTS_PER_SECOND: !Ref AWSLocationRequestsPerSecond
           MALFORMED_ADDRESS_THRESHOLD: !Ref MalformedAddressThreshold
       Layers:
-        - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+        - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:17"
 
   # Lambda function role
   RaddStoreRegistryLambdaExecutionRole:
