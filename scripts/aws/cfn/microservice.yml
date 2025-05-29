@@ -412,7 +412,7 @@ Parameters:
   AWSLocationRequestsPerSecond: 
     Type: Number
     Description: Aws Location Rate Limit API
-    default: 95
+    Default: 95
   
   MalformedAddressThreshold:
     Type: Number
