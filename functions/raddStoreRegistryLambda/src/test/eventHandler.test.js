@@ -35,8 +35,9 @@ describe('handler generates new file', () => {
     });
 
     sinon.stub(csvUtils, 'validateCsvConfiguration').returns();
-    sinon.stub(csvUtils, 'createCSVContent').returns('');
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
+
+    sinon.spy(csvUtils, 'createCSVContent');
 
     placesClientMock = mockClient(GeoPlacesClient);
 
@@ -65,7 +66,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length
+    );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -83,7 +87,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length
+    );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -112,7 +119,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length
+    );
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
   });
 
@@ -124,11 +134,11 @@ describe('handler generates new file', () => {
     });
 
     const firstBatch = {
-      registries: Array(5).fill({ id: 'batch1' }),
+      registries: raddAltApiResponse,
       lastKey: 'next',
     };
     const secondBatch = {
-      registries: Array(5).fill({ id: 'batch2' }),
+      registries: raddAltApiResponse,
       lastKey: null,
     };
 
@@ -148,7 +158,10 @@ describe('handler generates new file', () => {
     await handlePromise;
 
     sinon.assert.calledTwice(api.fetchApi);
-    sinon.assert.calledTwice(csvUtils.createCSVContent);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      firstBatch.registries.length + secondBatch.registries.length
+    );
 
     clock.restore();
   });
@@ -165,11 +178,20 @@ describe('handler generates new file', () => {
 
     sinon
       .stub(storeLocatorCsvEntity, 'mapApiResponseToStoreLocatorCsvEntities')
-      .callsFake((registry, wrongAddressesCsvContent) => {
-        wrongAddressesCsvContent.push(
-          'CAF UIL;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;11.9082'
-        );
-        return registry;
+      .callsFake(() => {
+        return {
+          storeRecord: null,
+          malformedRecord: {
+            description: 'Test Store',
+            city: 'Roma',
+            address: 'Via Nazionale 15',
+            province: 'RM',
+            awsAddress: 'Via Nazionale 15, 20100 RM, ROMA',
+            awsScore: 0.9,
+            awsLatitude: 42.6741,
+            awsLongiotude: 11.9082,
+          },
+        };
       });
 
     await handleEvent({});
@@ -190,7 +212,12 @@ describe('handler generates new file', () => {
     // csvContent
     assert.match(
       malformedAddressCall.args[2],
-      /CAF UIL;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;11.9082/
+      /descrizione;indirizzo;citta;provincia;indirizzo AWS;score AWS;latitudine;longitudine/
+    );
+
+    assert.match(
+      malformedAddressCall.args[2],
+      /Test Store;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;/
     );
   });
 });

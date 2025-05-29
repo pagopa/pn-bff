@@ -79,7 +79,7 @@ exports.handleEvent = async () => {
       for (let result of results) {
         if (result.malformedRecord) {
           wrongAddressesCsvContent += csvUtils.createCSVContent(
-            csvConfiguration.wrongAddressesConfig,
+            csvUtils.wrongAddressesConfig,
             [result.malformedRecord]
           );
         }
