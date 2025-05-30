@@ -1,12 +1,10 @@
-const fs = require('fs');
-const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
-
 const validFieldValue = [
   'description',
   'city',
   'address',
+  'awsAddress',
   'province',
+  'region',
   'zipCode',
   'phoneNumber',
   'monday',
@@ -19,6 +17,21 @@ const validFieldValue = [
   'latitude',
   'longitude',
 ];
+
+const wrongAddressesConfig = [
+  { header: 'descrizione', field: 'description' },
+  { header: 'indirizzo', field: 'address' },
+  { header: 'citta', field: 'city' },
+  { header: 'provincia', field: 'province' },
+  { header: 'indirizzo AWS', field: 'awsAddress' },
+  { header: 'score AWS', field: 'awsScore' },
+  { header: 'latitudine', field: 'awsLatitude' },
+  { header: 'longitudine', field: 'awsLongitude' },
+];
+
+const wrongAddressesCsvHeader = wrongAddressesConfig
+  .map((config) => config.header)
+  .join(';');
 
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
@@ -42,7 +55,7 @@ function validateCsvConfiguration(csvConfiguration) {
 function createCSVContent(configs, data) {
   console.log('Creating CSV content');
   let csvContent = '';
-  data.forEach((record, index) => {
+  data.forEach((record) => {
     csvContent += '\n';
     const row = configs
       .map((conf) => (conf.field ? record[conf.field] || '' : ''))
@@ -53,4 +66,9 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
-module.exports = { validateCsvConfiguration, createCSVContent };
+module.exports = {
+  validateCsvConfiguration,
+  createCSVContent,
+  wrongAddressesCsvHeader,
+  wrongAddressesConfig,
+};

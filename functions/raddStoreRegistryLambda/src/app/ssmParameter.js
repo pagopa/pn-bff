@@ -1,7 +1,4 @@
-const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
 const axios = require('axios');
-
-const client = new SSMClient({ region: process.env.AWS_REGION });
 
 const retrieveGenerationConfigParameter = async () => {
   const generationConfigName =
@@ -23,14 +20,6 @@ const retrieveCsvConfiguration = async () => {
     console.error('Error retrieving SSM parameter:', error);
     throw error;
   }
-};
-
-const getParameter = async (parameterName) => {
-  console.log(`Retrieving parameter: ${parameterName}`);
-  const command = new GetParameterCommand({ Name: parameterName });
-  const response = await client.send(command);
-  console.log(`Successfully retrieved parameter: ${parameterName}`);
-  return response.Parameter.Value;
 };
 
 async function getParameterFromLayer(parameterName) {
