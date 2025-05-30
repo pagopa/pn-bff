@@ -1,0 +1,66 @@
+info:
+  version: v1.0
+components:
+  parameters:
+    # Parameter for searching an address
+    LocationSearchAddress:
+      name: address
+      in: query
+      required: true
+      description: The address to search for.
+      schema:
+        type: string
+
+    # Parameter for retrieving place coordinates by place ID
+    LocationPlaceId:
+      name: placeId
+      in: query
+      required: true
+      description: The ID of the place to retrieve coordinates for.
+      schema:
+        type: string
+
+  schemas:
+    # Schema for address suggestions
+    AddressSuggestions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              placeId:
+                type: string
+                description: Unique identifier for the place
+              placeType:
+                type: string
+                description: Type of the place
+              label:
+                type: string
+                description: Full address label
+              street:
+                type: string
+                description: Street address
+              province:
+                type: string
+                description: Province code
+              city:
+                type: string
+                description: City/locality name
+
+    # Schema for place coordinates
+    PlaceCoordinates:
+      oneOf:
+        - type: object
+          properties:
+            longitude:
+              type: number
+              description: Longitude coordinate
+            latitude:
+              type: number
+              description: Latitude coordinate
+          required:
+            - longitude
+            - latitude
+        - type: "null"
