@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: Public OpenAPI to use AWS Location APIs
+  description: Documentation APIs v1.0
+  x-summary: 'API pubbliche da esporre per poter richiamare le API AWS Location'
+  version: '1.0.0'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: Location
+    description: >-
+      API pubbliche per l'utilizzo delle API AWS Location 
+
+paths:
+  '/location/searchAddress':
+    get:
+      summary: API for searching an address with AWS Location Autocomplete
+      description: >-
+        This API allows you to search for an address and retrieve suggestions
+      tags:
+        - Location
+      parameters:
+        - $ref: './location-schemas/location.yaml#/components/parameters/LocationSearchAddress'
+      response:
+        '200':
+          description: A list of address suggestions.
+          content:
+            application/json:
+              schema:
+                $ref: './location-schemas/location.yaml#/components/schemas/AddressSuggestions'
+        '400':
+          description: Bad Request - Invalid input parameters.
+        '500':
+          description: Internal Server Error - AWS Location service is unavailable.
+
+  '/location/getPlaceCoordinates':
+    get:
+      summary: API for retrieving coordinates of a place with AWS Location GetPlace
+      description: >-
+        This API allows you to retrieve the coordinates of a place by its ID.
+      tags:
+        - Location
+      parameters:
+        - $ref: './location-schemas/location.yaml#/components/parameters/LocationPlaceId'
+      response:
+        '200':
+          description: Coordinates of the place.
+          content:
+            application/json:
+              schema:
+                $ref: './location-schemas/location.yaml#/components/schemas/PlaceCoordinates'
+        '400':
+          description: Bad Request - Invalid input parameters.
+        '500':
+          description: Internal Server Error - AWS Location service is unavailable.
+  
