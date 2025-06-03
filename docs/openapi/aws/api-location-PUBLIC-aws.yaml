@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: wZhQPhJRVIZNq/ZKmUmC6hH7uQRl7+1d6IYv0B9c9Xc=
+  version: 2g5Jps8ce3HBFRBR3zsRYi6GMkokbl6f9bT2jvCpk7U=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -17,6 +17,8 @@ paths:
       description: This API allows you to search for an address and retrieve suggestions
       tags:
         - Location
+      x-pagopa-lambda-name: pn-search-addresses
+      x-pagopa-lambda-account: core
       parameters:
         - $ref: '#/components/parameters/LocationSearchAddress'
       response:
@@ -33,9 +35,8 @@ paths:
           description: Internal Server Error - AWS Location service is unavailable.
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/searchAddress
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-search-addresses/invocations
+        httpMethod: POST
         requestParameters:
           integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
@@ -46,27 +47,17 @@ paths:
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
           integration.request.header.x-pagopa-pn-src-ch: '''PUBLIC'''
         passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
+        contentHandling: CONVERT_TO_TEXT
         timeoutInMillis: 29000
-        type: http_proxy
-    options:
-      operationId: Options for /searchAddress API CORS
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/searchAddress
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters: {}
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
+        type: aws_proxy
   /getPlaceCoordinates:
     get:
       summary: API for retrieving coordinates of a place with AWS Location GetPlace
       description: This API allows you to retrieve the coordinates of a place by its ID.
       tags:
         - Location
+      x-pagopa-lambda-name: pn-search-addresses
+      x-pagopa-lambda-account: core
       parameters:
         - $ref: '#/components/parameters/LocationPlaceId'
       response:
@@ -83,9 +74,8 @@ paths:
           description: Internal Server Error - AWS Location service is unavailable.
       x-amazon-apigateway-integration:
         uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/getPlaceCoordinates
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-search-addresses/invocations
+        httpMethod: POST
         requestParameters:
           integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
           integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
@@ -96,21 +86,9 @@ paths:
           integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
           integration.request.header.x-pagopa-pn-src-ch: '''PUBLIC'''
         passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
+        contentHandling: CONVERT_TO_TEXT
         timeoutInMillis: 29000
-        type: http_proxy
-    options:
-      operationId: Options for /getPlaceCoordinates API CORS
-      x-amazon-apigateway-integration:
-        uri: >-
-          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/getPlaceCoordinates
-        connectionId: ${stageVariables.NetworkLoadBalancerLink}
-        httpMethod: ANY
-        requestParameters: {}
-        passthroughBehavior: when_no_match
-        connectionType: VPC_LINK
-        timeoutInMillis: 29000
-        type: http_proxy
+        type: aws_proxy
 components:
   parameters:
     LocationSearchAddress:
