@@ -1,148 +1,199 @@
+const { getCoordinatesForAddress } = require('./geocodeUtils');
+
 class StoreLocatorCsvEntity {
-    constructor() {
-        this.description = "";
-        this.city = "";
-        this.address = "";
-        this.province = "";
-        this.zipCode = "";
-        this.phoneNumber = "";
-        this.monday = "";
-        this.tuesday = "";
-        this.wednesday = "";
-        this.thursday = "";
-        this.friday = "";
-        this.saturday = "";
-        this.sunday = "";
-        this.latitude = "";
-        this.longitude = "";
-    }
+  constructor() {
+    this.description = '';
+    this.city = '';
+    this.address = '';
+    this.awsAddress = '';
+    this.province = '';
+    this.region = '';
+    this.zipCode = '';
+    this.phoneNumber = '';
+    this.monday = '';
+    this.tuesday = '';
+    this.wednesday = '';
+    this.thursday = '';
+    this.friday = '';
+    this.saturday = '';
+    this.sunday = '';
+    this.latitude = '';
+    this.longitude = '';
+  }
 
-    setDescription(description) {
-        if (description != null) this.description = description;
-    }
+  setDescription(description) {
+    if (description != null) this.description = description;
+  }
 
-    setCity(city) {
-        if (city != null) this.city = city;
-    }
+  setCity(city) {
+    if (city != null) this.city = city;
+  }
 
-    setAddress(address) {
-        if (address != null) this.address = address;
-    }
+  setAddress(address) {
+    if (address != null) this.address = address;
+  }
 
-    setProvince(province) {
-        if (province != null) this.province = province;
-    }
+  setAwsAddress(awsAddress) {
+    if (awsAddress != null) this.awsAddress = awsAddress;
+  }
 
-    setZipCode(zipCode) {
-        if (zipCode != null) this.zipCode = zipCode;
-    }
+  setProvince(province) {
+    if (province != null) this.province = province;
+  }
 
-    setPhoneNumber(phoneNumber) {
-        if (phoneNumber != null) this.phoneNumber = phoneNumber;
-    }
+  setRegion(region) {
+    if (region != null) this.region = region;
+  }
 
-    setMonday(monday) {
-        if (monday != null) this.monday = monday;
-    }
+  setZipCode(zipCode) {
+    if (zipCode != null) this.zipCode = zipCode;
+  }
 
-    setTuesday(tuesday) {
-        if (tuesday != null) this.tuesday = tuesday;
-    }
+  setPhoneNumber(phoneNumber) {
+    if (phoneNumber != null) this.phoneNumber = phoneNumber;
+  }
 
-    setWednesday(wednesday) {
-        if (wednesday != null) this.wednesday = wednesday;
-    }
+  setMonday(monday) {
+    if (monday != null) this.monday = monday;
+  }
 
-    setThursday(thursday) {
-        if (thursday != null) this.thursday = thursday;
-    }
+  setTuesday(tuesday) {
+    if (tuesday != null) this.tuesday = tuesday;
+  }
 
-    setFriday(friday) {
-        if (friday != null) this.friday = friday;
-    }
+  setWednesday(wednesday) {
+    if (wednesday != null) this.wednesday = wednesday;
+  }
 
-    setSaturday(saturday) {
-        if (saturday != null) this.saturday = saturday;
-    }
+  setThursday(thursday) {
+    if (thursday != null) this.thursday = thursday;
+  }
 
-    setSunday(sunday) {
-        if (sunday != null) this.sunday = sunday;
-    }
+  setFriday(friday) {
+    if (friday != null) this.friday = friday;
+  }
 
-    setLatitude(latitude) {
-        if (latitude != null) this.latitude = latitude;
-    }
+  setSaturday(saturday) {
+    if (saturday != null) this.saturday = saturday;
+  }
 
-    setLongitude(longitude) {
-        if (longitude != null) this.longitude = longitude;
-    }
+  setSunday(sunday) {
+    if (sunday != null) this.sunday = sunday;
+  }
+
+  setLatitude(latitude) {
+    if (latitude != null) this.latitude = latitude;
+  }
+
+  setLongitude(longitude) {
+    if (longitude != null) this.longitude = longitude;
+  }
 }
 
-const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
-    const getOpeningTimeByDay = (fullOpeningTime) => {
-        const times = new Array(7).fill(null);
-        if (fullOpeningTime) {
-            const days = fullOpeningTime.split("#");
-            for (let day of days) {
-                switch (day.substring(0, 3).toUpperCase()) {
-                    case "MON":
-                        times[0] = day.substring(4);
-                        break;
-                    case "TUE":
-                        times[1] = day.substring(4);
-                        break;
-                    case "WED":
-                        times[2] = day.substring(4);
-                        break;
-                    case "THU":
-                        times[3] = day.substring(4);
-                        break;
-                    case "FRI":
-                        times[4] = day.substring(4);
-                        break;
-                    case "SAT":
-                        times[5] = day.substring(4);
-                        break;
-                    case "SUN":
-                        times[6] = day.substring(4);
-                        break;
-                }
-            }
-        }
-        return times;
+const getOpeningTimeByDay = (fullOpeningTime) => {
+  const times = new Array(7).fill(null);
+  if (fullOpeningTime) {
+    const days = fullOpeningTime.split('#');
+    for (let day of days) {
+      switch (day.substring(0, 3).toUpperCase()) {
+        case 'MON':
+          times[0] = day.substring(4);
+          break;
+        case 'TUE':
+          times[1] = day.substring(4);
+          break;
+        case 'WED':
+          times[2] = day.substring(4);
+          break;
+        case 'THU':
+          times[3] = day.substring(4);
+          break;
+        case 'FRI':
+          times[4] = day.substring(4);
+          break;
+        case 'SAT':
+          times[5] = day.substring(4);
+          break;
+        case 'SUN':
+          times[6] = day.substring(4);
+          break;
+      }
     }
+  }
+  return times;
+};
 
-    const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
+/**
+ * returns an object with: storeRecord if awsScore is over the malformedAddressThreshold otherwise
+ * returns a malformedRecord that will be added to malformed addresses CSV.
+ */
+const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
+  const malformedAddressThreshold = Number(
+    process.env.MALFORMED_ADDRESS_THRESHOLD
+  );
 
-    storeLocatorCsvEntity.setDescription(registry.description);
-    if (registry.address) {
-        storeLocatorCsvEntity.setCity(registry.address.city);
-        storeLocatorCsvEntity.setAddress(registry.address.addressRow);
-        storeLocatorCsvEntity.setProvince(registry.address.pr);
-        storeLocatorCsvEntity.setZipCode(registry.address.cap);
+  const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
+
+  storeLocatorCsvEntity.setDescription(registry.description);
+  if (registry.address) {
+    storeLocatorCsvEntity.setCity(registry.address.city);
+    storeLocatorCsvEntity.setAddress(registry.address.addressRow);
+    storeLocatorCsvEntity.setProvince(registry.address.pr);
+    storeLocatorCsvEntity.setZipCode(registry.address.cap);
+  }
+  if (registry.phoneNumber) {
+    storeLocatorCsvEntity.setPhoneNumber(
+      registry.phoneNumber.replace(/\//g, ' ')
+    );
+  }
+
+  if (registry.openingTime) {
+    const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
+    storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
+    storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
+    storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
+    storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
+    storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
+    storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
+    storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
+  }
+
+  try {
+    const coordinatesResponse = await getCoordinatesForAddress(
+      registry.address.addressRow,
+      registry.address.pr,
+      registry.address.cap,
+      registry.address.city
+    );
+
+    if (coordinatesResponse) {
+      if (
+        coordinatesResponse.awsScore > malformedAddressThreshold &&
+        coordinatesResponse.awsLatitude &&
+        coordinatesResponse.awsLongitude
+      ) {
+        storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
+        storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+        storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
+        storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
+      } else {
+        return {
+          storeRecord: null,
+          malformedRecord: {
+            ...storeLocatorCsvEntity,
+            ...coordinatesResponse,
+          },
+        };
+      }
     }
-    if(registry.phoneNumber) {
-        storeLocatorCsvEntity.setPhoneNumber(registry.phoneNumber.replace(/\//g, ' '));
-    }
+  } catch (e) {
+    console.log(e);
+  }
 
-        
-    if (registry.openingTime) {
-        const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
-        storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
-        storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
-        storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
-        storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
-        storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
-        storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
-        storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
-    }
-
-    if (registry.geoLocation) {
-        storeLocatorCsvEntity.setLatitude(registry.geoLocation.latitude);
-        storeLocatorCsvEntity.setLongitude(registry.geoLocation.longitude);
-    }
-
-    return storeLocatorCsvEntity;
-}
+  return {
+    storeRecord: storeLocatorCsvEntity,
+    malformedRecord: null,
+  };
+};
 
 module.exports = { mapApiResponseToStoreLocatorCsvEntities };

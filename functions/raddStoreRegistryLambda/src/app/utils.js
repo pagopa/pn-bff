@@ -9,7 +9,9 @@ function checkIfIntervalPassed(latestFile) {
   console.log('Checking interval, generateInterval:', generateInterval);
 
   if (isNaN(generateInterval) || generateInterval < 0) {
-    throw new Error('Invalid or missing GENERATE_INTERVAL environment variable');
+    throw new Error(
+      'Invalid or missing GENERATE_INTERVAL environment variable'
+    );
   }
 
   const lastModified = new Date(latestFile.LastModified);
