@@ -556,7 +556,22 @@ Resources:
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
         TemplateBucketBaseUrl: !Ref TemplateBucketBaseUrl
-        ApiAlarmSegmentation: !Ref ApiAlarmSegmentation 
+        ApiAlarmSegmentation: !Ref ApiAlarmSegmentation
+
+  RaddSearchAddressPublicWebAPI:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-expose-service-openapi.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub '${ProjectName}-search-address'
+        IntendedUsage: PUBLIC
+        DnsName: !Ref WebApiDnsName
+        ProjectName: !Ref ProjectName
+        ServiceApiPath: 'location'
+        OpenApiBucketName: !Ref MicroserviceBucketName
+        OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-location-PUBLIC-aws.yaml
+        #AlarmSNSTopicArn: ''
+        #CloudwatchLogKinesisStreamArn: ''
   
   BffMicroservicePublicWebApiWaf:
     Type: AWS::CloudFormation::Stack
