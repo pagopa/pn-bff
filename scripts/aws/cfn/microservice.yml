@@ -944,8 +944,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - geo-places:SearchPlaceIndexForText
-                  - geo-places:SearchPlaceIndexForSuggestions
                   - geo-places:GetPlace
+                  - geo-places:Autocomplete
                 Resource:
-                  - !Sub 'arn:aws:geo-places:${AWSLocationRegion}:${AWS::AccountId}:place-index/default'
+                  - !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
