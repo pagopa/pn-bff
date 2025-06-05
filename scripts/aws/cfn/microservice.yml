@@ -335,6 +335,22 @@ Parameters:
     MinValue: 512
     MaxValue: 10240
     Description: Memory of the RaddStoreRegistry Lambda.
+  
+  SearchAddressesLambdaName:
+    Type: String
+    Description: Name of the SearchAddressesLambda.
+
+  SearchAddressesLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the SearchAddressesLambda.
+  
+  SearchAddressesLambdaRuntime:
+    Type: String
+    Default: nodejs22.x
+    Description: Runtime of the SearchAddresses Lambda.
 
   RaddStoreRegistryLambdaRuntime:
     Type: String
@@ -874,3 +890,47 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt RaddStoreRegistryScheduledRule.Arn
+  
+  SearchAddressesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref SearchAddressesLambdaName
+      Runtime: !Ref SearchAddressesLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt SearchAddressesLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/SearchAddressesLambda.zip"
+      MemorySize: !Ref SearchAddressesLambdaMemory
+      Timeout: 900
+      Environment:
+        Variables:
+          AWS_LOCATION_REGION: !Ref AWSLocationRegion
+
+  SearchAddressesLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${SearchAddressesLambdaName}-ExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessAWSLocationService
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - geo-places:SearchPlaceIndexForText
+                  - geo-places:SearchPlaceIndexForSuggestions
+                  - geo-places:GetPlace
+                Resource:
+                  - !Sub 'arn:aws:geo-places:${AWSLocationRegion}:${AWS::AccountId}:place-index/default'
