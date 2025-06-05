@@ -570,8 +570,8 @@ Resources:
         ServiceApiPath: 'location'
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-location-PUBLIC-aws.yaml
-        #AlarmSNSTopicArn: ''
-        #CloudwatchLogKinesisStreamArn: ''
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        CloudwatchLogKinesisStreamArn: ''
   
   BffMicroservicePublicWebApiWaf:
     Type: AWS::CloudFormation::Stack
