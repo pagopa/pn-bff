@@ -572,6 +572,8 @@ Resources:
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-location-PUBLIC-aws.yaml
         AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
         CloudwatchLogKinesisStreamArn: ''
+        NetworkLoadBalancerLink: ''
+        ApplicationLoadBalancerDomain: ''
   
   BffMicroservicePublicWebApiWaf:
     Type: AWS::CloudFormation::Stack
