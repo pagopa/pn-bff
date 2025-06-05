@@ -900,7 +900,7 @@ Resources:
       Role: !GetAtt SearchAddressesLambdaExecutionRole.Arn
       Code:
         S3Bucket: !Ref MicroserviceBucketName
-        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/SearchAddressesLambda.zip"
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/searchAddressesLambda.zip"
       MemorySize: !Ref SearchAddressesLambdaMemory
       Timeout: 900
       Environment:
