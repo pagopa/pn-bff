@@ -26,13 +26,13 @@ paths:
         This API allows you to search for an address and retrieve suggestions
       tags:
         - Location
-      'x-pagopa-lambda-name': 'pn-search-addresses'
+      'x-pagopa-lambda-name': 'pn-SearchAddressesLambda'
       'x-pagopa-lambda-account': 'core'
       parameters:
         - $ref: './location-schemas/location.yaml#/components/parameters/LocationSearchAddress'
-      response:
+      responses:
         '200':
-          description: A list of address suggestions.
+          description: OK
           content:
             application/json:
               schema:
@@ -49,13 +49,13 @@ paths:
         This API allows you to retrieve the coordinates of a place by its ID.
       tags:
         - Location
-      'x-pagopa-lambda-name': 'pn-search-addresses'
+      'x-pagopa-lambda-name': 'pn-SearchAddressesLambda'
       'x-pagopa-lambda-account': 'core'
       parameters:
         - $ref: './location-schemas/location.yaml#/components/parameters/LocationPlaceId'
-      response:
+      responses:
         '200':
-          description: Coordinates of the place.
+          description: OK
           content:
             application/json:
               schema:

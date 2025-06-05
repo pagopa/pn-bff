@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 2g5Jps8ce3HBFRBR3zsRYi6GMkokbl6f9bT2jvCpk7U=
+  version: JNJD28/JULeAFQ+51v8PXZp1S5cqu6EcwJtqHMNFY7o=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -17,18 +17,17 @@ paths:
       description: This API allows you to search for an address and retrieve suggestions
       tags:
         - Location
-      x-pagopa-lambda-name: pn-search-addresses
+      x-pagopa-lambda-name: pn-SearchAddressesLambda
       x-pagopa-lambda-account: core
       parameters:
         - $ref: '#/components/parameters/LocationSearchAddress'
       responses:
         '200':
-          description: A list of address suggestions.
+          description: OK
           content:
             application/json:
               schema:
-                $ref: >-
-                  ./location-schemas/location.yaml#/components/schemas/AddressSuggestions
+                $ref: '#/components/schemas/AddressSuggestions'
         '400':
           description: Bad Request - Invalid input parameters.
         '500':
@@ -56,18 +55,17 @@ paths:
       description: This API allows you to retrieve the coordinates of a place by its ID.
       tags:
         - Location
-      x-pagopa-lambda-name: pn-search-addresses
+      x-pagopa-lambda-name: pn-SearchAddressesLambda
       x-pagopa-lambda-account: core
       parameters:
         - $ref: '#/components/parameters/LocationPlaceId'
       responses:
         '200':
-          description: Coordinates of the place.
+          description: OK
           content:
             application/json:
               schema:
-                $ref: >-
-                  ./location-schemas/location.yaml#/components/schemas/PlaceCoordinates
+                $ref: '#/components/schemas/PlaceCoordinates'
         '400':
           description: Bad Request - Invalid input parameters.
         '500':
@@ -105,7 +103,47 @@ components:
       description: The ID of the place to retrieve coordinates for.
       schema:
         type: string
-  schemas: {}
+  schemas:
+    AddressSuggestions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              placeId:
+                type: string
+                description: Unique identifier for the place
+              placeType:
+                type: string
+                description: Type of the place
+              label:
+                type: string
+                description: Full address label
+              street:
+                type: string
+                description: Street address
+              province:
+                type: string
+                description: Province code
+              city:
+                type: string
+                description: City/locality name
+    PlaceCoordinates:
+      oneOf:
+        - type: object
+          properties:
+            longitude:
+              type: number
+              description: Longitude coordinate
+            latitude:
+              type: number
+              description: Latitude coordinate
+          required:
+            - longitude
+            - latitude
+        - type: 'null'
   responses: {}
   securitySchemes: {}
 tags:
