@@ -109,6 +109,18 @@ Resources:
         LogGroupName: !Sub ${ProjectName}-bff-RaddStoreRegistryLambda
         LogGroupRetention: !Ref LogRetention
         LogGroupPrefix: /aws/lambda
+  
+  # Lambda SearchAddresses
+  SearchAddressesLambdaLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
+      Parameters:
+        LogGroupName: !Sub ${ProjectName}-SearchAddressesLambda
+        LogGroupRetention: !Ref LogRetention
+        LogGroupPrefix: /aws/lambda
 
 Outputs:
   # Log group exports
@@ -116,6 +128,8 @@ Outputs:
     Value: !GetAtt PnBffLogGroup.Outputs.LogGroupName
   RaddStoreRegistryLambdaName:
     Value: !Sub ${ProjectName}-bff-RaddStoreRegistryLambda
+  SearchAddressesLambdaName:
+    Value: !Sub ${ProjectName}-SearchAddressesLambda
   # Lambda exports
   DataIndexerLambdaName:
     Value: !Sub ${ProjectName}-bff-SenderDashboardDataIndexer
