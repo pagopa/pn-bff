@@ -946,7 +946,16 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - geo-places:SearchPlaceIndexForText
                   - geo-places:GetPlace
                   - geo-places:Autocomplete
                 Resource:
                   - !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
+
+  SearchAddressesLambdaApiGatewayInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt SearchAddressesLambda.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RaddSearchAddressPublicWebAPI.Outputs.RestApiId}/*"
