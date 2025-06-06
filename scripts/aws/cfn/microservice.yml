@@ -952,7 +952,7 @@ Resources:
                 Resource:
                   - !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
 
-  SearchAddressesLambdaApiGatewayInvokePermission:
+  SearchAddressesLambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
