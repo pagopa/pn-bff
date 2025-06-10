@@ -31,10 +31,7 @@ const getAutocompleteAddresses = async (address) => {
       const data = response.ResultItems.map((item) => ({
         placeId: item.PlaceId,
         placeType: item.PlaceType,
-        label: item.Address?.Label,
-        street: item.Address?.Street,
-        province: item.Address?.SubRegion?.Code,
-        city: item.Address?.Locality,
+        address: item.Address,
       }));
 
       return { data };

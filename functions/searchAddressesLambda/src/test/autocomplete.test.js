@@ -58,18 +58,26 @@ describe("autocomplete tests", function () {
         {
           placeId: "place-123",
           placeType: "Street",
-          label: "Via Roma 1, 20121 Milano MI, Italy",
-          street: "Via Roma 1",
-          province: "MI",
-          city: "Milano",
+          address: {
+            Label: "Via Roma 1, 20121 Milano MI, Italy",
+            Street: "Via Roma 1",
+            SubRegion: {
+              Code: "MI",
+            },
+            Locality: "Milano",
+          },
         },
         {
           placeId: "place-456",
           placeType: "Municipality",
-          label: "Via Garibaldi 5, 10121 Torino TO, Italy",
-          street: "Via Garibaldi 5",
-          province: "TO",
-          city: "Torino",
+          address: {
+            Label: "Via Garibaldi 5, 10121 Torino TO, Italy",
+            Street: "Via Garibaldi 5",
+            SubRegion: {
+              Code: "TO",
+            },
+            Locality: "Torino",
+          },
         },
       ],
     });
