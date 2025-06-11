@@ -1,0 +1,128 @@
+info:
+  version: v1.0
+components:
+  parameters:
+    LocationSearchAddress:
+      name: address
+      in: query
+      required: true
+      description: The address to search for.
+      schema:
+        type: string
+
+    LocationPlaceId:
+      name: placeId
+      in: query
+      required: true
+      description: The ID of the place to retrieve coordinates for.
+      schema:
+        type: string
+
+  schemas:
+    AddressSuggestions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              placeId:
+                type: string
+                description: Unique identifier for the place
+              placeType:
+                type: string
+                description: Type of the place
+              address:
+                $ref: '#/components/schemas/Address'
+
+    PlaceCoordinates:
+      type: object
+      nullable: true
+      properties:
+        longitude:
+          type: number
+          description: Longitude coordinate
+        latitude:
+          type: number
+          description: Latitude coordinate
+      required:
+        - longitude
+        - latitude
+
+    Address:
+      type: object
+      properties:
+        AddressNumber:
+          type: number
+        Block:
+          type: string
+        Building:
+          type: string
+        Country:
+          $ref: '#/components/schemas/Country'
+        District:
+          type: string
+        Intersection:
+          type: array
+          items:
+            type: string
+        Label:
+          type: string
+        Locality:
+          type: string
+        PostalCode:
+          type: string
+        Region:
+          $ref: '#/components/schemas/Region'
+        Street:
+          type: string
+        StreetComponents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreetComponent'
+        SubBlock:
+          type: string
+        SubDistrict:
+          type: string
+        SubRegion:
+          $ref: '#/components/schemas/Region'
+
+    Country:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code2:
+          type: string
+        Code3:
+          type: string
+
+    Region:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code:
+          type: string
+
+    StreetComponent:
+      type: object
+      properties:
+        BaseName:
+          type: string
+        Direction:
+          type: string
+        Language:
+          type: string
+        Prefix:
+          type: string
+        Suffix:
+          type: string
+        Type:
+          type: string
+        TypePlacement:
+          type: string
+          enum: [ "AfterBaseName", "BeforeBaseName" ]
+        TypeSeparator:
+          type: string

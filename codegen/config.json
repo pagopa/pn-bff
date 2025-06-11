@@ -17,6 +17,13 @@
         "api-internal-pn-bff-sender-dashboard.yaml"
       ],
       "servicePath": "bff"
+    },
+    {
+      "intendedUsage": "PUBLIC",
+      "openapiFiles": [
+        "api-internal-location.yaml"
+      ],
+      "servicePath": "location"
     }
   ]
 }
