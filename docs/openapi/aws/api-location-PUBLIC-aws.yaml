@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: JNJD28/JULeAFQ+51v8PXZp1S5cqu6EcwJtqHMNFY7o=
+  version: coD2aqZCgmWQAJzPJWLTFA4p5b7Hwn0CuwgKdaDxPto=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -104,6 +104,81 @@ components:
       schema:
         type: string
   schemas:
+    Country:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code2:
+          type: string
+        Code3:
+          type: string
+    Region:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code:
+          type: string
+    StreetComponent:
+      type: object
+      properties:
+        BaseName:
+          type: string
+        Direction:
+          type: string
+        Language:
+          type: string
+        Prefix:
+          type: string
+        Suffix:
+          type: string
+        Type:
+          type: string
+        TypePlacement:
+          type: string
+          enum:
+            - AfterBaseName
+            - BeforeBaseName
+        TypeSeparator:
+          type: string
+    Address:
+      type: object
+      properties:
+        AddressNumber:
+          type: number
+        Block:
+          type: string
+        Building:
+          type: string
+        Country:
+          $ref: '#/components/schemas/Country'
+        District:
+          type: string
+        Intersection:
+          type: array
+          items:
+            type: string
+        Label:
+          type: string
+        Locality:
+          type: string
+        PostalCode:
+          type: string
+        Region:
+          $ref: '#/components/schemas/Region'
+        Street:
+          type: string
+        StreetComponents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreetComponent'
+        SubBlock:
+          type: string
+        SubDistrict:
+          type: string
+        SubRegion:
+          $ref: '#/components/schemas/Region'
     AddressSuggestions:
       type: object
       properties:
@@ -118,19 +193,12 @@ components:
               placeType:
                 type: string
                 description: Type of the place
-              label:
-                type: string
-                description: Full address label
-              street:
-                type: string
-                description: Street address
-              province:
-                type: string
-                description: Province code
-              city:
-                type: string
-                description: City/locality name
+              address:
+                $ref: '#/components/schemas/Address'
     PlaceCoordinates:
+      required:
+        - longitude
+        - latitude
       oneOf:
         - type: object
           properties:
@@ -140,9 +208,6 @@ components:
             latitude:
               type: number
               description: Latitude coordinate
-          required:
-            - longitude
-            - latitude
         - type: 'null'
   responses: {}
   securitySchemes: {}
