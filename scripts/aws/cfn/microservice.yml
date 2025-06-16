@@ -970,7 +970,7 @@ Resources:
     Properties:
       TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/public-enpoints-waf-acl.yaml"
       Parameters:
-        WAFName: !Sub '${ProjectName}-radd-search-address-acl'
+        WAFName: !Sub '${ProjectName}-radd-autocomp-address-acl'
         ResourceArn: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.APIGatewayARN
         TargetType: APIGATEWAY
         IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
