@@ -206,6 +206,11 @@ Parameters:
     AllowedValues: [60, 120, 300, 600]
     Description: Throttling period duration
 
+  LocationAutocompleteWafIpRateLimit:
+    Type: Number
+    Description: 'WAF rate limit per source IP address over a 10-minute period for the Autocomplete API.'
+    Default: 5000
+
   # SelfCare parameters
   SelfCareBaseURL:
       Type: String
@@ -959,3 +964,15 @@ Resources:
       FunctionName: !GetAtt SearchAddressesLambda.Arn
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RaddSearchAddressPublicWebAPI.Outputs.RestApiId}/*"
+  
+  LocationAutocompleteWaf:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/public-enpoints-waf-acl.yaml"
+      Parameters:
+        WAFName: !Sub '${ProjectName}-radd-search-address-api'
+        ResourceArn: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.APIGatewayARN
+        TargetType: APIGATEWAY
+        IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
+        RateLimitEvaluationWindowSec: 600 
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
