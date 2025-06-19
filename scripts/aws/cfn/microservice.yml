@@ -972,6 +972,7 @@ Resources:
       Parameters:
         WAFName: !Sub '${ProjectName}-radd-autocomp-address-acl'
         ResourceArn: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.APIGatewayARN
+        ApiName: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.RestApiName
         TargetType: APIGATEWAY
         IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
         RateLimitEvaluationWindowSec: 600 
