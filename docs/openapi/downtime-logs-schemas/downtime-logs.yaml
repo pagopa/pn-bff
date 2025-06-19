@@ -15,11 +15,11 @@ components:
         type: string
         format: date-time
     BffQueryToTime:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/1ce49ec4649f9efcba280d15564968bf2d996b2c/docs/openapi/api-internal-v1.yaml#/components/parameters/queryToTime'
     BffQueryPage:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/1ce49ec4649f9efcba280d15564968bf2d996b2c/docs/openapi/api-internal-v1.yaml#/components/parameters/queryPage'
     BffQuerySize:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/1ce49ec4649f9efcba280d15564968bf2d996b2c/docs/openapi/api-internal-v1.yaml#/components/parameters/querySize'
 
   schemas:
     BffPnStatusResponse:
@@ -38,6 +38,6 @@ components:
           description: Flag per indicare se l'applicazione è operativa
 
     BffPnDowntimeHistoryResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/1ce49ec4649f9efcba280d15564968bf2d996b2c/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/PnDowntimeHistoryResponse'
     BffLegalFactDownloadMetadataResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/6ca4b54d3295059882c11bb4ae7014b0b202e959/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-downtime-logs/1ce49ec4649f9efcba280d15564968bf2d996b2c/docs/openapi/schemas-pn-components-v1.yaml#/components/schemas/LegalFactDownloadMetadataResponse'
