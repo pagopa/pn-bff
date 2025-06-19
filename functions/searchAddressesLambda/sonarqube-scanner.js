@@ -1,6 +1,6 @@
 const options = {
   "sonar.organization": "pagopa",
-  "sonar.projectKey": "pagopa_pn-bff-searchaddresseslambda",
+  "sonar.projectKey": "pagopa_pn-bff-searchaddresses",
 };
 
 if (process.env.PR_NUM) {
