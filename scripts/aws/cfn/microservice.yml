@@ -206,6 +206,11 @@ Parameters:
     AllowedValues: [60, 120, 300, 600]
     Description: Throttling period duration
 
+  LocationAutocompleteWafIpRateLimit:
+    Type: Number
+    Description: 'WAF rate limit per source IP address over a 10-minute period for the Autocomplete API.'
+    Default: 2000
+
   # SelfCare parameters
   SelfCareBaseURL:
       Type: String
@@ -335,6 +340,22 @@ Parameters:
     MinValue: 512
     MaxValue: 10240
     Description: Memory of the RaddStoreRegistry Lambda.
+  
+  SearchAddressesLambdaName:
+    Type: String
+    Description: Name of the SearchAddressesLambda.
+
+  SearchAddressesLambdaMemory:
+    Type: Number
+    Default: 4096
+    MinValue: 512
+    MaxValue: 10240
+    Description: Memory of the SearchAddressesLambda.
+  
+  SearchAddressesLambdaRuntime:
+    Type: String
+    Default: nodejs22.x
+    Description: Runtime of the SearchAddresses Lambda.
 
   RaddStoreRegistryLambdaRuntime:
     Type: String
@@ -540,7 +561,24 @@ Resources:
         OpenApiBucketName: !Ref MicroserviceBucketName
         OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-bff-WEB-aws.yaml
         TemplateBucketBaseUrl: !Ref TemplateBucketBaseUrl
-        ApiAlarmSegmentation: !Ref ApiAlarmSegmentation 
+        ApiAlarmSegmentation: !Ref ApiAlarmSegmentation
+
+  RaddSearchAddressPublicWebAPI:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-expose-service-openapi.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub '${ProjectName}-search-address'
+        IntendedUsage: PUBLIC
+        DnsName: !Ref WebApiDnsName
+        ProjectName: !Ref ProjectName
+        ServiceApiPath: 'location'
+        OpenApiBucketName: !Ref MicroserviceBucketName
+        OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-location-PUBLIC-aws.yaml
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        CloudwatchLogKinesisStreamArn: ''
+        NetworkLoadBalancerLink: ''
+        ApplicationLoadBalancerDomain: ''
   
   BffMicroservicePublicWebApiWaf:
     Type: AWS::CloudFormation::Stack
@@ -874,3 +912,68 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt RaddStoreRegistryScheduledRule.Arn
+  
+  SearchAddressesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref SearchAddressesLambdaName
+      Runtime: !Ref SearchAddressesLambdaRuntime
+      Handler: index.handler
+      Role: !GetAtt SearchAddressesLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/searchAddressesLambda.zip"
+      MemorySize: !Ref SearchAddressesLambdaMemory
+      Timeout: 900
+      Environment:
+        Variables:
+          AWS_LOCATION_REGION: !Ref AWSLocationRegion
+
+  SearchAddressesLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${SearchAddressesLambdaName}-ExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AccessAWSLocationService
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - geo-places:SearchPlaceIndexForText
+                  - geo-places:GetPlace
+                  - geo-places:Autocomplete
+                Resource:
+                  - !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
+
+  SearchAddressesLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt SearchAddressesLambda.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RaddSearchAddressPublicWebAPI.Outputs.RestApiId}/*"
+  
+  LocationAutocompleteWaf:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/public-enpoints-waf-acl.yaml"
+      Parameters:
+        WAFName: !Sub '${ProjectName}-radd-autocomp-address-acl'
+        ResourceArn: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.APIGatewayARN
+        ApiName: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.RestApiName
+        TargetType: APIGATEWAY
+        IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
+        RateLimitEvaluationWindowSec: 600 
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn

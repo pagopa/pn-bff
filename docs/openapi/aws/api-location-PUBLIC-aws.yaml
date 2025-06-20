@@ -1,0 +1,247 @@
+openapi: 3.0.1
+info:
+  title: >-
+    ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
+  version: coD2aqZCgmWQAJzPJWLTFA4p5b7Hwn0CuwgKdaDxPto=
+servers:
+  - url: https://${stageVariables.DnsName}/{basePath}
+    variables:
+      basePath:
+        default: /${stageVariables.ServiceApiPath}
+    x-amazon-apigateway-endpoint-configuration:
+      disableExecuteApiEndpoint: true
+paths:
+  /searchAddress:
+    get:
+      summary: API for searching an address with AWS Location Autocomplete
+      description: This API allows you to search for an address and retrieve suggestions
+      tags:
+        - Location
+      x-pagopa-lambda-name: pn-SearchAddressesLambda
+      x-pagopa-lambda-account: core
+      parameters:
+        - $ref: '#/components/parameters/LocationSearchAddress'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressSuggestions'
+        '400':
+          description: Bad Request - Invalid input parameters.
+        '500':
+          description: Internal Server Error - AWS Location service is unavailable.
+      x-amazon-apigateway-integration:
+        uri: >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-SearchAddressesLambda/invocations
+        httpMethod: POST
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''PUBLIC'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        timeoutInMillis: 29000
+        type: aws_proxy
+  /getPlaceCoordinates:
+    get:
+      summary: API for retrieving coordinates of a place with AWS Location GetPlace
+      description: This API allows you to retrieve the coordinates of a place by its ID.
+      tags:
+        - Location
+      x-pagopa-lambda-name: pn-SearchAddressesLambda
+      x-pagopa-lambda-account: core
+      parameters:
+        - $ref: '#/components/parameters/LocationPlaceId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceCoordinates'
+        '400':
+          description: Bad Request - Invalid input parameters.
+        '500':
+          description: Internal Server Error - AWS Location service is unavailable.
+      x-amazon-apigateway-integration:
+        uri: >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-SearchAddressesLambda/invocations
+        httpMethod: POST
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''PUBLIC'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        timeoutInMillis: 29000
+        type: aws_proxy
+components:
+  parameters:
+    LocationSearchAddress:
+      name: address
+      in: query
+      required: true
+      description: The address to search for.
+      schema:
+        type: string
+    LocationPlaceId:
+      name: placeId
+      in: query
+      required: true
+      description: The ID of the place to retrieve coordinates for.
+      schema:
+        type: string
+  schemas:
+    Country:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code2:
+          type: string
+        Code3:
+          type: string
+    Region:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code:
+          type: string
+    StreetComponent:
+      type: object
+      properties:
+        BaseName:
+          type: string
+        Direction:
+          type: string
+        Language:
+          type: string
+        Prefix:
+          type: string
+        Suffix:
+          type: string
+        Type:
+          type: string
+        TypePlacement:
+          type: string
+          enum:
+            - AfterBaseName
+            - BeforeBaseName
+        TypeSeparator:
+          type: string
+    Address:
+      type: object
+      properties:
+        AddressNumber:
+          type: number
+        Block:
+          type: string
+        Building:
+          type: string
+        Country:
+          $ref: '#/components/schemas/Country'
+        District:
+          type: string
+        Intersection:
+          type: array
+          items:
+            type: string
+        Label:
+          type: string
+        Locality:
+          type: string
+        PostalCode:
+          type: string
+        Region:
+          $ref: '#/components/schemas/Region'
+        Street:
+          type: string
+        StreetComponents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreetComponent'
+        SubBlock:
+          type: string
+        SubDistrict:
+          type: string
+        SubRegion:
+          $ref: '#/components/schemas/Region'
+    AddressSuggestions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              placeId:
+                type: string
+                description: Unique identifier for the place
+              placeType:
+                type: string
+                description: Type of the place
+              address:
+                $ref: '#/components/schemas/Address'
+    PlaceCoordinates:
+      required:
+        - longitude
+        - latitude
+      oneOf:
+        - type: object
+          properties:
+            longitude:
+              type: number
+              description: Longitude coordinate
+            latitude:
+              type: number
+              description: Latitude coordinate
+        - type: 'null'
+  responses: {}
+  securitySchemes: {}
+tags:
+  - name: Location
+    description: 'API pubbliche per l''utilizzo delle API AWS Location '
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  BAD_REQUEST_PARAMETERS:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_PARAMETERS",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+  BAD_REQUEST_BODY:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_BODY",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: basic

@@ -1,7 +1,6 @@
 const {
   validateCsvConfiguration,
   createCSVContent,
-  addRowToWrongAddressCSV,
   wrongAddressesCsvHeader,
 } = require('../app/csvUtils');
 const chai = require('chai');
