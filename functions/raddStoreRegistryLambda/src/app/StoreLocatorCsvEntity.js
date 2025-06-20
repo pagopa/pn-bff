@@ -166,28 +166,33 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
       registry.address.city
     );
 
-    if (coordinatesResponse) {
-      if (
-        coordinatesResponse.awsScore > malformedAddressThreshold &&
-        coordinatesResponse.awsLatitude &&
-        coordinatesResponse.awsLongitude
-      ) {
-        storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
-        storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
-        storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
-        storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
-      } else {
-        return {
-          storeRecord: null,
-          malformedRecord: {
-            ...storeLocatorCsvEntity,
-            ...coordinatesResponse,
-          },
-        };
-      }
+    if (
+      coordinatesResponse &&
+      coordinatesResponse.awsScore > malformedAddressThreshold &&
+      coordinatesResponse.awsLatitude &&
+      coordinatesResponse.awsLongitude
+    ) {
+      storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
+      storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
+      storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
+      storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
+    } else {
+      return {
+        storeRecord: null,
+        malformedRecord: {
+          ...storeLocatorCsvEntity,
+          ...coordinatesResponse,
+        },
+      };
     }
   } catch (e) {
     console.log(e);
+    return {
+      storeRecord: null,
+      malformedRecord: {
+        ...storeLocatorCsvEntity,
+      },
+    };
   }
 
   return {

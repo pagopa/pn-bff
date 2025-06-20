@@ -207,7 +207,7 @@ describe('StoreLocatorCsvEntity', () => {
     };
 
     mockGeoPlacesErrorResponse();
-    const { storeRecord: result, malformedRecord } =
+    const { storeRecord, malformedRecord: result } =
       await mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('Test Store');
@@ -220,7 +220,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.latitude).to.equal('');
     expect(result.awsAddress).to.equal('');
     expect(result.region).to.equal('');
-    expect(malformedRecord).to.be.null;
+    expect(storeRecord).to.be.null;
   });
 
   it('should add address to wrongAddressesArray when AWS score is below 0.7', async () => {
@@ -256,6 +256,42 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.awsLatitude).to.equal(45.4642);
     expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
     expect(result.awsAddressRegion).to.equal('Lombardia');
+    expect(storeRecord).to.be.null;
+  });
+
+  it('should handle null geolocate response', async () => {
+    placesClientMock.on(GeocodeCommand).resolves({ ResultItems: null });
+
+    const registry = {
+      description: 'CAF UIL',
+      address: {
+        city: 'Milano',
+        addressRow: 'Via Carlo Magno 1',
+        pr: 'MI',
+        cap: '20100',
+      },
+    };
+
+    const { malformedRecord: result, storeRecord } =
+      await mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.description).to.equal('CAF UIL');
+    expect(result.city).to.equal('Milano');
+    expect(result.address).to.equal('Via Carlo Magno 1');
+    expect(result.province).to.equal('MI');
+    expect(result.zipCode).to.equal('20100');
+    expect(result.phoneNumber).to.equal('');
+    expect(result.monday).to.equal('');
+    expect(result.tuesday).to.equal('');
+    expect(result.wednesday).to.equal('');
+    expect(result.thursday).to.equal('');
+    expect(result.friday).to.equal('');
+    expect(result.saturday).to.equal('');
+    expect(result.sunday).to.equal('');
+    expect(result.latitude).to.equal('');
+    expect(result.longitude).to.equal('');
+    expect(result.awsAddress).to.equal('');
+    expect(result.region).to.equal('');
     expect(storeRecord).to.be.null;
   });
 });
