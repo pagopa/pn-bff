@@ -980,5 +980,5 @@ Resources:
         ApiName: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.RestApiName
         TargetType: APIGATEWAY
         IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
-        RateLimitEvaluationWindowSec: 600 
+        RateLimitEvaluationWindowSec: !Ref AutocompleteRateLimitEvaluationWindow
         AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
