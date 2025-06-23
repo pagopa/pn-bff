@@ -210,11 +210,14 @@ Parameters:
     Type: Number
     Description: 'WAF rate limit per source IP address over a 10-minute period for the Autocomplete API.'
     Default: 2000
+<<<<<<< HEAD
   
   AutocompleteRateLimitEvaluationWindow:
     Type: Number
     Description: 'Autocomplete Api WAF evaluation time in seconds'
     Default: 600 
+=======
+>>>>>>> develop
 
   # SelfCare parameters
   SelfCareBaseURL:
@@ -980,5 +983,9 @@ Resources:
         ApiName: !GetAtt RaddSearchAddressPublicWebAPI.Outputs.RestApiName
         TargetType: APIGATEWAY
         IpRateLimit: !Ref LocationAutocompleteWafIpRateLimit
+<<<<<<< HEAD
         RateLimitEvaluationWindowSec: !Ref AutocompleteRateLimitEvaluationWindow
+=======
+        RateLimitEvaluationWindowSec: 600 
+>>>>>>> develop
         AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
