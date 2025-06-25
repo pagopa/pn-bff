@@ -9,7 +9,7 @@
 | WEB_LANDING_BUCKET_PREFIX              | public/static/documents |     no       |
 | FILE_NAME                              | radd-store-registry     |     no       |
 | CSV_CONFIGURATION_PARAMETER            |                         |     yes      |
-| GENERATE_INTERVAL                      | 7                       |     no       |
+| GENERATE_INTERVAL                      | 30                      |     no       |
 | RADD_STORE_GENERATION_CONFIG_PARAMETER |                         |     no       |
 | RADD_STORE_REGISTRY_API_URL            |                         |     yes      |
 | AWS_LOCATION_REGION                    | eu-central-1            |     yes      |
