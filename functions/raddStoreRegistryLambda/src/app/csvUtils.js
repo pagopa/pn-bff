@@ -16,6 +16,7 @@ const validFieldValue = [
   'sunday',
   'latitude',
   'longitude',
+  'cafOpeningHours',
 ];
 
 const wrongAddressesConfig = [

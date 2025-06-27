@@ -17,78 +17,102 @@ class StoreLocatorCsvEntity {
     this.friday = '';
     this.saturday = '';
     this.sunday = '';
+    this.cafOpeningHours = '';
     this.latitude = '';
     this.longitude = '';
   }
 
   setDescription(description) {
-    if (description != null) this.description = description;
+    if (description != null) this.description = sanitizeCSVField(description);
   }
 
   setCity(city) {
-    if (city != null) this.city = city;
+    if (city != null) this.city = sanitizeCSVField(city);
   }
 
   setAddress(address) {
-    if (address != null) this.address = address;
+    if (address != null) this.address = sanitizeCSVField(address);
   }
 
   setAwsAddress(awsAddress) {
-    if (awsAddress != null) this.awsAddress = awsAddress;
+    if (awsAddress != null) this.awsAddress = sanitizeCSVField(awsAddress);
   }
 
   setProvince(province) {
-    if (province != null) this.province = province;
+    if (province != null) this.province = sanitizeCSVField(province);
   }
 
   setRegion(region) {
-    if (region != null) this.region = region;
+    if (region != null) this.region = sanitizeCSVField(region);
   }
 
   setZipCode(zipCode) {
-    if (zipCode != null) this.zipCode = zipCode;
+    if (zipCode != null) this.zipCode = sanitizeCSVField(zipCode);
   }
 
   setPhoneNumber(phoneNumber) {
-    if (phoneNumber != null) this.phoneNumber = phoneNumber;
+    if (phoneNumber != null) this.phoneNumber = sanitizeCSVField(phoneNumber);
   }
 
   setMonday(monday) {
-    if (monday != null) this.monday = monday;
+    if (monday != null) this.monday = sanitizeCSVField(monday);
   }
 
   setTuesday(tuesday) {
-    if (tuesday != null) this.tuesday = tuesday;
+    if (tuesday != null) this.tuesday = sanitizeCSVField(tuesday);
   }
 
   setWednesday(wednesday) {
-    if (wednesday != null) this.wednesday = wednesday;
+    if (wednesday != null) this.wednesday = sanitizeCSVField(wednesday);
   }
 
   setThursday(thursday) {
-    if (thursday != null) this.thursday = thursday;
+    if (thursday != null) this.thursday = sanitizeCSVField(thursday);
   }
 
   setFriday(friday) {
-    if (friday != null) this.friday = friday;
+    if (friday != null) this.friday = sanitizeCSVField(friday);
   }
 
   setSaturday(saturday) {
-    if (saturday != null) this.saturday = saturday;
+    if (saturday != null) this.saturday = sanitizeCSVField(saturday);
   }
 
   setSunday(sunday) {
-    if (sunday != null) this.sunday = sunday;
+    if (sunday != null) this.sunday = sanitizeCSVField(sunday);
+  }
+
+  setCafOpeningHours(cafOpeningHours) {
+    if (cafOpeningHours != null)
+      this.cafOpeningHours = sanitizeCSVField(cafOpeningHours);
   }
 
   setLatitude(latitude) {
-    if (latitude != null) this.latitude = latitude;
+    if (latitude != null) this.latitude = sanitizeCSVField(latitude);
   }
 
   setLongitude(longitude) {
-    if (longitude != null) this.longitude = longitude;
+    if (longitude != null) this.longitude = sanitizeCSVField(longitude);
   }
 }
+
+const sanitizeCSVField = (field) => {
+  if (field == null) return '';
+
+  const fieldStr = String(field).trim();
+
+  if (fieldStr === '') return '';
+
+  const cleanedField = fieldStr
+    .replaceAll('\n', ' ')
+    .replaceAll('\r', ' ')
+    .replaceAll('\t', ' ')
+    .replaceAll(/\s+/g, ' ');
+
+  const escapedField = cleanedField.replaceAll('"', '""');
+
+  return `"${escapedField}"`;
+};
 
 const getOpeningTimeByDay = (fullOpeningTime) => {
   const times = new Array(7).fill(null);
@@ -149,6 +173,10 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
 
   if (registry.openingTime) {
     const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
+    if (formattedOpeningTime.every((el) => el === null)) {
+      storeLocatorCsvEntity.setCafOpeningHours(registry.openingTime);
+    }
+
     storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
     storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
     storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
@@ -201,4 +229,4 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   };
 };
 
-module.exports = { mapApiResponseToStoreLocatorCsvEntities };
+module.exports = { mapApiResponseToStoreLocatorCsvEntities, sanitizeCSVField };
