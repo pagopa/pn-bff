@@ -396,7 +396,7 @@ Parameters:
   RaddStoreRegistryGenerateInterval:
     Type: Number
     Description: Time interval (days) for Store Locator generate csv
-    Default: 7
+    Default: 30
 
   RaddStoreRegistryAlarmThreshold:
     Type: Number
