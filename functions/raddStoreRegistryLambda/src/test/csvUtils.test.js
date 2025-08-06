@@ -1,7 +1,6 @@
 const {
   validateCsvConfiguration,
   createCSVContent,
-  wrongAddressesCsvHeader,
 } = require('../app/csvUtils');
 const chai = require('chai');
 const expect = chai.expect;
@@ -69,12 +68,18 @@ describe('createCSVContent', () => {
     const expectedContent = '\ndesc1;\ndesc2;city2';
     expect(createCSVContent(configs, data)).equal(expectedContent);
   });
-});
 
-describe('wrongAddressesCsvHeader', () => {
-  it('should return the correct header string', () => {
-    const expectedHeader =
-      'descrizione;indirizzo;citta;provincia;indirizzo AWS;score AWS;latitudine;longitudine';
-    expect(wrongAddressesCsvHeader).to.equal(expectedHeader);
+  it('handles configs without field property', () => {
+    const configs = [
+      { field: 'description' },
+      { field: null },
+      { field: 'city' },
+    ];
+    const data = [
+      { description: 'desc1', city: 'city1' },
+      { description: 'desc2', city: 'city2' },
+    ];
+    const expectedContent = '\ndesc1;;city1\ndesc2;;city2';
+    expect(createCSVContent(configs, data)).equal(expectedContent);
   });
 });

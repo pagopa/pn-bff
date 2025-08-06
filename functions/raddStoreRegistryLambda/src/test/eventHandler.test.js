@@ -6,22 +6,11 @@ const ssmUtils = require('../app/ssmParameter');
 const utils = require('../app/utils');
 const sinon = require('sinon');
 const assert = require('node:assert/strict');
-const storeLocatorCsvEntity = require('../app/StoreLocatorCsvEntity');
-const {
-  raddAltApiResponse,
-  mockGeocodeResponse,
-} = require('../__mocks__/registries.mock');
+const { raddAltApiResponse } = require('../__mocks__/registries.mock');
 const { csvConfigurationMock } = require('../__mocks__/csvConfiguration.mock');
-const { mockClient } = require('aws-sdk-client-mock');
-const {
-  GeoPlacesClient,
-  GeocodeCommand,
-} = require('@aws-sdk/client-geo-places');
 const { setupEnv } = require('./utils/test.utils');
 
 describe('handler generates new file', () => {
-  let placesClientMock;
-
   beforeEach(() => {
     setupEnv();
 
@@ -38,15 +27,10 @@ describe('handler generates new file', () => {
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
 
     sinon.spy(csvUtils, 'createCSVContent');
-
-    placesClientMock = mockClient(GeoPlacesClient);
-
-    placesClientMock.on(GeocodeCommand).resolves(mockGeocodeResponse);
   });
 
   afterEach(() => {
     sinon.restore();
-    placesClientMock.reset();
   });
 
   it('generates new file when forceGenerate is true', async () => {
@@ -66,10 +50,7 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(
-      csvUtils.createCSVContent,
-      raddAltApiResponse.length
-    );
+    sinon.assert.calledOnce(csvUtils.createCSVContent);
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -87,10 +68,7 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(
-      csvUtils.createCSVContent,
-      raddAltApiResponse.length
-    );
+    sinon.assert.calledOnce(csvUtils.createCSVContent);
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -119,106 +97,8 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(
-      csvUtils.createCSVContent,
-      raddAltApiResponse.length
-    );
+    sinon.assert.calledOnce(csvUtils.createCSVContent);
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
-  });
-
-  it('properly handles batching and sleep timing between batches', async () => {
-    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
-    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
-      forceGenerate: true,
-      sendToWebLanding: true,
-    });
-
-    const firstBatch = {
-      registries: raddAltApiResponse,
-      lastKey: 'next',
-    };
-    const secondBatch = {
-      registries: raddAltApiResponse,
-      lastKey: null,
-    };
-
-    if (api.fetchApi.restore) {
-      api.fetchApi.restore();
-    }
-
-    const fetchApiStub = sinon.stub(api, 'fetchApi');
-    fetchApiStub.onCall(0).resolves(firstBatch);
-    fetchApiStub.onCall(1).resolves(secondBatch);
-
-    const clock = sinon.useFakeTimers();
-
-    const handlePromise = handleEvent({});
-    await Promise.resolve();
-    await clock.tickAsync(1000);
-    await handlePromise;
-
-    sinon.assert.calledTwice(api.fetchApi);
-    sinon.assert.callCount(
-      csvUtils.createCSVContent,
-      firstBatch.registries.length + secondBatch.registries.length
-    );
-
-    clock.restore();
-  });
-
-  it('generates new file and uploads malformed addresses CSV when found', async () => {
-    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
-
-    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
-      forceGenerate: true,
-      sendToWebLanding: true,
-    });
-
-    sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
-
-    sinon
-      .stub(storeLocatorCsvEntity, 'mapApiResponseToStoreLocatorCsvEntities')
-      .callsFake(() => {
-        return {
-          storeRecord: null,
-          malformedRecord: {
-            description: 'Test Store',
-            city: 'Roma',
-            address: 'Via Nazionale 15',
-            province: 'RM',
-            awsAddress: 'Via Nazionale 15, 20100 RM, ROMA',
-            awsScore: 0.9,
-            awsLatitude: 42.6741,
-            awsLongiotude: 11.9082,
-          },
-        };
-      });
-
-    await handleEvent({});
-
-    sinon.assert.callCount(s3Utils.uploadVersionedFile, 2);
-
-    const malformedAddressCall = s3Utils.uploadVersionedFile.secondCall;
-
-    // sendToWebLanding
-    assert.strictEqual(malformedAddressCall.args[0], false);
-
-    // bffBucketS3Key
-    assert.strictEqual(
-      malformedAddressCall.args[1],
-      `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`
-    );
-
-    // csvContent
-    assert.match(
-      malformedAddressCall.args[2],
-      /descrizione;indirizzo;citta;provincia;indirizzo AWS;score AWS;latitudine;longitudine/
-    );
-
-    assert.match(
-      malformedAddressCall.args[2],
-      /Test Store;Via Nazionale 15;Roma;RM;Via Nazionale 15, 20100 RM, ROMA;0.9;42.6741;/
-    );
   });
 });
 

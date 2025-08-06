@@ -21,7 +21,6 @@ function setupEnv() {
     AWS_PROFILE_NAME: 'default',
     AWS_ENDPOINT_URL: 'http://localhost:4566/',
     AWS_LOCATION_REGION: 'eu-central-1',
-    AWS_LOCATION_REQUESTS_PER_SECOND: '95',
     MALFORMED_ADDRESS_THRESHOLD: '0.7',
   };
 }
