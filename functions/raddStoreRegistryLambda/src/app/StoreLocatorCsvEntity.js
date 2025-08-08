@@ -136,13 +136,22 @@ const getOpeningTimeByDay = (fullOpeningTime) => {
 };
 
 /**
- * returns an object with: storeRecord if awsScore is over the malformedAddressThreshold otherwise
- * returns a malformedRecord that will be added to malformed addresses CSV.
+ * Returns a StoreLocatorCsvEntity instance if the awsScore exceeds the malformedAddressThreshold
+ * Otherwise, the address will be skipped
+ *
+ * @param registry - The raw registry to be mapped into a StoreLocatorCsvEntity
  */
 const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   const malformedAddressThreshold = Number(
     process.env.MALFORMED_ADDRESS_THRESHOLD
   );
+
+  if (
+    !registry.normalizedAddress.biasPoint?.overall ||
+    registry.normalizedAddress.biasPoint.overall < malformedAddressThreshold
+  ) {
+    return;
+  }
 
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
@@ -155,8 +164,7 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
 
     if (
       registry.normalizedAddress.latitude &&
-      registry.normalizedAddress.longitude &&
-      registry.normalizedAddress.biasPoint.overall > malformedAddressThreshold
+      registry.normalizedAddress.longitude
     ) {
       storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
       storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);

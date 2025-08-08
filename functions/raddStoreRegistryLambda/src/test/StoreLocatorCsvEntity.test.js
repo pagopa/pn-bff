@@ -83,7 +83,18 @@ describe('StoreLocatorCsvEntity', () => {
   it('should handle null values correctly', async () => {
     const registry = {
       description: null,
-      normalizedAddress: null,
+      normalizedAddress: {
+        addressRow: null,
+        cap: null,
+        city: null,
+        province: null,
+        country: null,
+        latitude: null,
+        longitude: null,
+        biasPoint: {
+          overall: 0.98,
+        },
+      },
       phoneNumber: null,
       openingTime: null,
     };
@@ -106,8 +117,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('');
   });
 
-  // TODO - Will be modified with https://pagopa.atlassian.net/browse/PN-15547
-  it('should add address to wrongAddressesArray when AWS score is below 0.7', async () => {
+  it('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', async () => {
     const registry = {
       ...raddAltApiResponse[0],
       normalizedAddress: {
@@ -120,10 +130,21 @@ describe('StoreLocatorCsvEntity', () => {
 
     const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
 
-    // Here, with PN-15547, we only need to check that result is null
+    expect(result).to.be.undefined;
+  });
 
-    expect(result.longitude).to.equal('');
-    expect(result.latitude).to.equal('');
+  it('should skip address when biasPoint is not available', async () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      normalizedAddress: {
+        ...raddAltApiResponse[0].normalizedAddress,
+        biasPoint: null,
+      },
+    };
+
+    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result).to.be.undefined;
   });
 
   it('should handle malformed opening hours', async () => {
