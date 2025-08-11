@@ -3,6 +3,7 @@ class StoreLocatorCsvEntity {
     this.description = '';
     this.city = '';
     this.address = '';
+    this.normalizedAddress = '';
     this.province = '';
     this.zipCode = '';
     this.phoneNumber = '';
@@ -28,6 +29,11 @@ class StoreLocatorCsvEntity {
 
   setAddress(address) {
     if (address != null) this.address = sanitizeCSVField(address);
+  }
+
+  setNormalizedAddress(normalizedAddress) {
+    if (normalizedAddress != null)
+      this.normalizedAddress = sanitizeCSVField(normalizedAddress);
   }
 
   setProvince(province) {
@@ -157,8 +163,10 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
 
   storeLocatorCsvEntity.setDescription(registry.description);
   if (registry.normalizedAddress) {
+    storeLocatorCsvEntity.setNormalizedAddress(
+      registry.normalizedAddress.addressRow
+    );
     storeLocatorCsvEntity.setCity(registry.normalizedAddress.city);
-    storeLocatorCsvEntity.setAddress(registry.normalizedAddress.addressRow);
     storeLocatorCsvEntity.setProvince(registry.normalizedAddress.province);
     storeLocatorCsvEntity.setZipCode(registry.normalizedAddress.cap);
 
@@ -169,6 +177,12 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
       storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
       storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);
     }
+  }
+
+  if (registry.address) {
+    storeLocatorCsvEntity.setAddress(
+      `${registry.address.addressRow}, ${registry.address.cap} ${registry.address.city}`
+    );
   }
 
   if (registry.phoneNumber) {

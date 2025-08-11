@@ -31,6 +31,13 @@ const raddAltApiResponse = [
     partnerType: 'CAF',
     creationTimestamp: '2024-03-25T11:00:00Z',
     updateTimestamp: '2024-03-25T11:00:00Z',
+    address: {
+      addressRow: 'VIA PIAZZA DEL DUOMO 1',
+      cap: '20121',
+      city: 'MILANO',
+      province: 'RM',
+      country: 'ITALIA',
+    },
   },
   {
     normalizedAddress: {
@@ -63,6 +70,13 @@ const raddAltApiResponse = [
     partnerType: 'CAF',
     creationTimestamp: '2024-05-01T09:00:00Z',
     updateTimestamp: '2024-05-15T14:20:00Z',
+    address: {
+      addressRow: 'VIA TOLEDO 256',
+      cap: '80134',
+      city: 'NAPOLI',
+      province: 'NA',
+      country: 'ITALIA',
+    },
   },
   {
     normalizedAddress: {
@@ -95,6 +109,13 @@ const raddAltApiResponse = [
     partnerType: 'CAF',
     creationTimestamp: '2023-12-01T15:30:00Z',
     updateTimestamp: '2024-02-20T10:00:00Z',
+    address: {
+      addressRow: 'VIALE DELLA REPUBBLICA 50',
+      cap: '70125',
+      city: 'BARI',
+      province: 'BA',
+      country: 'ITALIA',
+    },
   },
   {
     normalizedAddress: {
@@ -127,6 +148,13 @@ const raddAltApiResponse = [
     partnerType: 'CAF',
     creationTimestamp: '2023-09-20T08:00:00Z',
     updateTimestamp: '2023-10-01T09:00:00Z',
+    address: {
+      addressRow: 'VIA GARIBALDI 10',
+      cap: '10122',
+      city: 'TORINO',
+      province: 'TO',
+      country: 'ITALIA',
+    },
   },
   {
     normalizedAddress: {
@@ -158,6 +186,13 @@ const raddAltApiResponse = [
     partnerType: 'CAF',
     creationTimestamp: '2024-05-15T12:00:00Z',
     updateTimestamp: '2024-05-15T12:00:00Z',
+    address: {
+      addressRow: 'VIA DEL PONTE DI RIALTO 1',
+      cap: '30124',
+      city: 'VENEZIA',
+      province: 'VE',
+      country: 'ITALIA',
+    },
   },
 ];
 

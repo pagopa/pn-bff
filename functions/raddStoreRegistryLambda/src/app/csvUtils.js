@@ -2,6 +2,7 @@ const validFieldValue = [
   'description',
   'city',
   'address',
+  'normalizedAddress',
   'province',
   'zipCode',
   'phoneNumber',

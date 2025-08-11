@@ -23,7 +23,8 @@ describe('StoreLocatorCsvEntity', () => {
 
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
-    expect(result.address).to.equal('"Piazza del Duomo 1"');
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
     expect(result.province).to.equal('"MI"');
     expect(result.zipCode).to.equal('"20121"');
     expect(result.longitude).to.equal('"9.1900"');
@@ -97,11 +98,13 @@ describe('StoreLocatorCsvEntity', () => {
       },
       phoneNumber: null,
       openingTime: null,
+      address: null,
     };
 
     const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
+    expect(result.normalizedAddress).to.equal('');
     expect(result.address).to.equal('');
     expect(result.province).to.equal('');
     expect(result.zipCode).to.equal('');
@@ -157,7 +160,8 @@ describe('StoreLocatorCsvEntity', () => {
 
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
-    expect(result.address).to.equal('"Piazza del Duomo 1"');
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
     expect(result.province).to.equal('"MI"');
     expect(result.zipCode).to.equal('"20121"');
     expect(result.longitude).to.equal('"9.1900"');
