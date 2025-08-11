@@ -30,56 +30,15 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('"9.1900"');
     expect(result.latitude).to.equal('"45.4642"');
     // expect(result.phoneNumber).to.equal('"123 456 7890"');
-    expect(result.monday).to.equal('');
-    expect(result.tuesday).to.equal('');
-    expect(result.wednesday).to.equal('');
-    expect(result.thursday).to.equal('');
-    expect(result.friday).to.equal('');
-    expect(result.saturday).to.equal('');
+    expect(result.monday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.tuesday).to.equal('"09:00-13:00"');
+    expect(result.wednesday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.thursday).to.equal('"09:00-13:00"');
+    expect(result.friday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.saturday).to.equal('"09:00-12:00"');
     expect(result.sunday).to.equal('');
-    expect(result.cafOpeningHours).to.equal(
-      '"Lun 09:00-17:00; Gio 09:00-12:00"'
-    );
+    expect(result.rawOpeningHours).to.equal('');
   });
-
-  // TODO - Will be modified with https://pagopa.atlassian.net/browse/PN-15548
-  // it('should map API response correctly when there is only one day in openingTime', async () => {
-  //   const registry = {
-  //     description: 'Test Store',
-  //     address: {
-  //       city: 'Test City',
-  //       addressRow: '123 Test St',
-  //       pr: 'Test Province',
-  //       cap: '12345',
-  //     },
-  //     phoneNumber: '123/456/7890',
-  //     openingTime: 'MON 09:00-17:00#',
-  //   };
-
-  //   mockGeoPlacesResponse(9.1876, 45.4669, 1);
-  //   const { storeRecord: result, malformedRecord } =
-  //     await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-  //   expect(result.description).to.equal('"Test Store"');
-  //   expect(result.city).to.equal('"Test City"');
-  //   expect(result.address).to.equal('"123 Test St"');
-  //   expect(result.province).to.equal('"Test Province"');
-  //   expect(result.zipCode).to.equal('"12345"');
-  //   expect(result.phoneNumber).to.equal('"123 456 7890"');
-  //   expect(result.monday).to.equal('"09:00-17:00"');
-  //   expect(result.tuesday).to.equal('');
-  //   expect(result.wednesday).to.equal('');
-  //   expect(result.thursday).to.equal('');
-  //   expect(result.friday).to.equal('');
-  //   expect(result.saturday).to.equal('');
-  //   expect(result.sunday).to.equal('');
-  //   expect(result.cafOpeningHours).to.equal('');
-  //   expect(result.longitude).to.equal('"9.1876"');
-  //   expect(result.latitude).to.equal('"45.4669"');
-  //   expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-  //   expect(result.region).to.equal('"Lombardia"');
-  //   expect(malformedRecord).to.be.null;
-  // });
 
   it('should handle null values correctly', async () => {
     const registry = {
@@ -97,7 +56,7 @@ describe('StoreLocatorCsvEntity', () => {
         },
       },
       phoneNumber: null,
-      openingTime: null,
+      openingTime: {},
       address: null,
     };
 
@@ -116,6 +75,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
+    expect(result.rawOpeningHours).to.equal('');
     expect(result.latitude).to.equal('');
     expect(result.longitude).to.equal('');
   });
@@ -173,7 +133,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.cafOpeningHours).to.equal(
+    expect(result.rawOpeningHours).to.equal(
       '"Lunedi dalle 10 alle 12:00 ; 14:00"'
     );
   });
