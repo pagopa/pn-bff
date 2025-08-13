@@ -51,7 +51,31 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
+const getOpeningTimeByDay = (openingTimeObj) => {
+  const times = new Array(7).fill(null);
+
+  const dayMapping = {
+    lun: 0,
+    mar: 1,
+    mer: 2,
+    gio: 3,
+    ven: 4,
+    sab: 5,
+    dom: 6,
+  };
+
+  for (const [dayKey, hours] of Object.entries(openingTimeObj)) {
+    const dayIndex = dayMapping[dayKey.toLowerCase()];
+    if (dayIndex !== undefined) {
+      times[dayIndex] = hours;
+    }
+  }
+
+  return times;
+};
+
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
+  getOpeningTimeByDay,
 };

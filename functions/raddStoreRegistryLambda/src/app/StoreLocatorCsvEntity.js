@@ -1,3 +1,5 @@
+const { getOpeningTimeByDay } = require('./csvUtils');
+
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
@@ -106,29 +108,6 @@ const sanitizeCSVField = (field) => {
   const escapedField = cleanedField.replaceAll('"', '""');
 
   return `"${escapedField}"`;
-};
-
-const getOpeningTimeByDay = (openingTimeObj) => {
-  const times = new Array(7).fill(null);
-
-  const dayMapping = {
-    lun: 0,
-    mar: 1,
-    mer: 2,
-    gio: 3,
-    ven: 4,
-    sab: 5,
-    dom: 6,
-  };
-
-  for (const [dayKey, hours] of Object.entries(openingTimeObj)) {
-    const dayIndex = dayMapping[dayKey.toLowerCase()];
-    if (dayIndex !== undefined) {
-      times[dayIndex] = hours;
-    }
-  }
-
-  return times;
 };
 
 /**
