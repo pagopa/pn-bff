@@ -1,4 +1,6 @@
 const validFieldValue = [
+  'locationId',
+  'partnerId',
   'description',
   'city',
   'address',
@@ -15,7 +17,10 @@ const validFieldValue = [
   'sunday',
   'latitude',
   'longitude',
-  'cafOpeningHours',
+  'rawOpeningHours',
+  'email',
+  'website',
+  'appointmentRequired',
 ];
 
 function validateCsvConfiguration(csvConfiguration) {
