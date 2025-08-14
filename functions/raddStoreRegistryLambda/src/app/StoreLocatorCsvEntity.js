@@ -1,14 +1,16 @@
-const { getOpeningTimeByDay } = require('./csvUtils');
+const { sanitizeCSVField, getOpeningTimeByDay } = require('./csvUtils');
 
 class StoreLocatorCsvEntity {
   constructor() {
+    this.locationId = '';
+    this.partnerId = '';
     this.description = '';
     this.city = '';
     this.address = '';
     this.normalizedAddress = '';
     this.province = '';
     this.zipCode = '';
-    this.phoneNumber = '';
+    this.phoneNumbers = '';
     this.monday = '';
     this.tuesday = '';
     this.wednesday = '';
@@ -19,6 +21,17 @@ class StoreLocatorCsvEntity {
     this.rawOpeningHours = '';
     this.latitude = '';
     this.longitude = '';
+    this.email = '';
+    this.website = '';
+    this.appointmentRequired = false;
+  }
+
+  setLocationId(locationId) {
+    if (locationId != null) this.locationId = sanitizeCSVField(locationId);
+  }
+
+  setPartnerId(partnerId) {
+    if (partnerId != null) this.partnerId = sanitizeCSVField(partnerId);
   }
 
   setDescription(description) {
@@ -46,8 +59,9 @@ class StoreLocatorCsvEntity {
     if (zipCode != null) this.zipCode = sanitizeCSVField(zipCode);
   }
 
-  setPhoneNumber(phoneNumber) {
-    if (phoneNumber != null) this.phoneNumber = sanitizeCSVField(phoneNumber);
+  setPhoneNumbers(phoneNumbers) {
+    if (phoneNumbers != null)
+      this.phoneNumbers = sanitizeCSVField(phoneNumbers);
   }
 
   setMonday(monday) {
@@ -90,25 +104,19 @@ class StoreLocatorCsvEntity {
   setLongitude(longitude) {
     if (longitude != null) this.longitude = sanitizeCSVField(longitude);
   }
+
+  setEmail(email) {
+    if (email != null) this.email = sanitizeCSVField(email);
+  }
+
+  setWebsite(website) {
+    if (website != null) this.website = sanitizeCSVField(website);
+  }
+
+  setAppointmentRequired(appointmentRequired) {
+    this.appointmentRequired = Boolean(appointmentRequired);
+  }
 }
-
-const sanitizeCSVField = (field) => {
-  if (field == null) return '';
-
-  const fieldStr = String(field).trim();
-
-  if (fieldStr === '') return '';
-
-  const cleanedField = fieldStr
-    .replaceAll('\n', ' ')
-    .replaceAll('\r', ' ')
-    .replaceAll('\t', ' ')
-    .replaceAll(/\s+/g, ' ');
-
-  const escapedField = cleanedField.replaceAll('"', '""');
-
-  return `"${escapedField}"`;
-};
 
 /**
  * Returns a StoreLocatorCsvEntity instance if the awsScore exceeds the malformedAddressThreshold
@@ -116,7 +124,7 @@ const sanitizeCSVField = (field) => {
  *
  * @param registry - The raw registry to be mapped into a StoreLocatorCsvEntity
  */
-const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   const malformedAddressThreshold = Number(
     process.env.MALFORMED_ADDRESS_THRESHOLD
   );
@@ -130,6 +138,14 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
 
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
+  if (registry.locationId) {
+    storeLocatorCsvEntity.setLocationId(registry.locationId);
+  }
+
+  if (registry.partnerId) {
+    storeLocatorCsvEntity.setPartnerId(registry.partnerId);
+  }
+
   storeLocatorCsvEntity.setDescription(registry.description);
   if (registry.normalizedAddress) {
     storeLocatorCsvEntity.setNormalizedAddress(
@@ -138,14 +154,8 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setCity(registry.normalizedAddress.city);
     storeLocatorCsvEntity.setProvince(registry.normalizedAddress.province);
     storeLocatorCsvEntity.setZipCode(registry.normalizedAddress.cap);
-
-    if (
-      registry.normalizedAddress.latitude &&
-      registry.normalizedAddress.longitude
-    ) {
-      storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
-      storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);
-    }
+    storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
+    storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);
   }
 
   if (registry.address) {
@@ -154,9 +164,9 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     );
   }
 
-  if (registry.phoneNumber) {
-    storeLocatorCsvEntity.setPhoneNumber(
-      registry.phoneNumber.replace(/\//g, ' ')
+  if (registry.phoneNumbers) {
+    storeLocatorCsvEntity.setPhoneNumbers(
+      registry.phoneNumbers.join('_').replace(/\//g, ' ')
     );
   }
 
@@ -185,7 +195,22 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     }
   }
 
+  if (registry.email) {
+    storeLocatorCsvEntity.setEmail(registry.email);
+  }
+
+  if (registry.website) {
+    storeLocatorCsvEntity.setWebsite(registry.website);
+  }
+
+  if (registry.appointmentRequired !== undefined) {
+    storeLocatorCsvEntity.setAppointmentRequired(registry.appointmentRequired);
+  }
+
   return storeLocatorCsvEntity;
 };
 
-module.exports = { mapApiResponseToStoreLocatorCsvEntities, sanitizeCSVField };
+module.exports = {
+  mapApiResponseToStoreLocatorCsvEntities,
+  sanitizeCSVField,
+};

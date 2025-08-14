@@ -20,7 +20,7 @@ const raddAltApiResponse = [
     partnerId: '11223344556',
     locationId: 'LOC-54321',
     description: 'CAF Milano',
-    phoneNumbers: ['+390212345678'],
+    phoneNumbers: ['0212345678'],
     email: 'milano@mail.it',
     openingTime: {
       lun: '09:00-13:00, 14:00-18:00',

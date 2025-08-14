@@ -2,7 +2,6 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const {
   mapApiResponseToStoreLocatorCsvEntities,
-  sanitizeCSVField,
 } = require('../app/StoreLocatorCsvEntity');
 const { setupEnv } = require('./utils/test.utils');
 const { raddAltApiResponse } = require('../__mocks__/registries.mock');
@@ -16,11 +15,13 @@ describe('StoreLocatorCsvEntity', () => {
     sinon.restore();
   });
 
-  it('should map API response correctly', async () => {
+  it('should map API response correctly', () => {
     const registry = raddAltApiResponse[0];
 
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
+    expect(result.locationId).to.equal('"LOC-54321"');
+    expect(result.partnerId).to.equal('"11223344556"');
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
     expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
@@ -29,7 +30,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.zipCode).to.equal('"20121"');
     expect(result.longitude).to.equal('"9.1900"');
     expect(result.latitude).to.equal('"45.4642"');
-    // expect(result.phoneNumber).to.equal('"123 456 7890"');
+    expect(result.phoneNumbers).to.equal('"0212345678"');
     expect(result.monday).to.equal('"09:00-13:00, 14:00-18:00"');
     expect(result.tuesday).to.equal('"09:00-13:00"');
     expect(result.wednesday).to.equal('"09:00-13:00, 14:00-18:00"');
@@ -38,10 +39,15 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.saturday).to.equal('"09:00-12:00"');
     expect(result.sunday).to.equal('');
     expect(result.rawOpeningHours).to.equal('');
+    expect(result.email).to.equal('"milano@mail.it"');
+    expect(result.website).to.equal('"https://www.mock-website.it"');
+    expect(result.appointmentRequired).to.be.false;
   });
 
-  it('should handle null values correctly', async () => {
+  it('should handle null values correctly', () => {
     const registry = {
+      locationId: null,
+      partnerId: null,
       description: null,
       normalizedAddress: {
         addressRow: null,
@@ -55,19 +61,24 @@ describe('StoreLocatorCsvEntity', () => {
           overall: 0.98,
         },
       },
-      phoneNumber: null,
-      openingTime: {},
+      phoneNumbers: null,
+      openingTime: null,
       address: null,
+      email: null,
+      website: null,
+      appointmentRequired: undefined,
     };
 
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.locationId).to.equal('');
+    expect(result.partnerId).to.equal('');
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
     expect(result.normalizedAddress).to.equal('');
     expect(result.address).to.equal('');
     expect(result.province).to.equal('');
     expect(result.zipCode).to.equal('');
-    expect(result.phoneNumber).to.equal('');
+    expect(result.phoneNumbers).to.equal('');
     expect(result.monday).to.equal('');
     expect(result.tuesday).to.equal('');
     expect(result.wednesday).to.equal('');
@@ -78,9 +89,12 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.rawOpeningHours).to.equal('');
     expect(result.latitude).to.equal('');
     expect(result.longitude).to.equal('');
+    expect(result.email).to.equal('');
+    expect(result.website).to.equal('');
+    expect(result.appointmentRequired).to.be.false;
   });
 
-  it('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', async () => {
+  it('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', () => {
     const registry = {
       ...raddAltApiResponse[0],
       normalizedAddress: {
@@ -91,12 +105,12 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result).to.be.undefined;
   });
 
-  it('should skip address when biasPoint is not available', async () => {
+  it('should skip address when biasPoint is not available', () => {
     const registry = {
       ...raddAltApiResponse[0],
       normalizedAddress: {
@@ -105,18 +119,18 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result).to.be.undefined;
   });
 
-  it('should handle malformed opening hours', async () => {
+  it('should handle malformed opening hours', () => {
     const registry = {
       ...raddAltApiResponse[0],
       openingTime: 'Lunedi dalle 10 alle 12:00 ; 14:00',
     };
 
-    const result = await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
@@ -137,46 +151,48 @@ describe('StoreLocatorCsvEntity', () => {
       '"Lunedi dalle 10 alle 12:00 ; 14:00"'
     );
   });
-});
 
-describe('sanitizeCSVField', () => {
-  it('should return empty string for null or undefined', () => {
-    expect(sanitizeCSVField(null)).to.equal('');
-    expect(sanitizeCSVField(undefined)).to.equal('');
+  it('should handle unkown key in opening hours', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      openingTime: {
+        monday: '09:00-13:00, 14:00-18:00',
+      },
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.monday).to.equal('');
   });
 
-  it('should return empty string for empty string', () => {
-    expect(sanitizeCSVField('')).to.equal('');
+  it('should handle multiple phone numbers', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: ['0212345678', '0298765432'],
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.phoneNumbers).to.equal('"0212345678_0298765432"');
   });
 
-  it('should return empty string for whitespace-only strings', () => {
-    expect(sanitizeCSVField('   ')).to.equal('');
+  it('should handle phone numbers with forward slashes', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: ['021/2345678', '029/8765432'],
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.phoneNumbers).to.equal('"021 2345678_029 8765432"');
   });
 
-  it('should wrap simple strings in quotes', () => {
-    expect(sanitizeCSVField('hello')).to.equal('"hello"');
-    expect(sanitizeCSVField('Test Store')).to.equal('"Test Store"');
-    expect(sanitizeCSVField('123')).to.equal('"123"');
-  });
+  it('should handle empty phone numbers array', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: [],
+    };
 
-  it('should trim whitespace and wrap in quotes', () => {
-    expect(sanitizeCSVField('  hello  ')).to.equal('"hello"');
-    expect(sanitizeCSVField('\t  Test Store  \n')).to.equal('"Test Store"');
-  });
-
-  it('should handle semicolons (CSV delimiters)', () => {
-    expect(sanitizeCSVField('Mon-Fri 9:00-17:00; Sat 10:00-14:00')).to.equal(
-      '"Mon-Fri 9:00-17:00; Sat 10:00-14:00"'
-    );
-  });
-
-  it('should replace newlines with spaces', () => {
-    expect(sanitizeCSVField('Line 1\nLine 2')).to.equal('"Line 1 Line 2"');
-  });
-
-  it('should replace tabs with spaces', () => {
-    expect(sanitizeCSVField('Tab\tSeparated\tValues')).to.equal(
-      '"Tab Separated Values"'
-    );
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.phoneNumbers).to.equal('');
   });
 });
