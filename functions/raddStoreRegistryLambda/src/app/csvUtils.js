@@ -2,9 +2,8 @@ const validFieldValue = [
   'description',
   'city',
   'address',
-  'awsAddress',
+  'normalizedAddress',
   'province',
-  'region',
   'zipCode',
   'phoneNumber',
   'monday',
@@ -18,21 +17,6 @@ const validFieldValue = [
   'longitude',
   'cafOpeningHours',
 ];
-
-const wrongAddressesConfig = [
-  { header: 'descrizione', field: 'description' },
-  { header: 'indirizzo', field: 'address' },
-  { header: 'citta', field: 'city' },
-  { header: 'provincia', field: 'province' },
-  { header: 'indirizzo AWS', field: 'awsAddress' },
-  { header: 'score AWS', field: 'awsScore' },
-  { header: 'latitudine', field: 'awsLatitude' },
-  { header: 'longitudine', field: 'awsLongitude' },
-];
-
-const wrongAddressesCsvHeader = wrongAddressesConfig
-  .map((config) => config.header)
-  .join(';');
 
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
@@ -70,6 +54,4 @@ function createCSVContent(configs, data) {
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
-  wrongAddressesCsvHeader,
-  wrongAddressesConfig,
 };

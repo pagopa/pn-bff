@@ -1,13 +1,10 @@
-const { getCoordinatesForAddress } = require('./geocodeUtils');
-
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
     this.city = '';
     this.address = '';
-    this.awsAddress = '';
+    this.normalizedAddress = '';
     this.province = '';
-    this.region = '';
     this.zipCode = '';
     this.phoneNumber = '';
     this.monday = '';
@@ -34,16 +31,13 @@ class StoreLocatorCsvEntity {
     if (address != null) this.address = sanitizeCSVField(address);
   }
 
-  setAwsAddress(awsAddress) {
-    if (awsAddress != null) this.awsAddress = sanitizeCSVField(awsAddress);
+  setNormalizedAddress(normalizedAddress) {
+    if (normalizedAddress != null)
+      this.normalizedAddress = sanitizeCSVField(normalizedAddress);
   }
 
   setProvince(province) {
     if (province != null) this.province = sanitizeCSVField(province);
-  }
-
-  setRegion(region) {
-    if (region != null) this.region = sanitizeCSVField(region);
   }
 
   setZipCode(zipCode) {
@@ -159,12 +153,30 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
   storeLocatorCsvEntity.setDescription(registry.description);
-  if (registry.address) {
-    storeLocatorCsvEntity.setCity(registry.address.city);
-    storeLocatorCsvEntity.setAddress(registry.address.addressRow);
-    storeLocatorCsvEntity.setProvince(registry.address.pr);
-    storeLocatorCsvEntity.setZipCode(registry.address.cap);
+  if (registry.normalizedAddress) {
+    storeLocatorCsvEntity.setNormalizedAddress(
+      registry.normalizedAddress.addressRow
+    );
+    storeLocatorCsvEntity.setCity(registry.normalizedAddress.city);
+    storeLocatorCsvEntity.setProvince(registry.normalizedAddress.province);
+    storeLocatorCsvEntity.setZipCode(registry.normalizedAddress.cap);
+
+    if (
+      registry.normalizedAddress.latitude &&
+      registry.normalizedAddress.longitude &&
+      registry.normalizedAddress.biasPoint.overall > malformedAddressThreshold
+    ) {
+      storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
+      storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);
+    }
   }
+
+  if (registry.address) {
+    storeLocatorCsvEntity.setAddress(
+      `${registry.address.addressRow}, ${registry.address.cap} ${registry.address.city}`
+    );
+  }
+
   if (registry.phoneNumber) {
     storeLocatorCsvEntity.setPhoneNumber(
       registry.phoneNumber.replace(/\//g, ' ')
@@ -186,47 +198,7 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
   }
 
-  try {
-    const coordinatesResponse = await getCoordinatesForAddress(
-      registry.address.addressRow,
-      registry.address.pr,
-      registry.address.cap,
-      registry.address.city
-    );
-
-    if (
-      coordinatesResponse &&
-      coordinatesResponse.awsScore > malformedAddressThreshold &&
-      coordinatesResponse.awsLatitude &&
-      coordinatesResponse.awsLongitude
-    ) {
-      storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
-      storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
-      storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
-      storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
-    } else {
-      return {
-        storeRecord: null,
-        malformedRecord: {
-          ...storeLocatorCsvEntity,
-          ...coordinatesResponse,
-        },
-      };
-    }
-  } catch (e) {
-    console.log(e);
-    return {
-      storeRecord: null,
-      malformedRecord: {
-        ...storeLocatorCsvEntity,
-      },
-    };
-  }
-
-  return {
-    storeRecord: storeLocatorCsvEntity,
-    malformedRecord: null,
-  };
+  return storeLocatorCsvEntity;
 };
 
 module.exports = { mapApiResponseToStoreLocatorCsvEntities, sanitizeCSVField };
