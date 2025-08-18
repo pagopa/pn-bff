@@ -1,6 +1,7 @@
 const validFieldValue = [
   'locationId',
   'partnerId',
+  'externalCodes',
   'description',
   'city',
   'address',

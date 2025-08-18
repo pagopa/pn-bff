@@ -32,7 +32,7 @@ const raddAltApiResponse = [
     },
     startValidity: '2024-04-01',
     endValidity: '2025-04-01',
-    externalCodes: ['MI-101'],
+    externalCodes: ['MI-101', 'MI-102'],
     appointmentRequired: false,
     website: 'https://www.mock-website.it',
     partnerType: 'CAF',

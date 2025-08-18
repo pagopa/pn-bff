@@ -4,6 +4,7 @@ class StoreLocatorCsvEntity {
   constructor() {
     this.locationId = '';
     this.partnerId = '';
+    this.externalCodes = '';
     this.description = '';
     this.city = '';
     this.address = '';
@@ -32,6 +33,11 @@ class StoreLocatorCsvEntity {
 
   setPartnerId(partnerId) {
     if (partnerId != null) this.partnerId = sanitizeCSVField(partnerId);
+  }
+
+  setExternalCodes(externalCodes) {
+    if (externalCodes != null)
+      this.externalCodes = sanitizeCSVField(externalCodes);
   }
 
   setDescription(description) {
@@ -144,6 +150,12 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
 
   if (registry.partnerId) {
     storeLocatorCsvEntity.setPartnerId(registry.partnerId);
+  }
+
+  if (registry.externalCodes) {
+    storeLocatorCsvEntity.setExternalCodes(
+      registry.externalCodes.join(' , ').replace(/\//g, ' ')
+    );
   }
 
   storeLocatorCsvEntity.setDescription(registry.description);

@@ -22,6 +22,7 @@ describe('StoreLocatorCsvEntity', () => {
 
     expect(result.locationId).to.equal('"LOC-54321"');
     expect(result.partnerId).to.equal('"11223344556"');
+    expect(result.externalCodes).to.equal('"MI-101 , MI-102"');
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
     expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
@@ -48,6 +49,7 @@ describe('StoreLocatorCsvEntity', () => {
     const registry = {
       locationId: null,
       partnerId: null,
+      externalCodes: null,
       description: null,
       normalizedAddress: {
         addressRow: null,
@@ -72,6 +74,7 @@ describe('StoreLocatorCsvEntity', () => {
     const result = mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.locationId).to.equal('');
     expect(result.partnerId).to.equal('');
+    expect(result.externalCodes).to.equal('');
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
     expect(result.normalizedAddress).to.equal('');
