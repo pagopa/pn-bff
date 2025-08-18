@@ -42,7 +42,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.rawOpeningHours).to.equal('');
     expect(result.email).to.equal('"milano@mail.it"');
     expect(result.website).to.equal('"https://www.mock-website.it"');
-    expect(result.appointmentRequired).to.be.false;
+    expect(result.appointmentRequired).to.equal('"no"');
   });
 
   it('should handle null values correctly', () => {
@@ -94,7 +94,7 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.longitude).to.equal('');
     expect(result.email).to.equal('');
     expect(result.website).to.equal('');
-    expect(result.appointmentRequired).to.be.false;
+    expect(result.appointmentRequired).to.equal('');
   });
 
   it('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', () => {

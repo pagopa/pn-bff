@@ -24,7 +24,7 @@ class StoreLocatorCsvEntity {
     this.longitude = '';
     this.email = '';
     this.website = '';
-    this.appointmentRequired = false;
+    this.appointmentRequired = '';
   }
 
   setLocationId(locationId) {
@@ -120,7 +120,8 @@ class StoreLocatorCsvEntity {
   }
 
   setAppointmentRequired(appointmentRequired) {
-    this.appointmentRequired = Boolean(appointmentRequired);
+    if (appointmentRequired != null)
+      this.appointmentRequired = sanitizeCSVField(appointmentRequired);
   }
 }
 
@@ -216,7 +217,9 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   }
 
   if (registry.appointmentRequired !== undefined) {
-    storeLocatorCsvEntity.setAppointmentRequired(registry.appointmentRequired);
+    storeLocatorCsvEntity.setAppointmentRequired(
+      registry.appointmentRequired ? 'si' : 'no'
+    );
   }
 
   return storeLocatorCsvEntity;
