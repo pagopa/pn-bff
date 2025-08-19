@@ -68,7 +68,7 @@ describe('StoreLocatorCsvEntity', () => {
       address: null,
       email: null,
       website: null,
-      appointmentRequired: undefined,
+      appointmentRequired: null,
     };
 
     const result = mapApiResponseToStoreLocatorCsvEntities(registry);
@@ -197,5 +197,15 @@ describe('StoreLocatorCsvEntity', () => {
 
     const result = mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.phoneNumbers).to.equal('');
+  });
+
+  it('should handle missing appointmentRequired', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      appointmentRequired: undefined,
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.appointmentRequired).to.equal('');
   });
 });

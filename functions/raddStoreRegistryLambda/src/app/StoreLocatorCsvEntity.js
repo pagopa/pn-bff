@@ -216,7 +216,10 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     storeLocatorCsvEntity.setWebsite(registry.website);
   }
 
-  if (registry.appointmentRequired !== undefined) {
+  if (
+    registry.appointmentRequired !== null &&
+    registry.appointmentRequired !== undefined
+  ) {
     storeLocatorCsvEntity.setAppointmentRequired(
       registry.appointmentRequired ? 'si' : 'no'
     );
