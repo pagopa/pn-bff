@@ -1,3 +1,5 @@
+const { getOpeningTimeByDay } = require('./csvUtils');
+
 class StoreLocatorCsvEntity {
   constructor() {
     this.description = '';
@@ -14,7 +16,7 @@ class StoreLocatorCsvEntity {
     this.friday = '';
     this.saturday = '';
     this.sunday = '';
-    this.cafOpeningHours = '';
+    this.rawOpeningHours = '';
     this.latitude = '';
     this.longitude = '';
   }
@@ -76,9 +78,9 @@ class StoreLocatorCsvEntity {
     if (sunday != null) this.sunday = sanitizeCSVField(sunday);
   }
 
-  setCafOpeningHours(cafOpeningHours) {
-    if (cafOpeningHours != null)
-      this.cafOpeningHours = sanitizeCSVField(cafOpeningHours);
+  setRawOpeningHours(rawOpeningHours) {
+    if (rawOpeningHours != null)
+      this.rawOpeningHours = sanitizeCSVField(rawOpeningHours);
   }
 
   setLatitude(latitude) {
@@ -106,39 +108,6 @@ const sanitizeCSVField = (field) => {
   const escapedField = cleanedField.replaceAll('"', '""');
 
   return `"${escapedField}"`;
-};
-
-const getOpeningTimeByDay = (fullOpeningTime) => {
-  const times = new Array(7).fill(null);
-  if (fullOpeningTime) {
-    const days = fullOpeningTime.split('#');
-    for (let day of days) {
-      switch (day.substring(0, 3).toUpperCase()) {
-        case 'MON':
-          times[0] = day.substring(4);
-          break;
-        case 'TUE':
-          times[1] = day.substring(4);
-          break;
-        case 'WED':
-          times[2] = day.substring(4);
-          break;
-        case 'THU':
-          times[3] = day.substring(4);
-          break;
-        case 'FRI':
-          times[4] = day.substring(4);
-          break;
-        case 'SAT':
-          times[5] = day.substring(4);
-          break;
-        case 'SUN':
-          times[6] = day.substring(4);
-          break;
-      }
-    }
-  }
-  return times;
 };
 
 /**
@@ -191,19 +160,29 @@ const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
     );
   }
 
+  /**
+   * The property openingTime can be either an object or a string
+   * An object is returned when openingTime is properly formatted
+   * A string is returned when openingTime is not properly formatted,
+   * so the raw string is saved instead
+   */
   if (registry.openingTime) {
-    const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
-    if (formattedOpeningTime.every((el) => el === null)) {
-      storeLocatorCsvEntity.setCafOpeningHours(registry.openingTime);
-    }
+    if (
+      typeof registry.openingTime === 'object' &&
+      registry.openingTime !== null
+    ) {
+      const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
 
-    storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
-    storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
-    storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
-    storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
-    storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
-    storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
-    storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
+      storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
+      storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
+      storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
+      storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
+      storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
+      storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
+      storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
+    } else if (typeof registry.openingTime === 'string') {
+      storeLocatorCsvEntity.setRawOpeningHours(registry.openingTime);
+    }
   }
 
   return storeLocatorCsvEntity;
