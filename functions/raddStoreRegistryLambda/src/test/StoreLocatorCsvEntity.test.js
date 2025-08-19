@@ -56,7 +56,7 @@ describe('StoreLocatorCsvEntity', () => {
         },
       },
       phoneNumber: null,
-      openingTime: {},
+      openingTime: null,
       address: null,
     };
 

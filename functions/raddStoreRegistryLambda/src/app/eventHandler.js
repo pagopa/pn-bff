@@ -57,9 +57,11 @@ exports.handleEvent = async () => {
       'Fetched API registries response size:',
       apiResponse.registries.length
     );
-    const records = registries.map((registry) =>
-      storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
-    );
+    const records = registries
+      .map((registry) =>
+        storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
+      )
+      .filter((record) => record !== undefined);
 
     csvContent += csvUtils.createCSVContent(csvConfiguration.configs, records);
 
