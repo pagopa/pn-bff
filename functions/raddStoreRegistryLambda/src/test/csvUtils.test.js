@@ -1,6 +1,7 @@
 const {
   validateCsvConfiguration,
   createCSVContent,
+  sanitizeCSVField,
   getOpeningTimeByDay,
 } = require('../app/csvUtils');
 const chai = require('chai');
@@ -152,5 +153,47 @@ describe('getOpeningTimeByDay', () => {
     expect(result[1]).to.be.null;
     expect(result[2]).to.equal('11:00-16:00');
     expect(result.filter((time) => time !== null)).to.have.length(2);
+  });
+});
+
+describe('sanitizeCSVField', () => {
+  it('should return empty string for null or undefined', () => {
+    expect(sanitizeCSVField(null)).to.equal('');
+    expect(sanitizeCSVField(undefined)).to.equal('');
+  });
+
+  it('should return empty string for empty string', () => {
+    expect(sanitizeCSVField('')).to.equal('');
+  });
+
+  it('should return empty string for whitespace-only strings', () => {
+    expect(sanitizeCSVField('   ')).to.equal('');
+  });
+
+  it('should wrap simple strings in quotes', () => {
+    expect(sanitizeCSVField('hello')).to.equal('"hello"');
+    expect(sanitizeCSVField('Test Store')).to.equal('"Test Store"');
+    expect(sanitizeCSVField('123')).to.equal('"123"');
+  });
+
+  it('should trim whitespace and wrap in quotes', () => {
+    expect(sanitizeCSVField('  hello  ')).to.equal('"hello"');
+    expect(sanitizeCSVField('\t  Test Store  \n')).to.equal('"Test Store"');
+  });
+
+  it('should handle semicolons (CSV delimiters)', () => {
+    expect(sanitizeCSVField('Mon-Fri 9:00-17:00; Sat 10:00-14:00')).to.equal(
+      '"Mon-Fri 9:00-17:00; Sat 10:00-14:00"'
+    );
+  });
+
+  it('should replace newlines with spaces', () => {
+    expect(sanitizeCSVField('Line 1\nLine 2')).to.equal('"Line 1 Line 2"');
+  });
+
+  it('should replace tabs with spaces', () => {
+    expect(sanitizeCSVField('Tab\tSeparated\tValues')).to.equal(
+      '"Tab Separated Values"'
+    );
   });
 });

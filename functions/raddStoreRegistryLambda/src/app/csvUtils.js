@@ -1,11 +1,14 @@
 const validFieldValue = [
+  'locationId',
+  'partnerId',
+  'externalCodes',
   'description',
   'city',
   'address',
   'normalizedAddress',
   'province',
   'zipCode',
-  'phoneNumber',
+  'phoneNumbers',
   'monday',
   'tuesday',
   'wednesday',
@@ -15,7 +18,10 @@ const validFieldValue = [
   'sunday',
   'latitude',
   'longitude',
-  'cafOpeningHours',
+  'rawOpeningHours',
+  'email',
+  'website',
+  'appointmentRequired',
 ];
 
 function validateCsvConfiguration(csvConfiguration) {
@@ -73,9 +79,27 @@ const getOpeningTimeByDay = (openingTimeObj) => {
 
   return times;
 };
+function sanitizeCSVField(field) {
+  if (field == null) return '';
+
+  const fieldStr = String(field).trim();
+
+  if (fieldStr === '') return '';
+
+  const cleanedField = fieldStr
+    .replaceAll('\n', ' ')
+    .replaceAll('\r', ' ')
+    .replaceAll('\t', ' ')
+    .replaceAll(/\s+/g, ' ');
+
+  const escapedField = cleanedField.replaceAll('"', '""');
+
+  return `"${escapedField}"`;
+}
 
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
   getOpeningTimeByDay,
+  sanitizeCSVField,
 };
