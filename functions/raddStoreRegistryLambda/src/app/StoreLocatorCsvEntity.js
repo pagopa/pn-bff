@@ -1,15 +1,17 @@
-const { getCoordinatesForAddress } = require('./geocodeUtils');
+const { sanitizeCSVField, getOpeningTimeByDay } = require('./csvUtils');
 
 class StoreLocatorCsvEntity {
   constructor() {
+    this.locationId = '';
+    this.partnerId = '';
+    this.externalCodes = '';
     this.description = '';
     this.city = '';
     this.address = '';
-    this.awsAddress = '';
+    this.normalizedAddress = '';
     this.province = '';
-    this.region = '';
     this.zipCode = '';
-    this.phoneNumber = '';
+    this.phoneNumbers = '';
     this.monday = '';
     this.tuesday = '';
     this.wednesday = '';
@@ -17,9 +19,25 @@ class StoreLocatorCsvEntity {
     this.friday = '';
     this.saturday = '';
     this.sunday = '';
-    this.cafOpeningHours = '';
+    this.rawOpeningHours = '';
     this.latitude = '';
     this.longitude = '';
+    this.email = '';
+    this.website = '';
+    this.appointmentRequired = '';
+  }
+
+  setLocationId(locationId) {
+    if (locationId != null) this.locationId = sanitizeCSVField(locationId);
+  }
+
+  setPartnerId(partnerId) {
+    if (partnerId != null) this.partnerId = sanitizeCSVField(partnerId);
+  }
+
+  setExternalCodes(externalCodes) {
+    if (externalCodes != null)
+      this.externalCodes = sanitizeCSVField(externalCodes);
   }
 
   setDescription(description) {
@@ -34,24 +52,22 @@ class StoreLocatorCsvEntity {
     if (address != null) this.address = sanitizeCSVField(address);
   }
 
-  setAwsAddress(awsAddress) {
-    if (awsAddress != null) this.awsAddress = sanitizeCSVField(awsAddress);
+  setNormalizedAddress(normalizedAddress) {
+    if (normalizedAddress != null)
+      this.normalizedAddress = sanitizeCSVField(normalizedAddress);
   }
 
   setProvince(province) {
     if (province != null) this.province = sanitizeCSVField(province);
   }
 
-  setRegion(region) {
-    if (region != null) this.region = sanitizeCSVField(region);
-  }
-
   setZipCode(zipCode) {
     if (zipCode != null) this.zipCode = sanitizeCSVField(zipCode);
   }
 
-  setPhoneNumber(phoneNumber) {
-    if (phoneNumber != null) this.phoneNumber = sanitizeCSVField(phoneNumber);
+  setPhoneNumbers(phoneNumbers) {
+    if (phoneNumbers != null)
+      this.phoneNumbers = sanitizeCSVField(phoneNumbers);
   }
 
   setMonday(monday) {
@@ -82,9 +98,9 @@ class StoreLocatorCsvEntity {
     if (sunday != null) this.sunday = sanitizeCSVField(sunday);
   }
 
-  setCafOpeningHours(cafOpeningHours) {
-    if (cafOpeningHours != null)
-      this.cafOpeningHours = sanitizeCSVField(cafOpeningHours);
+  setRawOpeningHours(rawOpeningHours) {
+    if (rawOpeningHours != null)
+      this.rawOpeningHours = sanitizeCSVField(rawOpeningHours);
   }
 
   setLatitude(latitude) {
@@ -94,139 +110,125 @@ class StoreLocatorCsvEntity {
   setLongitude(longitude) {
     if (longitude != null) this.longitude = sanitizeCSVField(longitude);
   }
+
+  setEmail(email) {
+    if (email != null) this.email = sanitizeCSVField(email);
+  }
+
+  setWebsite(website) {
+    if (website != null) this.website = sanitizeCSVField(website);
+  }
+
+  setAppointmentRequired(appointmentRequired) {
+    if (appointmentRequired != null)
+      this.appointmentRequired = sanitizeCSVField(appointmentRequired);
+  }
 }
 
-const sanitizeCSVField = (field) => {
-  if (field == null) return '';
-
-  const fieldStr = String(field).trim();
-
-  if (fieldStr === '') return '';
-
-  const cleanedField = fieldStr
-    .replaceAll('\n', ' ')
-    .replaceAll('\r', ' ')
-    .replaceAll('\t', ' ')
-    .replaceAll(/\s+/g, ' ');
-
-  const escapedField = cleanedField.replaceAll('"', '""');
-
-  return `"${escapedField}"`;
-};
-
-const getOpeningTimeByDay = (fullOpeningTime) => {
-  const times = new Array(7).fill(null);
-  if (fullOpeningTime) {
-    const days = fullOpeningTime.split('#');
-    for (let day of days) {
-      switch (day.substring(0, 3).toUpperCase()) {
-        case 'MON':
-          times[0] = day.substring(4);
-          break;
-        case 'TUE':
-          times[1] = day.substring(4);
-          break;
-        case 'WED':
-          times[2] = day.substring(4);
-          break;
-        case 'THU':
-          times[3] = day.substring(4);
-          break;
-        case 'FRI':
-          times[4] = day.substring(4);
-          break;
-        case 'SAT':
-          times[5] = day.substring(4);
-          break;
-        case 'SUN':
-          times[6] = day.substring(4);
-          break;
-      }
-    }
-  }
-  return times;
-};
-
 /**
- * returns an object with: storeRecord if awsScore is over the malformedAddressThreshold otherwise
- * returns a malformedRecord that will be added to malformed addresses CSV.
+ * Returns a StoreLocatorCsvEntity instance if the awsScore exceeds the malformedAddressThreshold
+ * Otherwise, the address will be skipped
+ *
+ * @param registry - The raw registry to be mapped into a StoreLocatorCsvEntity
  */
-const mapApiResponseToStoreLocatorCsvEntities = async (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   const malformedAddressThreshold = Number(
     process.env.MALFORMED_ADDRESS_THRESHOLD
   );
 
+  if (
+    !registry.normalizedAddress.biasPoint?.overall ||
+    registry.normalizedAddress.biasPoint.overall < malformedAddressThreshold
+  ) {
+    return;
+  }
+
   const storeLocatorCsvEntity = new StoreLocatorCsvEntity();
 
+  if (registry.locationId) {
+    storeLocatorCsvEntity.setLocationId(registry.locationId);
+  }
+
+  if (registry.partnerId) {
+    storeLocatorCsvEntity.setPartnerId(registry.partnerId);
+  }
+
+  if (registry.externalCodes) {
+    storeLocatorCsvEntity.setExternalCodes(
+      registry.externalCodes.join(' , ').replace(/\//g, ' ')
+    );
+  }
+
   storeLocatorCsvEntity.setDescription(registry.description);
+  if (registry.normalizedAddress) {
+    storeLocatorCsvEntity.setNormalizedAddress(
+      registry.normalizedAddress.addressRow
+    );
+    storeLocatorCsvEntity.setCity(registry.normalizedAddress.city);
+    storeLocatorCsvEntity.setProvince(registry.normalizedAddress.province);
+    storeLocatorCsvEntity.setZipCode(registry.normalizedAddress.cap);
+    storeLocatorCsvEntity.setLatitude(registry.normalizedAddress.latitude);
+    storeLocatorCsvEntity.setLongitude(registry.normalizedAddress.longitude);
+  }
+
   if (registry.address) {
-    storeLocatorCsvEntity.setCity(registry.address.city);
-    storeLocatorCsvEntity.setAddress(registry.address.addressRow);
-    storeLocatorCsvEntity.setProvince(registry.address.pr);
-    storeLocatorCsvEntity.setZipCode(registry.address.cap);
-  }
-  if (registry.phoneNumber) {
-    storeLocatorCsvEntity.setPhoneNumber(
-      registry.phoneNumber.replace(/\//g, ' ')
+    storeLocatorCsvEntity.setAddress(
+      `${registry.address.addressRow}, ${registry.address.cap} ${registry.address.city}`
     );
   }
 
+  if (registry.phoneNumbers) {
+    storeLocatorCsvEntity.setPhoneNumbers(
+      registry.phoneNumbers.join('_').replace(/\//g, ' ')
+    );
+  }
+
+  /**
+   * The property openingTime can be either an object or a string
+   * An object is returned when openingTime is properly formatted
+   * A string is returned when openingTime is not properly formatted,
+   * so the raw string is saved instead
+   */
   if (registry.openingTime) {
-    const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
-    if (formattedOpeningTime.every((el) => el === null)) {
-      storeLocatorCsvEntity.setCafOpeningHours(registry.openingTime);
-    }
-
-    storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
-    storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
-    storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
-    storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
-    storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
-    storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
-    storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
-  }
-
-  try {
-    const coordinatesResponse = await getCoordinatesForAddress(
-      registry.address.addressRow,
-      registry.address.pr,
-      registry.address.cap,
-      registry.address.city
-    );
-
     if (
-      coordinatesResponse &&
-      coordinatesResponse.awsScore > malformedAddressThreshold &&
-      coordinatesResponse.awsLatitude &&
-      coordinatesResponse.awsLongitude
+      typeof registry.openingTime === 'object' &&
+      registry.openingTime !== null
     ) {
-      storeLocatorCsvEntity.setLatitude(coordinatesResponse.awsLatitude);
-      storeLocatorCsvEntity.setLongitude(coordinatesResponse.awsLongitude);
-      storeLocatorCsvEntity.setAwsAddress(coordinatesResponse.awsAddress);
-      storeLocatorCsvEntity.setRegion(coordinatesResponse.awsAddressRegion);
-    } else {
-      return {
-        storeRecord: null,
-        malformedRecord: {
-          ...storeLocatorCsvEntity,
-          ...coordinatesResponse,
-        },
-      };
+      const formattedOpeningTime = getOpeningTimeByDay(registry.openingTime);
+
+      storeLocatorCsvEntity.setMonday(formattedOpeningTime[0]);
+      storeLocatorCsvEntity.setTuesday(formattedOpeningTime[1]);
+      storeLocatorCsvEntity.setWednesday(formattedOpeningTime[2]);
+      storeLocatorCsvEntity.setThursday(formattedOpeningTime[3]);
+      storeLocatorCsvEntity.setFriday(formattedOpeningTime[4]);
+      storeLocatorCsvEntity.setSaturday(formattedOpeningTime[5]);
+      storeLocatorCsvEntity.setSunday(formattedOpeningTime[6]);
+    } else if (typeof registry.openingTime === 'string') {
+      storeLocatorCsvEntity.setRawOpeningHours(registry.openingTime);
     }
-  } catch (e) {
-    console.log(e);
-    return {
-      storeRecord: null,
-      malformedRecord: {
-        ...storeLocatorCsvEntity,
-      },
-    };
   }
 
-  return {
-    storeRecord: storeLocatorCsvEntity,
-    malformedRecord: null,
-  };
+  if (registry.email) {
+    storeLocatorCsvEntity.setEmail(registry.email);
+  }
+
+  if (registry.website) {
+    storeLocatorCsvEntity.setWebsite(registry.website);
+  }
+
+  if (
+    registry.appointmentRequired !== null &&
+    registry.appointmentRequired !== undefined
+  ) {
+    storeLocatorCsvEntity.setAppointmentRequired(
+      registry.appointmentRequired ? 'si' : 'no'
+    );
+  }
+
+  return storeLocatorCsvEntity;
 };
 
-module.exports = { mapApiResponseToStoreLocatorCsvEntities, sanitizeCSVField };
+module.exports = {
+  mapApiResponseToStoreLocatorCsvEntities,
+  sanitizeCSVField,
+};

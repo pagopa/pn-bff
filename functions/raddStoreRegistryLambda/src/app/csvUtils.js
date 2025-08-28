@@ -1,12 +1,14 @@
 const validFieldValue = [
+  'locationId',
+  'partnerId',
+  'externalCodes',
   'description',
   'city',
   'address',
-  'awsAddress',
+  'normalizedAddress',
   'province',
-  'region',
   'zipCode',
-  'phoneNumber',
+  'phoneNumbers',
   'monday',
   'tuesday',
   'wednesday',
@@ -16,23 +18,11 @@ const validFieldValue = [
   'sunday',
   'latitude',
   'longitude',
-  'cafOpeningHours',
+  'rawOpeningHours',
+  'email',
+  'website',
+  'appointmentRequired',
 ];
-
-const wrongAddressesConfig = [
-  { header: 'descrizione', field: 'description' },
-  { header: 'indirizzo', field: 'address' },
-  { header: 'citta', field: 'city' },
-  { header: 'provincia', field: 'province' },
-  { header: 'indirizzo AWS', field: 'awsAddress' },
-  { header: 'score AWS', field: 'awsScore' },
-  { header: 'latitudine', field: 'awsLatitude' },
-  { header: 'longitudine', field: 'awsLongitude' },
-];
-
-const wrongAddressesCsvHeader = wrongAddressesConfig
-  .map((config) => config.header)
-  .join(';');
 
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
@@ -67,9 +57,49 @@ function createCSVContent(configs, data) {
   return csvContent;
 }
 
+const getOpeningTimeByDay = (openingTimeObj) => {
+  const times = new Array(7).fill(null);
+
+  const dayMapping = {
+    lun: 0,
+    mar: 1,
+    mer: 2,
+    gio: 3,
+    ven: 4,
+    sab: 5,
+    dom: 6,
+  };
+
+  for (const [dayKey, hours] of Object.entries(openingTimeObj)) {
+    const dayIndex = dayMapping[dayKey.toLowerCase()];
+    if (dayIndex !== undefined) {
+      times[dayIndex] = hours;
+    }
+  }
+
+  return times;
+};
+function sanitizeCSVField(field) {
+  if (field == null) return '';
+
+  const fieldStr = String(field).trim();
+
+  if (fieldStr === '') return '';
+
+  const cleanedField = fieldStr
+    .replaceAll('\n', ' ')
+    .replaceAll('\r', ' ')
+    .replaceAll('\t', ' ')
+    .replaceAll(/\s+/g, ' ');
+
+  const escapedField = cleanedField.replaceAll('"', '""');
+
+  return `"${escapedField}"`;
+}
+
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
-  wrongAddressesCsvHeader,
-  wrongAddressesConfig,
+  getOpeningTimeByDay,
+  sanitizeCSVField,
 };

@@ -2,187 +2,86 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const {
   mapApiResponseToStoreLocatorCsvEntities,
-  sanitizeCSVField,
 } = require('../app/StoreLocatorCsvEntity');
-const { mockClient } = require('aws-sdk-client-mock');
-const {
-  GeoPlacesClient,
-  GeocodeCommand,
-} = require('@aws-sdk/client-geo-places');
 const { setupEnv } = require('./utils/test.utils');
+const { raddAltApiResponse } = require('../__mocks__/registries.mock');
 
 describe('StoreLocatorCsvEntity', () => {
-  let placesClientMock;
-
   beforeEach(() => {
     setupEnv();
-    placesClientMock = mockClient(GeoPlacesClient);
   });
 
   afterEach(() => {
     sinon.restore();
-    placesClientMock.reset();
   });
 
-  const mockGeoPlacesResponse = (longitude, latitude, score) => {
-    placesClientMock.on(GeocodeCommand).resolves({
-      ResultItems: [
-        {
-          Title: 'Via Roma 123, Milano (MI), 20100',
-          Position: [longitude, latitude],
-          MatchScores: {
-            Overall: score,
-          },
-          Address: {
-            Region: {
-              Name: 'Lombardia',
-            },
-          },
-        },
-      ],
-    });
-  };
+  it('should map API response correctly', () => {
+    const registry = raddAltApiResponse[0];
 
-  const mockGeoPlacesErrorResponse = () => {
-    placesClientMock.on(GeocodeCommand).rejects(new Error());
-  };
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
-  it('should map API response correctly', async () => {
-    const registry = {
-      description: 'Test Store',
-      address: {
-        city: 'Test City',
-        addressRow: '123 Test St',
-        pr: 'Test Province',
-        cap: '12345',
-      },
-      phoneNumber: '123/456/7890',
-      openingTime:
-        'MON 09:00-17:00#TUE 09:00-17:00#WED 09:00-17:00#THU 09:00-17:00#FRI 09:00-17:00#SAT 10:00-14:00#SUN closed',
-    };
-
-    mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const { storeRecord: result, malformedRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"Test Store"');
-    expect(result.city).to.equal('"Test City"');
-    expect(result.address).to.equal('"123 Test St"');
-    expect(result.province).to.equal('"Test Province"');
-    expect(result.zipCode).to.equal('"12345"');
-    expect(result.phoneNumber).to.equal('"123 456 7890"');
-    expect(result.monday).to.equal('"09:00-17:00"');
-    expect(result.tuesday).to.equal('"09:00-17:00"');
-    expect(result.wednesday).to.equal('"09:00-17:00"');
-    expect(result.thursday).to.equal('"09:00-17:00"');
-    expect(result.friday).to.equal('"09:00-17:00"');
-    expect(result.saturday).to.equal('"10:00-14:00"');
-    expect(result.sunday).to.equal('"closed"');
-    expect(result.cafOpeningHours).to.equal('');
-    expect(result.longitude).to.equal('"9.1876"');
-    expect(result.latitude).to.equal('"45.4669"');
-    expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-    expect(result.region).to.equal('"Lombardia"');
-    expect(malformedRecord).to.be.null;
-  });
-
-  it('should map API response correctly when there is only one day in openingTime', async () => {
-    const registry = {
-      description: 'Test Store',
-      address: {
-        city: 'Test City',
-        addressRow: '123 Test St',
-        pr: 'Test Province',
-        cap: '12345',
-      },
-      phoneNumber: '123/456/7890',
-      openingTime: 'MON 09:00-17:00#',
-    };
-
-    mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const { storeRecord: result, malformedRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"Test Store"');
-    expect(result.city).to.equal('"Test City"');
-    expect(result.address).to.equal('"123 Test St"');
-    expect(result.province).to.equal('"Test Province"');
-    expect(result.zipCode).to.equal('"12345"');
-    expect(result.phoneNumber).to.equal('"123 456 7890"');
-    expect(result.monday).to.equal('"09:00-17:00"');
-    expect(result.tuesday).to.equal('');
-    expect(result.wednesday).to.equal('');
-    expect(result.thursday).to.equal('');
-    expect(result.friday).to.equal('');
-    expect(result.saturday).to.equal('');
+    expect(result.locationId).to.equal('"LOC-54321"');
+    expect(result.partnerId).to.equal('"11223344556"');
+    expect(result.externalCodes).to.equal('"MI-101 , MI-102"');
+    expect(result.description).to.equal('"CAF Milano"');
+    expect(result.city).to.equal('"Milano"');
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(result.province).to.equal('"MI"');
+    expect(result.zipCode).to.equal('"20121"');
+    expect(result.longitude).to.equal('"9.1900"');
+    expect(result.latitude).to.equal('"45.4642"');
+    expect(result.phoneNumbers).to.equal('"0212345678"');
+    expect(result.monday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.tuesday).to.equal('"09:00-13:00"');
+    expect(result.wednesday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.thursday).to.equal('"09:00-13:00"');
+    expect(result.friday).to.equal('"09:00-13:00, 14:00-18:00"');
+    expect(result.saturday).to.equal('"09:00-12:00"');
     expect(result.sunday).to.equal('');
-    expect(result.cafOpeningHours).to.equal('');
-    expect(result.longitude).to.equal('"9.1876"');
-    expect(result.latitude).to.equal('"45.4669"');
-    expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-    expect(result.region).to.equal('"Lombardia"');
-    expect(malformedRecord).to.be.null;
+    expect(result.rawOpeningHours).to.equal('');
+    expect(result.email).to.equal('"milano@mail.it"');
+    expect(result.website).to.equal('"https://www.mock-website.it"');
+    expect(result.appointmentRequired).to.equal('"no"');
   });
 
-  it('should handle missing optional fields gracefully', async () => {
+  it('should handle null values correctly', () => {
     const registry = {
-      description: 'Test Store',
-      address: {
-        city: 'Test City',
-        addressRow: '123 Test St',
-        pr: 'Test Province',
-        cap: '12345',
-      },
-      phoneNumber: '123/456/7890',
-    };
-
-    mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const { storeRecord: result, malformedRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"Test Store"');
-    expect(result.city).to.equal('"Test City"');
-    expect(result.address).to.equal('"123 Test St"');
-    expect(result.province).to.equal('"Test Province"');
-    expect(result.zipCode).to.equal('"12345"');
-    expect(result.phoneNumber).to.equal('"123 456 7890"');
-    expect(result.monday).to.equal('');
-    expect(result.tuesday).to.equal('');
-    expect(result.wednesday).to.equal('');
-    expect(result.thursday).to.equal('');
-    expect(result.friday).to.equal('');
-    expect(result.saturday).to.equal('');
-    expect(result.sunday).to.equal('');
-    expect(result.longitude).to.equal('"9.1876"');
-    expect(result.latitude).to.equal('"45.4669"');
-    expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-    expect(result.region).to.equal('"Lombardia"');
-    expect(malformedRecord).to.be.null;
-  });
-
-  it('should handle null values correctly', async () => {
-    const registry = {
+      locationId: null,
+      partnerId: null,
+      externalCodes: null,
       description: null,
-      address: {
-        addressRow: '',
-        pr: '',
-        cap: '',
-        city: '',
+      normalizedAddress: {
+        addressRow: null,
+        cap: null,
+        city: null,
+        province: null,
+        country: null,
+        latitude: null,
+        longitude: null,
+        biasPoint: {
+          overall: 0.98,
+        },
       },
-      phoneNumber: null,
+      phoneNumbers: null,
       openingTime: null,
+      address: null,
+      email: null,
+      website: null,
+      appointmentRequired: null,
     };
 
-    mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const { storeRecord: result, malformedRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-    console.log(result);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.locationId).to.equal('');
+    expect(result.partnerId).to.equal('');
+    expect(result.externalCodes).to.equal('');
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
+    expect(result.normalizedAddress).to.equal('');
     expect(result.address).to.equal('');
     expect(result.province).to.equal('');
     expect(result.zipCode).to.equal('');
-    expect(result.phoneNumber).to.equal('');
+    expect(result.phoneNumbers).to.equal('');
     expect(result.monday).to.equal('');
     expect(result.tuesday).to.equal('');
     expect(result.wednesday).to.equal('');
@@ -190,136 +89,60 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.latitude).to.equal('"45.4669"');
-    expect(result.longitude).to.equal('"9.1876"');
-    expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-    expect(result.region).to.equal('"Lombardia"');
-    expect(malformedRecord).to.be.null;
-  });
-
-  it('should handle error in geolocate function', async () => {
-    const registry = {
-      description: 'Test Store',
-      address: {
-        city: 'Test City',
-        addressRow: '123 Test St',
-        pr: 'Test Province',
-        cap: '12345',
-      },
-      phoneNumber: '123/456/7890',
-    };
-
-    mockGeoPlacesErrorResponse();
-    const { storeRecord, malformedRecord: result } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"Test Store"');
-    expect(result.city).to.equal('"Test City"');
-    expect(result.address).to.equal('"123 Test St"');
-    expect(result.province).to.equal('"Test Province"');
-    expect(result.zipCode).to.equal('"12345"');
-    expect(result.phoneNumber).to.equal('"123 456 7890"');
-    expect(result.longitude).to.equal('');
-    expect(result.latitude).to.equal('');
-    expect(result.awsAddress).to.equal('');
-    expect(result.region).to.equal('');
-    expect(storeRecord).to.be.null;
-  });
-
-  it('should add address to wrongAddressesArray when AWS score is below 0.7', async () => {
-    const registry = {
-      description: 'CAF UIL',
-      address: {
-        city: 'Milano',
-        addressRow: 'Via Carlo Magno 1',
-        pr: 'MI',
-        cap: '20100',
-      },
-    };
-
-    mockGeoPlacesResponse(9.19, 45.4642, 0.7);
-
-    const { malformedRecord: result, storeRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"CAF UIL"');
-    expect(result.city).to.equal('"Milano"');
-    expect(result.address).to.equal('"Via Carlo Magno 1"');
-    expect(result.province).to.equal('"MI"');
-    expect(result.zipCode).to.equal('"20100"');
-    expect(result.phoneNumber).to.equal('');
-    expect(result.monday).to.equal('');
-    expect(result.tuesday).to.equal('');
-    expect(result.wednesday).to.equal('');
-    expect(result.thursday).to.equal('');
-    expect(result.friday).to.equal('');
-    expect(result.saturday).to.equal('');
-    expect(result.sunday).to.equal('');
-    expect(result.awsLongitude).to.equal(9.19);
-    expect(result.awsLatitude).to.equal(45.4642);
-    expect(result.awsAddress).to.equal('Via Roma 123, Milano (MI), 20100');
-    expect(result.awsAddressRegion).to.equal('Lombardia');
-    expect(storeRecord).to.be.null;
-  });
-
-  it('should handle null geolocate response', async () => {
-    placesClientMock.on(GeocodeCommand).resolves({ ResultItems: null });
-
-    const registry = {
-      description: 'CAF UIL',
-      address: {
-        city: 'Milano',
-        addressRow: 'Via Carlo Magno 1',
-        pr: 'MI',
-        cap: '20100',
-      },
-    };
-
-    const { malformedRecord: result, storeRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result.description).to.equal('"CAF UIL"');
-    expect(result.city).to.equal('"Milano"');
-    expect(result.address).to.equal('"Via Carlo Magno 1"');
-    expect(result.province).to.equal('"MI"');
-    expect(result.zipCode).to.equal('"20100"');
-    expect(result.phoneNumber).to.equal('');
-    expect(result.monday).to.equal('');
-    expect(result.tuesday).to.equal('');
-    expect(result.wednesday).to.equal('');
-    expect(result.thursday).to.equal('');
-    expect(result.friday).to.equal('');
-    expect(result.saturday).to.equal('');
-    expect(result.sunday).to.equal('');
+    expect(result.rawOpeningHours).to.equal('');
     expect(result.latitude).to.equal('');
     expect(result.longitude).to.equal('');
-    expect(result.awsAddress).to.equal('');
-    expect(result.region).to.equal('');
-    expect(storeRecord).to.be.null;
+    expect(result.email).to.equal('');
+    expect(result.website).to.equal('');
+    expect(result.appointmentRequired).to.equal('');
   });
 
-  it('should handle malformed opening hours', async () => {
+  it('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', () => {
     const registry = {
-      description: 'Test Store',
-      address: {
-        city: 'Test City',
-        addressRow: '123 Test St',
-        pr: 'Test Province',
-        cap: '12345',
+      ...raddAltApiResponse[0],
+      normalizedAddress: {
+        ...raddAltApiResponse[0].normalizedAddress,
+        biasPoint: {
+          overall: 0.2,
+        },
       },
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result).to.be.undefined;
+  });
+
+  it('should skip address when biasPoint is not available', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      normalizedAddress: {
+        ...raddAltApiResponse[0].normalizedAddress,
+        biasPoint: null,
+      },
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result).to.be.undefined;
+  });
+
+  it('should handle malformed opening hours', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
       openingTime: 'Lunedi dalle 10 alle 12:00 ; 14:00',
     };
 
-    mockGeoPlacesResponse(9.1876, 45.4669, 1);
-    const { storeRecord: result, malformedRecord } =
-      await mapApiResponseToStoreLocatorCsvEntities(registry);
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
 
-    expect(result.description).to.equal('"Test Store"');
-    expect(result.city).to.equal('"Test City"');
-    expect(result.address).to.equal('"123 Test St"');
-    expect(result.province).to.equal('"Test Province"');
-    expect(result.zipCode).to.equal('"12345"');
-    expect(result.phoneNumber).to.equal('');
+    expect(result.description).to.equal('"CAF Milano"');
+    expect(result.city).to.equal('"Milano"');
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(result.province).to.equal('"MI"');
+    expect(result.zipCode).to.equal('"20121"');
+    expect(result.longitude).to.equal('"9.1900"');
+    expect(result.latitude).to.equal('"45.4642"');
     expect(result.monday).to.equal('');
     expect(result.tuesday).to.equal('');
     expect(result.wednesday).to.equal('');
@@ -327,55 +150,62 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.friday).to.equal('');
     expect(result.saturday).to.equal('');
     expect(result.sunday).to.equal('');
-    expect(result.cafOpeningHours).to.equal(
+    expect(result.rawOpeningHours).to.equal(
       '"Lunedi dalle 10 alle 12:00 ; 14:00"'
     );
-    expect(result.longitude).to.equal('"9.1876"');
-    expect(result.latitude).to.equal('"45.4669"');
-    expect(result.awsAddress).to.equal('"Via Roma 123, Milano (MI), 20100"');
-    expect(result.region).to.equal('"Lombardia"');
-    expect(malformedRecord).to.be.null;
-  });
-});
-
-describe('sanitizeCSVField', () => {
-  it('should return empty string for null or undefined', () => {
-    expect(sanitizeCSVField(null)).to.equal('');
-    expect(sanitizeCSVField(undefined)).to.equal('');
   });
 
-  it('should return empty string for empty string', () => {
-    expect(sanitizeCSVField('')).to.equal('');
+  it('should handle unkown key in opening hours', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      openingTime: {
+        monday: '09:00-13:00, 14:00-18:00',
+      },
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.monday).to.equal('');
   });
 
-  it('should return empty string for whitespace-only strings', () => {
-    expect(sanitizeCSVField('   ')).to.equal('');
+  it('should handle multiple phone numbers', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: ['0212345678', '0298765432'],
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.phoneNumbers).to.equal('"0212345678_0298765432"');
   });
 
-  it('should wrap simple strings in quotes', () => {
-    expect(sanitizeCSVField('hello')).to.equal('"hello"');
-    expect(sanitizeCSVField('Test Store')).to.equal('"Test Store"');
-    expect(sanitizeCSVField('123')).to.equal('"123"');
+  it('should handle phone numbers with forward slashes', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: ['021/2345678', '029/8765432'],
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.phoneNumbers).to.equal('"021 2345678_029 8765432"');
   });
 
-  it('should trim whitespace and wrap in quotes', () => {
-    expect(sanitizeCSVField('  hello  ')).to.equal('"hello"');
-    expect(sanitizeCSVField('\t  Test Store  \n')).to.equal('"Test Store"');
+  it('should handle empty phone numbers array', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      phoneNumbers: [],
+    };
+
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.phoneNumbers).to.equal('');
   });
 
-  it('should handle semicolons (CSV delimiters)', () => {
-    expect(sanitizeCSVField('Mon-Fri 9:00-17:00; Sat 10:00-14:00')).to.equal(
-      '"Mon-Fri 9:00-17:00; Sat 10:00-14:00"'
-    );
-  });
+  it('should handle missing appointmentRequired', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      appointmentRequired: undefined,
+    };
 
-  it('should replace newlines with spaces', () => {
-    expect(sanitizeCSVField('Line 1\nLine 2')).to.equal('"Line 1 Line 2"');
-  });
-
-  it('should replace tabs with spaces', () => {
-    expect(sanitizeCSVField('Tab\tSeparated\tValues')).to.equal(
-      '"Tab Separated Values"'
-    );
+    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.appointmentRequired).to.equal('');
   });
 });
