@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.pnclient.mandate;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.*;
 import it.pagopa.pn.bff.mocks.MandateMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,6 +72,7 @@ class PnMandateClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
+                Mockito.any(),
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.any(MandateDto.class)
@@ -82,6 +84,7 @@ class PnMandateClientRecipientImplTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 mandateMock.getNewMandateRequestMock()
         )).expectNext(mandateMock.getNewMandateResponseMock()).verifyComplete();
     }
@@ -92,6 +95,7 @@ class PnMandateClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.any(MandateDto.class)
@@ -103,6 +107,7 @@ class PnMandateClientRecipientImplTest {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 mandateMock.getNewMandateRequestMock()
         )).expectError(WebClientResponseException.class).verify();
     }

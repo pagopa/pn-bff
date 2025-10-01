@@ -59,7 +59,8 @@ public class MandateRecipientController implements MandateApi {
      * @param xPagopaPnCxType   User Type
      * @param xPagopaPnCxGroups User Group id List
      * @param xPagopaPnCxRole   User role
-     * @param newMandateRequest New mandate request
+     * @param xPagopaPnSrcCh User login source channel (required)
+     * @param bffNewMandateRequest  New mandate request (required)
      * @param exchange
      * @return
      */
@@ -68,13 +69,14 @@ public class MandateRecipientController implements MandateApi {
             String xPagopaPnUid,
             String xPagopaPnCxId,
             CxTypeAuthFleet xPagopaPnCxType,
-            Mono<BffNewMandateRequest> newMandateRequest,
+            String xPagopaPnSrcCh,
+            Mono<BffNewMandateRequest> bffNewMandateRequest,
             List<String> xPagopaPnCxGroups,
             String xPagopaPnCxRole,
             final ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = mandateRecipientService.createMandate(
-                xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, newMandateRequest
+                xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, xPagopaPnSrcCh, bffNewMandateRequest
         );
 
         return serviceResponse
