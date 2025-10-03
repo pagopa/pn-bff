@@ -3,7 +3,9 @@ const {
   createCSVContent,
   sanitizeCSVField,
   getOpeningTimeByDay,
+  isAWSAddressValid,
 } = require('../app/csvUtils');
+const { setupEnv } = require('./utils/test.utils');
 const chai = require('chai');
 const expect = chai.expect;
 
@@ -195,5 +197,82 @@ describe('sanitizeCSVField', () => {
     expect(sanitizeCSVField('Tab\tSeparated\tValues')).to.equal(
       '"Tab Separated Values"'
     );
+  });
+});
+
+describe('isAWSAddressValid', () => {
+  beforeEach(() => {
+    setupEnv();
+  });
+
+  it('should return true when all scores are perfect (1.0)', () => {
+    const perfectScores = {
+      addressNumber: 1,
+      country: 1,
+      locality: 1,
+      postalCode: 1,
+      subRegion: 1,
+      overall: 1,
+    };
+    const result = isAWSAddressValid(perfectScores);
+    expect(result).to.be.true;
+  });
+
+  it('should return true when all scores is over the thresholds', () => {
+    const scores = {
+      addressNumber: 0.9,
+      country: 1,
+      locality: 0.87,
+      postalCode: 1,
+      subRegion: 1,
+      overall: 0.92,
+    };
+    const result = isAWSAddressValid(scores);
+    expect(result).to.be.true;
+  });
+
+  it('should return false when a required score is missing', () => {
+    // subRegion is missing
+    const scores = {
+      addressNumber: 1,
+      locality: 1,
+      postalCode: 1,
+      overall: 1,
+    };
+    const result = isAWSAddressValid(scores);
+    expect(result).to.be.false;
+  });
+
+  it('should return false when all required scores are 1 but overall is below threshold', () => {
+    const scores = {
+      addressNumber: 1,
+      locality: 1,
+      postalCode: 1,
+      subRegion: 1,
+      overall: 0.7,
+    };
+    const result = isAWSAddressValid(scores);
+    expect(result).to.be.false;
+  });
+
+  it('should return false when scores is null', () => {
+    const result = isAWSAddressValid(null);
+    expect(result).to.be.false;
+  });
+
+  it('should return false when scores is undefined', () => {
+    const result = isAWSAddressValid(undefined);
+    expect(result).to.be.false;
+  });
+
+  it('should return false when overall is missing', () => {
+    const scores = {
+      addressNumber: 0.95,
+      locality: 1,
+      postalCode: 1,
+      subRegion: 1,
+    };
+    const result = isAWSAddressValid(scores);
+    expect(result).to.be.false;
   });
 });

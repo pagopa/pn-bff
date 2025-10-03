@@ -79,6 +79,7 @@ const getOpeningTimeByDay = (openingTimeObj) => {
 
   return times;
 };
+
 function sanitizeCSVField(field) {
   if (field == null) return '';
 
@@ -97,9 +98,62 @@ function sanitizeCSVField(field) {
   return `"${escapedField}"`;
 }
 
+/**
+ * Check if the AWS address is valid based on scores and thresholds
+ *
+ * @param {Object} scores - AWS address scores object (subRegion, locality, postalCode, addressNumber, overall)
+ * @returns {boolean} True if address is valid, false otherwise
+ */
+function isAWSAddressValid(scores) {
+  if (!scores) return false;
+
+  const requiredScores = [
+    'subRegion',
+    'locality',
+    'postalCode',
+    'addressNumber',
+  ];
+
+  const thresholds = {
+    subRegion: parseFloat(process.env.SUBREGION_THRESHOLD),
+    locality: parseFloat(process.env.LOCALITY_THRESHOLD),
+    postalCode: parseFloat(process.env.POSTALCODE_THRESHOLD),
+    addressNumber: parseFloat(process.env.ADDRESSNUMBER_THRESHOLD),
+    overall: parseFloat(process.env.OVERALL_THRESHOLD),
+  };
+
+  // Check all required fields exist and are truthy
+  const hasAllRequiredFields = requiredScores.every(
+    (key) => scores[key] != null && scores[key] !== false
+  );
+
+  if (!hasAllRequiredFields || scores.overall == null) {
+    return false;
+  }
+
+  // Check if all required scores and overall are equal to 1
+  const allScoresArePerfect = requiredScores.every((key) => scores[key] === 1);
+  if (allScoresArePerfect && scores.overall === 1) {
+    return true;
+  }
+
+  // If all required scores are perfect but overall is less than threshold, return false
+  if (allScoresArePerfect && scores.overall < thresholds.overall) {
+    return false;
+  }
+
+  // Check if thresholds are equal or greater than minimum thresholds
+  const areThresholdsOk = requiredScores.every(
+    (key) => scores[key] >= thresholds[key]
+  );
+
+  return areThresholdsOk && scores.overall >= thresholds.overall;
+}
+
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
   getOpeningTimeByDay,
   sanitizeCSVField,
+  isAWSAddressValid,
 };
