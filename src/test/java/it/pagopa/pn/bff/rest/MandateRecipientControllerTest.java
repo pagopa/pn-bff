@@ -6,7 +6,6 @@ import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandatesMapper;
 import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;
 import it.pagopa.pn.bff.mocks.MandateMock;
-import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.MandateRecipientService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -121,7 +120,6 @@ class MandateRecipientControllerTest {
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyList(),
                         Mockito.anyString(),
-                        Mockito.anyString(),
                         Mockito.any()
                 ))
                 .thenReturn(Mono.empty());
@@ -139,7 +137,6 @@ class MandateRecipientControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
-                .header(PnBffRestConstants.SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -152,7 +149,6 @@ class MandateRecipientControllerTest {
                 eq(CxTypeAuthFleet.PF),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE),
-                eq(NotificationsReceivedMock.SOURCE_CHANNEL),
                 argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }
@@ -165,7 +161,6 @@ class MandateRecipientControllerTest {
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
                         Mockito.anyList(),
-                        Mockito.anyString(),
                         Mockito.anyString(),
                         Mockito.any()
                 ))
@@ -184,7 +179,6 @@ class MandateRecipientControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
-                .header(PnBffRestConstants.SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -196,7 +190,6 @@ class MandateRecipientControllerTest {
                 eq(CxTypeAuthFleet.PF),
                 eq(UserMock.PN_CX_GROUPS),
                 eq(UserMock.PN_CX_ROLE),
-                eq(NotificationsReceivedMock.SOURCE_CHANNEL),
                 argThat(new MonoMatcher<>(Mono.just(request)))
         );
     }

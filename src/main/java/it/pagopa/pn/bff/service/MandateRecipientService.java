@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.mandate.*;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,13 +61,12 @@ public class MandateRecipientService {
                                     CxTypeAuthFleet xPagopaPnCxType,
                                     List<String> xPagopaPnCxGroups,
                                     String xPagopaPnCxRole,
-                                    String xPagopaPnSrcCh,
                                     Mono<BffNewMandateRequest> newMandateRequest) {
         log.info("Create mandate - recipientId: {} - type: {} - groups: {} - role: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
 
         return newMandateRequest.flatMap(req -> pnMandateClientRecipient
-                .createMandate(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, xPagopaPnSrcCh, NewMandateMapper.modelMapper.mapRequest(req))
+                .createMandate(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertMandateCXType(xPagopaPnCxType), xPagopaPnCxGroups, xPagopaPnCxRole, CommonUtility.SourceChannel.WEB.name(), NewMandateMapper.modelMapper.mapRequest(req))
                 .then()
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
     }

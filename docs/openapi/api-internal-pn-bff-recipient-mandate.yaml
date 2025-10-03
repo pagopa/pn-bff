@@ -70,7 +70,6 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
-        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'   # NO EXTERNAL
       requestBody:
         required: true
         content:

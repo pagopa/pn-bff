@@ -9,7 +9,6 @@ import it.pagopa.pn.bff.mappers.mandate.MandateCountMapper;
 import it.pagopa.pn.bff.mappers.mandate.MandatesMapper;
 import it.pagopa.pn.bff.mappers.mandate.SearchMandateByDelegateMapper;
 import it.pagopa.pn.bff.mocks.MandateMock;
-import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.mandate.PnMandateClientRecipientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -100,7 +99,6 @@ public class MandateRecipientServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
-                        NotificationsReceivedMock.SOURCE_CHANNEL,
                         Mono.just(mandateMock.getBffNewMandateRequestMock())
                 ))
                 .expectNext()
@@ -125,7 +123,6 @@ public class MandateRecipientServiceTest {
                         it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PA.PF,
                         UserMock.PN_CX_GROUPS,
                         UserMock.PN_CX_ROLE,
-                        NotificationsReceivedMock.SOURCE_CHANNEL,
                         Mono.just(mandateMock.getBffNewMandateRequestMock())
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
