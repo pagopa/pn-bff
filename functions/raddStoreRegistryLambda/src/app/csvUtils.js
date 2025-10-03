@@ -24,6 +24,19 @@ const validFieldValue = [
   'appointmentRequired',
 ];
 
+const wrongAddressesConfig = [
+  { header: 'locationId', field: 'locationId' },
+  { header: 'partnerId', field: 'partnerId' },
+  { header: 'descrizione', field: 'description' },
+  { header: 'indirizzo_originale', field: 'address' },
+  { header: 'indirizzo_normalizzato', field: 'normalizedAddress' },
+  { header: 'score_AWS', field: 'biasPoint' },
+];
+
+const wrongAddressesCsvHeader = wrongAddressesConfig
+  .map((config) => config.header)
+  .join(';');
+
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
   if (!csvConfiguration) throw new Error('Configuration is missing');
@@ -122,32 +135,11 @@ function isAWSAddressValid(scores) {
     overall: parseFloat(process.env.OVERALL_THRESHOLD),
   };
 
-  // Check all required fields exist and are truthy
-  const hasAllRequiredFields = requiredScores.every(
-    (key) => scores[key] != null && scores[key] !== false
+  return (
+    requiredScores.every(
+      (field) => scores[field] != null && scores[field] >= thresholds[field]
+    ) && scores.overall >= thresholds.overall
   );
-
-  if (!hasAllRequiredFields || scores.overall == null) {
-    return false;
-  }
-
-  // Check if all required scores and overall are equal to 1
-  const allScoresArePerfect = requiredScores.every((key) => scores[key] === 1);
-  if (allScoresArePerfect && scores.overall === 1) {
-    return true;
-  }
-
-  // If all required scores are perfect but overall is less than threshold, return false
-  if (allScoresArePerfect && scores.overall < thresholds.overall) {
-    return false;
-  }
-
-  // Check if thresholds are equal or greater than minimum thresholds
-  const areThresholdsOk = requiredScores.every(
-    (key) => scores[key] >= thresholds[key]
-  );
-
-  return areThresholdsOk && scores.overall >= thresholds.overall;
 }
 
 module.exports = {
@@ -156,4 +148,6 @@ module.exports = {
   getOpeningTimeByDay,
   sanitizeCSVField,
   isAWSAddressValid,
+  wrongAddressesCsvHeader,
+  wrongAddressesConfig,
 };
