@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mocks.MandateMock;
+import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -104,6 +105,7 @@ class PnMandateClientRecipientImplTestIT {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 mandateMock.getNewMandateRequestMock()
         )).expectNext(mandateMock.getNewMandateResponseMock()).verifyComplete();
     }
@@ -120,6 +122,7 @@ class PnMandateClientRecipientImplTestIT {
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_GROUPS,
                 UserMock.PN_CX_ROLE,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
                 mandateMock.getNewMandateRequestMock()
         )).expectError().verify();
     }

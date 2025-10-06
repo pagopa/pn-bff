@@ -89,6 +89,7 @@ public class MandateRecipientServiceTest {
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyList(),
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.any(MandateDto.class)
         )).thenReturn(Mono.just(mandateMock.getNewMandateResponseMock()));
 
@@ -111,6 +112,7 @@ public class MandateRecipientServiceTest {
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyList(),
+                Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.any(MandateDto.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
