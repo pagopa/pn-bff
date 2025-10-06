@@ -33,7 +33,7 @@ paths:
       tags:
         - Payments
       operationId: getPaymentsInfoV1
-      x-pagopa-monitoring-group: payment-payments
+      x-pagopa-monitoring-group: <none>
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:                                                                       # NO EXTERNAL
@@ -70,7 +70,7 @@ paths:
       tags:
         - Payments
       operationId: paymentsCartV1
-      x-pagopa-monitoring-group: payment-payments
+      x-pagopa-monitoring-group: <none>
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:
@@ -116,7 +116,7 @@ paths:
       tags:
         - Payments
       operationId: paymentsTppV1
-      x-pagopa-monitoring-group: payment-payments
+      x-pagopa-monitoring-group: <none>
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
