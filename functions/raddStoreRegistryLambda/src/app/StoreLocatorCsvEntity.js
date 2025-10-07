@@ -1,8 +1,8 @@
+const { sanitizeCSVField } = require('./csvUtils');
 const {
-  sanitizeCSVField,
   getOpeningTimeByDay,
   isAWSAddressValid,
-} = require('./csvUtils');
+} = require('../utils/storeLocatorUtils');
 
 const createStoreLocatorEntity = (data) => ({
   locationId: sanitizeCSVField(data.locationId),
@@ -128,6 +128,7 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   return {
     record,
     isRecordValid: isNormalizedAddressValid,
+    isCAPValid: registry.normalizedAddress?.biasPoint?.postalCode === 1,
   };
 };
 

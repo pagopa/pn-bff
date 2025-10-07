@@ -12,6 +12,8 @@ const { csvConfigurationMock } = require('../__mocks__/csvConfiguration.mock');
 const { setupEnv } = require('./utils/test.utils');
 
 describe('handler generates new file', () => {
+  let wrongAddressRecordCallCount = 0;
+
   beforeEach(() => {
     setupEnv();
 
@@ -28,6 +30,12 @@ describe('handler generates new file', () => {
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
 
     sinon.spy(csvUtils, 'createCSVContent');
+
+    wrongAddressRecordCallCount = raddAltApiResponse.reduce((count, record) => {
+      const { isRecordValid } =
+        storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(record);
+      return count + (isRecordValid ? 0 : 1);
+    }, 0);
   });
 
   afterEach(() => {
@@ -51,7 +59,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(csvUtils.createCSVContent, 8);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length + wrongAddressRecordCallCount * 2
+    );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -69,7 +80,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(csvUtils.createCSVContent, 8);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length + wrongAddressRecordCallCount * 2
+    );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -98,7 +112,10 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.callCount(csvUtils.createCSVContent, 8);
+    sinon.assert.callCount(
+      csvUtils.createCSVContent,
+      raddAltApiResponse.length + wrongAddressRecordCallCount * 2
+    );
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
   });
 
@@ -118,7 +135,6 @@ describe('handler generates new file', () => {
         return {
           record: {
             locationId: '"12345"',
-            partnerId: '"67890"',
             description: '"Test Store"',
             cafAddress: '"VIA NAZIONE 1, 20100 ROMA"',
             normalizedAddress: '"Via Nazionale 15, 20100 RM, ROMA"',
@@ -129,12 +145,16 @@ describe('handler generates new file', () => {
         };
       });
 
+    const csvHeader =
+      'locationId;descrizione;indirizzo_originale;indirizzo_normalizzato;score_AWS\n';
+    const csvLine =
+      '"12345";"Test Store";"VIA NAZIONE 1, 20100 ROMA";"Via Nazionale 15, 20100 RM, ROMA";{"addressNumber":0.95,"country":1,"locality":1,"postalCode":0.9,"subRegion":1,"overall":0.98}\n';
+
     await handleEvent({});
 
-    sinon.assert.callCount(s3Utils.uploadVersionedFile, 2);
+    sinon.assert.callCount(s3Utils.uploadVersionedFile, 3);
 
     const malformedAddressCall = s3Utils.uploadVersionedFile.getCall(0);
-    console.log(malformedAddressCall.args[2]);
 
     // sendToWebLanding
     assert.strictEqual(malformedAddressCall.args[0], false);
@@ -146,15 +166,22 @@ describe('handler generates new file', () => {
     );
 
     // csvContent
-    assert.match(
-      malformedAddressCall.args[2],
-      /locationId;partnerId;descrizione;indirizzo_originale;indirizzo_normalizzato;score_AWS/
+    assert.match(malformedAddressCall.args[2], new RegExp(csvHeader + csvLine));
+
+    // --- Also have to add this to wrong postal codes CSV
+    const wrongPostalCodesCall = s3Utils.uploadVersionedFile.getCall(1);
+
+    // sendToWebLanding
+    assert.strictEqual(wrongPostalCodesCall.args[0], false);
+
+    // bffBucketS3Key
+    assert.strictEqual(
+      wrongPostalCodesCall.args[1],
+      `${process.env.BFF_BUCKET_PREFIX}/wrong_postal_codes.csv`
     );
 
-    assert.match(
-      malformedAddressCall.args[2],
-      /"12345";"67890";"Test Store";"VIA NAZIONE 1, 20100 ROMA";"Via Nazionale 15, 20100 RM, ROMA";{"addressNumber":0.95,"country":1,"locality":1,"postalCode":0.9,"subRegion":1,"overall":0.98}/
-    );
+    // csvContent
+    assert.match(malformedAddressCall.args[2], new RegExp(csvHeader + csvLine));
   });
 });
 
