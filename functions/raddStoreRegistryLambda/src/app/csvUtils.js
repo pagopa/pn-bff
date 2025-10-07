@@ -28,7 +28,7 @@ const wrongAddressesConfig = [
   { header: 'locationId', field: 'locationId' },
   { header: 'partnerId', field: 'partnerId' },
   { header: 'descrizione', field: 'description' },
-  { header: 'indirizzo_originale', field: 'address' },
+  { header: 'indirizzo_originale', field: 'cafAddress' },
   { header: 'indirizzo_normalizzato', field: 'normalizedAddress' },
   { header: 'score_AWS', field: 'biasPoint' },
 ];
@@ -57,7 +57,6 @@ function validateCsvConfiguration(csvConfiguration) {
 }
 
 function createCSVContent(configs, data) {
-  console.log('Creating CSV content');
   let csvContent = '';
   data.forEach((record) => {
     csvContent += '\n';
@@ -66,7 +65,6 @@ function createCSVContent(configs, data) {
       .join(';');
     csvContent += row;
   });
-  console.log('CSV content created successfully');
   return csvContent;
 }
 
@@ -130,8 +128,8 @@ function isAWSAddressValid(scores) {
   const thresholds = {
     subRegion: parseFloat(process.env.SUBREGION_THRESHOLD),
     locality: parseFloat(process.env.LOCALITY_THRESHOLD),
-    postalCode: parseFloat(process.env.POSTALCODE_THRESHOLD),
-    addressNumber: parseFloat(process.env.ADDRESSNUMBER_THRESHOLD),
+    postalCode: parseFloat(process.env.POSTAL_CODE_THRESHOLD),
+    addressNumber: parseFloat(process.env.ADDRESS_NUMBER_THRESHOLD),
     overall: parseFloat(process.env.OVERALL_THRESHOLD),
   };
 

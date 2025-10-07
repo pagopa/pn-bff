@@ -15,10 +15,11 @@ describe('StoreLocatorCsvEntity', () => {
     sinon.restore();
   });
 
-  it('should map API response correctly', () => {
+  it('should map API response correctly with a valid AWS address', () => {
     const registry = raddAltApiResponse[0];
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.locationId).to.equal('"LOC-54321"');
     expect(result.partnerId).to.equal('"11223344556"');
@@ -26,7 +27,10 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
     expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
-    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"'
+    );
+    expect(result.address).to.equal('"Piazza del Duomo 1"');
     expect(result.province).to.equal('"MI"');
     expect(result.zipCode).to.equal('"20121"');
     expect(result.longitude).to.equal('"9.1900"');
@@ -43,6 +47,10 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.email).to.equal('"milano@mail.it"');
     expect(result.website).to.equal('"https://www.mock-website.it"');
     expect(result.appointmentRequired).to.equal('"no"');
+    expect(result.biasPoint).to.equal(
+      JSON.stringify(registry.normalizedAddress.biasPoint)
+    );
+    expect(isRecordValid).to.be.true;
   });
 
   it('should handle null values correctly', () => {
@@ -71,13 +79,16 @@ describe('StoreLocatorCsvEntity', () => {
       appointmentRequired: null,
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
+
     expect(result.locationId).to.equal('');
     expect(result.partnerId).to.equal('');
     expect(result.externalCodes).to.equal('');
     expect(result.description).to.equal('');
     expect(result.city).to.equal('');
     expect(result.normalizedAddress).to.equal('');
+    expect(result.cafAddress).to.equal('');
     expect(result.address).to.equal('');
     expect(result.province).to.equal('');
     expect(result.zipCode).to.equal('');
@@ -95,10 +106,10 @@ describe('StoreLocatorCsvEntity', () => {
     expect(result.email).to.equal('');
     expect(result.website).to.equal('');
     expect(result.appointmentRequired).to.equal('');
+    expect(isRecordValid).to.be.false;
   });
 
-  // TODO - Will be updated with detailed scores
-  it.skip('should skip address when AWS score is below MALFORMED_ADDRESS_THRESHOLD', () => {
+  it('should return isValidRecord false and use cafAddress when AWS score is low', () => {
     const registry = {
       ...raddAltApiResponse[0],
       normalizedAddress: {
@@ -109,12 +120,17 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result).to.be.undefined;
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"'
+    );
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(isRecordValid).to.be.false;
   });
 
-  it('should skip address when biasPoint is not available', () => {
+  it('should use cafAddress when biasPoint is not available', () => {
     const registry = {
       ...raddAltApiResponse[0],
       normalizedAddress: {
@@ -123,9 +139,15 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
-
-    expect(result).to.be.undefined;
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"'
+    );
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
+    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(result.biasPoint).to.equal('');
+    expect(isRecordValid).to.be.false;
   });
 
   it('should handle malformed opening hours', () => {
@@ -134,12 +156,16 @@ describe('StoreLocatorCsvEntity', () => {
       openingTime: 'Lunedi dalle 10 alle 12:00 ; 14:00',
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.description).to.equal('"CAF Milano"');
     expect(result.city).to.equal('"Milano"');
     expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1"');
-    expect(result.address).to.equal('"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"');
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO"'
+    );
+    expect(result.address).to.equal('"Piazza del Duomo 1"');
     expect(result.province).to.equal('"MI"');
     expect(result.zipCode).to.equal('"20121"');
     expect(result.longitude).to.equal('"9.1900"');
@@ -164,9 +190,48 @@ describe('StoreLocatorCsvEntity', () => {
       },
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.monday).to.equal('');
+  });
+
+  it('should handle empty opening hours object', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      openingTime: {},
+    };
+
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.monday).to.equal('');
+    expect(result.tuesday).to.equal('');
+    expect(result.wednesday).to.equal('');
+    expect(result.thursday).to.equal('');
+    expect(result.friday).to.equal('');
+    expect(result.saturday).to.equal('');
+    expect(result.sunday).to.equal('');
+    expect(result.rawOpeningHours).to.equal('');
+  });
+
+  it('should handle unknown type in opening hours', () => {
+    const registry = {
+      ...raddAltApiResponse[0],
+      openingTime: 12345,
+    };
+
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
+
+    expect(result.monday).to.equal('');
+    expect(result.tuesday).to.equal('');
+    expect(result.wednesday).to.equal('');
+    expect(result.thursday).to.equal('');
+    expect(result.friday).to.equal('');
+    expect(result.saturday).to.equal('');
+    expect(result.sunday).to.equal('');
+    expect(result.rawOpeningHours).to.equal('');
   });
 
   it('should handle multiple phone numbers', () => {
@@ -175,7 +240,8 @@ describe('StoreLocatorCsvEntity', () => {
       phoneNumbers: ['0212345678', '0298765432'],
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
 
     expect(result.phoneNumbers).to.equal('"0212345678_0298765432"');
   });
@@ -186,7 +252,8 @@ describe('StoreLocatorCsvEntity', () => {
       phoneNumbers: ['021/2345678', '029/8765432'],
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.phoneNumbers).to.equal('"021 2345678_029 8765432"');
   });
 
@@ -196,7 +263,8 @@ describe('StoreLocatorCsvEntity', () => {
       phoneNumbers: [],
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.phoneNumbers).to.equal('');
   });
 
@@ -206,7 +274,8 @@ describe('StoreLocatorCsvEntity', () => {
       appointmentRequired: undefined,
     };
 
-    const result = mapApiResponseToStoreLocatorCsvEntities(registry);
+    const { record: result } =
+      mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.appointmentRequired).to.equal('');
   });
 });

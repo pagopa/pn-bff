@@ -12,6 +12,7 @@ exports.handleEvent = async () => {
   let forceGenerate = false;
   let sendToWebLanding = false;
 
+  const malformedAddressS3Key = `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`;
   const generationConfig = await ssmUtils.retrieveGenerationConfigParameter();
 
   if (generationConfig) {
@@ -47,6 +48,7 @@ exports.handleEvent = async () => {
     .map((conf) => conf.header)
     .join(';');
   let csvContent = csvHeader;
+  let wrongAddressesCsvContent = csvUtils.wrongAddressesCsvHeader;
 
   let lastKey = null;
 
@@ -57,18 +59,35 @@ exports.handleEvent = async () => {
       'Fetched API registries response size:',
       apiResponse.registries.length
     );
-    const records = registries
-      .map((registry) =>
-        storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
-      )
-      .filter((record) => record !== undefined);
+    const records = registries.map((registry) =>
+      storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
+    );
 
-    csvContent += csvUtils.createCSVContent(csvConfiguration.configs, records);
+    for (let record of records) {
+      if (!record.isRecordValid) {
+        wrongAddressesCsvContent += csvUtils.createCSVContent(
+          csvUtils.wrongAddressesConfig,
+          [record.record]
+        );
+      }
+
+      csvContent += csvUtils.createCSVContent(csvConfiguration.configs, [
+        record.record,
+      ]);
+    }
 
     lastKey = apiResponse.lastKey;
     console.log('Processed records, lastKey:', lastKey);
   } while (lastKey);
 
+  // Upload malformed addresses CSV file
+  await s3Utils.uploadVersionedFile(
+    false,
+    malformedAddressS3Key,
+    wrongAddressesCsvContent
+  );
+
+  // Upload store locator CSV file
   await s3Utils.uploadVersionedFile(
     sendToWebLanding,
     bffBucketS3Key,
@@ -89,8 +108,8 @@ function validateEnvironmentVariables() {
     'RADD_STORE_REGISTRY_API_URL',
     'SUBREGION_THRESHOLD',
     'LOCALITY_THRESHOLD',
-    'POSTALCODE_THRESHOLD',
-    'ADDRESSNUMBER_THRESHOLD',
+    'POSTAL_CODE_THRESHOLD',
+    'ADDRESS_NUMBER_THRESHOLD',
     'OVERALL_THRESHOLD',
   ];
 

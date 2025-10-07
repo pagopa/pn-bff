@@ -3,6 +3,7 @@ const s3Utils = require('../app/s3Utils');
 const api = require('../app/raddClient');
 const csvUtils = require('../app/csvUtils');
 const ssmUtils = require('../app/ssmParameter');
+const storeLocatorCsvEntity = require('../app/StoreLocatorCsvEntity');
 const utils = require('../app/utils');
 const sinon = require('sinon');
 const assert = require('node:assert/strict');
@@ -50,7 +51,7 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(csvUtils.createCSVContent, 8);
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -68,7 +69,7 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(csvUtils.createCSVContent, 8);
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
   });
 
@@ -97,8 +98,63 @@ describe('handler generates new file', () => {
     sinon.assert.calledOnce(s3Utils.getLatestVersion);
     sinon.assert.calledOnce(api.fetchApi);
     sinon.assert.calledOnce(csvUtils.validateCsvConfiguration);
-    sinon.assert.calledOnce(csvUtils.createCSVContent);
+    sinon.assert.callCount(csvUtils.createCSVContent, 8);
     sinon.assert.calledOnce(utils.checkIfIntervalPassed);
+  });
+
+  it('generates new file and uploads malformed addresses CSV when found', async () => {
+    sinon.stub(s3Utils, 'getLatestVersion').resolves(null);
+
+    sinon.stub(ssmUtils, 'retrieveGenerationConfigParameter').resolves({
+      forceGenerate: true,
+      sendToWebLanding: true,
+    });
+
+    sinon.stub(utils, 'checkIfIntervalPassed').returns(false);
+
+    sinon
+      .stub(storeLocatorCsvEntity, 'mapApiResponseToStoreLocatorCsvEntities')
+      .callsFake(() => {
+        return {
+          record: {
+            locationId: '"12345"',
+            partnerId: '"67890"',
+            description: '"Test Store"',
+            cafAddress: '"VIA NAZIONE 1, 20100 ROMA"',
+            normalizedAddress: '"Via Nazionale 15, 20100 RM, ROMA"',
+            biasPoint:
+              '{"addressNumber":0.95,"country":1,"locality":1,"postalCode":0.9,"subRegion":1,"overall":0.98}',
+          },
+          isRecordValid: false,
+        };
+      });
+
+    await handleEvent({});
+
+    sinon.assert.callCount(s3Utils.uploadVersionedFile, 2);
+
+    const malformedAddressCall = s3Utils.uploadVersionedFile.getCall(0);
+    console.log(malformedAddressCall.args[2]);
+
+    // sendToWebLanding
+    assert.strictEqual(malformedAddressCall.args[0], false);
+
+    // bffBucketS3Key
+    assert.strictEqual(
+      malformedAddressCall.args[1],
+      `${process.env.BFF_BUCKET_PREFIX}/malformed_addresses.csv`
+    );
+
+    // csvContent
+    assert.match(
+      malformedAddressCall.args[2],
+      /locationId;partnerId;descrizione;indirizzo_originale;indirizzo_normalizzato;score_AWS/
+    );
+
+    assert.match(
+      malformedAddressCall.args[2],
+      /"12345";"67890";"Test Store";"VIA NAZIONE 1, 20100 ROMA";"Via Nazionale 15, 20100 RM, ROMA";{"addressNumber":0.95,"country":1,"locality":1,"postalCode":0.9,"subRegion":1,"overall":0.98}/
+    );
   });
 });
 
