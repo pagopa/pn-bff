@@ -98,29 +98,32 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   const isNormalizedAddressValid = isAWSAddressValid(
     registry.normalizedAddress?.biasPoint
   );
+  const isCAPValid =
+    registry?.normalizedAddress?.biasPoint?.postalCode >=
+    parseFloat(process.env.POSTAL_CODE_THRESHOLD);
 
   const data = {
-    locationId: registry.locationId,
-    partnerId: registry.partnerId,
-    externalCodes: formatExternalCodes(registry.externalCodes),
-    description: registry.description,
-    cafAddress: formatCafAddress(registry.address),
-    normalizedAddress: registry.normalizedAddress?.addressRow,
-    latitude: registry.normalizedAddress?.latitude,
-    longitude: registry.normalizedAddress?.longitude,
-    phoneNumbers: formatPhoneNumbers(registry.phoneNumbers),
-    email: registry.email,
-    website: registry.website,
-    appointmentRequired: getAppointmentRequired(registry.appointmentRequired),
-    biasPoint: registry.normalizedAddress.biasPoint
+    locationId: registry?.locationId,
+    partnerId: registry?.partnerId,
+    externalCodes: formatExternalCodes(registry?.externalCodes),
+    description: registry?.description,
+    cafAddress: formatCafAddress(registry?.address),
+    normalizedAddress: registry?.normalizedAddress?.addressRow,
+    latitude: registry?.normalizedAddress?.latitude,
+    longitude: registry?.normalizedAddress?.longitude,
+    phoneNumbers: formatPhoneNumbers(registry?.phoneNumbers),
+    email: registry?.email,
+    website: registry?.website,
+    appointmentRequired: getAppointmentRequired(registry?.appointmentRequired),
+    biasPoint: registry?.normalizedAddress?.biasPoint
       ? JSON.stringify(registry.normalizedAddress.biasPoint)
       : '',
     ...selectAddressFields(
-      registry.normalizedAddress,
-      registry.address,
+      registry?.normalizedAddress,
+      registry?.address,
       isNormalizedAddressValid
     ),
-    ...getOpeningHours(registry.openingTime),
+    ...getOpeningHours(registry?.openingTime),
   };
 
   const record = createStoreLocatorEntity(data);
@@ -128,7 +131,7 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
   return {
     record,
     isRecordValid: isNormalizedAddressValid,
-    isCAPValid: registry.normalizedAddress?.biasPoint?.postalCode === 1,
+    isCAPValid,
   };
 };
 

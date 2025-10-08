@@ -142,6 +142,7 @@ describe('handler generates new file', () => {
               '{"addressNumber":0.95,"country":1,"locality":1,"postalCode":0.9,"subRegion":1,"overall":0.98}',
           },
           isRecordValid: false,
+          isCAPValid: false,
         };
       });
 
