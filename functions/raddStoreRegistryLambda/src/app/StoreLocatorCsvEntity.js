@@ -44,7 +44,11 @@ const formatPhoneNumbers = (phoneNumbers) => {
 
 const formatCafAddress = (address) => {
   if (!address) return undefined;
-  return `${address.addressRow}, ${address.cap} ${address.city}`;
+  return `${address.addressRow}, ${address.cap} ${address.city} ${address.province}`;
+};
+
+const formatNormalizedAddress = (normalizedAddressRow) => {
+  return normalizedAddressRow?.replace(', Italia', '');
 };
 
 const getOpeningHours = (openingTime) => {
@@ -80,7 +84,9 @@ const selectAddressFields = (normalizedAddress, address, isValid) => {
   if (!normalizedAddress || !address) return {};
 
   return {
-    address: isValid ? normalizedAddress.addressRow : formatCafAddress(address),
+    address: isValid
+      ? formatNormalizedAddress(normalizedAddress.addressRow)
+      : formatCafAddress(address),
     city: isValid ? normalizedAddress.city : address.city,
     province: isValid ? normalizedAddress.province : address.province,
     zipCode: isValid ? normalizedAddress.cap : address.cap,

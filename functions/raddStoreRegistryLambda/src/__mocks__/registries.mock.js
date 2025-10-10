@@ -1,7 +1,7 @@
 const raddAltApiResponse = [
   {
     normalizedAddress: {
-      addressRow: 'Piazza del Duomo 1',
+      addressRow: 'Piazza del Duomo 1, Italia',
       cap: '20121',
       city: 'Milano',
       province: 'MI',
