@@ -1,28 +1,4 @@
-const validFieldValue = [
-  'locationId',
-  'partnerId',
-  'externalCodes',
-  'description',
-  'city',
-  'address',
-  'normalizedAddress',
-  'province',
-  'zipCode',
-  'phoneNumbers',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday',
-  'latitude',
-  'longitude',
-  'rawOpeningHours',
-  'email',
-  'website',
-  'appointmentRequired',
-];
+const { validFieldValue } = require('../data/csvData');
 
 function validateCsvConfiguration(csvConfiguration) {
   console.log('Validating configuration');
@@ -44,7 +20,6 @@ function validateCsvConfiguration(csvConfiguration) {
 }
 
 function createCSVContent(configs, data) {
-  console.log('Creating CSV content');
   let csvContent = '';
   data.forEach((record) => {
     csvContent += '\n';
@@ -53,32 +28,9 @@ function createCSVContent(configs, data) {
       .join(';');
     csvContent += row;
   });
-  console.log('CSV content created successfully');
   return csvContent;
 }
 
-const getOpeningTimeByDay = (openingTimeObj) => {
-  const times = new Array(7).fill(null);
-
-  const dayMapping = {
-    lun: 0,
-    mar: 1,
-    mer: 2,
-    gio: 3,
-    ven: 4,
-    sab: 5,
-    dom: 6,
-  };
-
-  for (const [dayKey, hours] of Object.entries(openingTimeObj)) {
-    const dayIndex = dayMapping[dayKey.toLowerCase()];
-    if (dayIndex !== undefined) {
-      times[dayIndex] = hours;
-    }
-  }
-
-  return times;
-};
 function sanitizeCSVField(field) {
   if (field == null) return '';
 
@@ -100,6 +52,5 @@ function sanitizeCSVField(field) {
 module.exports = {
   validateCsvConfiguration,
   createCSVContent,
-  getOpeningTimeByDay,
   sanitizeCSVField,
 };
