@@ -28,6 +28,10 @@
     "ApiAlarmSegmentation": "true",
     "SelfCareCdnURL": "https://selcucheckoutsa.z6.web.core.windows.net",
     "AWSLocationRegion": "eu-central-1",
-    "MalformedAddressThreshold": "0.7"
+    "SubRegionThreshold": "1",
+    "LocalityThreshold": "0.80",
+    "PostalCodeThreshold": "1",
+    "AddressNumberThreshold": "0.80",
+    "OverallThreshold": "0.85"
   }
 }

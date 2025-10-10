@@ -1,7 +1,7 @@
 const raddAltApiResponse = [
   {
     normalizedAddress: {
-      addressRow: 'Piazza del Duomo 1',
+      addressRow: 'Piazza del Duomo 1, Italia',
       cap: '20121',
       city: 'Milano',
       province: 'MI',
@@ -9,12 +9,12 @@ const raddAltApiResponse = [
       latitude: '45.4642',
       longitude: '9.1900',
       biasPoint: {
-        addressNumber: 0.95,
+        addressNumber: 1,
         country: 1,
         locality: 1,
-        postalCode: 0.9,
+        postalCode: 1,
         subRegion: 1,
-        overall: 0.98,
+        overall: 0.96,
       },
     },
     partnerId: '11223344556',
@@ -42,7 +42,7 @@ const raddAltApiResponse = [
       addressRow: 'VIA PIAZZA DEL DUOMO 1',
       cap: '20121',
       city: 'MILANO',
-      province: 'RM',
+      province: 'MI',
       country: 'ITALIA',
     },
   },
