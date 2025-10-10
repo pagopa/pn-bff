@@ -435,10 +435,38 @@ Parameters:
       - 'eu-west-1'     # Ireland
       - 'eu-north-1'    # Stockholm
   
-  MalformedAddressThreshold:
+  SubRegionThreshold:
     Type: Number
-    Description: Threshold for considering an address as malformed
-    Default: 0.7
+    Description: Threshold for considering subregion of AWS address as malformed
+    Default: 1
+    MinValue: 0
+    MaxValue: 1
+
+  LocalityThreshold:
+    Type: Number
+    Description: Threshold for considering locality of AWS address as malformed
+    Default: 0.80
+    MinValue: 0
+    MaxValue: 1
+
+  PostalCodeThreshold:
+    Type: Number
+    Description: Threshold for considering postal code of AWS address as malformed
+    Default: 1
+    MinValue: 0
+    MaxValue: 1
+
+  AddressNumberThreshold:
+    Type: Number
+    Description: Threshold for considering address number of AWS address as malformed
+    Default: 0.80
+    MinValue: 0
+    MaxValue: 1
+
+  OverallThreshold:
+    Type: Number
+    Description: Overall threshold for considering an AWS address as malformed
+    Default: 0.85
     MinValue: 0
     MaxValue: 1
 
@@ -806,7 +834,11 @@ Resources:
           GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
           RADD_STORE_GENERATION_CONFIG_PARAMETER: !Ref RaddStoreRegistryGenerationConfigParameter
           RADD_STORE_REGISTRY_API_URL: !Sub "http://${ApplicationLoadBalancerDomain}:8080/radd-net-private/api/v1/store"
-          MALFORMED_ADDRESS_THRESHOLD: !Ref MalformedAddressThreshold
+          SUBREGION_THRESHOLD: !Ref SubRegionThreshold
+          LOCALITY_THRESHOLD: !Ref LocalityThreshold
+          POSTAL_CODE_THRESHOLD: !Ref PostalCodeThreshold
+          ADDRESS_NUMBER_THRESHOLD: !Ref AddressNumberThreshold
+          OVERALL_THRESHOLD: !Ref OverallThreshold
       Layers:
         - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:17"
 
