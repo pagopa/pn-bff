@@ -36,6 +36,7 @@ public class PnMandateClientRecipientImpl {
                                           CxTypeAuthFleet xPagopaPnCxType,
                                           List<String> xPagopaPnCxGroups,
                                           String xPagopaPnCxRole,
+                                          String xPagopaPnSrcCh,
                                           MandateDto mandateDto) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_MANDATE, "createMandate");
 
@@ -43,6 +44,7 @@ public class PnMandateClientRecipientImpl {
                 xPagopaPnUid,
                 xPagopaPnCxId,
                 xPagopaPnCxType,
+                xPagopaPnSrcCh,
                 xPagopaPnCxGroups,
                 xPagopaPnCxRole,
                 mandateDto
