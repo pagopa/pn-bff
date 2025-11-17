@@ -89,14 +89,15 @@ class PnEmdClientImplTestIT {
         mockServerClient.when(request().withMethod("GET").withPath(paymentTppPath)
                         .withQueryStringParameter("retrievalId", "retrievalId")
                         .withQueryStringParameter("noticeCode", "noticeCode")
-                        .withQueryStringParameter("paTaxId", "paTaxId"))
+                        .withQueryStringParameter("paTaxId", "paTaxId")
+                        .withQueryStringParameter("amount", "100"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(response)
                 );
 
-        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId"))
+        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId", 100))
                 .expectNextMatches(paymentUrlResponse ->
                         "https://checkout-tpp-url.com".equals(paymentUrlResponse.getPaymentUrl()))
                 .verifyComplete();
@@ -107,6 +108,6 @@ class PnEmdClientImplTestIT {
         mockServerClient.when(request().withMethod("GET").withPath(paymentTppPath))
                 .respond(response().withStatusCode(404));
 
-        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId")).expectError().verify();
+        StepVerifier.create(pnEmdClient.getPaymentUrl("retrievalId", "noticeCode", "paTaxId", null)).expectError().verify();
     }
 }

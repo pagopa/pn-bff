@@ -1,11 +1,9 @@
 package it.pagopa.pn.bff.service;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
-import it.pagopa.pn.bff.mappers.notifications.NotificationRetrievalIdMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsTppMapper;
@@ -77,9 +75,9 @@ public class PaymentsService {
      * @param paTaxId     The pa tax id
      * @return the tpp response
      */
-    public Mono<BffPaymentTppResponse> paymentsTpp(String retrievalId, String noticeCode, String paTaxId) {
+    public Mono<BffPaymentTppResponse> paymentsTpp(String retrievalId, String noticeCode, String paTaxId, Integer amount) {
         log.info("Get payment cart tpp");
-        return pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId)
+        return pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                 .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse);
     }

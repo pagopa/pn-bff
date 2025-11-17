@@ -200,8 +200,8 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/71e2aa68ed63590a853efb38f45cf16d213b5273/docs/openapi/api-internal-b2b-pa.yaml#/components/schemas/PreLoadResponse'
 
     BffCheckTPPResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/15f1a851fe35781388134a991db66ab56f0078c1/docs/openapi/api-private.yaml#/components/schemas/RetrievalPayload'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/schemas/RetrievalPayload'
 
   parameters:
     BffCheckTPPRetrievalId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/15f1a851fe35781388134a991db66ab56f0078c1/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/parameters/retrievalId'

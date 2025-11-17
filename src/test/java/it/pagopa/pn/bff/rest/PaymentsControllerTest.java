@@ -166,7 +166,8 @@ class PaymentsControllerTest {
         when(paymentsService.paymentsTpp(
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.nullable(Integer.class)
         )).thenReturn(Mono.just(response));
 
         webTestClient.get()
@@ -176,6 +177,7 @@ class PaymentsControllerTest {
                                 .queryParam("retrievalId", "0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920")
                                 .queryParam("noticeCode", "333333333333333333")
                                 .queryParam("paTaxId", "77777777777")
+                                .queryParam("amount", "100")
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -187,7 +189,8 @@ class PaymentsControllerTest {
         Mockito.verify(paymentsService).paymentsTpp(
                 eq("0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920"),
                 eq("333333333333333333"),
-                eq("77777777777")
+                eq("77777777777"),
+                eq(100)
         );
     }
 
@@ -196,7 +199,8 @@ class PaymentsControllerTest {
         when(paymentsService.paymentsTpp(
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.nullable(Integer.class)
         )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient.get()
@@ -215,7 +219,8 @@ class PaymentsControllerTest {
         Mockito.verify(paymentsService).paymentsTpp(
                 eq("0e4c6629-8753-234s-b0da-1f796999ec2-15038637960920"),
                 eq("333333333333333333"),
-                eq("77777777777")
+                eq("77777777777"),
+                eq(null)
         );
     }
 }

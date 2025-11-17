@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: G7IbE0GdYluPlRIMzcNEvUuVzFauPZnvN4B8x7NxAYg=
+  version: ccaRpMEeaAKRISPxf42jN7cYA8U75O6n673PWCl4P/c=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2989,6 +2989,7 @@ paths:
         - $ref: '#/components/parameters/retrievalId'
         - $ref: '#/components/parameters/noticeCode'
         - $ref: '#/components/parameters/paTaxId'
+        - $ref: '#/components/parameters/amount'
       responses:
         '200':
           description: Ok
@@ -4069,6 +4070,14 @@ components:
         maxLength: 11
         minLength: 11
         pattern: ^\d+$
+    amount:
+      name: amount
+      in: query
+      required: false
+      description: amount of payment in cents
+      example: 5000
+      schema:
+        type: number
     senderId:
       in: path
       name: senderId
@@ -6511,6 +6520,12 @@ components:
           minLength: 24
           maxLength: 36
           example: XRUZ-GZAJ-ZUEJ-202407-W-1
+        isPaymentEnabled:
+          type: boolean
+          description: >-
+            ENG: Flag indicating whether the TPP is integrated with the payment
+            system. - IT: Flag che indica se il TPP è integrato con il sistema
+            di pagamento.
     BffApiKeyGroup:
       description: Gruppo a cui appartiene l'api key
       type: object

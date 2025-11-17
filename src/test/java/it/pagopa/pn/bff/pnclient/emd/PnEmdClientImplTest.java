@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {PnEmdClientImpl.class})
@@ -56,9 +57,9 @@ class PnEmdClientImplTest {
 
     @Test
     void testPayment() {
-        when(paymentApi.getPaymentUrl(anyString(), anyString(), anyString())).thenReturn(Mono.just(paymentsMock.getPaymentUrlResponse()));
+        when(paymentApi.getPaymentUrl(anyString(), anyString(), anyString(), nullable(Integer.class))).thenReturn(Mono.just(paymentsMock.getPaymentUrlResponse()));
 
-        Mono<PaymentUrlResponse> result = pnEmdClient.getPaymentUrl("retrievalId", "notificationId", "paTaxId");
+        Mono<PaymentUrlResponse> result = pnEmdClient.getPaymentUrl("retrievalId", "notificationId", "paTaxId", 100);
 
         StepVerifier.create(result)
                 .expectNext(paymentsMock.getPaymentUrlResponse())
@@ -67,9 +68,9 @@ class PnEmdClientImplTest {
 
     @Test
     void testPaymentError() {
-        when(paymentApi.getPaymentUrl(anyString(), anyString(), anyString())).thenReturn(Mono.error(new RuntimeException("Error")));
+        when(paymentApi.getPaymentUrl(anyString(), anyString(), anyString(), nullable(Integer.class))).thenReturn(Mono.error(new RuntimeException("Error")));
 
-        Mono<PaymentUrlResponse> result = pnEmdClient.getPaymentUrl("retrievalId", "notificationId", "paTaxId");
+        Mono<PaymentUrlResponse> result = pnEmdClient.getPaymentUrl("retrievalId", "notificationId", "paTaxId", null);
 
         StepVerifier.create(result)
                 .expectError(RuntimeException.class)
