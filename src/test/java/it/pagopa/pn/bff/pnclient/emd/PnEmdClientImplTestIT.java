@@ -70,7 +70,7 @@ class PnEmdClientImplTestIT {
                                 "tppId".equals(payload.getTppId()) &&
                                 "deeplink".equals(payload.getDeeplink()) &&
                                 "originId".equals(payload.getOriginId()) &&
-                                "paymentButton".equals(payload.getPaymentButton()))
+                                "bankName".equals(payload.getPspDenomination()))
                 .verifyComplete();
     }
 

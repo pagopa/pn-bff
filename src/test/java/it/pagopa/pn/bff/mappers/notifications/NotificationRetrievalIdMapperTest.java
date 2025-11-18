@@ -21,7 +21,7 @@ public class NotificationRetrievalIdMapperTest {
         assertEquals(response.getTppId(), retrievalPayload.getTppId());
         assertEquals(response.getDeeplink(), retrievalPayload.getDeeplink());
         assertEquals(response.getOriginId(), retrievalPayload.getOriginId());
-        assertEquals(response.getPaymentButton(), retrievalPayload.getPaymentButton());
+        assertEquals(response.getPspDenomination(), retrievalPayload.getPspDenomination());
         assertEquals(response.getIsPaymentEnabled(), retrievalPayload.getIsPaymentEnabled());
 
         BffCheckTPPResponse responseNull = NotificationRetrievalIdMapper.modelMapper.toBffCheckTPPResponse(null);

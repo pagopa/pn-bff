@@ -54,14 +54,14 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c0a560d67d0daf2341eb55aa99297b79461882f3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentResponse'
 
     BffPaymentTppResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/schemas/PaymentUrlResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/97507fdb45ba55a11fcc4d247968934187aaa53b/docs/openapi/api-private.yaml#/components/schemas/PaymentUrlResponse'
 
   parameters:
     BffPaymentTppRetrievalId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/97507fdb45ba55a11fcc4d247968934187aaa53b/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
     BffPaymentTppNoticeCode:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/parameters/noticeCode'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/97507fdb45ba55a11fcc4d247968934187aaa53b/docs/openapi/api-private.yaml#/components/parameters/noticeCode'
     BffPaymentTppPaTaxId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/parameters/paTaxId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/97507fdb45ba55a11fcc4d247968934187aaa53b/docs/openapi/api-private.yaml#/components/parameters/paTaxId'
     BffPaymentTppAmount:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/ce44f329f4e58c9e8119b474b00ea35700df46ae/docs/openapi/api-private.yaml#/components/parameters/amount'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/97507fdb45ba55a11fcc4d247968934187aaa53b/docs/openapi/api-private.yaml#/components/parameters/amount'

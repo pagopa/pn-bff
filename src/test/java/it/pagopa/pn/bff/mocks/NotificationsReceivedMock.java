@@ -76,7 +76,7 @@ public class NotificationsReceivedMock {
         retrievalPayload.setRetrievalId("retrievalId");
         retrievalPayload.deeplink("deeplink");
         retrievalPayload.tppId("tppId");
-        retrievalPayload.paymentButton("paymentButton");
+        retrievalPayload.pspDenomination("bankName");
         retrievalPayload.originId("originId");
         retrievalPayload.isPaymentEnabled(true);
         return retrievalPayload;

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: ccaRpMEeaAKRISPxf42jN7cYA8U75O6n673PWCl4P/c=
+  version: PK+p2A/ua6i9mkFVJsf0i1V9QLEzyeXs1UTNAfPRyQw=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6506,7 +6506,7 @@ components:
           maxLength: 128
           example: >-
             https://example.com/deeplink/123e4567-e89b-12d3-a456-426614174000?userId=1234567890&session=abcdef
-        paymentButton:
+        pspDenomination:
           type: string
           description: Payment button label (e.g., the name of the payment provider).
           pattern: ^[a-zA-Z0-9 ]{1,15}$
