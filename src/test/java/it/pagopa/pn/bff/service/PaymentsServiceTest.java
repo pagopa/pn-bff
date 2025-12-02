@@ -52,7 +52,7 @@ class PaymentsServiceTest {
         )).thenReturn(Flux.fromIterable(response));
 
         Mono<List<BffPaymentInfoItem>> result = paymentsService.getPaymentsInfo(
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 Flux.fromIterable(paymentsMock.getBffPaymentsInfoRequestMock())
         );
@@ -73,7 +73,7 @@ class PaymentsServiceTest {
         )).thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         Mono<List<BffPaymentInfoItem>> result = paymentsService.getPaymentsInfo(
-                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
                 Flux.fromIterable(paymentsMock.getBffPaymentsInfoRequestMock())
         );

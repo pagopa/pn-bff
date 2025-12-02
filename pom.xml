@@ -1224,7 +1224,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-emd-integration/15f1a851fe35781388134a991db66ab56f0078c1/docs/openapi/api-private.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-emd-integration/8eb53db3f82bec2097c17aac6051a9a7704f5d14/docs/openapi/api-private.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

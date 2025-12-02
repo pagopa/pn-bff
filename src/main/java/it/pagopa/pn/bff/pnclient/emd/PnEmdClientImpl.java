@@ -24,9 +24,9 @@ public class PnEmdClientImpl {
         return checkTppApi.emdCheckTPP(retrievalId);
     }
 
-    public Mono<PaymentUrlResponse> getPaymentUrl(String retrievalId, String noticeCode, String paTaxId) {
+    public Mono<PaymentUrlResponse> getPaymentUrl(String retrievalId, String noticeCode, String paTaxId, Integer amount) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EMD_INTEGRATION, "getPaymentUrl");
 
-        return paymentApi.getPaymentUrl(retrievalId, noticeCode, paTaxId);
+        return paymentApi.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount);
     }
 }

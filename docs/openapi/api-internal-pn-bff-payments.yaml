@@ -110,6 +110,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
   /bff/v1/payments/tpp:
     get:
       summary: Retrieve the payment url tpp given payment informations
@@ -123,6 +124,7 @@ paths:
         - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppRetrievalId'
         - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppNoticeCode'
         - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppPaTaxId'
+        - $ref: './payments-schemas/payments.yaml#/components/parameters/BffPaymentTppAmount'
       responses:
         '200':
           description: Ok

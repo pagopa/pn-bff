@@ -4,7 +4,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Noti
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
-import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
 
@@ -77,8 +76,9 @@ public class NotificationsReceivedMock {
         retrievalPayload.setRetrievalId("retrievalId");
         retrievalPayload.deeplink("deeplink");
         retrievalPayload.tppId("tppId");
-        retrievalPayload.paymentButton("paymentButton");
+        retrievalPayload.pspDenomination("bankName");
         retrievalPayload.originId("originId");
+        retrievalPayload.isPaymentEnabled(true);
         return retrievalPayload;
     }
 }
