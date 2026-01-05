@@ -5,6 +5,7 @@ function setupEnv() {
     BFF_BUCKET_PREFIX: 'pn-store-locator',
     WEB_LANDING_BUCKET_NAME: 'web-landing-store-locator',
     WEB_LANDING_BUCKET_PREFIX: 'web-landing',
+    WEB_LANDING_DISTRIBUTION_ID: 'web-landing-distribution-id',
     FILE_NAME: 'test-csv-file',
     CSV_CONFIGURATION_PARAMETER:
       '/pn-radd-store-registry-lambda/csv-configuration',

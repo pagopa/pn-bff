@@ -1,5 +1,6 @@
 const { handleEvent } = require('../app/eventHandler');
 const s3Utils = require('../app/s3Utils');
+const cloudFrontUtils = require('../app/cloudFrontUtils');
 const api = require('../app/raddClient');
 const csvUtils = require('../app/csvUtils');
 const ssmUtils = require('../app/ssmParameter');
@@ -30,6 +31,8 @@ describe('handler generates new file', () => {
     sinon.stub(s3Utils, 'uploadVersionedFile').returns();
 
     sinon.spy(csvUtils, 'createCSVContent');
+
+    sinon.stub(cloudFrontUtils, 'invalidateCache').returns();
 
     wrongAddressRecordCallCount = raddAltApiResponse.reduce((count, record) => {
       const { isRecordValid } =
@@ -64,6 +67,7 @@ describe('handler generates new file', () => {
       raddAltApiResponse.length + wrongAddressRecordCallCount * 2
     );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
+    sinon.assert.calledOnce(cloudFrontUtils.invalidateCache);
   });
 
   it('generates new file when doesnt find generationConfiguration and there is no previous file on bucket', async () => {
@@ -85,6 +89,7 @@ describe('handler generates new file', () => {
       raddAltApiResponse.length + wrongAddressRecordCallCount * 2
     );
     sinon.assert.notCalled(utils.checkIfIntervalPassed);
+    sinon.assert.notCalled(cloudFrontUtils.invalidateCache);
   });
 
   it('generates new file when doesnt find generationConfiguration and interval passed', async () => {
