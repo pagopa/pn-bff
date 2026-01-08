@@ -197,6 +197,7 @@ public class NotificationDetailUtility {
                                 new ArrayList<>(),
                                 new ArrayList<>(),
                                 null,
+                                null,
                                 null
                         );
 

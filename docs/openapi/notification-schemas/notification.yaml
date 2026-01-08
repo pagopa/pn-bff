@@ -59,6 +59,8 @@ components:
           type: string
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
 
     BffNotificationStatus:
       type: string
@@ -76,12 +78,17 @@ components:
         - CANCELLATION_IN_PROGRESS
         - RETURNED_TO_SENDER
 
+    BffNotificationReworkedStatus:
+      type: string
+      enum:
+        - VALID
+        - NOT_VALID
+
     BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-
     BffNotificationDetailDocument:
       description: >-
         Documento della notifica.
