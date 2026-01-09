@@ -173,10 +173,10 @@ components:
           type: integer
 
     BffTimelineCategory:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementCategoryV28'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/schemas-pn-timeline-internal.yaml#/components/schemas/TimelineElementCategoryV28'
 
     BffNotificationDetailTimelineDetails:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementDetailsV28'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/schemas-pn-timeline-internal.yaml#/components/schemas/TimelineElementDetailsV28'
     
     BffRequestStatus:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
