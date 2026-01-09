@@ -17,7 +17,6 @@
     "WebLandingBucketName": "web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
     "WebLandingBucketArn": "arn:aws:s3:::web-landing-cdn-dev-s3bucketforwebsitecontent-19q468wjmhc3b",
     "WebLandingBucketPrefix": "static/documents",
-    "WebLandingDistributionArn": "arn:aws:cloudfront::830192246553:distribution",
     "WebLandingDistributionId": "E1DR4W8CP5ZLTR",
     "RaddStoreRegistryGenerationConfigParameter": "/pn-radd-store-registry-lambda/generation-config",
     "DataIndexerLambdaAlarmNDays": "5",

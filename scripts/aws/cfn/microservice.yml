@@ -387,10 +387,6 @@ Parameters:
   WebLandingDistributionId:
     Type: String
     Description: Id of distribution for web-landing
-  
-  WebLandingDistributionArn:
-    Type: String
-    Description: Arn of distribution for web-landing
 
   RaddStoreRegistryFileName:
     Type: String
@@ -921,7 +917,7 @@ Resources:
                 Action:
                   - cloudfront:CreateInvalidation
                 Resource:
-                  - !Sub ${WebLandingDistributionArn}/${WebLandingDistributionId}
+                  - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${WebLandingDistributionId}
 
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:
