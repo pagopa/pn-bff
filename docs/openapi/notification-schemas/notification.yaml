@@ -77,6 +77,7 @@ components:
         - REFUSED
         - CANCELLATION_IN_PROGRESS
         - RETURNED_TO_SENDER
+        - NOTIFICATION_TIMELINE_REWORKED
 
     BffNotificationReworkedStatus:
       type: string

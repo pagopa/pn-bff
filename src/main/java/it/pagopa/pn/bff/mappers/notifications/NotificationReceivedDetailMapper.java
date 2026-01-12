@@ -28,6 +28,14 @@ public interface NotificationReceivedDetailMapper {
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV27 notification);
 
     /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertReworkedStatus(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+    }
+
+    /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#cleanRelatedTimelineElements(BffFullNotificationV1)
      */
     @AfterMapping

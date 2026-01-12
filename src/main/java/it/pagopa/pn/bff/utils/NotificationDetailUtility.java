@@ -246,7 +246,7 @@ public class NotificationDetailUtility {
 
                 final Integer recIndex = timeline.getDetails().getRecIndex();
                 final List<NotificationRecipientV24> recipients = bffFullNotificationV1.getRecipients();
-                if(recIndex != null){
+                if (recIndex != null) {
                     recipientData.setDenomination(recipients.get(recIndex).getDenomination());
                     recipientData.setTaxId(recipients.get(recIndex).getTaxId());
                 }
@@ -454,6 +454,20 @@ public class NotificationDetailUtility {
                     }
                 }
             }
+        }
+    }
+
+    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1) {
+        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            BffNotificationStatusHistory reworkedStatusHistory = new BffNotificationStatusHistory();
+            reworkedStatusHistory.setStatus(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED);
+            reworkedStatusHistory.setActiveFrom(timelineElement.getTimestamp());
+
+            bffFullNotificationV1.getNotificationStatusHistory().add(reworkedStatusHistory);
         }
     }
 }
