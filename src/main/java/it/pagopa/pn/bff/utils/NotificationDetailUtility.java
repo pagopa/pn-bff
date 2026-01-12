@@ -470,4 +470,24 @@ public class NotificationDetailUtility {
             bffFullNotificationV1.getNotificationStatusHistory().add(reworkedStatusHistory);
         }
     }
+
+    public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
+        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            for (NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+                for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                    BffNotificationDetailTimeline bffNotificationDetailTimeline = new BffNotificationDetailTimeline();
+                    BeanUtils.copyProperties(relatedTimelineElement, bffNotificationDetailTimeline);
+                    bffNotificationDetailTimeline.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                    bffFullNotificationV1.getTimeline().add(bffNotificationDetailTimeline);
+                }
+            }
+        }
+
+        // TODO sort by timestamp bffFullNotificationV1.getTimeline()
+        
+    }
 }

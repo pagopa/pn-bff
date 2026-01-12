@@ -36,6 +36,14 @@ public interface NotificationReceivedDetailMapper {
     }
 
     /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void insertInvalidateElementsInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.insertInvalidateElementsInTimeline(bffFullNotificationV1);
+    }
+
+    /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#cleanRelatedTimelineElements(BffFullNotificationV1)
      */
     @AfterMapping
