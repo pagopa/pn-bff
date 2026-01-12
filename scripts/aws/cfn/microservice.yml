@@ -384,6 +384,10 @@ Parameters:
     Description: Folder to upload store registry csv
     Default: 'public/static/documents'
 
+  WebLandingDistributionId:
+    Type: String
+    Description: Id of distribution for web-landing
+
   RaddStoreRegistryFileName:
     Type: String
     Description: Name of csv file for store locator
@@ -829,6 +833,7 @@ Resources:
           BFF_BUCKET_PREFIX: !Ref BffBucketRaddStoreRegistryPrefix
           WEB_LANDING_BUCKET_NAME: !Ref WebLandingBucketName
           WEB_LANDING_BUCKET_PREFIX: !Ref WebLandingBucketPrefix
+          WEB_LANDING_DISTRIBUTION_ID: !Ref WebLandingDistributionId
           FILE_NAME: !Ref RaddStoreRegistryFileName
           CSV_CONFIGURATION_PARAMETER: !Ref RaddStoreRegistryCsvConfigurationParameter
           GENERATE_INTERVAL: !Ref RaddStoreRegistryGenerateInterval
@@ -904,6 +909,16 @@ Resources:
                 Action:
                   - geo-places:Geocode
                 Resource: !Sub 'arn:aws:geo-places:${AWSLocationRegion}::provider/default'
+        - PolicyName: AccessWebLandingDistribution
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource:
+                  - !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${WebLandingDistributionId}
+
   # Fires the alarm when a duration threshold is reached
   RaddStoreRegistryLambdaAlarms:
     Type: AWS::CloudWatch::Alarm

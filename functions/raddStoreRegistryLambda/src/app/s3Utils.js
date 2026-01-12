@@ -102,20 +102,30 @@ async function uploadVersionedFile(
 ) {
   const bffBucketName = process.env.BFF_BUCKET_NAME;
 
-  await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
-  console.log('File uploaded to S3:', bffBucketS3Key);
+  try {
+    await uploadFile(bffBucketName, bffBucketS3Key, csvContent);
+    console.log('File uploaded to S3:', bffBucketS3Key);
+  } catch (error) {
+    console.error('Error uploading to S3:', error);
+    throw error;
+  }
 
   if (sendToWebLanding) {
-    const webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
-    const webLandingS3Key = generateS3Key(null, true);
-    await copyObject(
-      bffBucketName,
-      bffBucketS3Key,
-      webLandingBucketName,
-      webLandingS3Key
-    );
-    console.log('File copied to site bucket:', webLandingS3Key);
-  }
+      const webLandingBucketName = process.env.WEB_LANDING_BUCKET_NAME;
+      const webLandingS3Key = generateS3Key(null, true);
+      try {
+         await copyObject(
+          bffBucketName,
+          bffBucketS3Key,
+          webLandingBucketName,
+          webLandingS3Key
+        );
+        console.log('File copied to site bucket:', webLandingS3Key);
+      } catch (error) {
+        console.error('Error coping file to Landing S3:', error);
+        throw error;
+      }
+    }
 }
 
 module.exports = { getLatestVersion, generateS3Key, uploadVersionedFile };

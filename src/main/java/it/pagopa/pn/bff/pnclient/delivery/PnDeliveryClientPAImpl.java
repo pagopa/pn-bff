@@ -6,7 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV28;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +49,12 @@ public class PnDeliveryClientPAImpl {
         );
     }
 
-    public Mono<FullSentNotificationV27> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullSentNotificationV28> getSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                              String xPagopaPnCxId, String iun,
                                                              List<String> xPagopaPnCxGroups) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV27");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentNotificationV28");
 
-        return senderReadB2BApi.getSentNotificationV27(
+        return senderReadB2BApi.getSentNotificationV28(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

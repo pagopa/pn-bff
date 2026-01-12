@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,5 +17,5 @@ public interface SenderNotificationTimelineMapper {
 
     @Mapping(target = "hidden", ignore = true)
     @Mapping(target = "index", ignore = true)
-    public BffNotificationDetailTimeline mapTimelineElement(TimelineElementV27 timelineElement);
+    public BffNotificationDetailTimeline mapTimelineElement(TimelineElementV28 timelineElement);
 }
