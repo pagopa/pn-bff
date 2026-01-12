@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: NskCDB4psaHVd180dFUeFNXVRuD7tDLy5FAPXR5GWpY=
+  version: NKNR89W0YN/AMEz7xGBhq1yHfBcj9F3c5fP0/u9mGGE=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4984,13 +4984,8 @@ components:
         - PUBLIC_REGISTRY_VALIDATION_RESPONSE
         - NOTIFICATION_TIMELINE_REWORKED
     SenderAckCreationRequestDetails:
-      x-discriminator-value: SENDER_ACK_CREATION_REQUEST
       type: object
-      required:
-        - categoryType
       properties:
-        categoryType:
-          type: string
         legalFactId:
           type: string
           maxLength: 128
@@ -5039,16 +5034,12 @@ components:
           description: Denominazione paese estero
       description: Indirizzo fisico scoperto durante fase di consegna
     NormalizedAddressDetails:
-      x-discriminator-value: NORMALIZED_ADDRESS
       type: object
       required:
         - recIndex
         - oldAddress
         - normalizedAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5057,13 +5048,8 @@ components:
         normalizedAddress:
           $ref: '#/components/schemas/PhysicalAddress'
     NotificationRequestAcceptedDetailsV28:
-      x-discriminator-value: REQUEST_ACCEPTED
       type: object
-      required:
-        - categoryType
       properties:
-        categoryType:
-          type: string
         notificationRequestId:
           type: string
           description: >-
@@ -5084,14 +5070,10 @@ components:
           pattern: ^[ -~]*$
           maxLength: 256
     AnalogFailureWorkflowDetails:
-      x-discriminator-value: ANALOG_FAILURE_WORKFLOW
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5100,15 +5082,11 @@ components:
           maxLength: 128
           description: Chiave per recupero da safe-storage del documento aar
     AnalogSuccessWorkflowDetails:
-      x-discriminator-value: ANALOG_SUCCESS_WORKFLOW
       type: object
       required:
         - recIndex
         - physicalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5121,14 +5099,10 @@ components:
         - SUCCESS
         - FAILURE
     CompletelyUnreachableCreationRequestDetailsV28:
-      x-discriminator-value: COMPLETELY_UNREACHABLE_CREATION_REQUEST
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5145,14 +5119,10 @@ components:
           description: Data chiusura workflow
           format: date-time
     CompletelyUnreachableDetails:
-      x-discriminator-value: COMPLETELY_UNREACHABLE
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5176,15 +5146,11 @@ components:
           type: string
           description: account@domain
     DigitalDeliveryCreationRequestDetailsV28:
-      x-discriminator-value: DIGITAL_DELIVERY_CREATION_REQUEST
       type: object
       required:
         - recIndex
         - digitalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5203,27 +5169,19 @@ components:
             Identificativo dell'atto opponibile a terzi del quale è stata
             richiesta la creazione
     DigitalFailureWorkflowDetails:
-      x-discriminator-value: DIGITAL_FAILURE_WORKFLOW
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
     DigitalSuccessWorkflowDetails:
-      x-discriminator-value: DIGITAL_SUCCESS_WORKFLOW
       type: object
       required:
         - recIndex
         - digitalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5237,17 +5195,13 @@ components:
         - SPECIAL
         - GENERAL
     GetAddressInfoDetails:
-      x-discriminator-value: GET_ADDRESS
       type: object
       required:
         - recIndex
         - digitalAddressSource
         - isAvailable
         - attemptDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5298,14 +5252,10 @@ components:
         delegateType:
           $ref: '#/components/schemas/RecipientType'
     NotificationViewedCreationRequestDetailsV28:
-      x-discriminator-value: NOTIFICATION_VIEWED_CREATION_REQUEST
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5326,14 +5276,10 @@ components:
         delegateInfo:
           $ref: '#/components/schemas/DelegateInfo'
     NotificationViewedDetailsV23:
-      x-discriminator-value: NOTIFICATION_VIEWED
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5354,17 +5300,13 @@ components:
           description: Data evento visualizzazione
           format: date-time
     NotificationRADDRetrievedDetails:
-      x-discriminator-value: NOTIFICATION_RADD_RETRIEVED
       type: object
       required:
         - recIndex
         - raddType
         - raddTransactionId
         - eventTimestamp
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5389,7 +5331,6 @@ components:
         - CHOOSE_DELIVERY
         - SEND_ATTEMPT
     PublicRegistryCallDetails:
-      x-discriminator-value: PUBLIC_REGISTRY_CALL
       type: object
       required:
         - recIndex
@@ -5397,10 +5338,7 @@ components:
         - contactPhase
         - sentAttemptMade
         - sendDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5416,14 +5354,10 @@ components:
           description: Data invio richiesta ai public registry
           format: date-time
     PublicRegistryResponseDetails:
-      x-discriminator-value: PUBLIC_REGISTRY_RESPONSE
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5432,14 +5366,10 @@ components:
         physicalAddress:
           $ref: '#/components/schemas/PhysicalAddress'
     RefinementDetailsV23:
-      x-discriminator-value: REFINEMENT
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5484,13 +5414,8 @@ components:
             Index destinatario notifica digitale con errore che ha portato al
             rifiuto della notifica
     RequestRefusedDetailsV27:
-      x-discriminator-value: REQUEST_REFUSED
       type: object
-      required:
-        - categoryType
       properties:
-        categoryType:
-          type: string
         refusalReasons:
           type: array
           description: Motivazioni che hanno portato al rifiuto della notifica
@@ -5516,14 +5441,10 @@ components:
           pattern: ^[ -~]*$
           maxLength: 256
     ScheduleAnalogWorkflowDetailsV23:
-      x-discriminator-value: SCHEDULE_ANALOG_WORKFLOW
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5532,17 +5453,13 @@ components:
           description: Data prevista per l'inizio dell'invio analogico
           format: date-time
     ScheduleDigitalWorkflowDetailsV23:
-      x-discriminator-value: SCHEDULE_DIGITAL_WORKFLOW
       type: object
       required:
         - recIndex
         - digitalAddressSource
         - sentAttemptMade
         - lastAttemptDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5562,14 +5479,10 @@ components:
             specifica sorgente di indirizzo
           format: date-time
     ScheduleRefinementDetails:
-      x-discriminator-value: SCHEDULE_REFINEMENT
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5584,16 +5497,12 @@ components:
         - SENT_COURTESY
         - SENT_OPTIN
     SendCourtesyMessageDetails:
-      x-discriminator-value: SEND_COURTESY_MESSAGE
       type: object
       required:
         - recIndex
         - digitalAddress
         - sendDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5606,16 +5515,12 @@ components:
         ioSendMessageResult:
           $ref: '#/components/schemas/IoSendMessageResult'
     PrepareDigitalDetails:
-      x-discriminator-value: PREPARE_DIGITAL_DOMICILE
       type: object
       required:
         - recIndex
         - digitalAddressSource
         - retryNumber
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5640,17 +5545,13 @@ components:
           description: data tentativo precedente per prossimo source
           format: date-time
     SendDigitalDetails:
-      x-discriminator-value: SEND_DIGITAL_DOMICILE
       type: object
       required:
         - recIndex
         - digitalAddress
         - digitalAddressSource
         - retryNumber
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5679,17 +5580,13 @@ components:
           description: nome del server mittente
           maxLength: 128
     SendDigitalFeedbackDetails:
-      x-discriminator-value: SEND_DIGITAL_FEEDBACK
       type: object
       required:
         - recIndex
         - digitalAddress
         - responseStatus
         - notificationDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5726,13 +5623,8 @@ components:
           items:
             $ref: '#/components/schemas/SendingReceipt'
     SendDigitalProgressDetailsV23:
-      x-discriminator-value: SEND_DIGITAL_PROGRESS
       type: object
-      required:
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5771,17 +5663,13 @@ components:
         - AR_REGISTERED_LETTER
         - REGISTERED_LETTER_890
     BaseAnalogDetails:
-      x-discriminator-value: PREPARE_ANALOG_DOMICILE
       type: object
       required:
         - recIndex
         - physicalAddress
         - serviceLevel
         - sentAttemptMade
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5797,17 +5685,13 @@ components:
           description: Id relativo alla eventuale precedente richiesta di invio cartaceo
           maxLength: 512
     SendAnalogDetails:
-      x-discriminator-value: SEND_ANALOG_DOMICILE
       type: object
       required:
         - recIndex
         - physicalAddress
         - serviceLevel
         - sentAttemptMade
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5863,7 +5747,6 @@ components:
           type: string
           format: date-time
     SendAnalogFeedbackDetailsV25:
-      x-discriminator-value: SEND_ANALOG_FEEDBACK
       type: object
       required:
         - recIndex
@@ -5871,10 +5754,7 @@ components:
         - serviceLevel
         - sentAttemptMade
         - responseStatus
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5919,30 +5799,22 @@ components:
           description: Codice della raccomandata
           maxLength: 128
     BaseRegisteredLetterDetails:
-      x-discriminator-value: PREPARE_SIMPLE_REGISTERED_LETTER
       type: object
       required:
         - recIndex
         - physicalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
         physicalAddress:
           $ref: '#/components/schemas/PhysicalAddress'
     SimpleRegisteredLetterDetails:
-      x-discriminator-value: SEND_SIMPLE_REGISTERED_LETTER
       type: object
       required:
         - recIndex
         - physicalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5969,16 +5841,12 @@ components:
           description: request id della relativa richiesta di prepare
           maxLength: 512
     AarCreationRequestDetails:
-      x-discriminator-value: AAR_CREATION_REQUEST
       type: object
       required:
         - recIndex
         - aarKey
         - numberOfPages
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -5990,16 +5858,12 @@ components:
           type: number
           description: numero di pagine del PDF generato
     AarGenerationDetails:
-      x-discriminator-value: AAR_GENERATION
       type: object
       required:
         - recIndex
         - generatedAarUrl
         - numberOfPages
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -6011,16 +5875,12 @@ components:
           type: number
           description: numero di pagine del PDF generato
     NotHandledDetails:
-      x-discriminator-value: NOT_HANDLED
       type: object
       required:
         - recIndex
         - reasonCode
         - reason
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -6033,16 +5893,12 @@ components:
           description: Motivazione casistica non gestita
           maxLength: 2048
     NotificationPaidDetailsV23:
-      x-discriminator-value: PAYMENT
       type: object
       required:
         - recIndex
         - recipientType
         - paymentSourceChannel
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario che ha effettuato il pagamento della notifica
@@ -6072,14 +5928,10 @@ components:
           description: Data evento pagamento
           format: date-time
     SendAnalogProgressDetailsV23:
-      x-discriminator-value: SEND_ANALOG_PROGRESS
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario che ha effettuato il pagamento della notifica
@@ -6109,14 +5961,10 @@ components:
         serviceLevel:
           $ref: '#/components/schemas/ServiceLevel'
     SimpleRegisteredLetterProgressDetails:
-      x-discriminator-value: SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario che ha effettuato il pagamento della notifica
@@ -6144,15 +5992,11 @@ components:
           description: Codice della raccomandata
           maxLength: 128
     ProbableDateAnalogWorkflowDetails:
-      x-discriminator-value: PROBABLE_SCHEDULING_ANALOG_DATE
       type: object
       required:
         - recIndex
         - schedulingAnalogDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario che ha effettuato il pagamento della notifica
@@ -6161,28 +6005,20 @@ components:
           format: date-time
           description: Data probabile di inizio del flusso analogico
     NotificationCancellationRequestDetails:
-      x-discriminator-value: NOTIFICATION_CANCELLATION_REQUEST
       type: object
       required:
         - cancellationRequestId
-        - categoryType
       properties:
-        categoryType:
-          type: string
         cancellationRequestId:
           type: string
           description: Id della richiesta
           maxLength: 512
     NotificationCancelledDetails:
-      x-discriminator-value: NOTIFICATION_CANCELLED
       type: object
       required:
         - notificationCost
         - notRefinedRecipientIndexes
-        - categoryType
       properties:
-        categoryType:
-          type: string
         notificationCost:
           description: >-
             costo notifica in euro cents, vale 100 * numero di recipient not
@@ -6195,14 +6031,10 @@ components:
             description: indice del recipient non perfezionato
             type: number
     PrepareAnalogDomicileFailureDetails:
-      x-discriminator-value: PREPARE_ANALOG_DOMICILE_FAILURE
       type: object
       required:
         - recIndex
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -6221,15 +6053,11 @@ components:
           description: RequestId della richiesta di prepare
           maxLength: 512
     AnalogWorkflowRecipientDeceasedDetailsV26:
-      x-discriminator-value: ANALOG_WORKFLOW_RECIPIENT_DECEASED
       type: object
       required:
         - recIndex
         - physicalAddress
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndex:
           type: number
           description: Index destinatario notifica digitale
@@ -6242,16 +6070,12 @@ components:
           example: 1220
           type: number
     PublicRegistryValidationCallDetails:
-      x-discriminator-value: PUBLIC_REGISTRY_VALIDATION_CALL
       type: object
       required:
         - recIndexes
         - deliveryMode
         - sendDate
-        - categoryType
       properties:
-        categoryType:
-          type: string
         recIndexes:
           description: Lista destinatari notifica
           type: array
@@ -6264,15 +6088,10 @@ components:
           description: Data invio richiesta ai public registry
           format: date-time
     PublicRegistryValidationResponseDetails:
-      x-discriminator-value: PUBLIC_REGISTRY_VALIDATION_RESPONSE
       allOf:
         - $ref: '#/components/schemas/PublicRegistryResponseDetails'
         - type: object
-          required:
-            - categoryType
           properties:
-            categoryType:
-              type: string
             registry:
               type: string
               description: >
@@ -6281,14 +6100,6 @@ components:
                   - ANPR
                   - REGISTRO_IMPRESE
               maxLength: 128
-    ValidateNormalizeAddressDetails:
-      x-discriminator-value: VALIDATE_NORMALIZE_ADDRESSES_REQUEST
-      type: object
-      required:
-        - categoryType
-      properties:
-        categoryType:
-          type: string
     LegalFactCategoryV20:
       title: Tipi di atti opponibili a terzi
       description: >-
@@ -6302,14 +6113,6 @@ components:
           - ANALOG_FAILURE_DELIVERY  <br/>
           - NOTIFICATION_CANCELLED  <br/>
       type: string
-      enum:
-        - SENDER_ACK
-        - DIGITAL_DELIVERY
-        - ANALOG_DELIVERY
-        - RECIPIENT_ACCESS
-        - PEC_RECEIPT
-        - ANALOG_FAILURE_DELIVERY
-        - NOTIFICATION_CANCELLED
     LegalFactsIdV20:
       description: Chiavi dei documenti generati durante il processo di consegna cartacea
       type: object
@@ -6373,10 +6176,7 @@ components:
         - $ref: '#/components/schemas/AnalogWorkflowRecipientDeceasedDetailsV26'
         - $ref: '#/components/schemas/PublicRegistryValidationCallDetails'
         - $ref: '#/components/schemas/PublicRegistryValidationResponseDetails'
-        - $ref: '#/components/schemas/ValidateNormalizeAddressDetails'
         - $ref: '#/components/schemas/NotificationTimelineReworkedDetails'
-      discriminator:
-        propertyName: categoryType
     TimelineElementV28:
       type: object
       additionalProperties: false
@@ -6441,13 +6241,11 @@ components:
           items:
             $ref: '#/components/schemas/TimelineElementV28'
     NotificationTimelineReworkedDetails:
-      x-discriminator-value: NOTIFICATION_TIMELINE_REWORKED
       type: object
       required:
         - recIndex
         - sentAttemptMade
         - invalidatedTimelineAndStatusHistory
-        - categoryType
       properties:
         recIndex:
           type: number
@@ -6462,8 +6260,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotificationStatusHistoryInvalidatedElement'
-        categoryType:
-          type: string
     BffNotificationDetailTimeline:
       type: object
       required:
