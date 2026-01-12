@@ -8,6 +8,7 @@
 | BFF_BUCKET_PREFIX                      | radd/store              |      no      |
 | WEB_LANDING_BUCKET_NAME                |                         |     yes      |
 | WEB_LANDING_BUCKET_PREFIX              | public/static/documents |      no      |
+| WEB_LANDING_DISTRIBUTION_ID            |                         |      no      |
 | FILE_NAME                              | radd-store-registry     |      no      |
 | CSV_CONFIGURATION_PARAMETER            |                         |     yes      |
 | GENERATE_INTERVAL                      | 30                      |      no      |

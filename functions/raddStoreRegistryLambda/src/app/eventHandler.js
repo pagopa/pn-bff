@@ -1,6 +1,7 @@
 const ssmUtils = require('./ssmParameter');
 const s3Utils = require('./s3Utils');
 const csvUtils = require('./csvUtils');
+const cloudFrontUtils = require('./cloudFrontUtils');
 const apiClient = require('./raddClient');
 const utils = require('./utils');
 const storeLocatorCsvEntity = require('./StoreLocatorCsvEntity');
@@ -115,4 +116,13 @@ exports.handleEvent = async () => {
     bffBucketS3Key,
     csvContent
   );
+
+  // invalidate cache of the landing distribution
+  if (sendToWebLanding) {
+    const webLandingS3Key = s3Utils.generateS3Key(null, true);
+    await cloudFrontUtils.invalidateCache(
+      process.env.WEB_LANDING_DISTRIBUTION_ID,
+      [webLandingS3Key]
+    );
+  }
 };
