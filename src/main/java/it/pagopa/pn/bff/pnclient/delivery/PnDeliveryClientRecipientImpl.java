@@ -66,12 +66,12 @@ public class PnDeliveryClientRecipientImpl {
         );
     }
 
-    public Mono<FullReceivedNotificationV26> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<FullReceivedNotificationV27> getReceivedNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                      String xPagopaPnCxId, String xPagopaPnSrcCh, String iun,
                                                                      List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails, String mandateId) {
-        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV26");
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedNotificationV27");
 
-        return recipientReadApi.getReceivedNotificationV26(
+        return recipientReadApi.getReceivedNotificationV27(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class NotificationSentDetailMapperTest {
 
     @Test
     void testSentNotificationDetailMapper() {
-        FullSentNotificationV27 notification = new FullSentNotificationV27();
+        FullSentNotificationV28 notification = new FullSentNotificationV28();
         BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
         assertNotNull(actualMapSentNotificationDetailResult);
 
