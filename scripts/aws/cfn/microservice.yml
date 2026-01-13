@@ -267,7 +267,7 @@ Parameters:
 
   DataIndexerLambdaRuntime:
     Type: String
-    Default: nodejs20.x
+    Default: nodejs24.x
     Description: Runtime of the DataIndexer Lambda.
 
   DataIndexerLambdaAlarmNDays:
@@ -359,12 +359,12 @@ Parameters:
   
   SearchAddressesLambdaRuntime:
     Type: String
-    Default: nodejs22.x
+    Default: nodejs24.x
     Description: Runtime of the SearchAddresses Lambda.
 
   RaddStoreRegistryLambdaRuntime:
     Type: String
-    Default: nodejs20.x
+    Default: nodejs24.x
     Description: Runtime of the RaddStoreRegistry Lambda.
 
   BffBucketRaddStoreRegistryPrefix:
