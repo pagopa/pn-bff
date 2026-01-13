@@ -479,15 +479,29 @@ public class NotificationDetailUtility {
         for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
             for (NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
                 for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+
+                    // aggiungo in timeline
                     BffNotificationDetailTimeline bffNotificationDetailTimeline = new BffNotificationDetailTimeline();
                     BeanUtils.copyProperties(relatedTimelineElement, bffNotificationDetailTimeline);
+                    BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
+                    BeanUtils.copyProperties(relatedTimelineElement.getDetails(), details);
+                    bffNotificationDetailTimeline.setDetails(details);
                     bffNotificationDetailTimeline.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                    bffNotificationDetailTimeline.setCategory(BffTimelineCategory.valueOf(relatedTimelineElement.getCategory().name()));
                     bffFullNotificationV1.getTimeline().add(bffNotificationDetailTimeline);
+
+                    // aggiungo in status history
+                    // TODO adesso metto in coda all'array ma è da mettere nella posizione corretta in base al timestamp
+                    bffFullNotificationV1.getNotificationStatusHistory().stream()
+                            .filter(statusHistory -> statusHistory.getStatus().name().equals(invalidateElement.getStatus().name()))
+                            .findFirst()
+                            .ifPresent(statusHistory -> statusHistory.getRelatedTimelineElements().add(relatedTimelineElement.getElementId()));
+
                 }
             }
         }
 
         // TODO sort by timestamp bffFullNotificationV1.getTimeline()
-        
+
     }
 }
