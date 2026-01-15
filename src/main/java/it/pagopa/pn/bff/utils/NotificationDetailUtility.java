@@ -473,24 +473,84 @@ public class NotificationDetailUtility {
         }
     }
 
+    public static void setReworkedStatusOnSteps(BffFullNotificationV1 bffFullNotificationV1) {
+        // collect all invalidated elementIds from NOTIFICATION_TIMELINE_REWORKED elements
+        List<String> invalidatedElementIds = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .flatMap(el -> el.getDetails().getInvalidatedTimelineAndStatusHistory().stream())
+                .flatMap(invalidatedElement -> invalidatedElement.getRelatedTimelineElements().stream())
+                .map(TimelineElementV28::getElementId)
+                .toList();
+
+        // set reworkedStatus on each step
+        for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
+            if (statusHistory.getSteps() != null) {
+                for (BffNotificationDetailTimeline step : statusHistory.getSteps()) {
+                    if (step.getElementId().contains("REWORK_")) {
+                        step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                    } else if (invalidatedElementIds.contains(step.getElementId())) {
+                        step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                    }
+                }
+            }
+        }
+    }
+
     public static void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
         List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28> reworkedTimelineElements = fullReceivedNotificationV27.getTimeline().stream()
                 .filter(el -> el.getCategory() == it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV28.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
-
         // get the related Timeline Element from the notification status history from the event of reworked elements
         for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 timelineElement : reworkedTimelineElements) {
-            for (
-                    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
-                for (
-                        it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+            for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+                // add invalidated timeline elements to the main timeline
+                for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
                     fullReceivedNotificationV27.getTimeline().add(relatedTimelineElement);
                 }
+
+                // add elementIds to the corresponding notificationStatusHistory in the correct position based on timestamp
+                fullReceivedNotificationV27.getNotificationStatusHistory().stream()
+                        .filter(statusHistory -> statusHistory.getStatus().getValue().equals(invalidateElement.getStatus().getValue()))
+                        .findFirst()
+                        .ifPresent(statusHistory -> {
+                            for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                                insertElementIdInCorrectPosition(
+                                        statusHistory.getRelatedTimelineElements(),
+                                        relatedTimelineElement,
+                                        fullReceivedNotificationV27.getTimeline()
+                                );
+                            }
+                        });
             }
         }
 
         // sort the timeline by timestamp
         fullReceivedNotificationV27.getTimeline().sort(Comparator.comparing(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28::getTimestamp));
+    }
+
+    private static void insertElementIdInCorrectPosition(
+            List<String> relatedTimelineElements,
+            it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 elementToInsert,
+            List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28> timeline
+    ) {
+        long timestampToInsert = elementToInsert.getTimestamp().toInstant().toEpochMilli();
+        int insertPosition = 0;
+
+        for (int i = 0; i < relatedTimelineElements.size(); i++) {
+            String existingElementId = relatedTimelineElements.get(i);
+            // find the timestamp of the existing element in the timeline
+            long existingTimestamp = timeline.stream()
+                    .filter(t -> t.getElementId().equals(existingElementId))
+                    .findFirst()
+                    .map(t -> t.getTimestamp().toInstant().toEpochMilli())
+                    .orElse(0L);
+
+            if (timestampToInsert >= existingTimestamp) {
+                insertPosition = i + 1;
+            }
+        }
+
+        relatedTimelineElements.add(insertPosition, elementToInsert.getElementId());
     }
 }

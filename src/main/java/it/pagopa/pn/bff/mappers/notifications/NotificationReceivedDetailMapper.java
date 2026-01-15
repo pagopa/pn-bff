@@ -101,6 +101,14 @@ public interface NotificationReceivedDetailMapper {
     }
 
     /**
+     * @see NotificationDetailUtility#setReworkedStatusOnSteps(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void setReworkedStatusOnSteps(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.setReworkedStatusOnSteps(bffFullNotificationV1);
+    }
+
+    /**
      * Sort the notification status history by activeFrom date
      * From delivery, the statuses of the notification are sorted ascending (from the oldest to the earliest)
      * Front-end wants them ordered descending (from the earliest to the oldest) instead
