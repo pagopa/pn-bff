@@ -482,18 +482,61 @@ public class NotificationDetailUtility {
                 .map(TimelineElementV28::getElementId)
                 .toList();
 
-        // set reworkedStatus on each step
+        List<BffNotificationStatusHistory> newStatusHistories = new ArrayList<>();
+
         for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
-            if (statusHistory.getSteps() != null) {
-                for (BffNotificationDetailTimeline step : statusHistory.getSteps()) {
-                    if (step.getElementId().contains("REWORK_")) {
-                        step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
-                    } else if (invalidatedElementIds.contains(step.getElementId())) {
-                        step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
-                    }
+            if (statusHistory.getSteps() == null || statusHistory.getSteps().isEmpty()) {
+                continue;
+            }
+
+            // separate reworked steps from invalidated steps
+            List<BffNotificationDetailTimeline> reworkedSteps = new ArrayList<>();
+            List<BffNotificationDetailTimeline> invalidatedSteps = new ArrayList<>();
+            List<BffNotificationDetailTimeline> normalSteps = new ArrayList<>();
+
+            for (BffNotificationDetailTimeline step : statusHistory.getSteps()) {
+                if (step.getElementId().contains("REWORK_")) {
+                    step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                    reworkedSteps.add(step);
+                } else if (invalidatedElementIds.contains(step.getElementId())) {
+                    step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                    invalidatedSteps.add(step);
+                } else {
+                    normalSteps.add(step);
                 }
             }
+
+            // for DELIVERING status, keep everything together
+            if (statusHistory.getStatus() == BffNotificationStatus.DELIVERING) {
+                continue;
+            }
+
+            // for other statuses, if there are both reworked and invalidated steps, split them
+            if (!reworkedSteps.isEmpty() && !invalidatedSteps.isEmpty()) {
+                // create new status history for reworked steps
+                BffNotificationStatusHistory newStatusHistory = new BffNotificationStatusHistory();
+                newStatusHistory.setStatus(statusHistory.getStatus());
+                newStatusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                newStatusHistory.setSteps(reworkedSteps);
+                newStatusHistory.setRelatedTimelineElements(new ArrayList<>());
+                // set activeFrom from the first reworked step
+                if (!reworkedSteps.isEmpty()) {
+                    reworkedSteps.sort(NotificationDetailUtility::fromLatestToEarliest);
+                    newStatusHistory.setActiveFrom(reworkedSteps.get(reworkedSteps.size() - 1).getTimestamp());
+                }
+
+                newStatusHistories.add(newStatusHistory);
+
+                // update original status history with only invalidated steps
+                statusHistory.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                List<BffNotificationDetailTimeline> remainingSteps = new ArrayList<>(invalidatedSteps);
+                remainingSteps.addAll(normalSteps);
+                statusHistory.setSteps(remainingSteps);
+            }
         }
+
+        // add new status histories to the notification
+        bffFullNotificationV1.getNotificationStatusHistory().addAll(newStatusHistories);
     }
 
     public static void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
