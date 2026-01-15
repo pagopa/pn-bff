@@ -1,10 +1,12 @@
 package it.pagopa.pn.bff.utils;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -471,37 +473,24 @@ public class NotificationDetailUtility {
         }
     }
 
-    public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
-        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
-                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+    public static void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
+        List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28> reworkedTimelineElements = fullReceivedNotificationV27.getTimeline().stream()
+                .filter(el -> el.getCategory() == it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV28.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
-        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
-            for (NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
-                for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
 
-                    // aggiungo in timeline
-                    BffNotificationDetailTimeline bffNotificationDetailTimeline = new BffNotificationDetailTimeline();
-                    BeanUtils.copyProperties(relatedTimelineElement, bffNotificationDetailTimeline);
-                    BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
-                    BeanUtils.copyProperties(relatedTimelineElement.getDetails(), details);
-                    bffNotificationDetailTimeline.setDetails(details);
-                    bffNotificationDetailTimeline.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
-                    bffNotificationDetailTimeline.setCategory(BffTimelineCategory.valueOf(relatedTimelineElement.getCategory().name()));
-                    bffFullNotificationV1.getTimeline().add(bffNotificationDetailTimeline);
-
-                    // aggiungo in status history
-                    // TODO adesso metto in coda all'array ma è da mettere nella posizione corretta in base al timestamp
-                    bffFullNotificationV1.getNotificationStatusHistory().stream()
-                            .filter(statusHistory -> statusHistory.getStatus().name().equals(invalidateElement.getStatus().name()))
-                            .findFirst()
-                            .ifPresent(statusHistory -> statusHistory.getRelatedTimelineElements().add(relatedTimelineElement.getElementId()));
-
+        // get the related Timeline Element from the notification status history from the event of reworked elements
+        for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 timelineElement : reworkedTimelineElements) {
+            for (
+                    it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+                for (
+                        it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                    fullReceivedNotificationV27.getTimeline().add(relatedTimelineElement);
                 }
             }
         }
 
-        // TODO sort by timestamp bffFullNotificationV1.getTimeline()
-
+        // sort the timeline by timestamp
+        fullReceivedNotificationV27.getTimeline().sort(Comparator.comparing(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28::getTimestamp));
     }
 }

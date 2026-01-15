@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNot
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
@@ -28,19 +29,19 @@ public interface NotificationReceivedDetailMapper {
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV27 notification);
 
     /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(FullReceivedNotificationV27)
+     */
+    @BeforeMapping
+    default void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
+        NotificationDetailUtility.insertInvalidateElementsInTimeline(fullReceivedNotificationV27);
+    }
+
+    /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertReworkedStatus(BffFullNotificationV1)
      */
     @AfterMapping
     default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
-    }
-
-    /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
-     */
-    @AfterMapping
-    default void insertInvalidateElementsInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationDetailUtility.insertInvalidateElementsInTimeline(bffFullNotificationV1);
     }
 
     /**
