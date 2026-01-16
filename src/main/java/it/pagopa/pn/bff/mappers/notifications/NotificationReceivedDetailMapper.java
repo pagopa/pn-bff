@@ -3,6 +3,8 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationReworkedStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationStatus;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
@@ -117,8 +119,37 @@ public interface NotificationReceivedDetailMapper {
      */
     @AfterMapping
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) ->
-                o2.getActiveFrom().toInstant().toEpochMilli() >= o1.getActiveFrom().toInstant().toEpochMilli() ? 1 : -1
-        );
+        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> {
+            long time1 = o1.getActiveFrom().toInstant().toEpochMilli();
+            long time2 = o2.getActiveFrom().toInstant().toEpochMilli();
+
+            if (time1 != time2) {
+                return time2 > time1 ? 1 : -1;
+            }
+
+            // at equal activeFrom, NOTIFICATION_TIMELINE_REWORKED comes first
+            boolean isReworked1 = o1.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
+            boolean isReworked2 = o2.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
+
+            if (isReworked1 && !isReworked2) {
+                return -1;
+            }
+            if (!isReworked1 && isReworked2) {
+                return 1;
+            }
+
+            // then VALID comes before NOT_VALID
+            BffNotificationReworkedStatus reworkedStatus1 = o1.getReworkedStatus();
+            BffNotificationReworkedStatus reworkedStatus2 = o2.getReworkedStatus();
+
+            if (reworkedStatus1 == BffNotificationReworkedStatus.VALID && reworkedStatus2 == BffNotificationReworkedStatus.NOT_VALID) {
+                return -1;
+            }
+            if (reworkedStatus1 == BffNotificationReworkedStatus.NOT_VALID && reworkedStatus2 == BffNotificationReworkedStatus.VALID) {
+                return 1;
+            }
+
+            return 0;
+        });
     }
 }
