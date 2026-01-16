@@ -474,13 +474,28 @@ public class NotificationDetailUtility {
     }
 
     public static void setReworkedStatusOnSteps(BffFullNotificationV1 bffFullNotificationV1) {
-        // collect all invalidated elementIds from NOTIFICATION_TIMELINE_REWORKED elements
-        List<String> invalidatedElementIds = bffFullNotificationV1.getTimeline().stream()
+        // collect all NOTIFICATION_TIMELINE_REWORKED events
+        List<BffNotificationDetailTimeline> reworkedEvents = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        // early return if no NOTIFICATION_TIMELINE_REWORKED event exists
+        if (reworkedEvents.isEmpty()) {
+            return;
+        }
+
+        // collect all invalidated elementIds from all reworked events
+        List<String> invalidatedElementIds = reworkedEvents.stream()
                 .flatMap(el -> el.getDetails().getInvalidatedTimelineAndStatusHistory().stream())
                 .flatMap(invalidatedElement -> invalidatedElement.getRelatedTimelineElements().stream())
                 .map(TimelineElementV28::getElementId)
                 .toList();
+
+        // get the earliest reworked timestamp (first correction event)
+        long reworkedTimestamp = reworkedEvents.stream()
+                .map(el -> el.getTimestamp().toInstant().toEpochMilli())
+                .min(Long::compareTo)
+                .orElse(Long.MAX_VALUE);
 
         List<BffNotificationStatusHistory> newStatusHistories = new ArrayList<>();
 
@@ -513,25 +528,59 @@ public class NotificationDetailUtility {
 
             // for other statuses, if there are both reworked and invalidated steps, split them
             if (!reworkedSteps.isEmpty() && !invalidatedSteps.isEmpty()) {
-                // create new status history for reworked steps
+                // move normal steps that occurred after the REWORKED event to the reworked status
+                List<BffNotificationDetailTimeline> stepsAfterReworked = new ArrayList<>();
+                List<BffNotificationDetailTimeline> stepsBeforeReworked = new ArrayList<>();
+
+                for (BffNotificationDetailTimeline step : normalSteps) {
+                    long stepTimestamp = step.getTimestamp().toInstant().toEpochMilli();
+                    if (stepTimestamp > reworkedTimestamp) {
+                        stepsAfterReworked.add(step);
+                    } else {
+                        stepsBeforeReworked.add(step);
+                    }
+                }
+
+                // collect relatedTimelineElements that should move to the new status
+                List<String> relatedElementsForNewStatus = new ArrayList<>();
+                List<String> relatedElementsForOldStatus = new ArrayList<>();
+
+                for (String elementId : statusHistory.getRelatedTimelineElements()) {
+                    // check if this elementId corresponds to a reworked step or a step after reworked
+                    boolean isReworkedOrAfter = reworkedSteps.stream().anyMatch(s -> s.getElementId().equals(elementId))
+                            || stepsAfterReworked.stream().anyMatch(s -> s.getElementId().equals(elementId));
+
+                    if (isReworkedOrAfter) {
+                        relatedElementsForNewStatus.add(elementId);
+                    } else {
+                        relatedElementsForOldStatus.add(elementId);
+                    }
+                }
+
+                // create new status history for reworked steps + steps after reworked
                 BffNotificationStatusHistory newStatusHistory = new BffNotificationStatusHistory();
                 newStatusHistory.setStatus(statusHistory.getStatus());
                 newStatusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
-                newStatusHistory.setSteps(reworkedSteps);
-                newStatusHistory.setRelatedTimelineElements(new ArrayList<>());
-                // set activeFrom from the first reworked step
-                if (!reworkedSteps.isEmpty()) {
-                    reworkedSteps.sort(NotificationDetailUtility::fromLatestToEarliest);
-                    newStatusHistory.setActiveFrom(reworkedSteps.get(reworkedSteps.size() - 1).getTimestamp());
+
+                List<BffNotificationDetailTimeline> newSteps = new ArrayList<>(reworkedSteps);
+                newSteps.addAll(stepsAfterReworked);
+                newStatusHistory.setSteps(newSteps);
+                newStatusHistory.setRelatedTimelineElements(relatedElementsForNewStatus);
+
+                // set activeFrom from the earliest step in the new status
+                if (!newSteps.isEmpty()) {
+                    newSteps.sort(NotificationDetailUtility::fromLatestToEarliest);
+                    newStatusHistory.setActiveFrom(newSteps.get(newSteps.size() - 1).getTimestamp());
                 }
 
                 newStatusHistories.add(newStatusHistory);
 
-                // update original status history with only invalidated steps
+                // update original status history with only invalidated steps + steps before reworked
                 statusHistory.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
                 List<BffNotificationDetailTimeline> remainingSteps = new ArrayList<>(invalidatedSteps);
-                remainingSteps.addAll(normalSteps);
+                remainingSteps.addAll(stepsBeforeReworked);
                 statusHistory.setSteps(remainingSteps);
+                statusHistory.setRelatedTimelineElements(relatedElementsForOldStatus);
             }
         }
 
