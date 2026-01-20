@@ -31,11 +31,11 @@ public interface NotificationReceivedDetailMapper {
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV27 notification);
 
     /**
-     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(FullReceivedNotificationV27)
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
      */
-    @BeforeMapping
-    default void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
-        NotificationDetailUtility.insertInvalidateElementsInTimeline(fullReceivedNotificationV27);
+    @AfterMapping
+    default void insertInvalidateElementsInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.insertInvalidateElementsInTimeline(bffFullNotificationV1);
     }
 
     /**

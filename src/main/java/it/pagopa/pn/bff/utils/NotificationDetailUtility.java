@@ -2,6 +2,7 @@ package it.pagopa.pn.bff.utils;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
+import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -588,29 +589,30 @@ public class NotificationDetailUtility {
         bffFullNotificationV1.getNotificationStatusHistory().addAll(newStatusHistories);
     }
 
-    public static void insertInvalidateElementsInTimeline(FullReceivedNotificationV27 fullReceivedNotificationV27) {
-        List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28> reworkedTimelineElements = fullReceivedNotificationV27.getTimeline().stream()
-                .filter(el -> el.getCategory() == it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV28.NOTIFICATION_TIMELINE_REWORKED)
+    public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
+        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
         // get the related Timeline Element from the notification status history from the event of reworked elements
-        for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 timelineElement : reworkedTimelineElements) {
-            for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            for (NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
                 // add invalidated timeline elements to the main timeline
-                for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
-                    fullReceivedNotificationV27.getTimeline().add(relatedTimelineElement);
+                for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                    BffNotificationDetailTimeline bffRelatedTimelineElement = BffTimelineMapper.modelMapper.mapToBffTimeline(relatedTimelineElement);
+                    bffFullNotificationV1.getTimeline().add(bffRelatedTimelineElement);
                 }
 
                 // add elementIds to the corresponding notificationStatusHistory in the correct position based on timestamp
-                fullReceivedNotificationV27.getNotificationStatusHistory().stream()
+                bffFullNotificationV1.getNotificationStatusHistory().stream()
                         .filter(statusHistory -> statusHistory.getStatus().getValue().equals(invalidateElement.getStatus().getValue()))
                         .findFirst()
                         .ifPresent(statusHistory -> {
-                            for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                            for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
                                 insertElementIdInCorrectPosition(
                                         statusHistory.getRelatedTimelineElements(),
                                         relatedTimelineElement,
-                                        fullReceivedNotificationV27.getTimeline()
+                                        bffFullNotificationV1.getTimeline()
                                 );
                             }
                         });
@@ -618,13 +620,13 @@ public class NotificationDetailUtility {
         }
 
         // sort the timeline by timestamp
-        fullReceivedNotificationV27.getTimeline().sort(Comparator.comparing(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28::getTimestamp));
+        bffFullNotificationV1.getTimeline().sort(Comparator.comparing(BffNotificationDetailTimeline::getTimestamp));
     }
 
     private static void insertElementIdInCorrectPosition(
             List<String> relatedTimelineElements,
-            it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28 elementToInsert,
-            List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28> timeline
+            TimelineElementV28 elementToInsert,
+            List<BffNotificationDetailTimeline> timeline
     ) {
         long timestampToInsert = elementToInsert.getTimestamp().toInstant().toEpochMilli();
         int insertPosition = 0;
@@ -645,4 +647,98 @@ public class NotificationDetailUtility {
 
         relatedTimelineElements.add(insertPosition, elementToInsert.getElementId());
     }
+
+    private static BffNotificationDetailTimelineDetails mapToBffDetails(TimelineElementDetailsV28 timelineElementDetailsV28) {
+        if (timelineElementDetailsV28 == null) {
+            return null;
+        }
+
+        return BffNotificationDetailTimelineDetails.builder()
+                // --- Identificativi e ID ---
+                .legalFactId(timelineElementDetailsV28.getLegalFactId())
+                .notificationRequestId(timelineElementDetailsV28.getNotificationRequestId())
+                .paProtocolNumber(timelineElementDetailsV28.getPaProtocolNumber())
+                .idempotenceToken(timelineElementDetailsV28.getIdempotenceToken())
+                .prepareRequestId(timelineElementDetailsV28.getPrepareRequestId())
+                .sendRequestId(timelineElementDetailsV28.getSendRequestId())
+                .cancellationRequestId(timelineElementDetailsV28.getCancellationRequestId())
+                .relatedRequestId(timelineElementDetailsV28.getRelatedRequestId())
+
+                // --- Indici e Numeri ---
+                .recIndex(timelineElementDetailsV28.getRecIndex())
+                .recIndexes(timelineElementDetailsV28.getRecIndexes())
+                .sentAttemptMade(timelineElementDetailsV28.getSentAttemptMade())
+                .retryNumber(timelineElementDetailsV28.getRetryNumber())
+                .nextSourceAttemptsMade(timelineElementDetailsV28.getNextSourceAttemptsMade())
+                .numberOfPages(timelineElementDetailsV28.getNumberOfPages())
+                .envelopeWeight(timelineElementDetailsV28.getEnvelopeWeight())
+                .notRefinedRecipientIndexes(timelineElementDetailsV28.getNotRefinedRecipientIndexes())
+
+                // --- Date (OffsetDateTime) ---
+                .completionWorkflowDate(timelineElementDetailsV28.getCompletionWorkflowDate())
+                .legalFactGenerationDate(timelineElementDetailsV28.getLegalFactGenerationDate())
+                .attemptDate(timelineElementDetailsV28.getAttemptDate())
+                .eventTimestamp(timelineElementDetailsV28.getEventTimestamp())
+                .sendDate(timelineElementDetailsV28.getSendDate())
+                .schedulingDate(timelineElementDetailsV28.getSchedulingDate())
+                .lastAttemptDate(timelineElementDetailsV28.getLastAttemptDate())
+                .notificationDate(timelineElementDetailsV28.getNotificationDate())
+                .schedulingAnalogDate(timelineElementDetailsV28.getSchedulingAnalogDate())
+                .nextLastAttemptMadeForSource(timelineElementDetailsV28.getNextLastAttemptMadeForSource())
+
+                // --- Indirizzi (Fisici e Digitali) ---
+                .oldAddress(timelineElementDetailsV28.getOldAddress())
+                .normalizedAddress(timelineElementDetailsV28.getNormalizedAddress())
+                .physicalAddress(timelineElementDetailsV28.getPhysicalAddress())
+                .newAddress(timelineElementDetailsV28.getNewAddress())
+                .foundAddress(timelineElementDetailsV28.getFoundAddress())
+                .digitalAddress(timelineElementDetailsV28.getDigitalAddress())
+
+                // --- Informazioni di Consegna e Stato ---
+                .deliveryMode(timelineElementDetailsV28.getDeliveryMode())
+                .contactPhase(timelineElementDetailsV28.getContactPhase())
+                .serviceLevel(timelineElementDetailsV28.getServiceLevel())
+                .recipientType(timelineElementDetailsV28.getRecipientType())
+                .endWorkflowStatus(timelineElementDetailsV28.getEndWorkflowStatus())
+                .responseStatus(timelineElementDetailsV28.getResponseStatus())
+                .digitalAddressSource(timelineElementDetailsV28.getDigitalAddressSource())
+                .nextDigitalAddressSource(timelineElementDetailsV28.getNextDigitalAddressSource())
+
+                // --- Costi e Pagamenti ---
+                .notificationCost(timelineElementDetailsV28.getNotificationCost())
+                .analogCost(timelineElementDetailsV28.getAnalogCost())
+                .amount(timelineElementDetailsV28.getAmount())
+                .creditorTaxId(timelineElementDetailsV28.getCreditorTaxId())
+                .noticeCode(timelineElementDetailsV28.getNoticeCode())
+                .idF24(timelineElementDetailsV28.getIdF24())
+                .paymentSourceChannel(timelineElementDetailsV28.getPaymentSourceChannel())
+                .uncertainPaymentDate(timelineElementDetailsV28.getUncertainPaymentDate())
+
+                // --- Codici, Chiavi e Motivazioni ---
+                .generatedAarUrl(timelineElementDetailsV28.getGeneratedAarUrl())
+                .aarKey(timelineElementDetailsV28.getAarKey())
+                .registeredLetterCode(timelineElementDetailsV28.getRegisteredLetterCode())
+                .raddType(timelineElementDetailsV28.getRaddType())
+                .raddTransactionId(timelineElementDetailsV28.getRaddTransactionId())
+                .deliveryFailureCause(timelineElementDetailsV28.getDeliveryFailureCause())
+                .deliveryDetailCode(timelineElementDetailsV28.getDeliveryDetailCode())
+                .failureCause(timelineElementDetailsV28.getFailureCause())
+                .reasonCode(timelineElementDetailsV28.getReasonCode())
+                .reason(timelineElementDetailsV28.getReason())
+                .productType(timelineElementDetailsV28.getProductType())
+                .registry(timelineElementDetailsV28.getRegistry())
+                .isAvailable(timelineElementDetailsV28.getIsAvailable())
+                .shouldRetry(timelineElementDetailsV28.getShouldRetry())
+
+                // --- Liste e Oggetti Complessi ---
+                .delegateInfo(timelineElementDetailsV28.getDelegateInfo())
+                .ioSendMessageResult(timelineElementDetailsV28.getIoSendMessageResult())
+                .refusalReasons(timelineElementDetailsV28.getRefusalReasons())
+                .sendingReceipts(timelineElementDetailsV28.getSendingReceipts())
+                .attachments(timelineElementDetailsV28.getAttachments())
+                .invalidatedTimelineAndStatusHistory(timelineElementDetailsV28.getInvalidatedTimelineAndStatusHistory())
+
+                .build();
+    }
+
 }
