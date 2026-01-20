@@ -1,7 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalFactId;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalFactType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffTimelineCategory;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.LegalFactsIdV20;
@@ -34,7 +33,7 @@ public interface BffTimelineMapper {
     @Mapping(target = "category", expression = "java(bffLegalFactId.getCategory() != null ? bffLegalFactId.getCategory().getValue() : null)")
     LegalFactsIdV20 mapToLegalFactsId(BffLegalFactId bffLegalFactId);
 
-    @Mapping(target = "category", expression = "java(legalFactsId.getCategory() != null ? BffLegalFactType.fromValue(legalFactsId.getCategory()) : null)")
+    @Mapping(target = "category", expression = "java(legalFactsId.getCategory() != null ? it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalFactType.fromValue(legalFactsId.getCategory()) : null)")
     BffLegalFactId mapToBffLegalFactId(LegalFactsIdV20 legalFactsId);
 
     // Sub-mapper for Category enum
