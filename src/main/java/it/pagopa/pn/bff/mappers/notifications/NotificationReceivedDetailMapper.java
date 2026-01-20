@@ -111,45 +111,10 @@ public interface NotificationReceivedDetailMapper {
     }
 
     /**
-     * Sort the notification status history by activeFrom date
-     * From delivery, the statuses of the notification are sorted ascending (from the oldest to the earliest)
-     * Front-end wants them ordered descending (from the earliest to the oldest) instead
-     *
-     * @param bffFullNotificationV1 the BffFullNotificationV1 to map
+     * @see NotificationDetailUtility#sortNotificationStatusHistory(BffFullNotificationV1)
      */
     @AfterMapping
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> {
-            long time1 = o1.getActiveFrom().toInstant().toEpochMilli();
-            long time2 = o2.getActiveFrom().toInstant().toEpochMilli();
-
-            if (time1 != time2) {
-                return time2 > time1 ? 1 : -1;
-            }
-
-            // at equal activeFrom, NOTIFICATION_TIMELINE_REWORKED comes first
-            boolean isReworked1 = o1.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
-            boolean isReworked2 = o2.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
-
-            if (isReworked1 && !isReworked2) {
-                return -1;
-            }
-            if (!isReworked1 && isReworked2) {
-                return 1;
-            }
-
-            // then VALID comes before NOT_VALID
-            BffNotificationReworkedStatus reworkedStatus1 = o1.getReworkedStatus();
-            BffNotificationReworkedStatus reworkedStatus2 = o2.getReworkedStatus();
-
-            if (reworkedStatus1 == BffNotificationReworkedStatus.VALID && reworkedStatus2 == BffNotificationReworkedStatus.NOT_VALID) {
-                return -1;
-            }
-            if (reworkedStatus1 == BffNotificationReworkedStatus.NOT_VALID && reworkedStatus2 == BffNotificationReworkedStatus.VALID) {
-                return 1;
-            }
-
-            return 0;
-        });
+        NotificationDetailUtility.sortNotificationStatusHistory(bffFullNotificationV1);
     }
 }
