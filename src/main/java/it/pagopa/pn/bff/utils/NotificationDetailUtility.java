@@ -1,10 +1,13 @@
 package it.pagopa.pn.bff.utils;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
+import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -197,6 +200,7 @@ public class NotificationDetailUtility {
                                 new ArrayList<>(),
                                 new ArrayList<>(),
                                 null,
+                                null,
                                 null
                         );
 
@@ -245,7 +249,7 @@ public class NotificationDetailUtility {
 
                 final Integer recIndex = timeline.getDetails().getRecIndex();
                 final List<NotificationRecipientV24> recipients = bffFullNotificationV1.getRecipients();
-                if(recIndex != null){
+                if (recIndex != null) {
                     recipientData.setDenomination(recipients.get(recIndex).getDenomination());
                     recipientData.setTaxId(recipients.get(recIndex).getTaxId());
                 }
@@ -455,4 +459,328 @@ public class NotificationDetailUtility {
             }
         }
     }
+
+    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1) {
+        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            BffNotificationStatusHistory reworkedStatusHistory = new BffNotificationStatusHistory();
+            reworkedStatusHistory.setStatus(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED);
+            reworkedStatusHistory.setActiveFrom(timelineElement.getTimestamp());
+
+            bffFullNotificationV1.getNotificationStatusHistory().add(reworkedStatusHistory);
+        }
+    }
+
+    public static void setReworkedStatusOnSteps(BffFullNotificationV1 bffFullNotificationV1) {
+        // collect all NOTIFICATION_TIMELINE_REWORKED events
+        List<BffNotificationDetailTimeline> reworkedEvents = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        // early return if no NOTIFICATION_TIMELINE_REWORKED event exists
+        if (reworkedEvents.isEmpty()) {
+            return;
+        }
+
+        // collect all invalidated elementIds from all reworked events
+        List<String> invalidatedElementIds = reworkedEvents.stream()
+                .flatMap(el -> el.getDetails().getInvalidatedTimelineAndStatusHistory().stream())
+                .flatMap(invalidatedElement -> invalidatedElement.getRelatedTimelineElements().stream())
+                .map(TimelineElementV28::getElementId)
+                .toList();
+
+        // get the earliest reworked timestamp (first correction event)
+        long reworkedTimestamp = reworkedEvents.stream()
+                .map(el -> el.getTimestamp().toInstant().toEpochMilli())
+                .min(Long::compareTo)
+                .orElse(Long.MAX_VALUE);
+
+        List<BffNotificationStatusHistory> newStatusHistories = new ArrayList<>();
+
+        for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
+            if (statusHistory.getSteps() == null || statusHistory.getSteps().isEmpty()) {
+                continue;
+            }
+
+            // separate reworked steps from invalidated steps
+            List<BffNotificationDetailTimeline> reworkedSteps = new ArrayList<>();
+            List<BffNotificationDetailTimeline> invalidatedSteps = new ArrayList<>();
+            List<BffNotificationDetailTimeline> normalSteps = new ArrayList<>();
+
+            for (BffNotificationDetailTimeline step : statusHistory.getSteps()) {
+                if (step.getElementId().contains("REWORK_")) {
+                    step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                    reworkedSteps.add(step);
+                } else if (invalidatedElementIds.contains(step.getElementId())) {
+                    step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                    invalidatedSteps.add(step);
+                } else {
+                    normalSteps.add(step);
+                }
+            }
+
+            // for DELIVERING status, keep everything together
+            if (statusHistory.getStatus() == BffNotificationStatus.DELIVERING) {
+                continue;
+            }
+
+            // for other statuses, if there are both reworked and invalidated steps, split them
+            if (!reworkedSteps.isEmpty() && !invalidatedSteps.isEmpty()) {
+                // move normal steps that occurred after the REWORKED event to the reworked status
+                List<BffNotificationDetailTimeline> stepsAfterReworked = new ArrayList<>();
+                List<BffNotificationDetailTimeline> stepsBeforeReworked = new ArrayList<>();
+
+                for (BffNotificationDetailTimeline step : normalSteps) {
+                    long stepTimestamp = step.getTimestamp().toInstant().toEpochMilli();
+                    if (stepTimestamp > reworkedTimestamp) {
+                        stepsAfterReworked.add(step);
+                    } else {
+                        stepsBeforeReworked.add(step);
+                    }
+                }
+
+                // collect relatedTimelineElements that should move to the new status
+                List<String> relatedElementsForNewStatus = new ArrayList<>();
+                List<String> relatedElementsForOldStatus = new ArrayList<>();
+
+                for (String elementId : statusHistory.getRelatedTimelineElements()) {
+                    // check if this elementId corresponds to a reworked step or a step after reworked
+                    boolean isReworkedOrAfter = reworkedSteps.stream().anyMatch(s -> s.getElementId().equals(elementId))
+                            || stepsAfterReworked.stream().anyMatch(s -> s.getElementId().equals(elementId));
+
+                    if (isReworkedOrAfter) {
+                        relatedElementsForNewStatus.add(elementId);
+                    } else {
+                        relatedElementsForOldStatus.add(elementId);
+                    }
+                }
+
+                // create new status history for reworked steps + steps after reworked
+                BffNotificationStatusHistory newStatusHistory = new BffNotificationStatusHistory();
+                newStatusHistory.setStatus(statusHistory.getStatus());
+                newStatusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+
+                List<BffNotificationDetailTimeline> newSteps = new ArrayList<>(reworkedSteps);
+                newSteps.addAll(stepsAfterReworked);
+                newStatusHistory.setSteps(newSteps);
+                newStatusHistory.setRelatedTimelineElements(relatedElementsForNewStatus);
+
+                // set activeFrom from the earliest step in the new status
+                if (!newSteps.isEmpty()) {
+                    newSteps.sort(NotificationDetailUtility::fromLatestToEarliest);
+                    newStatusHistory.setActiveFrom(newSteps.get(newSteps.size() - 1).getTimestamp());
+                }
+
+                newStatusHistories.add(newStatusHistory);
+
+                // update original status history with only invalidated steps + steps before reworked
+                statusHistory.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                List<BffNotificationDetailTimeline> remainingSteps = new ArrayList<>(invalidatedSteps);
+                remainingSteps.addAll(stepsBeforeReworked);
+                statusHistory.setSteps(remainingSteps);
+                statusHistory.setRelatedTimelineElements(relatedElementsForOldStatus);
+            }
+        }
+
+        // add new status histories to the notification
+        bffFullNotificationV1.getNotificationStatusHistory().addAll(newStatusHistories);
+    }
+
+    public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
+        List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
+                .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
+                .toList();
+
+        // get the related Timeline Element from the notification status history from the event of reworked elements
+        for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            for (NotificationStatusHistoryInvalidatedElement invalidateElement : timelineElement.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+                // add invalidated timeline elements to the main timeline
+                for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                    BffNotificationDetailTimeline bffRelatedTimelineElement = BffTimelineMapper.modelMapper.mapToBffTimeline(relatedTimelineElement);
+                    bffFullNotificationV1.getTimeline().add(bffRelatedTimelineElement);
+                }
+
+                // add elementIds to the corresponding notificationStatusHistory in the correct position based on timestamp
+                bffFullNotificationV1.getNotificationStatusHistory().stream()
+                        .filter(statusHistory -> statusHistory.getStatus().getValue().equals(invalidateElement.getStatus().getValue()))
+                        .findFirst()
+                        .ifPresent(statusHistory -> {
+                            for (TimelineElementV28 relatedTimelineElement : invalidateElement.getRelatedTimelineElements()) {
+                                insertElementIdInCorrectPosition(
+                                        statusHistory.getRelatedTimelineElements(),
+                                        relatedTimelineElement,
+                                        bffFullNotificationV1.getTimeline()
+                                );
+                            }
+                        });
+            }
+        }
+
+        // sort the timeline by timestamp
+        bffFullNotificationV1.getTimeline().sort(Comparator.comparing(BffNotificationDetailTimeline::getTimestamp));
+    }
+
+    /**
+     * Sort the notification status history by activeFrom date
+     * From delivery, the statuses of the notification are sorted ascending (from the oldest to the earliest)
+     * Front-end wants them ordered descending (from the earliest to the oldest) instead
+     * A PARITà DI DATA MOSTRIAMO PRIMA GLI EVENTI REWORKED E POI QUELLI INVALIDATI
+     *
+     * @param bffFullNotificationV1 the BffFullNotificationV1 to map
+     */
+    public static void sortNotificationStatusHistory (BffFullNotificationV1 bffFullNotificationV1){
+        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) -> {
+            long time1 = o1.getActiveFrom().toInstant().toEpochMilli();
+            long time2 = o2.getActiveFrom().toInstant().toEpochMilli();
+
+            if (time1 != time2) {
+                return time2 > time1 ? 1 : -1;
+            }
+
+            // at equal activeFrom, NOTIFICATION_TIMELINE_REWORKED comes first
+            boolean isReworked1 = o1.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
+            boolean isReworked2 = o2.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED;
+
+            if (isReworked1 && !isReworked2) {
+                return -1;
+            }
+            if (!isReworked1 && isReworked2) {
+                return 1;
+            }
+
+            // then VALID comes before NOT_VALID
+            BffNotificationReworkedStatus reworkedStatus1 = o1.getReworkedStatus();
+            BffNotificationReworkedStatus reworkedStatus2 = o2.getReworkedStatus();
+
+            if (reworkedStatus1 == BffNotificationReworkedStatus.VALID && reworkedStatus2 == BffNotificationReworkedStatus.NOT_VALID) {
+                return -1;
+            }
+            if (reworkedStatus1 == BffNotificationReworkedStatus.NOT_VALID && reworkedStatus2 == BffNotificationReworkedStatus.VALID) {
+                return 1;
+            }
+
+            return 0;
+        });
+    }
+    private static void insertElementIdInCorrectPosition(
+            List<String> relatedTimelineElements,
+            TimelineElementV28 elementToInsert,
+            List<BffNotificationDetailTimeline> timeline
+    ) {
+        long timestampToInsert = elementToInsert.getTimestamp().toInstant().toEpochMilli();
+        int insertPosition = 0;
+
+        for (int i = 0; i < relatedTimelineElements.size(); i++) {
+            String existingElementId = relatedTimelineElements.get(i);
+            // find the timestamp of the existing element in the timeline
+            long existingTimestamp = timeline.stream()
+                    .filter(t -> t.getElementId().equals(existingElementId))
+                    .findFirst()
+                    .map(t -> t.getTimestamp().toInstant().toEpochMilli())
+                    .orElse(0L);
+
+            if (timestampToInsert >= existingTimestamp) {
+                insertPosition = i + 1;
+            }
+        }
+
+        relatedTimelineElements.add(insertPosition, elementToInsert.getElementId());
+    }
+
+    private static BffNotificationDetailTimelineDetails mapToBffDetails(TimelineElementDetailsV28 timelineElementDetailsV28) {
+        if (timelineElementDetailsV28 == null) {
+            return null;
+        }
+
+        return BffNotificationDetailTimelineDetails.builder()
+                // --- Identificativi e ID ---
+                .legalFactId(timelineElementDetailsV28.getLegalFactId())
+                .notificationRequestId(timelineElementDetailsV28.getNotificationRequestId())
+                .paProtocolNumber(timelineElementDetailsV28.getPaProtocolNumber())
+                .idempotenceToken(timelineElementDetailsV28.getIdempotenceToken())
+                .prepareRequestId(timelineElementDetailsV28.getPrepareRequestId())
+                .sendRequestId(timelineElementDetailsV28.getSendRequestId())
+                .cancellationRequestId(timelineElementDetailsV28.getCancellationRequestId())
+                .relatedRequestId(timelineElementDetailsV28.getRelatedRequestId())
+
+                // --- Indici e Numeri ---
+                .recIndex(timelineElementDetailsV28.getRecIndex())
+                .recIndexes(timelineElementDetailsV28.getRecIndexes())
+                .sentAttemptMade(timelineElementDetailsV28.getSentAttemptMade())
+                .retryNumber(timelineElementDetailsV28.getRetryNumber())
+                .nextSourceAttemptsMade(timelineElementDetailsV28.getNextSourceAttemptsMade())
+                .numberOfPages(timelineElementDetailsV28.getNumberOfPages())
+                .envelopeWeight(timelineElementDetailsV28.getEnvelopeWeight())
+                .notRefinedRecipientIndexes(timelineElementDetailsV28.getNotRefinedRecipientIndexes())
+
+                // --- Date (OffsetDateTime) ---
+                .completionWorkflowDate(timelineElementDetailsV28.getCompletionWorkflowDate())
+                .legalFactGenerationDate(timelineElementDetailsV28.getLegalFactGenerationDate())
+                .attemptDate(timelineElementDetailsV28.getAttemptDate())
+                .eventTimestamp(timelineElementDetailsV28.getEventTimestamp())
+                .sendDate(timelineElementDetailsV28.getSendDate())
+                .schedulingDate(timelineElementDetailsV28.getSchedulingDate())
+                .lastAttemptDate(timelineElementDetailsV28.getLastAttemptDate())
+                .notificationDate(timelineElementDetailsV28.getNotificationDate())
+                .schedulingAnalogDate(timelineElementDetailsV28.getSchedulingAnalogDate())
+                .nextLastAttemptMadeForSource(timelineElementDetailsV28.getNextLastAttemptMadeForSource())
+
+                // --- Indirizzi (Fisici e Digitali) ---
+                .oldAddress(timelineElementDetailsV28.getOldAddress())
+                .normalizedAddress(timelineElementDetailsV28.getNormalizedAddress())
+                .physicalAddress(timelineElementDetailsV28.getPhysicalAddress())
+                .newAddress(timelineElementDetailsV28.getNewAddress())
+                .foundAddress(timelineElementDetailsV28.getFoundAddress())
+                .digitalAddress(timelineElementDetailsV28.getDigitalAddress())
+
+                // --- Informazioni di Consegna e Stato ---
+                .deliveryMode(timelineElementDetailsV28.getDeliveryMode())
+                .contactPhase(timelineElementDetailsV28.getContactPhase())
+                .serviceLevel(timelineElementDetailsV28.getServiceLevel())
+                .recipientType(timelineElementDetailsV28.getRecipientType())
+                .endWorkflowStatus(timelineElementDetailsV28.getEndWorkflowStatus())
+                .responseStatus(timelineElementDetailsV28.getResponseStatus())
+                .digitalAddressSource(timelineElementDetailsV28.getDigitalAddressSource())
+                .nextDigitalAddressSource(timelineElementDetailsV28.getNextDigitalAddressSource())
+
+                // --- Costi e Pagamenti ---
+                .notificationCost(timelineElementDetailsV28.getNotificationCost())
+                .analogCost(timelineElementDetailsV28.getAnalogCost())
+                .amount(timelineElementDetailsV28.getAmount())
+                .creditorTaxId(timelineElementDetailsV28.getCreditorTaxId())
+                .noticeCode(timelineElementDetailsV28.getNoticeCode())
+                .idF24(timelineElementDetailsV28.getIdF24())
+                .paymentSourceChannel(timelineElementDetailsV28.getPaymentSourceChannel())
+                .uncertainPaymentDate(timelineElementDetailsV28.getUncertainPaymentDate())
+
+                // --- Codici, Chiavi e Motivazioni ---
+                .generatedAarUrl(timelineElementDetailsV28.getGeneratedAarUrl())
+                .aarKey(timelineElementDetailsV28.getAarKey())
+                .registeredLetterCode(timelineElementDetailsV28.getRegisteredLetterCode())
+                .raddType(timelineElementDetailsV28.getRaddType())
+                .raddTransactionId(timelineElementDetailsV28.getRaddTransactionId())
+                .deliveryFailureCause(timelineElementDetailsV28.getDeliveryFailureCause())
+                .deliveryDetailCode(timelineElementDetailsV28.getDeliveryDetailCode())
+                .failureCause(timelineElementDetailsV28.getFailureCause())
+                .reasonCode(timelineElementDetailsV28.getReasonCode())
+                .reason(timelineElementDetailsV28.getReason())
+                .productType(timelineElementDetailsV28.getProductType())
+                .registry(timelineElementDetailsV28.getRegistry())
+                .isAvailable(timelineElementDetailsV28.getIsAvailable())
+                .shouldRetry(timelineElementDetailsV28.getShouldRetry())
+
+                // --- Liste e Oggetti Complessi ---
+                .delegateInfo(timelineElementDetailsV28.getDelegateInfo())
+                .ioSendMessageResult(timelineElementDetailsV28.getIoSendMessageResult())
+                .refusalReasons(timelineElementDetailsV28.getRefusalReasons())
+                .sendingReceipts(timelineElementDetailsV28.getSendingReceipts())
+                .attachments(timelineElementDetailsV28.getAttachments())
+                .invalidatedTimelineAndStatusHistory(timelineElementDetailsV28.getInvalidatedTimelineAndStatusHistory())
+
+                .build();
+    }
+
 }

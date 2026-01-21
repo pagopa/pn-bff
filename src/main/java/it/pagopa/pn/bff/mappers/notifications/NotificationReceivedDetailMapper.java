@@ -3,8 +3,11 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationReworkedStatus;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationStatus;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
@@ -26,6 +29,22 @@ public interface NotificationReceivedDetailMapper {
      * @return the mapped BffFullNotificationV1
      */
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV27 notification);
+
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void insertInvalidateElementsInTimeline(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.insertInvalidateElementsInTimeline(bffFullNotificationV1);
+    }
+
+    /**
+     * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertReworkedStatus(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+    }
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#cleanRelatedTimelineElements(BffFullNotificationV1)
@@ -84,16 +103,18 @@ public interface NotificationReceivedDetailMapper {
     }
 
     /**
-     * Sort the notification status history by activeFrom date
-     * From delivery, the statuses of the notification are sorted ascending (from the oldest to the earliest)
-     * Front-end wants them ordered descending (from the earliest to the oldest) instead
-     *
-     * @param bffFullNotificationV1 the BffFullNotificationV1 to map
+     * @see NotificationDetailUtility#setReworkedStatusOnSteps(BffFullNotificationV1)
+     */
+    @AfterMapping
+    default void setReworkedStatusOnSteps(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+        NotificationDetailUtility.setReworkedStatusOnSteps(bffFullNotificationV1);
+    }
+
+    /**
+     * @see NotificationDetailUtility#sortNotificationStatusHistory(BffFullNotificationV1)
      */
     @AfterMapping
     default void sortNotificationStatusHistory(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        bffFullNotificationV1.getNotificationStatusHistory().sort((o1, o2) ->
-                o2.getActiveFrom().toInstant().toEpochMilli() >= o1.getActiveFrom().toInstant().toEpochMilli() ? 1 : -1
-        );
+        NotificationDetailUtility.sortNotificationStatusHistory(bffFullNotificationV1);
     }
 }

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: NKNR89W0YN/AMEz7xGBhq1yHfBcj9F3c5fP0/u9mGGE=
+  version: XXVrGVv+WS+RNWlLrjDM3Co699y1vrXJXo1UCwcNQmA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6291,6 +6291,11 @@ components:
       enum:
         - analog
         - digital
+    BffNotificationReworkedStatus:
+      type: string
+      enum:
+        - VALID
+        - NOT_VALID
     BffNotificationStatusHistory:
       type: object
       additionalProperties: false
@@ -6316,6 +6321,8 @@ components:
           type: string
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
     BffDocumentRecipientData:
       type: object
       required:

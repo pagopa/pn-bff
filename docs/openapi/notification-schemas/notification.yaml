@@ -59,6 +59,8 @@ components:
           type: string
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
 
     BffNotificationStatus:
       type: string
@@ -75,13 +77,19 @@ components:
         - REFUSED
         - CANCELLATION_IN_PROGRESS
         - RETURNED_TO_SENDER
+        - NOTIFICATION_TIMELINE_REWORKED
+
+    BffNotificationReworkedStatus:
+      type: string
+      enum:
+        - VALID
+        - NOT_VALID
 
     BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-
     BffNotificationDetailDocument:
       description: >-
         Documento della notifica.
@@ -171,6 +179,8 @@ components:
           type: boolean
         index:
           type: integer
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
 
     BffTimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/bf6ef041f67988e99f71d2e6ad686b62fc413a49/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementCategoryV28'
