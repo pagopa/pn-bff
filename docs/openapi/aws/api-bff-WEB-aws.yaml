@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: XXVrGVv+WS+RNWlLrjDM3Co699y1vrXJXo1UCwcNQmA=
+  version: clhjxraAydvFEx4+x37HEliCfGo8BDCGQ71TPBbThNM=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4863,6 +4863,7 @@ components:
         - REFUSED
         - CANCELLATION_IN_PROGRESS
         - RETURNED_TO_SENDER
+        - NOTIFICATION_TIMELINE_REWORKED
     BffLegalFactType:
       type: string
       enum:
@@ -6260,6 +6261,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotificationStatusHistoryInvalidatedElement'
+    BffNotificationReworkedStatus:
+      type: string
+      enum:
+        - VALID
+        - NOT_VALID
     BffNotificationDetailTimeline:
       type: object
       required:
@@ -6286,16 +6292,13 @@ components:
           type: boolean
         index:
           type: number
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
     BffNotificationDeliveryMode:
       type: string
       enum:
         - analog
         - digital
-    BffNotificationReworkedStatus:
-      type: string
-      enum:
-        - VALID
-        - NOT_VALID
     BffNotificationStatusHistory:
       type: object
       additionalProperties: false
