@@ -511,12 +511,12 @@ public class NotificationDetailUtility {
             List<BffNotificationDetailTimeline> normalSteps = new ArrayList<>();
 
             for (BffNotificationDetailTimeline step : statusHistory.getSteps()) {
-                if (step.getElementId().contains("REWORK_")) {
-                    step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
-                    reworkedSteps.add(step);
-                } else if (invalidatedElementIds.contains(step.getElementId())) {
+                if (invalidatedElementIds.contains(step.getElementId())) {
                     step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
                     invalidatedSteps.add(step);
+                } else if (step.getElementId().contains("REWORK_")) {
+                    step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                    reworkedSteps.add(step);
                 } else {
                     normalSteps.add(step);
                 }
