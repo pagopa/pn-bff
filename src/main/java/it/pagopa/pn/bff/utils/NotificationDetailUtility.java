@@ -528,6 +528,24 @@ public class NotificationDetailUtility {
                 steps.sort(NotificationDetailUtility::fromLatestToEarliest);
                 newStatusHistory.setSteps(steps);
 
+                // set deliveryMode for DELIVERED status
+                if (newStatusHistory.getStatus() == BffNotificationStatus.DELIVERED) {
+                    BffNotificationDeliveryMode deliveryMode = null;
+                    for (BffNotificationDetailTimeline step : steps) {
+                        if (step.getCategory() == BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW) {
+                            deliveryMode = BffNotificationDeliveryMode.DIGITAL;
+                            break;
+                        } else if (step.getCategory() == BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER
+                                || step.getCategory() == BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW) {
+                            deliveryMode = BffNotificationDeliveryMode.ANALOG;
+                            break;
+                        }
+                    }
+                    if (deliveryMode != null) {
+                        newStatusHistory.setDeliveryMode(deliveryMode);
+                    }
+                }
+
                 newStatusHistories.add(newStatusHistory);
             }
         }
