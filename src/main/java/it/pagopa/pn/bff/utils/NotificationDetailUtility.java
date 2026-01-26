@@ -546,6 +546,26 @@ public class NotificationDetailUtility {
                     }
                 }
 
+                // set recipient for VIEWED status
+                if (newStatusHistory.getStatus() == BffNotificationStatus.VIEWED) {
+                    List<BffNotificationDetailTimeline> viewedSteps = steps.stream()
+                            .filter(s -> s.getCategory() == BffTimelineCategory.NOTIFICATION_VIEWED)
+                            .toList();
+
+                    if (!viewedSteps.isEmpty()) {
+                        BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
+
+                        if (mostOldViewedStep.getDetails() != null) {
+                            BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
+                            if (viewedDetails.getDelegateInfo() != null) {
+                                String recipient = viewedDetails.getDelegateInfo().getDenomination() +
+                                        " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
+                                newStatusHistory.setRecipient(recipient);
+                            }
+                        }
+                    }
+                }
+
                 newStatusHistories.add(newStatusHistory);
             }
         }
