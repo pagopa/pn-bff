@@ -395,11 +395,10 @@ public class NotificationDetailUtility {
                 );
 
                 if (step != null) {
-                    if (deliveryMode == null && step.getCategory().equals(BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
-                        deliveryMode = BffNotificationDeliveryMode.DIGITAL;
-                    } else if (deliveryMode == null && (step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
-                            || step.getCategory().equals(BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
-                        deliveryMode = BffNotificationDeliveryMode.ANALOG;
+                    if (deliveryMode == null) {
+                        List<BffNotificationDetailTimeline> steps = new ArrayList<>();
+                        steps.add(step);
+                        deliveryMode = getDeliveryMode(steps);
                     }
 
                     if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
@@ -439,26 +438,16 @@ public class NotificationDetailUtility {
                 acceptedStatusItems = new ArrayList<>();
             }
 
+            // set deliveryMode for DELIVERED status using deliveryMode determined from steps
             if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && deliveryMode != null) {
                 status.setDeliveryMode(deliveryMode);
             }
 
+            // set recipient for VIEWED status
             if (status.getStatus().equals(BffNotificationStatus.VIEWED)) {
-                List<BffNotificationDetailTimeline> viewedSteps = status.getSteps().stream()
-                        .filter(s -> s.getCategory().equals(BffTimelineCategory.NOTIFICATION_VIEWED))
-                        .toList();
-
-                if (!viewedSteps.isEmpty()) {
-                    BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
-
-                    if (mostOldViewedStep.getDetails() != null) {
-                        BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
-                        if (viewedDetails.getDelegateInfo() != null) {
-                            String recipient = viewedDetails.getDelegateInfo().getDenomination() +
-                                    " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
-                            status.setRecipient(recipient);
-                        }
-                    }
+                String recipient = getRecipientFromViewedSteps(status.getSteps());
+                if (recipient != null) {
+                    status.setRecipient(recipient);
                 }
             }
         }
@@ -530,17 +519,7 @@ public class NotificationDetailUtility {
 
                 // set deliveryMode for DELIVERED status
                 if (newStatusHistory.getStatus() == BffNotificationStatus.DELIVERED) {
-                    BffNotificationDeliveryMode deliveryMode = null;
-                    for (BffNotificationDetailTimeline step : steps) {
-                        if (step.getCategory() == BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW) {
-                            deliveryMode = BffNotificationDeliveryMode.DIGITAL;
-                            break;
-                        } else if (step.getCategory() == BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER
-                                || step.getCategory() == BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW) {
-                            deliveryMode = BffNotificationDeliveryMode.ANALOG;
-                            break;
-                        }
-                    }
+                    BffNotificationDeliveryMode deliveryMode = getDeliveryMode(steps);
                     if (deliveryMode != null) {
                         newStatusHistory.setDeliveryMode(deliveryMode);
                     }
@@ -548,21 +527,9 @@ public class NotificationDetailUtility {
 
                 // set recipient for VIEWED status
                 if (newStatusHistory.getStatus() == BffNotificationStatus.VIEWED) {
-                    List<BffNotificationDetailTimeline> viewedSteps = steps.stream()
-                            .filter(s -> s.getCategory() == BffTimelineCategory.NOTIFICATION_VIEWED)
-                            .toList();
-
-                    if (!viewedSteps.isEmpty()) {
-                        BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
-
-                        if (mostOldViewedStep.getDetails() != null) {
-                            BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
-                            if (viewedDetails.getDelegateInfo() != null) {
-                                String recipient = viewedDetails.getDelegateInfo().getDenomination() +
-                                        " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
-                                newStatusHistory.setRecipient(recipient);
-                            }
-                        }
+                    String recipient = getRecipientFromViewedSteps(steps);
+                    if (recipient != null) {
+                        newStatusHistory.setRecipient(recipient);
                     }
                 }
 
@@ -824,4 +791,54 @@ public class NotificationDetailUtility {
                 .build();
     }
 
+    /**
+     * Determines the deliveryMode based on the steps
+     *
+     * @param steps the steps to analyze
+     * @return the delivery mode or null if not determined
+     */
+    private static BffNotificationDeliveryMode getDeliveryMode(List<BffNotificationDetailTimeline> steps) {
+        if (steps == null) {
+            return null;
+        }
+
+        for (BffNotificationDetailTimeline step : steps) {
+            if (step.getCategory() == BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW) {
+                return BffNotificationDeliveryMode.DIGITAL;
+            } else if (step.getCategory() == BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER
+                    || step.getCategory() == BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW) {
+                return BffNotificationDeliveryMode.ANALOG;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Extracts the recipient information from VIEWED steps based on delegate info
+     *
+     * @param steps the steps to analyze
+     * @return the recipient string or null if not found
+     */
+    private static String getRecipientFromViewedSteps(List<BffNotificationDetailTimeline> steps) {
+        if (steps == null) {
+            return null;
+        }
+
+        List<BffNotificationDetailTimeline> viewedSteps = steps.stream()
+                .filter(s -> s.getCategory() == BffTimelineCategory.NOTIFICATION_VIEWED)
+                .toList();
+
+        if (!viewedSteps.isEmpty()) {
+            BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
+
+            if (mostOldViewedStep.getDetails() != null) {
+                BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
+                if (viewedDetails.getDelegateInfo() != null) {
+                    return viewedDetails.getDelegateInfo().getDenomination() +
+                            " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
+                }
+            }
+        }
+        return null;
+    }
 }
