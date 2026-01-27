@@ -395,11 +395,10 @@ public class NotificationDetailUtility {
                 );
 
                 if (step != null) {
-                    if (deliveryMode == null && step.getCategory().equals(BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW)) {
-                        deliveryMode = BffNotificationDeliveryMode.DIGITAL;
-                    } else if (deliveryMode == null && (step.getCategory().equals(BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER)
-                            || step.getCategory().equals(BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW))) {
-                        deliveryMode = BffNotificationDeliveryMode.ANALOG;
+                    if (deliveryMode == null) {
+                        List<BffNotificationDetailTimeline> steps = new ArrayList<>();
+                        steps.add(step);
+                        deliveryMode = getDeliveryMode(steps);
                     }
 
                     if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && !preventShiftFromDeliveredToDelivering) {
@@ -439,26 +438,16 @@ public class NotificationDetailUtility {
                 acceptedStatusItems = new ArrayList<>();
             }
 
+            // set deliveryMode for DELIVERED status using deliveryMode determined from steps
             if (status.getStatus().equals(BffNotificationStatus.DELIVERED) && deliveryMode != null) {
                 status.setDeliveryMode(deliveryMode);
             }
 
+            // set recipient for VIEWED status
             if (status.getStatus().equals(BffNotificationStatus.VIEWED)) {
-                List<BffNotificationDetailTimeline> viewedSteps = status.getSteps().stream()
-                        .filter(s -> s.getCategory().equals(BffTimelineCategory.NOTIFICATION_VIEWED))
-                        .toList();
-
-                if (!viewedSteps.isEmpty()) {
-                    BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
-
-                    if (mostOldViewedStep.getDetails() != null) {
-                        BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
-                        if (viewedDetails.getDelegateInfo() != null) {
-                            String recipient = viewedDetails.getDelegateInfo().getDenomination() +
-                                    " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
-                            status.setRecipient(recipient);
-                        }
-                    }
+                String recipient = getRecipientFromViewedSteps(status.getSteps());
+                if (recipient != null) {
+                    status.setRecipient(recipient);
                 }
             }
         }
@@ -530,19 +519,17 @@ public class NotificationDetailUtility {
 
                 // set deliveryMode for DELIVERED status
                 if (newStatusHistory.getStatus() == BffNotificationStatus.DELIVERED) {
-                    BffNotificationDeliveryMode deliveryMode = null;
-                    for (BffNotificationDetailTimeline step : steps) {
-                        if (step.getCategory() == BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW) {
-                            deliveryMode = BffNotificationDeliveryMode.DIGITAL;
-                            break;
-                        } else if (step.getCategory() == BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER
-                                || step.getCategory() == BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW) {
-                            deliveryMode = BffNotificationDeliveryMode.ANALOG;
-                            break;
-                        }
-                    }
+                    BffNotificationDeliveryMode deliveryMode = getDeliveryMode(steps);
                     if (deliveryMode != null) {
                         newStatusHistory.setDeliveryMode(deliveryMode);
+                    }
+                }
+
+                // set recipient for VIEWED status
+                if (newStatusHistory.getStatus() == BffNotificationStatus.VIEWED) {
+                    String recipient = getRecipientFromViewedSteps(steps);
+                    if (recipient != null) {
+                        newStatusHistory.setRecipient(recipient);
                     }
                 }
 
@@ -711,97 +698,54 @@ public class NotificationDetailUtility {
         relatedTimelineElements.add(insertPosition, elementToInsert.getElementId());
     }
 
-    private static BffNotificationDetailTimelineDetails mapToBffDetails(TimelineElementDetailsV28 timelineElementDetailsV28) {
-        if (timelineElementDetailsV28 == null) {
+    /**
+     * Determines the deliveryMode based on the steps
+     *
+     * @param steps the steps to analyze
+     * @return the delivery mode or null if not determined
+     */
+    private static BffNotificationDeliveryMode getDeliveryMode(List<BffNotificationDetailTimeline> steps) {
+        if (steps == null) {
             return null;
         }
 
-        return BffNotificationDetailTimelineDetails.builder()
-                // --- Identificativi e ID ---
-                .legalFactId(timelineElementDetailsV28.getLegalFactId())
-                .notificationRequestId(timelineElementDetailsV28.getNotificationRequestId())
-                .paProtocolNumber(timelineElementDetailsV28.getPaProtocolNumber())
-                .idempotenceToken(timelineElementDetailsV28.getIdempotenceToken())
-                .prepareRequestId(timelineElementDetailsV28.getPrepareRequestId())
-                .sendRequestId(timelineElementDetailsV28.getSendRequestId())
-                .cancellationRequestId(timelineElementDetailsV28.getCancellationRequestId())
-                .relatedRequestId(timelineElementDetailsV28.getRelatedRequestId())
-
-                // --- Indici e Numeri ---
-                .recIndex(timelineElementDetailsV28.getRecIndex())
-                .recIndexes(timelineElementDetailsV28.getRecIndexes())
-                .sentAttemptMade(timelineElementDetailsV28.getSentAttemptMade())
-                .retryNumber(timelineElementDetailsV28.getRetryNumber())
-                .nextSourceAttemptsMade(timelineElementDetailsV28.getNextSourceAttemptsMade())
-                .numberOfPages(timelineElementDetailsV28.getNumberOfPages())
-                .envelopeWeight(timelineElementDetailsV28.getEnvelopeWeight())
-                .notRefinedRecipientIndexes(timelineElementDetailsV28.getNotRefinedRecipientIndexes())
-
-                // --- Date (OffsetDateTime) ---
-                .completionWorkflowDate(timelineElementDetailsV28.getCompletionWorkflowDate())
-                .legalFactGenerationDate(timelineElementDetailsV28.getLegalFactGenerationDate())
-                .attemptDate(timelineElementDetailsV28.getAttemptDate())
-                .eventTimestamp(timelineElementDetailsV28.getEventTimestamp())
-                .sendDate(timelineElementDetailsV28.getSendDate())
-                .schedulingDate(timelineElementDetailsV28.getSchedulingDate())
-                .lastAttemptDate(timelineElementDetailsV28.getLastAttemptDate())
-                .notificationDate(timelineElementDetailsV28.getNotificationDate())
-                .schedulingAnalogDate(timelineElementDetailsV28.getSchedulingAnalogDate())
-                .nextLastAttemptMadeForSource(timelineElementDetailsV28.getNextLastAttemptMadeForSource())
-
-                // --- Indirizzi (Fisici e Digitali) ---
-                .oldAddress(timelineElementDetailsV28.getOldAddress())
-                .normalizedAddress(timelineElementDetailsV28.getNormalizedAddress())
-                .physicalAddress(timelineElementDetailsV28.getPhysicalAddress())
-                .newAddress(timelineElementDetailsV28.getNewAddress())
-                .foundAddress(timelineElementDetailsV28.getFoundAddress())
-                .digitalAddress(timelineElementDetailsV28.getDigitalAddress())
-
-                // --- Informazioni di Consegna e Stato ---
-                .deliveryMode(timelineElementDetailsV28.getDeliveryMode())
-                .contactPhase(timelineElementDetailsV28.getContactPhase())
-                .serviceLevel(timelineElementDetailsV28.getServiceLevel())
-                .recipientType(timelineElementDetailsV28.getRecipientType())
-                .endWorkflowStatus(timelineElementDetailsV28.getEndWorkflowStatus())
-                .responseStatus(timelineElementDetailsV28.getResponseStatus())
-                .digitalAddressSource(timelineElementDetailsV28.getDigitalAddressSource())
-                .nextDigitalAddressSource(timelineElementDetailsV28.getNextDigitalAddressSource())
-
-                // --- Costi e Pagamenti ---
-                .notificationCost(timelineElementDetailsV28.getNotificationCost())
-                .analogCost(timelineElementDetailsV28.getAnalogCost())
-                .amount(timelineElementDetailsV28.getAmount())
-                .creditorTaxId(timelineElementDetailsV28.getCreditorTaxId())
-                .noticeCode(timelineElementDetailsV28.getNoticeCode())
-                .idF24(timelineElementDetailsV28.getIdF24())
-                .paymentSourceChannel(timelineElementDetailsV28.getPaymentSourceChannel())
-                .uncertainPaymentDate(timelineElementDetailsV28.getUncertainPaymentDate())
-
-                // --- Codici, Chiavi e Motivazioni ---
-                .generatedAarUrl(timelineElementDetailsV28.getGeneratedAarUrl())
-                .aarKey(timelineElementDetailsV28.getAarKey())
-                .registeredLetterCode(timelineElementDetailsV28.getRegisteredLetterCode())
-                .raddType(timelineElementDetailsV28.getRaddType())
-                .raddTransactionId(timelineElementDetailsV28.getRaddTransactionId())
-                .deliveryFailureCause(timelineElementDetailsV28.getDeliveryFailureCause())
-                .deliveryDetailCode(timelineElementDetailsV28.getDeliveryDetailCode())
-                .failureCause(timelineElementDetailsV28.getFailureCause())
-                .reasonCode(timelineElementDetailsV28.getReasonCode())
-                .reason(timelineElementDetailsV28.getReason())
-                .productType(timelineElementDetailsV28.getProductType())
-                .registry(timelineElementDetailsV28.getRegistry())
-                .isAvailable(timelineElementDetailsV28.getIsAvailable())
-                .shouldRetry(timelineElementDetailsV28.getShouldRetry())
-
-                // --- Liste e Oggetti Complessi ---
-                .delegateInfo(timelineElementDetailsV28.getDelegateInfo())
-                .ioSendMessageResult(timelineElementDetailsV28.getIoSendMessageResult())
-                .refusalReasons(timelineElementDetailsV28.getRefusalReasons())
-                .sendingReceipts(timelineElementDetailsV28.getSendingReceipts())
-                .attachments(timelineElementDetailsV28.getAttachments())
-                .invalidatedTimelineAndStatusHistory(timelineElementDetailsV28.getInvalidatedTimelineAndStatusHistory())
-
-                .build();
+        for (BffNotificationDetailTimeline step : steps) {
+            if (step.getCategory() == BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW) {
+                return BffNotificationDeliveryMode.DIGITAL;
+            } else if (step.getCategory() == BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER
+                    || step.getCategory() == BffTimelineCategory.ANALOG_SUCCESS_WORKFLOW) {
+                return BffNotificationDeliveryMode.ANALOG;
+            }
+        }
+        return null;
     }
 
+    /**
+     * Extracts the recipient information from VIEWED steps based on delegate info
+     *
+     * @param steps the steps to analyze
+     * @return the recipient string or null if not found
+     */
+    private static String getRecipientFromViewedSteps(List<BffNotificationDetailTimeline> steps) {
+        if (steps == null) {
+            return null;
+        }
+
+        List<BffNotificationDetailTimeline> viewedSteps = steps.stream()
+                .filter(s -> s.getCategory() == BffTimelineCategory.NOTIFICATION_VIEWED)
+                .toList();
+
+        if (!viewedSteps.isEmpty()) {
+            BffNotificationDetailTimeline mostOldViewedStep = viewedSteps.get(viewedSteps.size() - 1);
+
+            if (mostOldViewedStep.getDetails() != null) {
+                BffNotificationDetailTimelineDetails viewedDetails = mostOldViewedStep.getDetails();
+                if (viewedDetails.getDelegateInfo() != null) {
+                    return viewedDetails.getDelegateInfo().getDenomination() +
+                            " (" + viewedDetails.getDelegateInfo().getTaxId() + ")";
+                }
+            }
+        }
+        return null;
+    }
 }
