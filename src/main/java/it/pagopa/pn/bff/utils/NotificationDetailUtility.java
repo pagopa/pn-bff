@@ -556,12 +556,15 @@ public class NotificationDetailUtility {
                 if (invalidatedElementIds.contains(step.getElementId())) {
                     step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
                 } else if (step.getElementId().contains(REWORK_SUFFIX)) {
-                    // check if this step corrects an invalidated element
+                    // Check if this step corrects an invalidated element
                     String baseId = step.getElementId().substring(0, step.getElementId().lastIndexOf(REWORK_SUFFIX));
                     boolean correctsInvalidated = invalidatedElementIds.stream()
                             .anyMatch(id -> id.equals(baseId) || id.startsWith(baseId + REWORK_SUFFIX));
 
-                    if (correctsInvalidated) {
+                    // PN-18239 -> Reworked elements with SEND_ANALOG_PROGRESS category must be marked as VALID even if they don't have a direct link with an invalidated element.
+                    boolean isAnalogProgress = step.getCategory() == BffTimelineCategory.SEND_ANALOG_PROGRESS;
+                    
+                    if (correctsInvalidated || isAnalogProgress) {
                         step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
                         hasReworkedSteps = true;
                     }
