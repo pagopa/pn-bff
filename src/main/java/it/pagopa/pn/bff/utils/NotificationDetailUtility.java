@@ -544,6 +544,22 @@ public class NotificationDetailUtility {
                 .map(TimelineElementV28::getElementId)
                 .toList();
 
+        // Find the maximum rework number from NOTIFICATION_TIMELINE_REWORKED events in the timeline
+        int maxReworkNumber = -1;
+        for (BffNotificationDetailTimeline timelineElement : bffFullNotificationV1.getTimeline()) {
+            if (timelineElement.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED &&
+                    timelineElement.getElementId().contains(REWORK_SUFFIX)) {
+                int reworkIndex = timelineElement.getElementId().lastIndexOf(REWORK_SUFFIX);
+                String reworkPart = timelineElement.getElementId().substring(reworkIndex + REWORK_SUFFIX.length());
+                try {
+                    int reworkNumber = Integer.parseInt(reworkPart);
+                    maxReworkNumber = Math.max(maxReworkNumber, reworkNumber);
+                } catch (NumberFormatException e) {
+                    // ignore invalid rework number
+                }
+            }
+        }
+
         // mark existing statusHistory steps with reworkedStatus and clean up
         for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
             if (statusHistory.getSteps() == null || statusHistory.getSteps().isEmpty()) {
@@ -555,8 +571,24 @@ public class NotificationDetailUtility {
                 // check if step is invalidated first
                 if (invalidatedElementIds.contains(step.getElementId())) {
                     step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                } else if (step.getCategory() == BffTimelineCategory.SEND_ANALOG_PROGRESS &&
+                        step.getElementId().contains(REWORK_SUFFIX)) {
+                    // For SEND_ANALOG_PROGRESS: only the latest rework number should be VALID
+                    int reworkIndex = step.getElementId().lastIndexOf(REWORK_SUFFIX);
+                    String reworkPart = step.getElementId().substring(reworkIndex + REWORK_SUFFIX.length());
+                    try {
+                        int reworkNumber = Integer.parseInt(reworkPart);
+                        if (reworkNumber == maxReworkNumber) {
+                            step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                            hasReworkedSteps = true;
+                        } else {
+                            step.setReworkedStatus(BffNotificationReworkedStatus.NOT_VALID);
+                        }
+                    } catch (NumberFormatException e) {
+                        // ignore invalid rework number
+                    }
                 } else if (step.getElementId().contains(REWORK_SUFFIX)) {
-                    // check if this step corrects an invalidated element
+                    // For other categories: check if this step corrects an invalidated element
                     String baseId = step.getElementId().substring(0, step.getElementId().lastIndexOf(REWORK_SUFFIX));
                     boolean correctsInvalidated = invalidatedElementIds.stream()
                             .anyMatch(id -> id.equals(baseId) || id.startsWith(baseId + REWORK_SUFFIX));
