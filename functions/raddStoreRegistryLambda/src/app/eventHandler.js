@@ -122,7 +122,7 @@ exports.handleEvent = async () => {
     const webLandingS3Key = s3Utils.generateS3Key(null, true);
     await cloudFrontUtils.invalidateCache(
       process.env.WEB_LANDING_DISTRIBUTION_ID,
-      [webLandingS3Key]
+      ["/" + webLandingS3Key]
     );
   }
 };
