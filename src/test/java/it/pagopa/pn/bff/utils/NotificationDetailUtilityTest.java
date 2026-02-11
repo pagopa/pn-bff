@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.Notific
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
+import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.time.OffsetTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationDetailUtilityTest {
@@ -647,5 +649,94 @@ class NotificationDetailUtilityTest {
         assertNotNull(viewedStatusHistory);
         assertEquals(viewedStatusHistory.getSteps().size(), 1);
         assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
+    }
+
+    @Test
+    void insertReworkedStatus() {
+        // create notification with one step in timeline with category "NOTIFICATION_TIMELINE_REWORKED"
+        BffFullNotificationV1 bffFullNotificationV1 = new BffFullNotificationV1();
+        List<BffNotificationDetailTimeline> timeline = new ArrayList<>();
+        BffNotificationDetailTimeline singleElementTimeline = new BffNotificationDetailTimeline();
+        singleElementTimeline.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+
+        // add element to timeline
+        timeline.add(singleElementTimeline);
+        bffFullNotificationV1.setTimeline(timeline);
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+
+        assertEquals(1, bffFullNotificationV1.getNotificationStatusHistory().stream()
+                .filter(status -> status.getStatus().equals(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED)).toList().size()
+        );
+    }
+
+    @Test
+    void insertInvalidateElementsInTimeline() {
+        // STEP1: notifica bff che ha reworked_timeline_element in timeline ma non ha l'elemento invalidato nella timeline
+
+        // creazione NOTIFICA
+        BffFullNotificationV1 bffFullNotificationV1 = new BffFullNotificationV1();
+        //
+        // creazione NotificationStatusHistory
+        List<BffNotificationStatusHistory> notificationStatusHistory = new ArrayList<>();
+        // creazione elemento della notification status history
+        BffNotificationStatusHistory elementStatusHistory = new BffNotificationStatusHistory();
+        // caratterizzazione elemento della notification status history con status "DELIVERING"
+        elementStatusHistory.setStatus(BffNotificationStatus.DELIVERING);
+        // aggiunta elemento della notification status history alla notification status history
+        notificationStatusHistory.add(elementStatusHistory);
+        // aggiunta NotificationStatusHistory alla notifica
+        bffFullNotificationV1.setNotificationStatusHistory(notificationStatusHistory);
+        // creazione oggetto TIMELINE vuoto
+        List<BffNotificationDetailTimeline> timeline = new ArrayList<>();
+        // creazione REWORKED TIMELINE ELEMENT con categoria "NOTIFICATION_TIMELINE_REWORKED"
+        BffNotificationDetailTimeline reworkedElementTimeline = new BffNotificationDetailTimeline();
+        reworkedElementTimeline.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        reworkedElementTimeline.setTimestamp(OffsetDateTime.now());
+        // creazione proprietà DETAILS vuota dell'elemento reworked
+        BffNotificationDetailTimelineDetails reworkedDetails = new BffNotificationDetailTimelineDetails();
+
+        // creare lista VUOTA degli elementi invalidati da inserire in details
+        List<NotificationStatusHistoryInvalidatedElement> invalidatedElements = new ArrayList<>();
+        // creare un elemento invalidato di esempio
+        NotificationStatusHistoryInvalidatedElement invalidatedElement = new NotificationStatusHistoryInvalidatedElement();
+        // creare una lista di relatedTimelineElements da associare all'elemento invalidato
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.TimelineElementV28> relatedTimelineElements = new ArrayList<>();
+        //creare un elemento di esempio da inserire nella lista di relatedTimelineElements
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.TimelineElementV28 relatedTimelineElement = new it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.TimelineElementV28();
+        // caratterizziamo l'elemento di esempio con un id, category e timestamp
+        relatedTimelineElement.setElementId("relatedElementId");
+        relatedTimelineElement.setCategory(
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.TimelineElementCategoryV28.SEND_ANALOG_PROGRESS);
+        relatedTimelineElement.setTimestamp(OffsetDateTime.now());
+
+        // popolare la lista di releatedTimelineElements con un elemento di esempio
+        relatedTimelineElements.add(relatedTimelineElement);
+        // creiamo lo status di esempio "DELIVERING" da associare all'elemento invalidato
+        NotificationStatusV26 status = NotificationStatusV26.DELIVERING;
+        // popoliamo l'elemento invalidato con i suoi relatedTimelineElements e con lo status di esempio "DELIVERING"
+        invalidatedElement.setRelatedTimelineElements(relatedTimelineElements);
+        invalidatedElement.setStatus(status);
+        invalidatedElement.setActiveFrom(OffsetDateTime.now());
+
+        // popoliamo invalidatedElements con l'elemento invalidato di esempio
+        invalidatedElements.add(invalidatedElement);
+
+        // popoliamo la proprietà DETAILS con gli invalidatedElements
+        reworkedDetails.setInvalidatedTimelineAndStatusHistory(invalidatedElements);
+
+        //aggiunta propriertà DETAILS all'elemento reworked
+        reworkedElementTimeline.setDetails(reworkedDetails);
+        // aggiunta elemento reworked alla timeline
+        timeline.add(reworkedElementTimeline);
+        // aggiunta timeline alla notifica
+        bffFullNotificationV1.setTimeline(timeline);
+
+        // add invalidated element to timeline
+         NotificationDetailUtility.insertInvalidateElementsInTimeline(bffFullNotificationV1);
+         // verificare che dopo l'esecuzione del metodo, viene inserito l'elemento invalidato nella timeline
+            assertTrue(bffFullNotificationV1.getTimeline().stream()
+                    .anyMatch(element -> element.getElementId() != null && element.getElementId().equals("relatedElementId"))
+            );
+
     }
 }

@@ -8,13 +8,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class NotificationReceivedDetailMapperTest {
-    @Test
-    void testReceivedNotificationDetailMapper() {
-        FullReceivedNotificationV27 notification = new FullReceivedNotificationV27();
-        BffFullNotificationV1 actualMapNotificationDetailResult = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
-        assertNotNull(actualMapNotificationDetailResult);
 
+    @Test
+    void testMapNotificationNull() {
         BffFullNotificationV1 mapNotificationNull = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(null);
         assertNull(mapNotificationNull);
     }
+
+    @Test
+    void testReceivedNotificationDetailMapper() {
+        FullReceivedNotificationV27 notification = new FullReceivedNotificationV27();
+        notification.setIun("id-test-123");
+
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+
+        assertNotNull(result);
+        assertNotNull(result.getIun());
+    }
 }
+

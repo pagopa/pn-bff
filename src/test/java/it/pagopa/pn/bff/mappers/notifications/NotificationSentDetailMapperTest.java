@@ -10,12 +10,23 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class NotificationSentDetailMapperTest {
 
     @Test
-    void testSentNotificationDetailMapper() {
+    void testMapNotificationNull() {
         FullSentNotificationV28 notification = new FullSentNotificationV28();
         BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
         assertNotNull(actualMapSentNotificationDetailResult);
 
         BffFullNotificationV1 mapSentNotificationNull = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(null);
         assertNull(mapSentNotificationNull);
+    }
+
+    @Test
+    void testSentNotificationDetailMapper() {
+        FullSentNotificationV28 notification = new FullSentNotificationV28();
+        notification.setSenderPaId("sent-id-123");
+
+        BffFullNotificationV1 result = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
+
+        assertNotNull(result);
+        assertNotNull(result.getSenderPaId()); // <--- Aggiungiamo questo per coerenza con l'altro test
     }
 }
