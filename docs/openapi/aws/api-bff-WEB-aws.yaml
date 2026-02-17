@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: clhjxraAydvFEx4+x37HEliCfGo8BDCGQ71TPBbThNM=
+  version: v9wF7L5cpf/20+YAdd0b9KOlnegpM+tKI+cfhdkWvPQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7471,13 +7471,9 @@ components:
         companyName:
           type: string
           description: Public Administration company name
-          maxLength: 250
-          pattern: ^([\x20-\xFF]{1,250})$
         description:
           type: string
           description: Subject of payment
-          maxLength: 250
-          pattern: ^([\x20-\xFF]{1,250})$
     PaymentRequest:
       title: Request to make a payment on Checkout
       type: object
