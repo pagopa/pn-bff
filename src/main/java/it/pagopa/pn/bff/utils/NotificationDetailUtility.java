@@ -578,7 +578,10 @@ public class NotificationDetailUtility {
 
             // if statusHistory contains reworked steps, mark it as VALID and remove NOT_VALID steps
             if (hasReworkedSteps) {
-                statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                // PN-10503 Temp: if the status is VIEWED, we don't set it as VALID
+                if (statusHistory.getStatus() != BffNotificationStatus.VIEWED) {
+                    statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
+                }
 
                 // keep only VALID steps (remove invalidated steps added by insertInvalidateElementsInTimeline)
                 List<BffNotificationDetailTimeline> validSteps = statusHistory.getSteps().stream()
