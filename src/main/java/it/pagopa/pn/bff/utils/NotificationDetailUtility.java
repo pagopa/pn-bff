@@ -583,9 +583,9 @@ public class NotificationDetailUtility {
                     statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
                 }
 
-                // keep only VALID steps (remove invalidated steps added by insertInvalidateElementsInTimeline)
+                // keep only VALID and null steps (remove only NOT_VALID steps added by insertInvalidateElementsInTimeline)
                 List<BffNotificationDetailTimeline> validSteps = statusHistory.getSteps().stream()
-                        .filter(step -> step.getReworkedStatus() == BffNotificationReworkedStatus.VALID)
+                        .filter(step -> step.getReworkedStatus() != BffNotificationReworkedStatus.NOT_VALID)
                         .toList();
                 statusHistory.setSteps(new ArrayList<>(validSteps));
 
