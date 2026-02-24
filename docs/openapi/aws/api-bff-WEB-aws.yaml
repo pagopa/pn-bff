@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: v9wF7L5cpf/20+YAdd0b9KOlnegpM+tKI+cfhdkWvPQ=
+  version: Xi6kyiBF44E3F3S0kz402gGzUHRdRYqwOSHhAsvRBvU=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6716,10 +6716,12 @@ components:
           type: string
           description: id dell'api key appena generata
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         apiKey:
           type: string
           description: Valore dell'api key appena generata
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
     RequestApiKeyStatus:
       title: Richiesta di cambio stato per una api key
       description: Richiesta di cambio stato per una api key
@@ -6762,10 +6764,12 @@ components:
           type: string
           description: Id della public key
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         issuer:
           type: string
           description: Issuer della public key
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         name:
           type: string
           description: Nome della public key
@@ -6775,6 +6779,7 @@ components:
             Valore dell public key restituito solo se il query param
             showPublicKey == True
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         createdAt:
           type: string
           description: Data censimento public key
@@ -6849,6 +6854,7 @@ components:
             Kid della public key caricata da utilizzare nell'header kid del
             token JWT
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         issuer:
           type: string
           description: >-
@@ -6981,10 +6987,12 @@ components:
           type: string
           description: id della virtual key appena generata
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         virtualKey:
           type: string
           description: Valore della virtual key appena generata
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
     RequestVirtualKeyStatus:
       title: Richiesta di cambio stato per una virtual key
       description: Richiesta di cambio stato per una virtual key
@@ -7732,6 +7740,7 @@ components:
       properties:
         taxId:
           type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
           minLength: 11
           maxLength: 16
           pattern: >-
