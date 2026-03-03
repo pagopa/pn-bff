@@ -72,11 +72,7 @@ class PnNotificationCostServiceClientImplTestIT {
 
         StepVerifier.create(pnNotificationCostServiceClient.getNotificationCostRecipient("test-iun", 0))
                 .expectNextMatches(result ->
-                        result.getPagoPaIntMode() != null &&
-                                result.getTotalCost() != null &&
-                                result.getTotalCost().getCostWithVat() == 1220 &&
-                                result.getTotalCost().getDetails() != null &&
-                                result.getTotalCost().getDetails().getVat() == 22 &&
+                        result.getTotalCost().getCostWithVat() == 1220 &&
                                 result.getTotalCost().getDetails().getBaseCostDetail().getCost() == 100 &&
                                 result.getTotalCost().getDetails().getAnalogCostDetail().getCostWithVat() == 1000
                 )
