@@ -1,8 +1,11 @@
 info:
   version: v1.0
 components:
-  schemas:
+  parameters:
+    BffCheckTPPRetrievalId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
 
+  schemas:
     BffNotificationsResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/b82bee7394cdb44b506d2cb45fb685171186c677/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
 
@@ -33,6 +36,8 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
+            notificationCostDetails:
+              $ref: '#/components/schemas/BffNotificationCostDetails'
 
     BffNotificationStatusHistory:
       type: object
@@ -212,6 +217,34 @@ components:
     BffCheckTPPResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/schemas/RetrievalPayload'
 
-  parameters:
-    BffCheckTPPRetrievalId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
+    BffNotificationCostDetails:
+      type: object
+      description: >-
+        Dettaglio dei costi di una notifica. I campi relativi ai costi sono presenti solo quando status è OK.
+      required:
+        - status
+      properties:
+        status:
+          description: Stato della risposta al microservizio notification-cost-service.
+          type: string
+          enum:
+            - OK
+            - UNAVAILABLE
+            - ERROR
+          default: UNAVAILABLE
+        totalCost:
+          description: Costo totale in eurocent della notifica
+          type: integer
+          format: int32
+        baseCost:
+          description: Costo base di notificazione in eurocent
+          type: integer
+          format: int32
+        analogCost:
+          description: Costo totale in eurocent dei flussi analogici
+          type: integer
+          format: int32
+        numberOfAnalogCost:
+          description: Totale di invii cartacei (sia raccomandata semplice che 890/AR…)
+          type: integer
+          format: int32
