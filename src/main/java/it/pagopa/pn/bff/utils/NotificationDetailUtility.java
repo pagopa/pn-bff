@@ -480,15 +480,21 @@ public class NotificationDetailUtility {
      * @param bffFullNotificationV1 the notification to update in place
      */
     public static void setReworkedStatusOnSteps(BffFullNotificationV1 bffFullNotificationV1) {
-        // collect all NOTIFICATION_TIMELINE_REWORKED events
         List<BffNotificationDetailTimeline> reworkedEvents = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
-        // early return if no NOTIFICATION_TIMELINE_REWORKED event exists
         if (reworkedEvents.isEmpty()) {
             return;
         }
+
+        List<String> invalidatedElementIds = reworkedEvents.stream()
+                .flatMap(el -> el.getDetails().getInvalidatedTimelineAndStatusHistory().stream())
+                .flatMap(invalidatedElement -> invalidatedElement.getRelatedTimelineElements().stream())
+                .map(TimelineElementV28::getElementId)
+                .toList();
+
+        boolean firstRefinementNotInvalidated = false;
 
         /* FIRST STEP
          * create new status history entries for each invalidated statuses in REWORKED events (except DELIVERING), moving the related steps from the original status history to the new one
@@ -501,6 +507,23 @@ public class NotificationDetailUtility {
                 // skip DELIVERING status - keep everything together
                 if (invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING) {
                     continue;
+                }
+
+                // in a multi-recipient notification, EFFECTIVE_DATE must not be duplicated if the correction does not involve the refinement that perfected the notification
+                // to determine this, sort the REFINEMENT timeline events and check whether the first one is not invalidated
+                if (invalidatedStatus.getStatus() == NotificationStatusV26.EFFECTIVE_DATE) {
+                    List<BffNotificationDetailTimeline> refinementEvents = bffFullNotificationV1.getTimeline().stream()
+                            .filter(el -> el.getCategory() == BffTimelineCategory.REFINEMENT)
+                            .sorted(Comparator.comparing(BffNotificationDetailTimeline::getTimestamp))
+                            .toList();
+
+                    if (!refinementEvents.isEmpty()) {
+                        String firstRefinementId = refinementEvents.get(0).getElementId();
+                        if (!invalidatedElementIds.contains(firstRefinementId)) {
+                            firstRefinementNotInvalidated = true;
+                            continue;
+                        }
+                    }
                 }
 
                 BffNotificationStatusHistory newStatusHistory = new BffNotificationStatusHistory();
@@ -561,13 +584,6 @@ public class NotificationDetailUtility {
          * mark the steps that correct an invalidated element as VALID, and the ones that are invalidated as NOT_VALID. Then, mark the parent status history as VALID as well (except for VIEWED, UNREACHABLE and DELIVERING)
          */
 
-        List<String> invalidatedElementIds = reworkedEvents.stream()
-                .flatMap(el -> el.getDetails().getInvalidatedTimelineAndStatusHistory().stream())
-                .flatMap(invalidatedElement -> invalidatedElement.getRelatedTimelineElements().stream())
-                .map(TimelineElementV28::getElementId)
-                .toList();
-
-
         // mark all statusHistory steps (including new invalidated ones) with reworkedStatus
         for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
             if (statusHistory.getSteps() == null || statusHistory.getSteps().isEmpty()) {
@@ -595,11 +611,12 @@ public class NotificationDetailUtility {
                 }
             }
 
-            // if statusHistory contains reworked steps, mark it as VALID (except for VIEWED, UNREACHABLE and DELIVERING)
+            // if statusHistory contains reworked steps, mark it as VALID (except for VIEWED, UNREACHABLE, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
             if (hasReworkedSteps &&
                     statusHistory.getStatus() != BffNotificationStatus.VIEWED &&
                     statusHistory.getStatus() != BffNotificationStatus.UNREACHABLE &&
-                    statusHistory.getStatus() != BffNotificationStatus.DELIVERING) {
+                    statusHistory.getStatus() != BffNotificationStatus.DELIVERING &&
+                    !(statusHistory.getStatus() == BffNotificationStatus.EFFECTIVE_DATE && firstRefinementNotInvalidated)) {
                 statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
             }
         }
