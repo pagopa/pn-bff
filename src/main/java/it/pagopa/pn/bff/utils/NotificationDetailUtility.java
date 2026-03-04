@@ -622,7 +622,6 @@ public class NotificationDetailUtility {
         }
     }
 
-
     public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
         List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)

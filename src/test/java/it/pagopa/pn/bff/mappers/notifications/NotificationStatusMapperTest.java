@@ -23,4 +23,6 @@ public class NotificationStatusMapperTest {
         assertNotNull(actualConvertDeliveryRecipientNotificationStatusResult);
         assertEquals(actualConvertDeliveryRecipientNotificationStatusResult.getValue(), notificationStatus.getValue());
     }
+
+
 }

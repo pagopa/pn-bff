@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.Notific
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
+import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.time.OffsetTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationDetailUtilityTest {
@@ -648,4 +650,5 @@ class NotificationDetailUtilityTest {
         assertEquals(viewedStatusHistory.getSteps().size(), 1);
         assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
     }
+
 }
