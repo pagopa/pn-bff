@@ -4,7 +4,7 @@ components:
   schemas:
 
     BffPaymentInfoRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentInfoRequests'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentInfoRequests'
 
     BffPaymentInfoResponse:
       title: Response for payment info requests
@@ -28,11 +28,11 @@ components:
         noticeCode:
           $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/6f155ba29a704ec2d4e1ff46ce70ee8077e368c9/docs/openapi/schemas-pn-notification.yaml#/components/schemas/noticeCode'
         status:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentStatus'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentStatus'
         detail:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/Detail'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/Detail'
         detail_v2:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/DetailV2'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/DetailV2'
         errorCode:
           description: error code to show at the user
           type: string
@@ -48,10 +48,10 @@ components:
           pattern: ([0-9]{4})-(1[0-2]|0[1-9])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])
 
     BffPaymentRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentRequest'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentRequest'
 
     BffPaymentResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/405908698ca09f10438f25512f30ed28994af343/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/c3df6cb618bfce3dd359d63fd6366a50a091dae3/docs/openapi/pn-payment-info-internal-v1.yaml#/components/schemas/PaymentResponse'
 
     BffPaymentTppResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/8a7a490ee41e43a6199c824a28a6b92e56075a23/docs/openapi/api-private.yaml#/components/schemas/PaymentUrlResponse'
