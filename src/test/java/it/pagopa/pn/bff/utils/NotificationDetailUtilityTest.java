@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.pagopa.pn.bff.utils.NotificationDetailUtility.findRecipientIndex;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationDetailUtilityTest {
@@ -647,5 +648,35 @@ class NotificationDetailUtilityTest {
         assertNotNull(viewedStatusHistory);
         assertEquals(viewedStatusHistory.getSteps().size(), 1);
         assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
+    }
+
+    @Test
+    void shouldFindRecIndexOnSingleRecipient() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(0, findRecipientIndex(recipients));
+    }
+    
+    @Test
+    void shouldFindRecIndexOnMultiRecipients() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(2, findRecipientIndex(recipients));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNoRecipientHasTaxId() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF)
+        );
+
+        assertThrows(IllegalStateException.class, () -> findRecipientIndex(recipients));
     }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Class that contains the utility functions used to transform the data from delivery to front-end
@@ -563,7 +564,7 @@ public class NotificationDetailUtility {
 
                     // PN-18239 -> Reworked elements with SEND_ANALOG_PROGRESS category must be marked as VALID even if they don't have a direct link with an invalidated element.
                     boolean isAnalogProgress = step.getCategory() == BffTimelineCategory.SEND_ANALOG_PROGRESS;
-                    
+
                     if (correctsInvalidated || isAnalogProgress) {
                         step.setReworkedStatus(BffNotificationReworkedStatus.VALID);
                         hasReworkedSteps = true;
@@ -750,5 +751,23 @@ public class NotificationDetailUtility {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the index of the recipient with a taxId valorized.
+     * In multi-recipient notifications, only the requester has the taxId valorized; others are anonymized.
+     *
+     * @param recipients the list of recipients from the notification
+     * @return index of the recipient
+     * @throws IllegalStateException - no recipient with a taxId found
+     */
+    public static int findRecipientIndex(List<NotificationRecipientV24> recipients) {
+        return IntStream.range(0, recipients.size())
+                .filter(i -> {
+                    String taxId = recipients.get(i).getTaxId();
+                    return taxId != null && !taxId.isEmpty();
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No recipient with a taxId found"));
     }
 }
