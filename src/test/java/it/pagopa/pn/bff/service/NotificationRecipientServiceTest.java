@@ -7,10 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTy
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.*;
-import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
-import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
-import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
-import it.pagopa.pn.bff.mocks.UserMock;
+import it.pagopa.pn.bff.mocks.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
@@ -42,6 +39,7 @@ class NotificationRecipientServiceTest {
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
+    private final NotificationCostDetailsMock notificationCostDetailsMock = new NotificationCostDetailsMock();
 
     @BeforeAll
     public static void setup() {
@@ -235,8 +233,14 @@ class NotificationRecipientServiceTest {
                 "MANDATE_ID"
         );
 
+        BffFullNotificationV1 expected = NotificationReceivedDetailMapper.modelMapper
+                .mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
+        BffNotificationCostDetails unavailableCost = new BffNotificationCostDetails();
+        unavailableCost.setStatus(BffNotificationCostDetails.StatusEnum.UNAVAILABLE);
+        expected.setNotificationCostDetails(unavailableCost);
+
         StepVerifier.create(result)
-                .expectNext(NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock()))
+                .expectNext(expected)
                 .verifyComplete();
     }
 
@@ -268,6 +272,126 @@ class NotificationRecipientServiceTest {
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
                 .verify();
+    }
+
+    @Test
+    void getNotificationDetailWithCostSuccess() {
+        when(pnDeliveryClientRecipient.getReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationAsyncDeliveryModeMock()));
+
+        when(pnNotificationCostServiceClient.getNotificationCostRecipient(
+                Mockito.anyString(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(notificationCostDetailsMock.getNotificationCostRecipientResponseMock()));
+
+        Mono<BffFullNotificationV1> result = notificationsRecipientService.getNotificationDetail(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
+        StepVerifier.create(result)
+                .assertNext(notification -> {
+                    BffNotificationCostDetails costDetails = notification.getNotificationCostDetails();
+                    assert costDetails != null;
+                    assert costDetails.getStatus() == BffNotificationCostDetails.StatusEnum.OK;
+                    assert Objects.equals(costDetails.getTotalCost(), 1220);
+                    assert Objects.equals(costDetails.getBaseCost(), 100);
+                    assert Objects.equals(costDetails.getAnalogCost(), 1000);
+                    assert Objects.equals(costDetails.getNumberOfAnalogCost(), 2);
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getNotificationDetailWithCost404() {
+        when(pnDeliveryClientRecipient.getReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationAsyncDeliveryModeMock()));
+
+        when(pnNotificationCostServiceClient.getNotificationCostRecipient(
+                Mockito.anyString(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffFullNotificationV1> result = notificationsRecipientService.getNotificationDetail(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
+        StepVerifier.create(result)
+                .assertNext(notification -> {
+                    BffNotificationCostDetails costDetails = notification.getNotificationCostDetails();
+                    assert costDetails != null;
+                    assert costDetails.getStatus() == BffNotificationCostDetails.StatusEnum.UNAVAILABLE;
+                    assert costDetails.getTotalCost() == null;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getNotificationDetailWithCostError() {
+        when(pnDeliveryClientRecipient.getReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationAsyncDeliveryModeMock()));
+
+        when(pnNotificationCostServiceClient.getNotificationCostRecipient(
+                Mockito.anyString(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.error(new WebClientResponseException(500, "Internal Server Error", null, null, null)));
+
+        Mono<BffFullNotificationV1> result = notificationsRecipientService.getNotificationDetail(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PA.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
+        StepVerifier.create(result)
+                .assertNext(notification -> {
+                    BffNotificationCostDetails costDetails = notification.getNotificationCostDetails();
+                    assert costDetails != null;
+                    assert costDetails.getStatus() == BffNotificationCostDetails.StatusEnum.ERROR;
+                    assert costDetails.getTotalCost() == null;
+                })
+                .verifyComplete();
     }
 
     @Test
