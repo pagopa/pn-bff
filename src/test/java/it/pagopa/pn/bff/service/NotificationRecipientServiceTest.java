@@ -14,6 +14,7 @@ import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
+import it.pagopa.pn.bff.pnclient.notificationcostservice.PnNotificationCostServiceClientImpl;
 import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,6 +38,7 @@ class NotificationRecipientServiceTest {
     private static PnDeliveryPushClientImpl pnDeliveryPushClient;
     private static PnBffExceptionUtility pnBffExceptionUtility;
     private static PnEmdClientImpl pnEmdClient;
+    private static PnNotificationCostServiceClientImpl pnNotificationCostServiceClient;
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
@@ -47,7 +49,8 @@ class NotificationRecipientServiceTest {
         pnDeliveryPushClient = mock(PnDeliveryPushClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         pnEmdClient = mock(PnEmdClientImpl.class);
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient);
+        pnNotificationCostServiceClient = mock(PnNotificationCostServiceClientImpl.class);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient, pnNotificationCostServiceClient);
     }
 
     @Test
