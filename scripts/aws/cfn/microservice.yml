@@ -537,6 +537,7 @@ Resources:
         ContainerEnvEntry22: !Sub 'PN_BFF_RETRY_MAXATTEMPTS=${PnBffRetryMaxAttempts}'
         ContainerEnvEntry23: !Sub 'PN_BFF_EMD_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
         ContainerEnvEntry24: !Sub 'PN_BFF_SELFCARE_CDN_URL=${SelfCareCdnURL}'
+        ContainerEnvEntry25: !Sub 'PN_BFF_NOTIFICATION_COST_SERVICE_BASE_URL=http://${ApplicationLoadBalancerDomain}:8080'
         MappedPaths: '/bff/*'
         ECSClusterName: !Ref ECSClusterName
         Subnets: !Ref VpcEgressSubnetsIds
