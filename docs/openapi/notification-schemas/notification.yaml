@@ -1,8 +1,11 @@
 info:
   version: v1.0
 components:
-  schemas:
+  parameters:
+    BffCheckTPPRetrievalId:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
 
+  schemas:
     BffNotificationsResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/b82bee7394cdb44b506d2cb45fb685171186c677/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationSearchResponse'
 
@@ -33,6 +36,8 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
+            notificationCostDetails:
+              $ref: '#/components/schemas/BffNotificationCostDetails'
 
     BffNotificationStatusHistory:
       type: object
@@ -212,6 +217,34 @@ components:
     BffCheckTPPResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/schemas/RetrievalPayload'
 
-  parameters:
-    BffCheckTPPRetrievalId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/f7a28e5541e85831606482eb5420eb5cf62439b7/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
+    BffNotificationCostDetails:
+      type: object
+      description: >-
+        Cost details of a notification. Cost-related fields are present only when the status is OK
+      required:
+        - status
+      properties:
+        status:
+          description: Status of the response from the notification-cost-service microservice
+          type: string
+          enum:
+            - OK
+            - UNAVAILABLE
+            - ERROR
+          default: UNAVAILABLE
+        totalCost:
+          description: Total cost of the notification in euro cents, including VAT
+          type: integer
+          format: int32
+        baseCost:
+          description: Base notification cost in euro cents
+          type: integer
+          format: int32
+        analogCost:
+          description: Total cost of analog flows in euro cents, including VAT
+          type: integer
+          format: int32
+        numberOfAnalogCost:
+          description: Total number of paper deliveries (both simple registered mail and 890/AR…)
+          type: integer
+          format: int32

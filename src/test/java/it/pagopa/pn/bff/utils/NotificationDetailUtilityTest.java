@@ -13,12 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.pagopa.pn.bff.utils.NotificationDetailUtility.findRecipientIndex;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationDetailUtilityTest {
@@ -647,5 +645,36 @@ class NotificationDetailUtilityTest {
         assertNotNull(viewedStatusHistory);
         assertEquals(viewedStatusHistory.getSteps().size(), 1);
         assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
+    }
+
+
+    @Test
+    void shouldFindRecIndexOnSingleRecipient() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(OptionalInt.of(0), findRecipientIndex(recipients));
+    }
+
+    @Test
+    void shouldFindRecIndexOnMultiRecipients() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(OptionalInt.of(2), findRecipientIndex(recipients));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenNoRecipientHasTaxId() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF)
+        );
+
+        assertEquals(OptionalInt.empty(), findRecipientIndex(recipients));
     }
 }
