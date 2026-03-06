@@ -204,7 +204,7 @@ public class NotificationsRecipientService {
                 && notification.getNotificationFeePolicy().getValue().equals(NotificationFeePolicy.DELIVERY_MODE.getValue());
 
         if (!isAsyncDeliveryMode) {
-            var costDetails = new BffNotificationCostDetails();
+            BffNotificationCostDetails costDetails = new BffNotificationCostDetails();
             costDetails.setStatus(BffNotificationCostDetails.StatusEnum.UNAVAILABLE);
             notification.setNotificationCostDetails(costDetails);
             return Mono.just(notification);
@@ -225,7 +225,7 @@ public class NotificationsRecipientService {
                                                                  String iun, int recIndex) {
         return pnNotificationCostServiceClient.getNotificationCostRecipient(iun, recIndex)
                 .map(costResponse -> {
-                    var costDetails = NotificationCostDetailsMapper.modelMapper.mapCostDetails(costResponse);
+                    BffNotificationCostDetails costDetails = NotificationCostDetailsMapper.modelMapper.mapCostDetails(costResponse);
                     costDetails.setStatus(BffNotificationCostDetails.StatusEnum.OK);
 
                     notification.setNotificationCostDetails(costDetails);
@@ -236,7 +236,7 @@ public class NotificationsRecipientService {
                     log.info("Error fetching cost details for iun: {}, recIndex: {}. Status code: {}, response body: {}",
                             iun, recIndex, error.getStatusCode(), error.getResponseBodyAsString());
 
-                    var costDetails = new BffNotificationCostDetails();
+                    BffNotificationCostDetails costDetails = new BffNotificationCostDetails();
                     costDetails.setStatus(HttpStatus.NOT_FOUND.equals(error.getStatusCode())
                             ? BffNotificationCostDetails.StatusEnum.UNAVAILABLE
                             : BffNotificationCostDetails.StatusEnum.ERROR);
