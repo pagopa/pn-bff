@@ -227,15 +227,22 @@ public class NotificationsRecipientService {
                 .map(costResponse -> {
                     var costDetails = NotificationCostDetailsMapper.modelMapper.mapCostDetails(costResponse);
                     costDetails.setStatus(BffNotificationCostDetails.StatusEnum.OK);
+
                     notification.setNotificationCostDetails(costDetails);
+
                     return notification;
                 })
                 .onErrorResume(WebClientResponseException.class, error -> {
+                    log.info("Error fetching cost details for iun: {}, recIndex: {}. Status code: {}, response body: {}",
+                            iun, recIndex, error.getStatusCode(), error.getResponseBodyAsString());
+
                     var costDetails = new BffNotificationCostDetails();
                     costDetails.setStatus(HttpStatus.NOT_FOUND.equals(error.getStatusCode())
                             ? BffNotificationCostDetails.StatusEnum.UNAVAILABLE
                             : BffNotificationCostDetails.StatusEnum.ERROR);
+
                     notification.setNotificationCostDetails(costDetails);
+
                     return Mono.just(notification);
                 });
     }

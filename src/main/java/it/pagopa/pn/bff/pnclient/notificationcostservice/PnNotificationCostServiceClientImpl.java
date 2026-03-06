@@ -15,6 +15,8 @@ public class PnNotificationCostServiceClientImpl {
     private final NotificationCostRecipientApi notificationCostRecipientApi;
 
     public Mono<NotificationCostRecipientResponse> getNotificationCostRecipient(String iun, Integer recIndex) {
+        log.logInvokingExternalService("pn-notification-cost-service", "notificationCostRecipient");
+
         return notificationCostRecipientApi.notificationCostRecipient(iun, recIndex);
     }
 }
