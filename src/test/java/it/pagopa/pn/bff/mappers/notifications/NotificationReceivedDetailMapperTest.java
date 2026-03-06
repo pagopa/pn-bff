@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.Time
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -13,6 +14,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
 
 class NotificationReceivedDetailMapperTest {
 
@@ -40,45 +43,39 @@ class NotificationReceivedDetailMapperTest {
         notification.setTimeline(new ArrayList<>(List.of(new TimelineElementV28())));
         notification.setNotificationStatusHistory(new ArrayList<>());
 
-        List<String> callOrder = new ArrayList<>();
-
         try (MockedStatic<NotificationDetailUtility> mockUtil = Mockito.mockStatic(NotificationDetailUtility.class)) {
-            mockUtil.when(() -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()))
-                    .thenAnswer(inv -> { callOrder.add("insertInvalidateElementsInTimeline"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.insertReworkedStatus(any()))
-                    .thenAnswer(inv -> { callOrder.add("insertReworkedStatus"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.cleanRelatedTimelineElements(any()))
-                    .thenAnswer(inv -> { callOrder.add("cleanRelatedTimelineElements"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.populateOtherDocuments(any()))
-                    .thenAnswer(inv -> { callOrder.add("populateOtherDocuments"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.checkRADDInTimeline(any()))
-                    .thenAnswer(inv -> { callOrder.add("checkRADDInTimeline"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.insertCancelledStatusInTimeline(any()))
-                    .thenAnswer(inv -> { callOrder.add("insertCancelledStatusInTimeline"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.timelineElementMustBeShown(any()))
-                    .thenAnswer(inv -> { callOrder.add("setTimelineIndexAndHidden"); return false; });
-            mockUtil.when(() -> NotificationDetailUtility.populateMacroSteps(any()))
-                    .thenAnswer(inv -> { callOrder.add("populateMacroSteps"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.setReworkedStatusOnSteps(any()))
-                    .thenAnswer(inv -> { callOrder.add("setReworkedStatusOnSteps"); return null; });
-            mockUtil.when(() -> NotificationDetailUtility.sortNotificationStatusHistory(any()))
-                    .thenAnswer(inv -> { callOrder.add("sortNotificationStatusHistory"); return null; });
+            // Stub the only non-void method
+            mockUtil.when(() -> NotificationDetailUtility.timelineElementMustBeShown(any())).thenReturn(false);
 
+            // Act
             NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
-        }
 
-        assertEquals(List.of(
-                "insertInvalidateElementsInTimeline",
-                "insertReworkedStatus",
-                "cleanRelatedTimelineElements",
-                "populateOtherDocuments",
-                "checkRADDInTimeline",
-                "insertCancelledStatusInTimeline",
-                "setTimelineIndexAndHidden",
-                "populateMacroSteps",
-                "setReworkedStatusOnSteps",
-                "sortNotificationStatusHistory"
-        ), callOrder);
+            // Assert each method is called exactly once
+            mockUtil.verify(() -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.insertReworkedStatus(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.cleanRelatedTimelineElements(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.populateOtherDocuments(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.checkRADDInTimeline(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.insertCancelledStatusInTimeline(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.timelineElementMustBeShown(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.populateMacroSteps(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.setReworkedStatusOnSteps(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.sortNotificationStatusHistory(any()), times(1));
+
+            // Assert methods are called in the exact order
+            // (inverting any two consecutive inOrder.verify calls would make this test fail)
+            InOrder inOrder = inOrder(NotificationDetailUtility.class);
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertReworkedStatus(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.cleanRelatedTimelineElements(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.populateOtherDocuments(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.checkRADDInTimeline(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertCancelledStatusInTimeline(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.timelineElementMustBeShown(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.populateMacroSteps(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.setReworkedStatusOnSteps(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.sortNotificationStatusHistory(any()));
+        }
     }
 }
 
