@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: pO+DT/uplM8vZLipFFHEoZfKEbSl6V16W3LQcZMn/IM=
+  version: MuDLsTrHeDraFAI99wojFbCHezP0VXG1L4B3WvQThSg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6364,13 +6364,15 @@ components:
     BffNotificationCostDetails:
       type: object
       description: >-
-        Dettaglio dei costi di una notifica. I campi relativi ai costi sono
-        presenti solo quando status è OK.
+        Cost details of a notification. Cost-related fields are present only
+        when the status is OK
       required:
         - status
       properties:
         status:
-          description: Stato della risposta al microservizio notification-cost-service.
+          description: >-
+            Status of the response from the notification-cost-service
+            microservice
           type: string
           enum:
             - OK
@@ -6378,16 +6380,18 @@ components:
             - ERROR
           default: UNAVAILABLE
         totalCost:
-          description: Costo totale in eurocent della notifica
+          description: Total cost of the notification in euro cents, including VAT
           type: number
         baseCost:
-          description: Costo base di notificazione in eurocent
+          description: Base notification cost in euro cents
           type: number
         analogCost:
-          description: Costo totale in eurocent dei flussi analogici
+          description: Total cost of analog flows in euro cents, including VAT
           type: number
         numberOfAnalogCost:
-          description: Totale di invii cartacei (sia raccomandata semplice che 890/AR…)
+          description: >-
+            Total number of paper deliveries (both simple registered mail and
+            890/AR…)
           type: number
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
