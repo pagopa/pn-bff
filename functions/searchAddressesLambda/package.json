@@ -12,7 +12,7 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@aws-sdk/client-geo-places": "^3.817.0",
+    "@aws-sdk/client-geo-places": "^3.1001.0",
     "aws-sdk-client-mock": "^4.1.0",
     "chai": "^4.3.6",
     "lambda-tester": "^4.0.1",
