@@ -567,6 +567,13 @@ public class NotificationDetailRecipientMock {
         return bffFullNotificationV1Mock;
     }
 
+    public FullReceivedNotificationV27 getNotificationAsyncDeliveryModeMock() {
+        FullReceivedNotificationV27 notification = getNotificationMultiRecipientMock();
+        notification.setPagoPaIntMode(FullReceivedNotificationV27.PagoPaIntModeEnum.ASYNC);
+        notification.setNotificationFeePolicy(NotificationFeePolicy.DELIVERY_MODE);
+        return notification;
+    }
+
     public TimelineElementV28 getTimelineElem(TimelineElementCategoryV28 category, TimelineElementDetailsV28 details) {
         return new TimelineElementV28()
                 .category(category)

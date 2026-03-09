@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Xi6kyiBF44E3F3S0kz402gGzUHRdRYqwOSHhAsvRBvU=
+  version: MuDLsTrHeDraFAI99wojFbCHezP0VXG1L4B3WvQThSg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6361,6 +6361,38 @@ components:
               type: number
             recipient:
               $ref: '#/components/schemas/BffDocumentRecipientData'
+    BffNotificationCostDetails:
+      type: object
+      description: >-
+        Cost details of a notification. Cost-related fields are present only
+        when the status is OK
+      required:
+        - status
+      properties:
+        status:
+          description: >-
+            Status of the response from the notification-cost-service
+            microservice
+          type: string
+          enum:
+            - OK
+            - UNAVAILABLE
+            - ERROR
+          default: UNAVAILABLE
+        totalCost:
+          description: Total cost of the notification in euro cents, including VAT
+          type: number
+        baseCost:
+          description: Base notification cost in euro cents
+          type: number
+        analogCost:
+          description: Total cost of analog flows in euro cents, including VAT
+          type: number
+        numberOfAnalogCost:
+          description: >-
+            Total number of paper deliveries (both simple registered mail and
+            890/AR…)
+          type: number
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
@@ -6387,6 +6419,8 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
+            notificationCostDetails:
+              $ref: '#/components/schemas/BffNotificationCostDetails'
     BffDocumentType:
       type: string
       enum:

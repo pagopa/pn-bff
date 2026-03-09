@@ -5,7 +5,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.Notific
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementCategoryV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
-import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationSentDetailMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailPaMock;
 import it.pagopa.pn.bff.utils.helpers.ArrayHelpers;
@@ -14,13 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.time.OffsetTime.now;
+import static it.pagopa.pn.bff.utils.NotificationDetailUtility.findRecipientIndex;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationDetailUtilityTest {
@@ -651,4 +647,34 @@ class NotificationDetailUtilityTest {
         assertEquals(viewedStatusHistory.getRecipient(), delegate.getDenomination() + " (" + delegate.getTaxId() + ')');
     }
 
+
+    @Test
+    void shouldFindRecIndexOnSingleRecipient() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(OptionalInt.of(0), findRecipientIndex(recipients));
+    }
+
+    @Test
+    void shouldFindRecIndexOnMultiRecipients() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF).taxId("123456789")
+        );
+
+        assertEquals(OptionalInt.of(2), findRecipientIndex(recipients));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenNoRecipientHasTaxId() {
+        List<NotificationRecipientV24> recipients = List.of(
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF),
+                new NotificationRecipientV24().recipientType(NotificationRecipientV24.RecipientTypeEnum.PF)
+        );
+
+        assertEquals(OptionalInt.empty(), findRecipientIndex(recipients));
+    }
 }

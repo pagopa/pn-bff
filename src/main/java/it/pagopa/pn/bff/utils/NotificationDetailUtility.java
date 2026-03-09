@@ -3,11 +3,10 @@ package it.pagopa.pn.bff.utils;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * Class that contains the utility functions used to transform the data from delivery to front-end
@@ -773,5 +772,19 @@ public class NotificationDetailUtility {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the index of the recipient with a taxId valorized.
+     * In multi-recipient notifications, only the requester has the taxId valorized;
+     * others are anonymized.
+     *
+     * @param recipients the list of recipients from the notification
+     * @return OptionalInt containing the index, or empty if no recipient has a taxId
+     */
+    public static OptionalInt findRecipientIndex(List<NotificationRecipientV24> recipients) {
+        return IntStream.range(0, recipients.size())
+                .filter(i -> StringUtils.hasText(recipients.get(i).getTaxId()))
+                .findFirst();
     }
 }

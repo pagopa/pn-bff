@@ -16,6 +16,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.a
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.mandate.api.MandateServiceApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.notification_cost_service.api.NotificationCostRecipientApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi;
@@ -269,4 +270,16 @@ public class MsClientConfig extends CommonBaseClient {
         return new PaymentApi(apiClient);
     }
 
+    @Bean
+    @Primary
+    NotificationCostRecipientApi notificationCostRecipientApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.notification_cost_service.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.notification_cost_service.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.notification_cost_service.ApiClient.buildWebClientBuilder())
+                );
+
+        apiClient.setBasePath(cfg.getNotificationCostServiceBaseUrl());
+
+        return new NotificationCostRecipientApi(apiClient);
+    }
 }

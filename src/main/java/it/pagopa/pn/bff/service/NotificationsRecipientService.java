@@ -4,7 +4,6 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
@@ -13,20 +12,24 @@ import it.pagopa.pn.bff.mappers.notifications.*;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientRecipientImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
+import it.pagopa.pn.bff.pnclient.notificationcostservice.PnNotificationCostServiceClientImpl;
 import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 import static it.pagopa.pn.bff.exceptions.PnBffExceptionCodes.ERROR_CODE_BFF_DOCUMENTIDNOTFOUND;
+import static it.pagopa.pn.bff.utils.NotificationDetailUtility.findRecipientIndex;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class NotificationsRecipientService {
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
     private final PnEmdClientImpl pnEmdClient;
+    private final PnNotificationCostServiceClientImpl pnNotificationCostServiceClient;
 
     /**
      * Search received notifications for a recipient user.
@@ -161,18 +165,86 @@ public class NotificationsRecipientService {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
-        Mono<FullReceivedNotificationV27> notificationDetail = pnDeliveryClient.getReceivedNotification(
-                xPagopaPnUid,
-                CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
-                xPagopaPnCxId,
-                xPagopaPnSrcCh,
-                iun,
-                xPagopaPnCxGroups,
-                xPagopaPnSrcChDetails,
-                mandateId
-        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+        return pnDeliveryClient.getReceivedNotification(
+                        xPagopaPnUid,
+                        CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
+                        xPagopaPnCxId, xPagopaPnSrcCh, iun,
+                        xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
+                )
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                .map(NotificationReceivedDetailMapper.modelMapper::mapReceivedNotificationDetail)
+                .flatMap(notification -> enrichWithCostDetails(notification, iun));
+    }
 
-        return notificationDetail.map(NotificationReceivedDetailMapper.modelMapper::mapReceivedNotificationDetail);
+    /**
+     * Check if the notification needs to be enriched with cost details or if it can be returned as-is.
+     * Returns the notification as-is when:
+     * - the recIndex is not found
+     * - the recipient has no payments
+     * - the notification is not ASYNC / DELIVERY_MODE
+     *
+     * @param notification the notification to enrich with cost details
+     * @param iun          the iun of the notification
+     * @return the notification enriched with cost details if needed, otherwise the original notification
+     */
+    private Mono<BffFullNotificationV1> enrichWithCostDetails(BffFullNotificationV1 notification, String iun) {
+        OptionalInt recIndex = findRecipientIndex(notification.getRecipients());
+
+        if (recIndex.isEmpty()) {
+            log.warn("No recipient with taxId valorized found for iun: {}", iun);
+            return Mono.just(notification);
+        }
+
+        if (CollectionUtils.isEmpty(notification.getRecipients().get(recIndex.getAsInt()).getPayments())) {
+            return Mono.just(notification);
+        }
+
+        boolean isAsyncDeliveryMode = notification.getPagoPaIntMode() != null
+                && notification.getPagoPaIntMode().getValue().equals(BffFullNotificationV1.PagoPaIntModeEnum.ASYNC.getValue())
+                && notification.getNotificationFeePolicy().getValue().equals(NotificationFeePolicy.DELIVERY_MODE.getValue());
+
+        if (!isAsyncDeliveryMode) {
+            BffNotificationCostDetails costDetails = new BffNotificationCostDetails();
+            costDetails.setStatus(BffNotificationCostDetails.StatusEnum.UNAVAILABLE);
+            notification.setNotificationCostDetails(costDetails);
+            return Mono.just(notification);
+        }
+
+        return fetchAndApplyCostDetails(notification, iun, recIndex.getAsInt());
+    }
+
+    /**
+     * Fetch the cost details for a notification and apply them to the notification.
+     *
+     * @param notification the notification to enrich with cost details
+     * @param iun          the iun of the notification
+     * @param recIndex     the index of the recipient to fetch the cost details for
+     * @return the notification enriched with cost details
+     */
+    private Mono<BffFullNotificationV1> fetchAndApplyCostDetails(BffFullNotificationV1 notification,
+                                                                 String iun, int recIndex) {
+        return pnNotificationCostServiceClient.getNotificationCostRecipient(iun, recIndex)
+                .map(costResponse -> {
+                    BffNotificationCostDetails costDetails = NotificationCostDetailsMapper.modelMapper.mapCostDetails(costResponse);
+                    costDetails.setStatus(BffNotificationCostDetails.StatusEnum.OK);
+
+                    notification.setNotificationCostDetails(costDetails);
+
+                    return notification;
+                })
+                .onErrorResume(WebClientResponseException.class, error -> {
+                    log.info("Error fetching cost details for iun: {}, recIndex: {}. Status code: {}, response body: {}",
+                            iun, recIndex, error.getStatusCode(), error.getResponseBodyAsString());
+
+                    BffNotificationCostDetails costDetails = new BffNotificationCostDetails();
+                    costDetails.setStatus(HttpStatus.NOT_FOUND.equals(error.getStatusCode())
+                            ? BffNotificationCostDetails.StatusEnum.UNAVAILABLE
+                            : BffNotificationCostDetails.StatusEnum.ERROR);
+
+                    notification.setNotificationCostDetails(costDetails);
+
+                    return Mono.just(notification);
+                });
     }
 
     /**
