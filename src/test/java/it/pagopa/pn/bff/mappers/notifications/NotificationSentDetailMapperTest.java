@@ -37,7 +37,7 @@ class NotificationSentDetailMapperTest {
         BffFullNotificationV1 result = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
 
         assertNotNull(result);
-        assertNotNull(result.getSenderPaId()); // <--- Aggiungiamo questo per coerenza con l'altro test
+        assertNotNull(result.getSenderPaId());
     }
 
     @Test
