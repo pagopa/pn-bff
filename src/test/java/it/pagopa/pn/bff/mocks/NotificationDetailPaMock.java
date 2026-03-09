@@ -580,5 +580,4 @@ public class NotificationDetailPaMock {
                 .timestamp(OffsetDateTime.parse("2023-08-25T11:38:05.392Z"))
                 .details(details);
     }
-
 }
