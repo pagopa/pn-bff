@@ -496,15 +496,16 @@ public class NotificationDetailUtility {
         boolean firstRefinementNotInvalidated = false;
 
         /* FIRST STEP
-         * create new status history entries for each invalidated statuses in REWORKED events (except DELIVERING), moving the related steps from the original status history to the new one
+         * create new status history entries for each invalidated statuses in REWORKED events (except DELIVERING and VIEWED), moving the related steps from the original status history to the new one
          */
         List<BffNotificationStatusHistory> newNotValidStatusHistories = new ArrayList<>();
 
         for (BffNotificationDetailTimeline reworkedEvent : reworkedEvents) {
             for (NotificationStatusHistoryInvalidatedElement invalidatedStatus : reworkedEvent.getDetails().getInvalidatedTimelineAndStatusHistory()) {
 
-                // skip DELIVERING status - keep everything together
-                if (invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING) {
+                // skip DELIVERING and VIEWED status - keep everything together
+                if (invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING ||
+                        invalidatedStatus.getStatus() == NotificationStatusV26.VIEWED) {
                     continue;
                 }
 
@@ -565,14 +566,6 @@ public class NotificationDetailUtility {
                     }
                 }
 
-                // set recipient for VIEWED status
-                if (newStatusHistory.getStatus() == BffNotificationStatus.VIEWED) {
-                    String recipient = getRecipientFromViewedSteps(newStatusHistory.getSteps());
-                    if (recipient != null) {
-                        newStatusHistory.setRecipient(recipient);
-                    }
-                }
-
                 newNotValidStatusHistories.add(newStatusHistory);
             }
         }
@@ -580,7 +573,7 @@ public class NotificationDetailUtility {
         bffFullNotificationV1.getNotificationStatusHistory().addAll(newNotValidStatusHistories);
 
         /* SECOND STEP
-         * mark the steps that correct an invalidated element as VALID, and the ones that are invalidated as NOT_VALID. Then, mark the parent status history as VALID as well (except for VIEWED, UNREACHABLE and DELIVERING)
+         * mark the steps that correct an invalidated element as VALID, and the ones that are invalidated as NOT_VALID. Then, mark the parent status history as VALID as well (except for VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
          */
 
         // mark all statusHistory steps (including new invalidated ones) with reworkedStatus
@@ -610,10 +603,9 @@ public class NotificationDetailUtility {
                 }
             }
 
-            // if statusHistory contains reworked steps, mark it as VALID (except for VIEWED, UNREACHABLE, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
+            // if statusHistory contains reworked steps, mark it as VALID (except for VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
             if (hasReworkedSteps &&
                     statusHistory.getStatus() != BffNotificationStatus.VIEWED &&
-                    statusHistory.getStatus() != BffNotificationStatus.UNREACHABLE &&
                     statusHistory.getStatus() != BffNotificationStatus.DELIVERING &&
                     !(statusHistory.getStatus() == BffNotificationStatus.EFFECTIVE_DATE && firstRefinementNotInvalidated)) {
                 statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
