@@ -35,6 +35,8 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
+      x-support-roles-permissions:
+        - support
 #      security:                                    # ONLY EXTERNAL
 #       - bearerAuth: [ ]                           # ONLY EXTERNAL
       parameters:
