@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: MuDLsTrHeDraFAI99wojFbCHezP0VXG1L4B3WvQThSg=
+  version: S/ADJxeVw/fjFWHO3YWrbAh2+2BVCvnqUzuAlFsggeQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -18,6 +18,8 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2209,6 +2211,8 @@ paths:
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:

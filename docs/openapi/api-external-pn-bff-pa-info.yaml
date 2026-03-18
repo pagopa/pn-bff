@@ -126,6 +126,8 @@ paths:
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
+      x-support-roles-permissions:
+        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
