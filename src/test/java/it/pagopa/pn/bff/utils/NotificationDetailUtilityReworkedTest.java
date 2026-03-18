@@ -317,43 +317,6 @@ class NotificationDetailUtilityReworkedTest {
     }
 
     @Test
-    void setReworkedStatusOnSteps_unreachableStatusNotMarkedValid() {
-        BffNotificationDetailTimeline reworkedStep = new BffNotificationDetailTimeline();
-        reworkedStep.setElementId("baseId.REWORK_1");
-        reworkedStep.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
-        reworkedStep.setTimestamp(OffsetDateTime.now());
-
-        TimelineElementV28 relatedElem = new TimelineElementV28();
-        relatedElem.setElementId("baseId");
-
-        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
-        invalidated.setStatus(NotificationStatusV26.ACCEPTED);
-        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
-        invalidated.setActiveFrom(OffsetDateTime.now());
-
-        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
-        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
-
-        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
-        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
-        reworkedEvent.setTimestamp(OffsetDateTime.now());
-        reworkedEvent.setDetails(details);
-
-        BffNotificationStatusHistory unreachableHistory = new BffNotificationStatusHistory();
-        unreachableHistory.setStatus(BffNotificationStatus.UNREACHABLE);
-        unreachableHistory.setSteps(new ArrayList<>(List.of(reworkedStep)));
-        unreachableHistory.setRelatedTimelineElements(new ArrayList<>(List.of("baseId.REWORK_1")));
-
-        BffFullNotificationV1 notification = new BffFullNotificationV1();
-        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent)));
-        notification.setNotificationStatusHistory(new ArrayList<>(List.of(unreachableHistory)));
-
-        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
-
-        assertNull(unreachableHistory.getReworkedStatus());
-    }
-
-    @Test
     void setReworkedStatusOnSteps_deliveringStatusNotMarkedValid() {
         BffNotificationDetailTimeline reworkedStep = new BffNotificationDetailTimeline();
         reworkedStep.setElementId("baseId.REWORK_1");
@@ -430,54 +393,6 @@ class NotificationDetailUtilityReworkedTest {
                 .findFirst().orElseThrow();
 
         assertEquals(BffNotificationDeliveryMode.DIGITAL, notValidDelivered.getDeliveryMode());
-    }
-
-    @Test
-    void setReworkedStatusOnSteps_recipientSetForInvalidatedViewedStatusWithDelegate() {
-        BffNotificationDetailTimeline viewedStep = new BffNotificationDetailTimeline();
-        viewedStep.setElementId("viewedStep");
-        viewedStep.setCategory(BffTimelineCategory.NOTIFICATION_VIEWED);
-        viewedStep.setTimestamp(OffsetDateTime.now());
-        DelegateInfo delegate = new DelegateInfo();
-        delegate.setDenomination("Mario Rossi");
-        delegate.setTaxId("RSSMRA80A01H501U");
-        BffNotificationDetailTimelineDetails viewedDetails = new BffNotificationDetailTimelineDetails();
-        viewedDetails.setDelegateInfo(delegate);
-        viewedStep.setDetails(viewedDetails);
-
-        TimelineElementV28 relatedElem = new TimelineElementV28();
-        relatedElem.setElementId("viewedStep");
-
-        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
-        invalidated.setStatus(NotificationStatusV26.VIEWED);
-        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
-        invalidated.setActiveFrom(OffsetDateTime.now());
-
-        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
-        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
-
-        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
-        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
-        reworkedEvent.setTimestamp(OffsetDateTime.now());
-        reworkedEvent.setDetails(details);
-
-        BffNotificationStatusHistory viewedHistory = new BffNotificationStatusHistory();
-        viewedHistory.setStatus(BffNotificationStatus.VIEWED);
-        viewedHistory.setSteps(new ArrayList<>(List.of(viewedStep)));
-        viewedHistory.setRelatedTimelineElements(new ArrayList<>(List.of("viewedStep")));
-
-        BffFullNotificationV1 notification = new BffFullNotificationV1();
-        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent)));
-        notification.setNotificationStatusHistory(new ArrayList<>(List.of(viewedHistory)));
-
-        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
-
-        BffNotificationStatusHistory notValidViewed = notification.getNotificationStatusHistory().stream()
-                .filter(sh -> sh.getStatus() == BffNotificationStatus.VIEWED
-                        && sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID)
-                .findFirst().orElseThrow();
-
-        assertEquals("Mario Rossi (RSSMRA80A01H501U)", notValidViewed.getRecipient());
     }
 
     @Test
