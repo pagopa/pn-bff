@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: S/ADJxeVw/fjFWHO3YWrbAh2+2BVCvnqUzuAlFsggeQ=
+  version: taPWL+6L8Sny0d/DC0UJA51MtopHtqQLComjbF+fGaA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -155,6 +155,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -218,6 +220,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationDocumentV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -292,6 +296,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationPaymentV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2088,6 +2094,8 @@ paths:
         This operation retrieves all active products associated with the
         specified institution and user.
       operationId: getInstitutionProductsV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2211,8 +2219,6 @@ paths:
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
-      x-support-roles-permissions:
-        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2655,6 +2661,8 @@ paths:
       x-api-permissions:
         - api-key-read
         - log-downtime-read
+      x-support-roles-permissions:
+        - support
       responses:
         '200':
           description: OK
@@ -2716,6 +2724,8 @@ paths:
       x-api-permissions:
         - api-key-read
         - log-downtime-read
+      x-support-roles-permissions:
+        - support
       parameters:
         - $ref: '#/components/parameters/BffQueryFromTime'
         - $ref: '#/components/parameters/queryToTime'
@@ -2779,6 +2789,8 @@ paths:
       x-api-permissions:
         - api-key-read
         - log-downtime-read
+      x-support-roles-permissions:
+        - support
       parameters:
         - name: legalFactId
           in: path
