@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: taPWL+6L8Sny0d/DC0UJA51MtopHtqQLComjbF+fGaA=
+  version: QsruJe+RX3Rarg4W00+JAKMQjRvZxzCjVECJeBNGA1E=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2033,6 +2033,8 @@ paths:
       summary: Get Institutions list
       description: This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
+      x-support-roles-permissions:
+        - support
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
