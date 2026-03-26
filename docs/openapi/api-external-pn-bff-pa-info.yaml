@@ -31,8 +31,6 @@ paths:
       description: |-
         This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
-      x-support-roles-permissions:
-        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -63,8 +61,6 @@ paths:
       description: |-
         This operation retrieves all active products associated with the specified institution and user.
       operationId: getInstitutionProductsV1
-      x-support-roles-permissions:
-        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

@@ -40,8 +40,6 @@ paths:
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
-      x-support-roles-permissions:
-        - support
       responses:
         '200':
           description: OK
@@ -72,8 +70,6 @@ paths:
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
-      x-support-roles-permissions:
-        - support
       parameters:
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryFromTime'
         - $ref: './downtime-logs-schemas/downtime-logs.yaml#/components/parameters/BffQueryToTime'
@@ -108,8 +104,6 @@ paths:
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
-      x-support-roles-permissions:
-        - support
       parameters:
         - name: legalFactId
           in: path

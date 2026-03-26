@@ -35,8 +35,6 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
-      x-support-roles-permissions:
-        - support
       security:                                    # ONLY EXTERNAL
        - bearerAuth: [ ]                           # ONLY EXTERNAL
       parameters:
@@ -118,8 +116,6 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationV1
-      x-support-roles-permissions:
-        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -151,8 +147,6 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationDocumentV1
-      x-support-roles-permissions:
-        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -192,8 +186,6 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationPaymentV1
-      x-support-roles-permissions:
-        - support
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
