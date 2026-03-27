@@ -1,5 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { readFileSync } = require('fs');
+const { join } = require('path');
 
 class RepositoryHelper {
     #octokit;
@@ -231,12 +233,9 @@ class RepositoryHelper {
     }
 
     #getPullRequestBodyString(changesToCommit) {
-        let body = "## Short description\n\nUpdated micro-service dependencies\n\n## List of changes proposed in this pull request\n\n";
-        for (const change of changesToCommit) {
-            body += `- Updated ${change.path}\n`;
-        }
-        body += "\n## How to test\n\nRun a clean install -> run tests -> check that everything is ok\n\n>[!WARNING]\n>**IMPORTANT: remember to regenerate the external and aws files**";
-        return body;
+        const template = readFileSync(join(__dirname, 'templates', 'PULL_REQUEST_BODY.md'), 'utf-8');
+        const changes = changesToCommit.map(change => `- Updated \`${change.path}\``).join('\n');
+        return template.replace('{{CHANGES}}', changes);
     }
 
     async #checkIfPullRequestExists(branchName) {
