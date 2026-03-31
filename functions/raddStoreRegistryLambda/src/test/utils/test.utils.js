@@ -26,6 +26,8 @@ function setupEnv() {
     POSTAL_CODE_THRESHOLD: '1',
     ADDRESS_NUMBER_THRESHOLD: '0.85',
     OVERALL_THRESHOLD: '0.85',
+    CAF_LOCATION_IDS_WHITELIST_PARAMETER:
+      '/pn-radd-store-registry-lambda/caf-locationIDs-whitelist',
   };
 }
 
