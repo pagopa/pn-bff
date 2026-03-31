@@ -912,6 +912,7 @@ Resources:
                 Resource:
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryCsvConfigurationParameter}'
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryGenerationConfigParameter}'
+                    - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${CafLocationIdsWhitelistParameter}'
         - PolicyName: AccessAWSLocationService
           PolicyDocument:
             Version: '2012-10-17'
