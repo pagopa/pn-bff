@@ -1261,7 +1261,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-notification-cost-service/375ac1b008b66ee734e6877a9d389f33f6be100e/docs/openapi/api-private.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-notification-cost-service/4b16a298bf647e16471bc8d4f353576d0526f875/docs/openapi/api-private.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
