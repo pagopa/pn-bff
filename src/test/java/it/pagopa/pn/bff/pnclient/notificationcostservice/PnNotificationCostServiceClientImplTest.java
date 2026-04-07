@@ -30,7 +30,7 @@ class PnNotificationCostServiceClientImplTest {
 
     @Test
     void testGetNotificationCostRecipient() {
-        when(notificationCostRecipientApi.notificationCostRecipient(anyString(), anyInt()))
+        when(notificationCostRecipientApi.getNotificationCost(anyString(), anyInt()))
                 .thenReturn(Mono.just(notificationCostMock.getNotificationCostRecipientResponseMock()));
 
         Mono<NotificationCostRecipientResponse> result = pnNotificationCostServiceClient
@@ -43,7 +43,7 @@ class PnNotificationCostServiceClientImplTest {
 
     @Test
     void testGetNotificationCostRecipientError() {
-        when(notificationCostRecipientApi.notificationCostRecipient(anyString(), anyInt()))
+        when(notificationCostRecipientApi.getNotificationCost(anyString(), anyInt()))
                 .thenReturn(Mono.error(new RuntimeException("Error")));
 
         Mono<NotificationCostRecipientResponse> result = pnNotificationCostServiceClient
