@@ -22,8 +22,7 @@ components:
         type: string
         enum:
           - 'PA'
-          - 'PF'
-          - 'PG'
+          - 'BS'
     BffSenderDashboardQueryStartDate:
       name: startDate
       in: query
