@@ -22,7 +22,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet convertDeliveryRecipientCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
@@ -33,7 +32,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet convertDeliveryB2bPACXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
@@ -44,7 +42,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet convertDeliveryWebPACXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
@@ -66,7 +63,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet cxType);
 
     /**
@@ -77,7 +73,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
