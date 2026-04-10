@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: YAMu3/53BTxY0piQPPEqHmqb3H2vsJF/t3fU5BuehfA=
+  version: Lce8vx9XFqgSH/G/5ySwBvoZ9jpaqlN6Qki98JbpXeQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4132,8 +4132,7 @@ components:
         type: string
         enum:
           - PA
-          - PF
-          - PG
+          - BS
     BffSenderDashboardPathCxId:
       name: cxId
       in: path
