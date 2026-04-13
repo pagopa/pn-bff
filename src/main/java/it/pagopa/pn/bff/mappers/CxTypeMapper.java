@@ -105,7 +105,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "BS", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet convertDeliveryPushCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
