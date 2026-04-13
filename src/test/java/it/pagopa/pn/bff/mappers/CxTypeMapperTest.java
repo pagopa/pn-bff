@@ -137,8 +137,7 @@ class CxTypeMapperTest {
                 CxTypeMapper.cxTypeMapper.convertDeliveryPushCXType(cxType);
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BS) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO) {
             assertNull(result);
         } else {
             assertNotNull(result);
