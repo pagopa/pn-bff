@@ -35,7 +35,7 @@
     "sonarqube-scanner": "^3.5.0"
   },
   "dependencies": {
-    "axios": "^1.7.2"
+    "axios": "^1.15.0"
   },
   "author": "",
   "license": "ISC",
