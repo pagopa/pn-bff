@@ -33,6 +33,7 @@
     "LocalityThreshold": "0.80",
     "PostalCodeThreshold": "1",
     "AddressNumberThreshold": "0.80",
-    "OverallThreshold": "0.85"
+    "OverallThreshold": "0.85",
+    "CafLocationIdsWhitelistParameter": "/pn-radd-store-registry-lambda/caf-locationIDs-whitelist"
   }
 }

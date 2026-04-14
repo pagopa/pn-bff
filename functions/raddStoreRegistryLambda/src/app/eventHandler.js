@@ -30,6 +30,10 @@ exports.handleEvent = async () => {
   const csvConfiguration = await ssmUtils.retrieveCsvConfiguration();
   console.log('Configuration fetched:', csvConfiguration);
 
+  const cafLocationIdsWhitelist =
+    await ssmUtils.retrieveCafLocationIdsWhitelist();
+  console.log('CAF whitelist configuration fetched', cafLocationIdsWhitelist);
+
   const bffBucketS3Key = s3Utils.generateS3Key(
     csvConfiguration.configurationVersion,
     false
@@ -67,7 +71,10 @@ exports.handleEvent = async () => {
       apiResponse.registries.length
     );
     const records = registries.map((registry) =>
-      storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(registry)
+      storeLocatorCsvEntity.mapApiResponseToStoreLocatorCsvEntities(
+        registry,
+        cafLocationIdsWhitelist
+      )
     );
 
     for (let record of records) {
@@ -122,7 +129,7 @@ exports.handleEvent = async () => {
     const webLandingS3Key = s3Utils.generateS3Key(null, true);
     await cloudFrontUtils.invalidateCache(
       process.env.WEB_LANDING_DISTRIBUTION_ID,
-      ["/" + webLandingS3Key]
+      ['/' + webLandingS3Key]
     );
   }
 };

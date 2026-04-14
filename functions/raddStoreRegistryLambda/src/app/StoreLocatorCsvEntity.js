@@ -2,6 +2,8 @@ const { sanitizeCSVField } = require('./csvUtils');
 const {
   getOpeningTimeByDay,
   isAWSAddressValid,
+  selectAddressFields,
+  formatCafAddress,
 } = require('../utils/storeLocatorUtils');
 
 const createStoreLocatorEntity = (data) => ({
@@ -42,15 +44,6 @@ const formatPhoneNumbers = (phoneNumbers) => {
   return phoneNumbers.join('_').replace(/\//g, ' ');
 };
 
-const formatCafAddress = (address) => {
-  if (!address) return undefined;
-  return `${address.addressRow}, ${address.cap} ${address.city} ${address.province}`;
-};
-
-const formatNormalizedAddress = (normalizedAddressRow) => {
-  return normalizedAddressRow?.replace(', Italia', '');
-};
-
 const getOpeningHours = (openingTime) => {
   if (!openingTime) return {};
 
@@ -80,19 +73,6 @@ const getAppointmentRequired = (appointmentRequired) => {
   return appointmentRequired ? 'si' : 'no';
 };
 
-const selectAddressFields = (normalizedAddress, address, isValid) => {
-  if (!normalizedAddress || !address) return {};
-
-  return {
-    address: isValid
-      ? formatNormalizedAddress(normalizedAddress.addressRow)
-      : formatCafAddress(address),
-    city: isValid ? normalizedAddress.city : address.city,
-    province: isValid ? normalizedAddress.province : address.province,
-    zipCode: isValid ? normalizedAddress.cap : address.cap,
-  };
-};
-
 /**
  * returns an object with record and isRecordValid properties.
  * record is the StoreLocatorCsvEntity created from the registry
@@ -100,7 +80,10 @@ const selectAddressFields = (normalizedAddress, address, isValid) => {
  *
  * @param registry - The raw registry to be mapped into a StoreLocatorCsvEntity
  */
-const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
+const mapApiResponseToStoreLocatorCsvEntities = (
+  registry,
+  cafLocationIdsWhitelist
+) => {
   const isNormalizedAddressValid = isAWSAddressValid(
     registry.normalizedAddress?.biasPoint
   );
@@ -124,11 +107,11 @@ const mapApiResponseToStoreLocatorCsvEntities = (registry) => {
     biasPoint: registry?.normalizedAddress?.biasPoint
       ? JSON.stringify(registry.normalizedAddress.biasPoint)
       : '',
-    ...selectAddressFields(
-      registry?.normalizedAddress,
-      registry?.address,
-      isNormalizedAddressValid
-    ),
+    ...selectAddressFields({
+      registry,
+      isNormalizedAddressValid,
+      cafLocationIdsWhitelist,
+    }),
     ...getOpeningHours(registry?.openingTime),
   };
 

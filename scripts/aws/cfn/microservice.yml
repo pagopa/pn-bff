@@ -477,6 +477,10 @@ Parameters:
     Default: 0.85
     MinValue: 0
     MaxValue: 1
+  
+  CafLocationIdsWhitelistParameter:
+    Type: String
+    Description: SSM parameter name for the list of locationIds for which to return the original CAF address
 
 Conditions:
   CreateFakeDLRole:
@@ -850,6 +854,7 @@ Resources:
           POSTAL_CODE_THRESHOLD: !Ref PostalCodeThreshold
           ADDRESS_NUMBER_THRESHOLD: !Ref AddressNumberThreshold
           OVERALL_THRESHOLD: !Ref OverallThreshold
+          CAF_LOCATION_IDS_WHITELIST_PARAMETER: !Ref CafLocationIdsWhitelistParameter
       Layers:
         - !Sub "arn:aws:lambda:${AWS::Region}:325218067255:layer:AWS-Parameters-and-Secrets-Lambda-Extension:17"
 
@@ -907,6 +912,7 @@ Resources:
                 Resource:
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryCsvConfigurationParameter}'
                     - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${RaddStoreRegistryGenerationConfigParameter}'
+                    - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${CafLocationIdsWhitelistParameter}'
         - PolicyName: AccessAWSLocationService
           PolicyDocument:
             Version: '2012-10-17'

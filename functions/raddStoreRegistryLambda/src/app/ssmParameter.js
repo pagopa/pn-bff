@@ -22,6 +22,28 @@ const retrieveCsvConfiguration = async () => {
   }
 };
 
+const retrieveCafLocationIdsWhitelist = async () => {
+  const cafLocationIdsWhiteListParamName =
+    process.env.CAF_LOCATION_IDS_WHITELIST_PARAMETER;
+  console.log(
+    'Fetching CAF location IDs whitelist parameter: ',
+    cafLocationIdsWhiteListParamName
+  );
+  try {
+    const response = JSON.parse(
+      await getParameterFromLayer(cafLocationIdsWhiteListParamName)
+    );
+
+    return response.length > 0
+      ? response.split(',').map((item) => item.trim())
+      : [];
+  } catch (error) {
+    console.error(
+      `Error retrieving SSM parameter ${cafLocationIdsWhiteListParamName}: ${error}`
+    );
+  }
+};
+
 async function getParameterFromLayer(parameterName) {
   try {
     const response = await axios.get(
@@ -58,6 +80,7 @@ function validateEnvironmentVariables() {
     'POSTAL_CODE_THRESHOLD',
     'ADDRESS_NUMBER_THRESHOLD',
     'OVERALL_THRESHOLD',
+    'CAF_LOCATION_IDS_WHITELIST_PARAMETER',
   ];
 
   requiredEnvVars.forEach((envVar) => {
@@ -74,4 +97,5 @@ module.exports = {
   retrieveGenerationConfigParameter,
   retrieveCsvConfiguration,
   validateEnvironmentVariables,
+  retrieveCafLocationIdsWhitelist,
 };
