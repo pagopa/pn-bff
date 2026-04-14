@@ -82,4 +82,48 @@ describe('ssmParameter', () => {
       message: 'Error retrieving SSM parameter',
     });
   });
+
+  it('should retrive whitelist configuration and split it to array', async () => {
+    const parameterName = process.env.CAF_LOCATION_IDS_WHITELIST_PARAMETER;
+    const url = `http://localhost:2773/systemsmanager/parameters/get?name=${encodeURIComponent(parameterName)}`;
+    const mockResponse = 'LOC-123, LOC-456 ,LOC-789';
+    mock
+      .onGet(url)
+      .reply(
+        200,
+        { Parameter: { Value: JSON.stringify(mockResponse) } },
+        { 'Content-Type': 'application/json' }
+      );
+
+    const { retrieveCafLocationIdsWhitelist } = require('../app/ssmParameter');
+    const response = await retrieveCafLocationIdsWhitelist();
+    expect(response).to.deep.equal(['LOC-123', 'LOC-456', 'LOC-789']);
+  });
+
+  it('should retrive empty array if whitelist configuration is empty', async () => {
+    const parameterName = process.env.CAF_LOCATION_IDS_WHITELIST_PARAMETER;
+    const url = `http://localhost:2773/systemsmanager/parameters/get?name=${encodeURIComponent(parameterName)}`;
+    const mockResponse = '';
+    mock
+      .onGet(url)
+      .reply(
+        200,
+        { Parameter: { Value: JSON.stringify(mockResponse) } },
+        { 'Content-Type': 'application/json' }
+      );
+
+    const { retrieveCafLocationIdsWhitelist } = require('../app/ssmParameter');
+    const response = await retrieveCafLocationIdsWhitelist();
+    expect(response).to.deep.equal([]);
+  });
+
+  it('should not retrieve whitelist configuration in case of exception', async () => {
+    const parameterName = process.env.CAF_LOCATION_IDS_WHITELIST_PARAMETER;
+    const url = `http://localhost:2773/systemsmanager/parameters/get?name=${encodeURIComponent(parameterName)}`;
+    mock.onGet(url).reply(500);
+
+    const { retrieveCafLocationIdsWhitelist } = require('../app/ssmParameter');
+    const response = await retrieveCafLocationIdsWhitelist();
+    expect(response).to.equal(undefined);
+  });
 });
