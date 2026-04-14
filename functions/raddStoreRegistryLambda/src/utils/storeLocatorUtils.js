@@ -1,3 +1,12 @@
+const formatNormalizedAddress = (normalizedAddressRow) => {
+  return normalizedAddressRow?.replace(', Italia', '');
+};
+
+const formatCafAddress = (address) => {
+  if (!address) return undefined;
+  return `${address.addressRow}, ${address.cap} ${address.city} ${address.province}`;
+};
+
 /**
  * Convert opening time object to an array of opening times for each day of the week
  * @param {*} openingTimeObj - Object with keys as day abbreviations and values as opening hours
@@ -57,7 +66,45 @@ function isAWSAddressValid(scores) {
   );
 }
 
+/**
+ * @param {Object} registry - The CAF registry
+ * @param {boolean} isNormalizedAddressValid - A flag that indicate if the normalizedAddress has passed the scores
+ * @param {string[]} cafLocationIdsWhitelist - List of locationIds for which to return the original CAF address
+ * @returns {Object} Formatted address fields
+ */
+const selectAddressFields = ({
+  registry,
+  isNormalizedAddressValid,
+  cafLocationIdsWhitelist,
+}) => {
+  const { normalizedAddress, address, locationId } = registry;
+
+  if (!normalizedAddress || !address) return {};
+
+  // If the locationId is in the whitelist, return the original CAF address
+  const isLocationIdOnWhitelist =
+    !!cafLocationIdsWhitelist?.includes(locationId);
+
+  if (isNormalizedAddressValid && !isLocationIdOnWhitelist) {
+    return {
+      address: formatNormalizedAddress(normalizedAddress.addressRow),
+      city: normalizedAddress.city,
+      province: normalizedAddress.province,
+      zipCode: normalizedAddress.cap,
+    };
+  }
+
+  return {
+    address: formatCafAddress(address),
+    city: address.city,
+    province: address.province,
+    zipCode: address.cap,
+  };
+};
+
 module.exports = {
   getOpeningTimeByDay,
   isAWSAddressValid,
+  selectAddressFields,
+  formatCafAddress,
 };

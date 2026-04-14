@@ -282,4 +282,60 @@ describe('StoreLocatorCsvEntity', () => {
       mapApiResponseToStoreLocatorCsvEntities(registry);
     expect(result.appointmentRequired).to.equal('');
   });
+
+  it('should handle empty whitelist', () => {
+    const registry = raddAltApiResponse[0];
+    const whitelist = [];
+
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry, whitelist);
+
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1, Italia"');
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO MI"'
+    );
+    expect(result.address).to.equal('"Piazza del Duomo 1"');
+    expect(result.city).to.equal('"Milano"');
+    expect(result.province).to.equal('"MI"');
+    expect(result.zipCode).to.equal('"20121"');
+    expect(isRecordValid).to.be.true;
+  });
+
+  it('should return CAF address if locationId is on whitelist', () => {
+    const registry = raddAltApiResponse[0];
+    const whitelist = ['locationId1', registry.locationId, 'locationId3'];
+
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry, whitelist);
+
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1, Italia"');
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO MI"'
+    );
+    expect(result.address).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO MI"'
+    );
+    expect(result.city).to.equal('"MILANO"');
+    expect(result.province).to.equal('"MI"');
+    expect(result.zipCode).to.equal('"20121"');
+    expect(isRecordValid).to.be.true;
+  });
+
+  it('should return normalized address if locationId is not on whitelist', () => {
+    const registry = raddAltApiResponse[0];
+    const whitelist = ['locationId1', 'locationId2'];
+
+    const { record: result, isRecordValid } =
+      mapApiResponseToStoreLocatorCsvEntities(registry, whitelist);
+
+    expect(result.normalizedAddress).to.equal('"Piazza del Duomo 1, Italia"');
+    expect(result.cafAddress).to.equal(
+      '"VIA PIAZZA DEL DUOMO 1, 20121 MILANO MI"'
+    );
+    expect(result.address).to.equal('"Piazza del Duomo 1"');
+    expect(result.city).to.equal('"Milano"');
+    expect(result.province).to.equal('"MI"');
+    expect(result.zipCode).to.equal('"20121"');
+    expect(isRecordValid).to.be.true;
+  });
 });
