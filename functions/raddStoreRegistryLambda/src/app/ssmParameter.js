@@ -30,8 +30,8 @@ const retrieveCafLocationIdsWhitelist = async () => {
     cafLocationIdsWhiteListParamName
   );
   try {
-    const response = JSON.parse(
-      await getParameterFromLayer(cafLocationIdsWhiteListParamName)
+    const response = await getParameterFromLayer(
+      cafLocationIdsWhiteListParamName
     );
 
     return response.length > 0
