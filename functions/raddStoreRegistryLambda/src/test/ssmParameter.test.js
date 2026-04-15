@@ -91,7 +91,7 @@ describe('ssmParameter', () => {
       .onGet(url)
       .reply(
         200,
-        { Parameter: { Value: JSON.stringify(mockResponse) } },
+        { Parameter: { Value: mockResponse } },
         { 'Content-Type': 'application/json' }
       );
 
@@ -108,7 +108,7 @@ describe('ssmParameter', () => {
       .onGet(url)
       .reply(
         200,
-        { Parameter: { Value: JSON.stringify(mockResponse) } },
+        { Parameter: { Value: mockResponse } },
         { 'Content-Type': 'application/json' }
       );
 
