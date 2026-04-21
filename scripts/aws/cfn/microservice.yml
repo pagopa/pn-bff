@@ -210,6 +210,10 @@ Parameters:
     AllowedValues: [60, 120, 300, 600]
     Description: Throttling period duration
 
+  LogRetention:
+    Type: Number
+    Default: 14
+
   LocationAutocompleteWafIpRateLimit:
     Type: Number
     Description: 'WAF rate limit per source IP address over a 10-minute period for the Autocomplete API.'
@@ -639,6 +643,8 @@ Resources:
     Properties:
       TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/applicative-throttling.yaml"
       Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        LogRetentionDays: !Ref LogRetention
         ApplicationLoadBalancerArn: !Ref ApplicationLoadBalancerArn
         ThrottledPathsRegexp: '(/bff/v1/addresses/.*)'
         ThrottlingGroupString: 'recapiti-by-cx-id'
