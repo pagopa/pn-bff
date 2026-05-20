@@ -67,11 +67,13 @@ paths:
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       x-pagopa-pn-custom-throttling-group: 'recapiti-by-cx-id'
       x-pagopa-pn-custom-throttling-value: 'context.authorizer.cx_id'
+
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxRoleAuthFleet'       # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerLanguage'
         - name: addressType
           in: path
           description: Address type

@@ -61,6 +61,7 @@ public class AddressesService {
      * @param channelType         Channel Type (EMAIL, SMS, PEC or APPIO)
      * @param addressVerification Body of the request containing the address to be created or updated and the verification code
      * @param xPagopaPnCxGroups   Public Administration Group id List
+     * @param xPagopaPnLanguage  Language
      * @return the address created or updated
      */
     public Mono<BffAddressVerificationResponse> createOrUpdateAddress(String xPagopaPnCxId,
@@ -70,7 +71,8 @@ public class AddressesService {
                                                                       String senderId,
                                                                       BffChannelType channelType,
                                                                       Mono<BffAddressVerificationRequest> addressVerification,
-                                                                      List<String> xPagopaPnCxGroups) {
+                                                                      List<String> xPagopaPnCxGroups,
+                                                                      String xPagopaPnLanguage) {
 
         log.info("Create/Update user address - recipientId: {} - type: {} - groups: {} - role: {} - senderId: {} - addressType: {} - channelType: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, senderId, addressType, channelType);
@@ -83,7 +85,9 @@ public class AddressesService {
                             ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(channelType),
                             AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                             xPagopaPnCxGroups,
-                            xPagopaPnCxRole
+                            xPagopaPnCxRole,
+                            xPagopaPnLanguage
+
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                     .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         }
@@ -95,7 +99,8 @@ public class AddressesService {
                         ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
                         AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                         xPagopaPnCxGroups,
-                        xPagopaPnCxRole
+                        xPagopaPnCxRole,
+                        xPagopaPnLanguage
                 ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
 

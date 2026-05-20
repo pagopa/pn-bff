@@ -51,17 +51,22 @@ public class PnUserAttributesClientImpl {
         return allAddressesApi.getAddressesByRecipient(xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
     }
 
+    private CxLanguage convertToUserAttributesLanguage(String xPagopaPnLanguage ) {
+        return xPagopaPnLanguage != null ? CxLanguage.fromValue(xPagopaPnLanguage) : null;
+    }
+
     public Mono<AddressVerificationResponse> createOrUpdateCourtesyAddress(String xPagopaPnCxId,
                                                                            CxTypeAuthFleet xPagopaPnCxType,
                                                                            String senderId,
                                                                            CourtesyChannelType channelType,
                                                                            AddressVerification addressVerification,
                                                                            List<String> xPagopaPnCxGroups,
-                                                                           String xPagopaPnCxRole) {
+                                                                           String xPagopaPnCxRole,
+                                                                           String xPagopaPnLanguage) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "postRecipientCourtesyAddress");
 
         return courtesyApi.postRecipientCourtesyAddress(xPagopaPnCxId, xPagopaPnCxType, senderId,
-                channelType, addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole
+                channelType, addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, convertToUserAttributesLanguage(xPagopaPnLanguage)
         );
     }
 
@@ -71,11 +76,12 @@ public class PnUserAttributesClientImpl {
                                                                         LegalChannelType channelType,
                                                                         AddressVerification addressVerification,
                                                                         List<String> xPagopaPnCxGroups,
-                                                                        String xPagopaPnCxRole) {
+                                                                        String xPagopaPnCxRole,
+                                                                        String xPagopaPnLanguage) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "postRecipientLegalAddress");
 
         return legalApi.postRecipientLegalAddress(xPagopaPnCxId, xPagopaPnCxType, senderId, channelType,
-                addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole
+                addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, convertToUserAttributesLanguage(xPagopaPnLanguage)
         );
     }
 
