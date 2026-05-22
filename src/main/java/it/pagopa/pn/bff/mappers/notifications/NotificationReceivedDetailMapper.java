@@ -1,13 +1,10 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationReworkedStatus;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationStatus;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
@@ -28,7 +25,7 @@ public interface NotificationReceivedDetailMapper {
      * @param notification the FullReceivedNotificationV27 to map
      * @return the mapped BffFullNotificationV1
      */
-    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV27 notification);
+    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification);
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)

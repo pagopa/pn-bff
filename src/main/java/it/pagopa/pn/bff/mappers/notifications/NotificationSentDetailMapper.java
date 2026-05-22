@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV28;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV29;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
@@ -25,7 +25,7 @@ public interface NotificationSentDetailMapper {
      * @param notification the FullSentNotificationV28 to map
      * @return the mapped BffFullNotificationV1
      */
-    BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV28 notification);
+    BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV29 notification);
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
