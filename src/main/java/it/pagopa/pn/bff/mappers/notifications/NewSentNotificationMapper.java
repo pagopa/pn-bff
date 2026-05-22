@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the BffNewNotificationRequest to the NewNotificationRequestV25,
+ * Mapstruct mapper interface, used to map the BffNewNotificationRequest to the NewNotificationRequestV26,
  * and the NewNotificationResponse to the BffNewNotificationResponse
  */
 @Mapper
@@ -17,10 +17,10 @@ public interface NewSentNotificationMapper {
     NewSentNotificationMapper modelMapper = Mappers.getMapper(NewSentNotificationMapper.class);
 
     /**
-     * Maps a BffNewNotificationRequest to a NewNotificationRequestV25
+     * Maps a BffNewNotificationRequest to a NewNotificationRequestV26
      *
      * @param request the BffNewNotificationRequest to map
-     * @return the mapped NewNotificationRequestV25
+     * @return the mapped NewNotificationRequestV26
      */
     NewNotificationRequestV26 mapRequest(BffNewNotificationRequest request);
 

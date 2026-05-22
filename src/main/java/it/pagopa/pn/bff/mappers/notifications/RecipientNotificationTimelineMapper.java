@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the TimelineElementV28 from the FullReceivedNotificationV27
+ * Mapstruct mapper interface, used to map the TimelineElementV28 from the FullReceivedNotificationV28
  * to the NotificationDetailTimeline
  */
 @Mapper

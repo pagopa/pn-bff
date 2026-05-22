@@ -107,7 +107,7 @@ class PnDeliveryClientPAImplTest {
     }
 
     @Test
-    void getSentNotificationV28() throws RestClientException {
+    void getSentNotificationV29() throws RestClientException {
         when(senderReadB2BApi.getSentNotificationV29(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -126,7 +126,7 @@ class PnDeliveryClientPAImplTest {
     }
 
     @Test
-    void getSentNotificationV28Error() {
+    void getSentNotificationV29Error() {
         when(senderReadB2BApi.getSentNotificationV29(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),

@@ -96,7 +96,7 @@ public class PnDeliveryClientPAImpl {
     }
 
     public Mono<NewNotificationResponse> newSentNotification(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
-                                                             String xPagopaPnCxId, NewNotificationRequestV26 NewNotificationRequestV25,
+                                                             String xPagopaPnCxId, NewNotificationRequestV26 NewNotificationRequestV26,
                                                              List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "sendNewNotificationV25");
 
@@ -105,7 +105,7 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 "WEB",
-                NewNotificationRequestV25,
+                NewNotificationRequestV26,
                 xPagopaPnCxGroups,
                 null,
                 null
