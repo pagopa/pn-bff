@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV28;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV29;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
@@ -21,7 +21,7 @@ class NotificationSentDetailMapperTest {
 
     @Test
     void testMapNotificationNull() {
-        FullSentNotificationV28 notification = new FullSentNotificationV28();
+        FullSentNotificationV29 notification = new FullSentNotificationV29();
         BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
         assertNotNull(actualMapSentNotificationDetailResult);
 
@@ -31,7 +31,7 @@ class NotificationSentDetailMapperTest {
 
     @Test
     void testSentNotificationDetailMapper() {
-        FullSentNotificationV28 notification = new FullSentNotificationV28();
+        FullSentNotificationV29 notification = new FullSentNotificationV29();
         notification.setSenderPaId("sent-id-123");
 
         BffFullNotificationV1 result = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
@@ -42,7 +42,7 @@ class NotificationSentDetailMapperTest {
 
     @Test
     void mapSentNotificationDetail_invokesAllAfterMappingMethodsInOrder() {
-        FullSentNotificationV28 notification = new FullSentNotificationV28();
+        FullSentNotificationV29 notification = new FullSentNotificationV29();
         notification.setIun("test-iun");
         notification.setTimeline(new ArrayList<>(List.of(new TimelineElementV28())));
         notification.setNotificationStatusHistory(new ArrayList<>());

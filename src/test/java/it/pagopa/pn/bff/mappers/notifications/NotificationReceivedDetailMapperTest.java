@@ -1,6 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV27;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
@@ -27,7 +27,7 @@ class NotificationReceivedDetailMapperTest {
 
     @Test
     void testReceivedNotificationDetailMapper() {
-        FullReceivedNotificationV27 notification = new FullReceivedNotificationV27();
+        FullReceivedNotificationV28 notification = new FullReceivedNotificationV28();
         notification.setIun("id-test-123");
 
         BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
@@ -38,7 +38,7 @@ class NotificationReceivedDetailMapperTest {
 
     @Test
     void mapReceivedNotificationDetail_invokesAllAfterMappingMethodsInOrder() {
-        FullReceivedNotificationV27 notification = new FullReceivedNotificationV27();
+        FullReceivedNotificationV28 notification = new FullReceivedNotificationV28();
         notification.setIun("test-iun");
         notification.setTimeline(new ArrayList<>(List.of(new TimelineElementV28())));
         notification.setNotificationStatusHistory(new ArrayList<>());

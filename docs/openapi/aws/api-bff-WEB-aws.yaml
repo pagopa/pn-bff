@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: R3ADAgmLKl8pAdB1BZAu/BY3iiW1AvfxeeoQtmu9ot4=
+  version: Qs3h6I3cXWPGqNBkslkUEZrggaW9li3++/IkCTrlWYk=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -85,7 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewNotificationRequestV25'
+              $ref: '#/components/schemas/NewNotificationRequestV26'
       responses:
         '202':
           description: Accepted
@@ -4661,7 +4661,7 @@ components:
         <br/> Esempio vat al 22% -> 22 <br/>
       minimum: 0
       maximum: 100
-    NewNotificationRequestV25:
+    NewNotificationRequestV26:
       description: I campi utilizzati per la creazione di una nuova Notifica.
       type: object
       required:
@@ -4783,6 +4783,18 @@ components:
           items:
             type: string
             maxItems: 1
+        physicalCommunicationPriority:
+          type: number
+          description: >-
+            Priorità del primo tentativo di recapito quando è attiva la
+            funzionalità di gestione dei picchi, dove 100 rappresenta la
+            priorità massima e 0 la minima.  Regola l'ordine di affido delle
+            spedizioni all'interno della sola quota mittente, dando precedenza a
+            quelle più urgenti senza impattare sulle quote degli altri enti.
+          minimum: 0
+          maximum: 100
+          default: 0
+          example: 0
     NewNotificationResponse:
       title: Identificativi della richiesta di notifica
       description: >-
@@ -4815,10 +4827,10 @@ components:
       properties:
         physicalAddressLookup:
           type: boolean
-    SentNotificationV25:
+    SentNotificationV26:
       description: Le informazioni riguardanti una richiesta di notifica accettata
       allOf:
-        - $ref: '#/components/schemas/NewNotificationRequestV25'
+        - $ref: '#/components/schemas/NewNotificationRequestV26'
         - type: object
           required:
             - iun
@@ -6395,7 +6407,7 @@ components:
     BffFullNotificationV1:
       description: Dettaglio notifica con elementi per il Frontend
       allOf:
-        - $ref: '#/components/schemas/SentNotificationV25'
+        - $ref: '#/components/schemas/SentNotificationV26'
         - type: object
           required:
             - notificationStatusHistory

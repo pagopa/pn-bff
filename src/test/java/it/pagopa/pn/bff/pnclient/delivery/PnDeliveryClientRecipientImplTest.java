@@ -177,8 +177,8 @@ class PnDeliveryClientRecipientImplTest {
     }
 
     @Test
-    void getReceivedNotificationV27() throws RestClientException {
-        when(recipientReadApi.getReceivedNotificationV27(
+    void getReceivedNotificationV28() throws RestClientException {
+        when(recipientReadApi.getReceivedNotificationV28(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
@@ -202,8 +202,8 @@ class PnDeliveryClientRecipientImplTest {
     }
 
     @Test
-    void getReceivedNotificationV27Error() {
-        when(recipientReadApi.getReceivedNotificationV27(
+    void getReceivedNotificationV28Error() {
+        when(recipientReadApi.getReceivedNotificationV28(
                 Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.anyString(),
