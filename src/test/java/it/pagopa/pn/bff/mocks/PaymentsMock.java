@@ -116,4 +116,12 @@ public class PaymentsMock {
         paymentUrlResponse.paymentUrl("https://checkout-tpp-url.com");
         return paymentUrlResponse;
     }
+
+    public RetrievalPayload getRetrievalPayloadMock() {
+        RetrievalPayload retrievalPayload = new RetrievalPayload();
+        retrievalPayload.setRetrievalId("RETRIEVAL_ID");
+        retrievalPayload.setTppId("TPP_ID");
+        retrievalPayload.setIsPaymentEnabled(true);
+        return retrievalPayload;
+    }
 }

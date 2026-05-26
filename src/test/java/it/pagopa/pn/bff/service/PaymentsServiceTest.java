@@ -7,8 +7,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_i
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentInfoItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffPaymentTppResponse;
 import it.pagopa.pn.bff.mappers.payments.PaymentsCartMapper;
 import it.pagopa.pn.bff.mappers.payments.PaymentsInfoMapper;
+import it.pagopa.pn.bff.mappers.payments.PaymentsTppMapper;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
@@ -37,6 +39,7 @@ class PaymentsServiceTest {
     @BeforeAll
     public static void setup() {
         pnExternalRegistriesClient = mock(PnExternalRegistriesClientImpl.class);
+        pnEmdClient = mock(PnEmdClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         paymentsService = new PaymentsService(pnExternalRegistriesClient, pnBffExceptionUtility, pnEmdClient);
     }
@@ -108,6 +111,52 @@ class PaymentsServiceTest {
         Mono<BffPaymentResponse> result = paymentsService.paymentsCart(
                 Mono.just(paymentsMock.getBffPaymentRequestMock())
         );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+    }
+
+    @Test
+    void paymentsTpp() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.just(paymentsMock.getRetrievalPayloadMock()));
+        when(pnEmdClient.getPaymentUrl(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(Mono.just(paymentsMock.getPaymentUrlResponse()));
+
+        Mono<BffPaymentTppResponse> result = paymentsService.paymentsTpp("RETRIEVAL_ID", "NOTICE_CODE", "PA_TAX_ID", 100);
+
+        StepVerifier.create(result)
+                .expectNext(PaymentsTppMapper.modelMapper.mapPaymentTppResponse(paymentsMock.getPaymentUrlResponse()))
+                .verifyComplete();
+    }
+
+    @Test
+    void paymentsTppCheckTppError() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffPaymentTppResponse> result = paymentsService.paymentsTpp("RETRIEVAL_ID", "NOTICE_CODE", "PA_TAX_ID", 100);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
+
+        Mockito.clearInvocations(pnEmdClient);
+        Mockito.verify(pnEmdClient, Mockito.never())
+                .getPaymentUrl(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+    }
+
+    @Test
+    void paymentsTppGetPaymentUrlError() {
+        when(pnEmdClient.checkTpp(Mockito.anyString()))
+                .thenReturn(Mono.just(paymentsMock.getRetrievalPayloadMock()));
+        when(pnEmdClient.getPaymentUrl(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffPaymentTppResponse> result = paymentsService.paymentsTpp("RETRIEVAL_ID", "NOTICE_CODE", "PA_TAX_ID", 100);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
