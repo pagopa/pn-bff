@@ -2,10 +2,7 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.AddressVerification;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyChannelType;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CxTypeAuthFleet;
-import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.LegalChannelType;
+import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffAddressVerificationResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.BffChannelType;
@@ -97,7 +94,8 @@ public class AddressesServiceTest {
                 Mockito.any(CourtesyChannelType.class),
                 Mockito.any(AddressVerification.class),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.just(addressesMock.addressVerificationCourtesyResponseMock()));
 
         BffAddressVerificationResponse bffUserAddress = AddressVerificationMapper
@@ -112,7 +110,9 @@ public class AddressesServiceTest {
                         AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
-                        UserMock.PN_CX_GROUPS
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_LANGUAGE_HEADER
+
                 ))
                 .expectNext(bffUserAddress)
                 .verifyComplete();
@@ -127,7 +127,8 @@ public class AddressesServiceTest {
                 Mockito.any(CourtesyChannelType.class),
                 Mockito.any(AddressVerification.class),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
@@ -138,7 +139,8 @@ public class AddressesServiceTest {
                         AddressesMock.SENDER_ID,
                         BffChannelType.EMAIL,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
-                        UserMock.PN_CX_GROUPS
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_LANGUAGE_HEADER
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)
@@ -154,7 +156,8 @@ public class AddressesServiceTest {
                 Mockito.any(LegalChannelType.class),
                 Mockito.any(AddressVerification.class),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.just(addressesMock.addressVerificationLegalResponseMock()));
 
         BffAddressVerificationResponse bffUserAddress = AddressVerificationMapper
@@ -169,7 +172,8 @@ public class AddressesServiceTest {
                         AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
-                        UserMock.PN_CX_GROUPS
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_LANGUAGE_HEADER
                 ))
                 .expectNext(bffUserAddress)
                 .verifyComplete();
@@ -184,7 +188,8 @@ public class AddressesServiceTest {
                 Mockito.any(LegalChannelType.class),
                 Mockito.any(AddressVerification.class),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(addressesService.createOrUpdateAddress(
@@ -195,7 +200,8 @@ public class AddressesServiceTest {
                         AddressesMock.SENDER_ID,
                         BffChannelType.PEC,
                         Mono.just(addressesMock.getBffAddressVerificationMock()),
-                        UserMock.PN_CX_GROUPS
+                        UserMock.PN_CX_GROUPS,
+                        UserMock.PN_LANGUAGE_HEADER
                 ))
                 .expectErrorMatches(throwable -> throwable instanceof PnBffException
                         && ((PnBffException) throwable).getProblem().getStatus() == 404)

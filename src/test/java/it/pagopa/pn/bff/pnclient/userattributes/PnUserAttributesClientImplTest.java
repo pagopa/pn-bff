@@ -232,7 +232,8 @@ class PnUserAttributesClientImplTest {
                 Mockito.any(),
                 Mockito.any(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.just(addressesMock.addressVerificationCourtesyResponseMock()));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
@@ -242,7 +243,9 @@ class PnUserAttributesClientImplTest {
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
+
         )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
     }
 
@@ -255,7 +258,8 @@ class PnUserAttributesClientImplTest {
                 Mockito.any(),
                 Mockito.any(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateCourtesyAddress(
@@ -265,7 +269,8 @@ class PnUserAttributesClientImplTest {
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectError(WebClientResponseException.class).verify();
     }
 
@@ -278,7 +283,8 @@ class PnUserAttributesClientImplTest {
                 Mockito.any(),
                 Mockito.any(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.just(addressesMock.addressVerificationCourtesyResponseMock()));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
@@ -288,7 +294,8 @@ class PnUserAttributesClientImplTest {
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
     }
 
@@ -301,7 +308,8 @@ class PnUserAttributesClientImplTest {
                 Mockito.any(),
                 Mockito.any(),
                 Mockito.anyList(),
-                Mockito.anyString()
+                Mockito.anyString(),
+                Mockito.any(CxLanguage.class)
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
 
         StepVerifier.create(pnUserAttributesClient.createOrUpdateLegalAddress(
@@ -311,7 +319,8 @@ class PnUserAttributesClientImplTest {
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectError(WebClientResponseException.class).verify();
     }
 

@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsA
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
+import it.pagopa.pn.bff.mappers.addresses.AddressLanguageMapper;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +52,6 @@ public class PnUserAttributesClientImpl {
         return allAddressesApi.getAddressesByRecipient(xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole);
     }
 
-    private CxLanguage convertToUserAttributesLanguage(String xPagopaPnLanguage ) {
-        return xPagopaPnLanguage != null ? CxLanguage.fromValue(xPagopaPnLanguage) : null;
-    }
-
     public Mono<AddressVerificationResponse> createOrUpdateCourtesyAddress(String xPagopaPnCxId,
                                                                            CxTypeAuthFleet xPagopaPnCxType,
                                                                            String senderId,
@@ -62,11 +59,11 @@ public class PnUserAttributesClientImpl {
                                                                            AddressVerification addressVerification,
                                                                            List<String> xPagopaPnCxGroups,
                                                                            String xPagopaPnCxRole,
-                                                                           String xPagopaPnLanguage) {
+                                                                           CxLanguage xPagopaPnLanguage) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "postRecipientCourtesyAddress");
 
         return courtesyApi.postRecipientCourtesyAddress(xPagopaPnCxId, xPagopaPnCxType, senderId,
-                channelType, addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, convertToUserAttributesLanguage(xPagopaPnLanguage)
+                channelType, addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, xPagopaPnLanguage
         );
     }
 
@@ -77,11 +74,11 @@ public class PnUserAttributesClientImpl {
                                                                         AddressVerification addressVerification,
                                                                         List<String> xPagopaPnCxGroups,
                                                                         String xPagopaPnCxRole,
-                                                                        String xPagopaPnLanguage) {
+                                                                        CxLanguage xPagopaPnLanguage) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "postRecipientLegalAddress");
 
         return legalApi.postRecipientLegalAddress(xPagopaPnCxId, xPagopaPnCxType, senderId, channelType,
-                addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, convertToUserAttributesLanguage(xPagopaPnLanguage)
+                addressVerification, xPagopaPnCxGroups, xPagopaPnCxRole, xPagopaPnLanguage
         );
     }
 

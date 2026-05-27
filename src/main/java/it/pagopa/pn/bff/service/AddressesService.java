@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.addresses.AddressLanguageMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
 import it.pagopa.pn.bff.mappers.addresses.ChannelTypeMapper;
@@ -86,7 +87,7 @@ public class AddressesService {
                             AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                             xPagopaPnCxGroups,
                             xPagopaPnCxRole,
-                            xPagopaPnLanguage
+                            AddressLanguageMapper.modelMapper.mapAddressesLanguage(xPagopaPnLanguage)
 
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                     .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
@@ -100,7 +101,7 @@ public class AddressesService {
                         AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                         xPagopaPnCxGroups,
                         xPagopaPnCxRole,
-                        xPagopaPnLanguage
+                        AddressLanguageMapper.modelMapper.mapAddressesLanguage(xPagopaPnLanguage)
                 ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
 
