@@ -69,16 +69,23 @@ public class PaymentsService {
 
     /**
      * Payments tpp.
+     * First checks retrievalId validity. If that fails the error is propagated
+     * and getPaymentUrl is never called. Otherwise, if the check is successful,
+     * it calls getPaymentUrl to retrieve the url where to pay the payment.
      *
      * @param retrievalId The retrieval id
      * @param noticeCode  The notice code
      * @param paTaxId     The pa tax id
-     * @return the tpp response
+     * @param amount      The payment amount
+     * @return the url where to pay the payment
      */
     public Mono<BffPaymentTppResponse> paymentsTpp(String retrievalId, String noticeCode, String paTaxId, Integer amount) {
         log.info("Get payment cart tpp");
-        return pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount)
+
+        return pnEmdClient.checkTpp(retrievalId)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse);
+                .flatMap(__ -> pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount)
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse));
     }
 }
