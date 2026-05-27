@@ -15,18 +15,8 @@ public interface AddressLanguageMapper {
     /**
      * Maps a CxLanguage to a string language
      *
-     * @param language the BffPaymentRequest to map
-     * @return the mapped PaymentRequest
+     * @param language the String language to map
+     * @return the mapped CxLanguage
      */
-    default CxLanguage mapAddressesLanguage(String language) {
-        if (language == null) {
-            return CxLanguage.IT;
-        }
-        try {
-            return CxLanguage.valueOf(language.toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            return CxLanguage.IT;
-        }
-    }
-
+    CxLanguage mapAddressesLanguage(String language);
 }

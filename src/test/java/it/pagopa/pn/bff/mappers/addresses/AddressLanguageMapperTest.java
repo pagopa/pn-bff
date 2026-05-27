@@ -17,18 +17,4 @@ public class AddressLanguageMapperTest {
         CxLanguage result = AddressLanguageMapper.modelMapper.mapAddressesLanguage(language.name());
         assertEquals(language, result);
     }
-
-    @Test
-    void testAddressLanguageNotValidMapper() {
-        CxLanguage language = AddressLanguageMapper.modelMapper.mapAddressesLanguage("GP");
-        assertNotNull(language);
-        assertEquals(CxLanguage.IT, language);
-    }
-
-    @Test
-    void testAddressLanguageNotValidNullMapper() {
-        CxLanguage language = AddressLanguageMapper.modelMapper.mapAddressesLanguage(null);
-        assertNotNull(language);
-        assertEquals(CxLanguage.IT, language);
-    }
 }
