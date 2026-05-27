@@ -93,8 +93,8 @@ public class NewSentNotificationMock {
         return payment;
     }
 
-    public NewNotificationRequestV25 getNewSentNotificationRequest() {
-        NewNotificationRequestV25 request = new NewNotificationRequestV25();
+    public NewNotificationRequestV26 getNewSentNotificationRequest() {
+        NewNotificationRequestV26 request = new NewNotificationRequestV26();
         request.setAbstract("Description of mocked notification");
         request.setSubject("Title of mocked notification");
         request.setAmount(999);
@@ -104,12 +104,12 @@ public class NewSentNotificationMock {
         request.setNotificationFeePolicy(NotificationFeePolicy.DELIVERY_MODE);
         request.setPaFee(99);
         request.setVat(9);
-        request.setPagoPaIntMode(NewNotificationRequestV25.PagoPaIntModeEnum.NONE);
+        request.setPagoPaIntMode(NewNotificationRequestV26.PagoPaIntModeEnum.NONE);
         request.setPaymentExpirationDate("2024-11-23");
         request.setPaProtocolNumber("12345678910");
         request.setSenderTaxId("77777777777");
         request.setTaxonomyCode("010801N");
-        request.setPhysicalCommunicationType(NewNotificationRequestV25.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
+        request.setPhysicalCommunicationType(NewNotificationRequestV26.PhysicalCommunicationTypeEnum.AR_REGISTERED_LETTER);
         List<NotificationDocument> documents = new ArrayList<>();
         documents.add(getDocumentMock(0));
         documents.add(getDocumentMock(1));
@@ -138,7 +138,7 @@ public class NewSentNotificationMock {
     }
 
     public BffNewNotificationRequest getBffNewSentNotificationRequest() {
-        NewNotificationRequestV25 msRequest = getNewSentNotificationRequest();
+        NewNotificationRequestV26 msRequest = getNewSentNotificationRequest();
         return mapper.convertValue(msRequest, BffNewNotificationRequest.class);
     }
 
