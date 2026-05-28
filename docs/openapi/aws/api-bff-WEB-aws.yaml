@@ -3110,6 +3110,7 @@ paths:
       x-pagopa-pn-custom-throttling-group: recapiti-by-cx-id
       x-pagopa-pn-custom-throttling-value: context.authorizer.cx_id
       parameters:
+        - $ref: '#/components/parameters/headerLanguage'
         - name: addressType
           in: path
           description: Address type
@@ -4078,6 +4079,13 @@ components:
       example: 5000
       schema:
         type: number
+    headerLanguage:
+      name: x-pagopa-pn-language
+      in: header
+      description: User preferred language for platform communications.
+      required: false
+      schema:
+        $ref: '#/components/schemas/CxLanguage'
     senderId:
       in: path
       name: senderId
@@ -7602,6 +7610,15 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/BffUserAddress'
+    CxLanguage:
+      type: string
+      enum:
+        - IT
+        - DE
+        - SL
+        - FR
+        - EN
+      default: IT
     BffAddressType:
       type: string
       enum:

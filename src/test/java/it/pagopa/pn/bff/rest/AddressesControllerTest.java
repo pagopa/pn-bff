@@ -112,7 +112,8 @@ class AddressesControllerTest {
                 Mockito.anyString(),
                 Mockito.any(BffChannelType.class),
                 Mockito.any(),
-                Mockito.anyList()
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Mono.just(response));
 
         webTestClient
@@ -125,6 +126,7 @@ class AddressesControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_LANGUAGE_HEADER, "IT")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -140,7 +142,8 @@ class AddressesControllerTest {
                 eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
+                eq(UserMock.PN_CX_GROUPS),
+                eq("IT")
         );
     }
 
@@ -156,7 +159,8 @@ class AddressesControllerTest {
                 Mockito.anyString(),
                 Mockito.any(BffChannelType.class),
                 Mockito.any(),
-                Mockito.anyList()
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Mono.empty());
 
         webTestClient
@@ -169,6 +173,7 @@ class AddressesControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_LANGUAGE_HEADER, "IT")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -182,7 +187,8 @@ class AddressesControllerTest {
                 eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
+                eq(UserMock.PN_CX_GROUPS),
+                eq("IT")
         );
     }
 
@@ -198,7 +204,8 @@ class AddressesControllerTest {
                 Mockito.anyString(),
                 Mockito.any(BffChannelType.class),
                 Mockito.any(),
-                Mockito.anyList()
+                Mockito.anyList(),
+                Mockito.anyString()
         )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
 
         webTestClient
@@ -211,6 +218,7 @@ class AddressesControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
+                .header(PnBffRestConstants.CX_LANGUAGE_HEADER, "IT")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
@@ -224,7 +232,8 @@ class AddressesControllerTest {
                 eq(AddressesMock.SENDER_ID),
                 eq(BffChannelType.EMAIL),
                 argThat(new MonoMatcher<>(Mono.just(request))),
-                eq(UserMock.PN_CX_GROUPS)
+                eq(UserMock.PN_CX_GROUPS),
+                eq("IT")
         );
     }
 

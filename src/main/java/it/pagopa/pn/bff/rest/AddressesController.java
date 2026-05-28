@@ -72,6 +72,7 @@ public class AddressesController implements AddressesApi {
                                                                                         Mono<BffAddressVerificationRequest> addressVerification,
                                                                                         List<String> xPagopaPnCxGroups,
                                                                                         String xPagopaPnCxRole,
+                                                                                        CxLanguage xPagopaPnLanguage,
                                                                                         final ServerWebExchange exchange) {
 
         Mono<BffAddressVerificationResponse> serviceResponse = addressesService.createOrUpdateAddress(
@@ -82,7 +83,9 @@ public class AddressesController implements AddressesApi {
                 senderId,
                 channelType,
                 addressVerification,
-                xPagopaPnCxGroups
+                xPagopaPnCxGroups,
+                xPagopaPnLanguage != null ? xPagopaPnLanguage.getValue() : null
+
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response))

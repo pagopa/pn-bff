@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.UserAddresses;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
+import it.pagopa.pn.bff.mappers.addresses.AddressLanguageMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressVerificationMapper;
 import it.pagopa.pn.bff.mappers.addresses.AddressesMapper;
 import it.pagopa.pn.bff.mappers.addresses.ChannelTypeMapper;
@@ -61,6 +62,7 @@ public class AddressesService {
      * @param channelType         Channel Type (EMAIL, SMS, PEC or APPIO)
      * @param addressVerification Body of the request containing the address to be created or updated and the verification code
      * @param xPagopaPnCxGroups   Public Administration Group id List
+     * @param xPagopaPnLanguage  Language
      * @return the address created or updated
      */
     public Mono<BffAddressVerificationResponse> createOrUpdateAddress(String xPagopaPnCxId,
@@ -70,7 +72,8 @@ public class AddressesService {
                                                                       String senderId,
                                                                       BffChannelType channelType,
                                                                       Mono<BffAddressVerificationRequest> addressVerification,
-                                                                      List<String> xPagopaPnCxGroups) {
+                                                                      List<String> xPagopaPnCxGroups,
+                                                                      String xPagopaPnLanguage) {
 
         log.info("Create/Update user address - recipientId: {} - type: {} - groups: {} - role: {} - senderId: {} - addressType: {} - channelType: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, xPagopaPnCxRole, senderId, addressType, channelType);
@@ -83,7 +86,9 @@ public class AddressesService {
                             ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(channelType),
                             AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                             xPagopaPnCxGroups,
-                            xPagopaPnCxRole
+                            xPagopaPnCxRole,
+                            AddressLanguageMapper.modelMapper.mapAddressesLanguage(xPagopaPnLanguage)
+
                     ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                     .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
         }
@@ -95,7 +100,8 @@ public class AddressesService {
                         ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(channelType),
                         AddressVerificationMapper.addressVerificationMapper.mapAddressVerificationRequest(verification),
                         xPagopaPnCxGroups,
-                        xPagopaPnCxRole
+                        xPagopaPnCxRole,
+                        AddressLanguageMapper.modelMapper.mapAddressesLanguage(xPagopaPnLanguage)
                 ).map(AddressVerificationMapper.addressVerificationMapper::mapAddressVerificationResponse)
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException));
 

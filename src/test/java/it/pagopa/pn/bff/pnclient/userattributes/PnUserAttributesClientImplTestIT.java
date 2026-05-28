@@ -235,7 +235,8 @@ class PnUserAttributesClientImplTestIT {
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
     }
 
@@ -252,7 +253,8 @@ class PnUserAttributesClientImplTestIT {
                 CourtesyChannelType.EMAIL,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectError().verify();
     }
 
@@ -274,7 +276,8 @@ class PnUserAttributesClientImplTestIT {
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectNext(addressesMock.addressVerificationCourtesyResponseMock()).verifyComplete();
     }
 
@@ -291,7 +294,8 @@ class PnUserAttributesClientImplTestIT {
                 LegalChannelType.PEC,
                 addressesMock.getAddressVerificationBodyMock(),
                 UserMock.PN_CX_GROUPS,
-                UserMock.PN_CX_ROLE
+                UserMock.PN_CX_ROLE,
+                CxLanguage.IT
         )).expectError().verify();
     }
 
