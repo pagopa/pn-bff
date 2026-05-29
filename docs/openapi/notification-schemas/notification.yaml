@@ -28,6 +28,7 @@ components:
               $ref: '#/components/schemas/BffNotificationStatus'
             timeline:
               type: array
+              x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
               items:
                 $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
@@ -62,6 +63,7 @@ components:
             $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
           type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -130,8 +132,10 @@ components:
       properties:
         denomination:
           type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
         taxId:
           type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
 
     BffLegalFactId:
       type: object

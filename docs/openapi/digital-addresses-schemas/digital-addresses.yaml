@@ -31,6 +31,7 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
         codeValid:
           type: boolean
         pecValid:
