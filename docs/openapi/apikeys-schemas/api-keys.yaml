@@ -82,6 +82,7 @@ components:
         changedByDenomination:
           type: string
           description: nome dell'utente che ha effettuato il cambio di stato
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
     
     BffRequestNewApiKey:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/003bfc21d6d15a59e1f60701b95e06001961332f/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestNewApiKey'

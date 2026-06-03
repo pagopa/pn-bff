@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Lce8vx9XFqgSH/G/5ySwBvoZ9jpaqlN6Qki98JbpXeQ=
+  version: d6KcfUAY3sdIqPYlqRTcS+ishU5sE9P6+okbImR0fPM=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6321,6 +6321,7 @@ components:
             $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
           type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -6333,8 +6334,10 @@ components:
       properties:
         denomination:
           type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
         taxId:
           type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
     BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
@@ -6410,6 +6413,7 @@ components:
               $ref: '#/components/schemas/BffNotificationStatus'
             timeline:
               type: array
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
               items:
                 $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
@@ -6674,6 +6678,7 @@ components:
         changedByDenomination:
           type: string
           description: nome dell'utente che ha effettuato il cambio di stato
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
     BffApiKeyRow:
       type: object
       properties:
@@ -7582,6 +7587,7 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
         codeValid:
           type: boolean
         pecValid:
