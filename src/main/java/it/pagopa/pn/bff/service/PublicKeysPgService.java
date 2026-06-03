@@ -108,7 +108,7 @@ public class PublicKeysPgService {
     public Mono<Void> deletePublicKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                       String xPagopaPnCxId, String xPagopaPnCxRole,
                                       String id, List<String> xPagopaPnCxGroups) {
-        log.info("Delete public key {} - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Delete public key - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return pnPublickeyManagerClientPG.deletePublicKey(
                 xPagopaPnUid,
@@ -137,7 +137,7 @@ public class PublicKeysPgService {
                                             String xPagopaPnCxId, String xPagopaPnCxRole,
                                             String id, String status,
                                             List<String> xPagopaPnCxGroups) {
-        log.info("Change public key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Change public key status - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return pnPublickeyManagerClientPG.changeStatusPublicKey(
                 xPagopaPnUid,
@@ -166,7 +166,7 @@ public class PublicKeysPgService {
                                                       String xPagopaPnCxId, String xPagopaPnCxRole,
                                                       String id, Mono<BffPublicKeyRequest> bffPublicKeyRequest,
                                                       List<String> xPagopaPnCxGroups) {
-        log.info("Rotate public key {} status - senderId: {} - type: {} - groups: {}", id, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Rotate public key status - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
         return bffPublicKeyRequest.flatMap(request -> {
             Mono<PublicKeyResponse> publicKeyResponse = pnPublickeyManagerClientPG.rotatePublicKey(
