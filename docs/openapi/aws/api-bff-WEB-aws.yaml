@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: IorI9BXEllEKm13jb+K3MWIa8juoNgfpysTAF46scWg=
+  version: d6KcfUAY3sdIqPYlqRTcS+ishU5sE9P6+okbImR0fPM=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6678,6 +6678,7 @@ components:
         changedByDenomination:
           type: string
           description: nome dell'utente che ha effettuato il cambio di stato
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
     BffApiKeyRow:
       type: object
       properties:

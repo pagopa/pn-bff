@@ -226,4 +226,4 @@ components:
       required: true
       schema:
         type: string
-        x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+      x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
