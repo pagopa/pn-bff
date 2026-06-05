@@ -965,7 +965,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3fc486fee7044e9858d21fabce598887429a894b/docs/openapi/pn-user-consents-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/7e64fd51324347c2002865387a0d0e1ca3839fec/docs/openapi/pn-user-consents-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -1002,7 +1002,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/3fc486fee7044e9858d21fabce598887429a894b/docs/openapi/pn-address-book-api-internal.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/7e64fd51324347c2002865387a0d0e1ca3839fec/docs/openapi/pn-address-book-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
