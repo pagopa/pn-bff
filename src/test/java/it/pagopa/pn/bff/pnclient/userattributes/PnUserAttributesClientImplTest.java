@@ -77,6 +77,7 @@ class PnUserAttributesClientImplTest {
         Consent consent = consentsMock.getTosConsentResponseMock();
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.any()
@@ -84,6 +85,7 @@ class PnUserAttributesClientImplTest {
 
         StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS
         )).expectNext(consent).verifyComplete();
@@ -93,6 +95,7 @@ class PnUserAttributesClientImplTest {
     void getContentByTypeError() {
         when(consentsApi.getConsentByType(
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.any()
@@ -100,6 +103,7 @@ class PnUserAttributesClientImplTest {
 
         StepVerifier.create(pnUserAttributesClient.getConsentByType(
                 UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS
         )).expectError(WebClientResponseException.class).verify();
@@ -155,6 +159,7 @@ class PnUserAttributesClientImplTest {
     void acceptConsent() {
         when(consentsApi.consentAction(
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.anyString(),
@@ -163,6 +168,7 @@ class PnUserAttributesClientImplTest {
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
                 UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),
@@ -174,6 +180,7 @@ class PnUserAttributesClientImplTest {
     void acceptConsentError() {
         when(consentsApi.consentAction(
                 Mockito.anyString(),
+                Mockito.anyString(),
                 Mockito.any(CxTypeAuthFleet.class),
                 Mockito.any(ConsentType.class),
                 Mockito.anyString(),
@@ -182,6 +189,7 @@ class PnUserAttributesClientImplTest {
 
         StepVerifier.create(pnUserAttributesClient.acceptConsent(
                 UserMock.PN_UID,
+                UserMock.PN_CX_ID,
                 CxTypeAuthFleet.PF,
                 ConsentType.TOS,
                 new ConsentAction().action(ConsentAction.ActionEnum.ACCEPT),

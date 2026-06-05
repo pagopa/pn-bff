@@ -5,7 +5,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsA
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.*;
-import it.pagopa.pn.bff.mappers.addresses.AddressLanguageMapper;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -24,26 +23,26 @@ public class PnUserAttributesClientImpl {
     private final CourtesyApi courtesyApi;
     private final LegalApi legalApi;
 
-    public Mono<Void> acceptConsentPg(String xPagopaPnCxId,CxTypeAuthFleet xPagopaPnCxType, ConsentType type,
-                                      String xPagopaPnCxRole,String version, ConsentAction consentAction, List<String> xPagopaPnCxGroups) {
+    public Mono<Void> acceptConsentPg(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, ConsentType type,
+                                      String xPagopaPnCxRole, String version, ConsentAction consentAction, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "setPgConsentAction");
-        return consentsApi.setPgConsentAction(xPagopaPnCxId,xPagopaPnCxType,type,xPagopaPnCxRole,version,consentAction,xPagopaPnCxGroups);
+        return consentsApi.setPgConsentAction(xPagopaPnCxId, xPagopaPnCxType, type, xPagopaPnCxRole, version, consentAction, xPagopaPnCxGroups);
     }
 
-    public Mono<Consent> getPgConsentByType(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, ConsentType type){
+    public Mono<Consent> getPgConsentByType(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getPgConsentByType");
-        return consentsApi.getPgConsentByType( xPagopaPnCxId,  xPagopaPnCxType,  type, null);
+        return consentsApi.getPgConsentByType(xPagopaPnCxId, xPagopaPnCxType, type, null);
     }
 
-    public Mono<Consent> getConsentByType(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {
+    public Mono<Consent> getConsentByType(String xPagopaPnUid, String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, ConsentType type) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "getConsentByType");
-        return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxType, type, null);
+        return consentsApi.getConsentByType(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, type, null);
     }
 
-    public Mono<Void> acceptConsent(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+    public Mono<Void> acceptConsent(String xPagopaPnUid, String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,
                                     ConsentType consentType, ConsentAction consentAction, String version) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_USER_ATTRIBUTES, "acceptConsent");
-        return consentsApi.consentAction(xPagopaPnUid, xPagopaPnCxType, consentType, version, consentAction);
+        return consentsApi.consentAction(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, consentType, version, consentAction);
     }
 
     public Mono<UserAddresses> getUserAddresses(String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType,

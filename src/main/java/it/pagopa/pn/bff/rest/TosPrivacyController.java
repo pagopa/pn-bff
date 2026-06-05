@@ -79,6 +79,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * Get the Tos & Privacy information of the user
      *
      * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxId   User Identifier
      * @param xPagopaPnCxType Public Administration Type
      * @param type            List of consents to retrieve
      * @param exchange
@@ -86,12 +87,13 @@ public class TosPrivacyController implements UserConsentsApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<BffConsent>>> getTosPrivacyV2(String xPagopaPnUid,
+                                                                  String xPagopaPnCxId,
                                                                   CxTypeAuthFleet xPagopaPnCxType,
                                                                   List<ConsentType> type,
                                                                   final ServerWebExchange exchange) {
 
         Flux<BffConsent> serviceResponse = tosPrivacyService
-                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxType, type);
+                .getTosPrivacy(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, type);
 
         return serviceResponse.collectList()
                 .map(consents -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(consents)));
@@ -102,6 +104,7 @@ public class TosPrivacyController implements UserConsentsApi {
      * Allows to accept the TOS and Privacy.
      *
      * @param xPagopaPnUid    User Identifier
+     * @param xPagopaPnCxId   User Identifier
      * @param xPagopaPnCxType Public Administration Type
      * @param tosPrivacyBody  Body of the request containing the acceptance of the TOS and Privacy
      * @param exchange
@@ -109,12 +112,13 @@ public class TosPrivacyController implements UserConsentsApi {
      */
     @Override
     public Mono<ResponseEntity<Void>> acceptTosPrivacyV2(String xPagopaPnUid,
+                                                         String xPagopaPnCxId,
                                                          CxTypeAuthFleet xPagopaPnCxType,
                                                          Flux<BffTosPrivacyActionBody> tosPrivacyBody,
                                                          ServerWebExchange exchange) {
 
         Mono<Void> serviceResponse = tosPrivacyService
-                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxType, tosPrivacyBody);
+                .acceptOrDeclineTosPrivacy(xPagopaPnUid, xPagopaPnCxId, xPagopaPnCxType, tosPrivacyBody);
 
         return serviceResponse
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))

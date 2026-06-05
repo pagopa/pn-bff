@@ -62,7 +62,7 @@ public class TosPrivacyService {
     /**
      * Retrieve pg tos and privacy consents for the user
      *
-     * @param xPagopaPnCxId    User Identifier
+     * @param xPagopaPnCxId   User Identifier
      * @param xPagopaPnCxType Customer/Recipient Type
      * @return an object containing the tos and privacy consents
      */
@@ -88,12 +88,12 @@ public class TosPrivacyService {
      * @param type            List of consents to retrieve
      * @return an object containing the tos and privacy consents
      */
-    public Flux<BffConsent> getTosPrivacy(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
+    public Flux<BffConsent> getTosPrivacy(String xPagopaPnUid, String xPagopaPnCxId, CxTypeAuthFleet xPagopaPnCxType, List<ConsentType> type) {
         log.info("Get tos and privacy consents - type: {}", xPagopaPnCxType);
 
         Flux<Consent> consents = Flux.empty();
         for (ConsentType t : type) {
-            Mono<Consent> consent = pnUserAttributesClient.getConsentByType(xPagopaPnUid, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
+            Mono<Consent> consent = pnUserAttributesClient.getConsentByType(xPagopaPnUid, xPagopaPnCxId, CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType), TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(t));
             consents = Flux.concat(consents, consent);
         }
 
@@ -111,6 +111,7 @@ public class TosPrivacyService {
      * @return void
      */
     public Mono<Void> acceptOrDeclineTosPrivacy(String xPagopaPnUid,
+                                                String xPagopaPnCxId,
                                                 CxTypeAuthFleet xPagopaPnCxType,
                                                 Flux<BffTosPrivacyActionBody> tosPrivacyBody) {
         log.info("Accept or decline tos and privacy consents - type: {}", xPagopaPnCxType);
@@ -120,6 +121,7 @@ public class TosPrivacyService {
             consentAction.setAction(TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentAction(request.getAction()));
             return pnUserAttributesClient.acceptConsent(
                     xPagopaPnUid,
+                    xPagopaPnCxId,
                     CxTypeMapper.cxTypeMapper.convertUserAttributesCXType(xPagopaPnCxType),
                     TosPrivacyConsentMapper.tosPrivacyConsentMapper.convertConsentType(request.getType()),
                     consentAction,
