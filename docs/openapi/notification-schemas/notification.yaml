@@ -59,6 +59,7 @@ components:
             type: string
         steps:
           type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
             $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:

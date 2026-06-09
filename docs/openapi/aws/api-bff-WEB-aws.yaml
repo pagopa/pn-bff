@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: d6KcfUAY3sdIqPYlqRTcS+ishU5sE9P6+okbImR0fPM=
+  version: jrww+ulEq1bzPVuari3iNDlFBHOdVNiyCro7g9oGN6o=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6317,6 +6317,7 @@ components:
             type: string
         steps:
           type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
             $ref: '#/components/schemas/BffNotificationDetailTimeline'
         recipient:
