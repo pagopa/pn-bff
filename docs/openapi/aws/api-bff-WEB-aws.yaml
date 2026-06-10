@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: jrww+ulEq1bzPVuari3iNDlFBHOdVNiyCro7g9oGN6o=
+  version: 3o2EgX2LjyQGvTwzqIb+w2aAY0pl5KWR5psK/AEaIPg=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3844,6 +3844,7 @@ components:
       schema:
         type: string
         x-field-extra-annotation: '@lombok.ToString.Exclude'
+        format: password
     BffNotificationSearchStatus:
       name: status
       in: query
@@ -4219,9 +4220,10 @@ components:
             Elenco delle denominazioni dei destinatari della notifica. <br/>
             __N.B:__ campo da utilizzare solo per visualizzazione.
           type: array
-          x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
             type: string
+            x-field-extra-annotation: '@lombok.ToString.Exclude'
+            format: password
         requestAcceptedAt:
           description: Data accettazione notifica
           type: string
@@ -4329,6 +4331,7 @@ components:
       description: C.F. persona fisica o persona giuridica
       type: string
       x-field-extra-annotation: '@lombok.ToString.Exclude'
+      format: password
       minLength: 11
       maxLength: 16
       pattern: >-
@@ -4340,6 +4343,7 @@ components:
         controllo, ovvero la seguente regexp: ^[ -{}~\u00A0-ÿ]*$
       type: string
       x-field-extra-annotation: '@lombok.ToString.Exclude'
+      format: password
       minLength: 1
       pattern: ^.*$
     NotificationDigitalAddress:
@@ -4357,6 +4361,7 @@ components:
         address:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           example: account@domain.it
           description: >-
             Indirizzo PEC o REM che il mittente della notifica intende
@@ -4374,11 +4379,13 @@ components:
         at:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Campo "presso" dell'indirizzo
           pattern: ^.*$
         address:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Indirizzo del domicilio fisico
           pattern: ^.*$
           minLength: 2
@@ -4386,12 +4393,14 @@ components:
         addressDetails:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Seconda riga dell'indirizzo fisico
           pattern: ^.*$
           maxLength: 1024
         zip:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: >-
             Codice di avviamento postale. In caso di invio estero diventa
             facoltativo
@@ -4401,6 +4410,7 @@ components:
         municipality:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Comune
           pattern: ^.*$
           minLength: 2
@@ -4408,18 +4418,21 @@ components:
         municipalityDetails:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Frazione o località
           pattern: ^.*$
           maxLength: 256
         province:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Provincia
           pattern: ^.*$
           maxLength: 256
         foreignState:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           description: Denominazione paese estero
           pattern: ^.*$
           maxLength: 256
@@ -4705,6 +4718,8 @@ components:
         recipients:
           type: array
           description: Informazioni sui destinatari
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           items:
             $ref: '#/components/schemas/NotificationRecipientV24'
           minItems: 1
@@ -5000,36 +5015,44 @@ components:
       properties:
         at:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Campo "presso" dell'indirizzo
         address:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Indirizzo del domicilio fisico
         addressDetails:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Seconda riga dell'indirizzo fisico
         zip:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: >-
             Codice di avviamento postale. In caso di invio estero diventa
             facoltativo
         municipality:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Comune in cui l'indirizzo si trova
         municipalityDetails:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Frazione o località
         province:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Provincia in cui si trova l'indirizzo
         foreignState:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: Denominazione paese estero
       description: Indirizzo fisico scoperto durante fase di consegna
@@ -5139,10 +5162,12 @@ components:
       properties:
         type:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: tipo di indirizzo PEC, REM, SERCQ, SMS, EMAIL, APPIO ...
         address:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           type: string
           description: account@domain
     DigitalDeliveryCreationRequestDetailsV28:
@@ -7616,6 +7641,7 @@ components:
         value:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
           maxLength: 254
           pattern: >-
             ^(((00|\+)393\d{8,9})|(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])|(ENABLED)|(DISABLED)|(APPIO)|([a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+:[a-zA-Z0-9\-]+\??.*))$

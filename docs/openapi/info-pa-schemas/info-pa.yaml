@@ -57,7 +57,7 @@ components:
           description: The URL of the product
     
     BffPaGroupStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/53442c03ec1da1c55c7414e2bc2f06424a15dd17/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-external-registries/e497aac358dff447e341a23c39fb0e638eb301fb/docs/openapi/pn-selfcare-internal-v1.yaml#/components/schemas/PaGroupStatus'
     
     BffPaGroupList:
       title: Groups defined in Self Care
