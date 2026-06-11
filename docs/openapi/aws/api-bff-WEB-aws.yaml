@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: bg/K6TKaER4Td4a+/IWRqp8xpbFAR0iv3stW37MiVnk=
+  version: 8TJBEsom2rRmXkm7LTK3MZKd95PRrLLhzPTyg6KdGuE=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4223,7 +4223,6 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
             type: string
-            x-field-extra-annotation: '@lombok.ToString.Exclude'
             format: password
         requestAcceptedAt:
           description: Data accettazione notifica
