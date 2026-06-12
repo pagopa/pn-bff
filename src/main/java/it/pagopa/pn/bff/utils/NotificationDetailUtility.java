@@ -503,8 +503,9 @@ public class NotificationDetailUtility {
         for (BffNotificationDetailTimeline reworkedEvent : reworkedEvents) {
             for (NotificationStatusHistoryInvalidatedElement invalidatedStatus : reworkedEvent.getDetails().getInvalidatedTimelineAndStatusHistory()) {
 
-                // skip DELIVERING and VIEWED status - keep everything together
-                if (invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING ||
+                // skip ACCEPTED (PN-20141), DELIVERING and VIEWED status - keep everything together
+                if (invalidatedStatus.getStatus() == NotificationStatusV26.ACCEPTED ||
+                        invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING ||
                         invalidatedStatus.getStatus() == NotificationStatusV26.VIEWED) {
                     continue;
                 }
@@ -603,8 +604,9 @@ public class NotificationDetailUtility {
                 }
             }
 
-            // if statusHistory contains reworked steps, mark it as VALID (except for VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
+            // if statusHistory contains reworked steps, mark it as VALID (except for ACCEPTED, VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
             if (hasReworkedSteps &&
+                    statusHistory.getStatus() != BffNotificationStatus.ACCEPTED &&
                     statusHistory.getStatus() != BffNotificationStatus.VIEWED &&
                     statusHistory.getStatus() != BffNotificationStatus.DELIVERING &&
                     !(statusHistory.getStatus() == BffNotificationStatus.EFFECTIVE_DATE && firstRefinementNotInvalidated)) {
