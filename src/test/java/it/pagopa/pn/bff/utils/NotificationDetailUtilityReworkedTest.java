@@ -150,7 +150,7 @@ class NotificationDetailUtilityReworkedTest {
     }
 
     @Test
-    void setReworkedStatusOnSteps_invalidatedStatusCreatesNotValidEntry_andStepMovedFromOriginal() {
+    void setReworkedStatusOnSteps_acceptedStatusNotDuplicated_andStepKeptInOriginal() {
         BffNotificationDetailTimeline step = new BffNotificationDetailTimeline();
         step.setElementId("stepId");
         step.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
@@ -183,24 +183,20 @@ class NotificationDetailUtilityReworkedTest {
 
         NotificationDetailUtility.setReworkedStatusOnSteps(notification);
 
-        BffNotificationStatusHistory notValidEntry = notification.getNotificationStatusHistory().stream()
-                .filter(sh -> sh.getStatus() == BffNotificationStatus.ACCEPTED
-                        && sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID)
-                .findFirst().orElse(null);
-
         long acceptedCount = notification.getNotificationStatusHistory().stream()
                 .filter(sh -> sh.getStatus() == BffNotificationStatus.ACCEPTED)
                 .count();
-        assertEquals(2, acceptedCount);
+        assertEquals(1, acceptedCount);
         assertNull(originalAccepted.getReworkedStatus());
-        assertTrue(originalAccepted.getSteps().isEmpty());
-        assertNotNull(notValidEntry);
-        assertEquals(1, notValidEntry.getSteps().size());
-        assertEquals("stepId", notValidEntry.getSteps().get(0).getElementId());
+        assertEquals(1, originalAccepted.getSteps().size());
+        assertEquals("stepId", originalAccepted.getSteps().get(0).getElementId());
+        assertTrue(notification.getNotificationStatusHistory().stream()
+                .noneMatch(sh -> sh.getStatus() == BffNotificationStatus.ACCEPTED
+                        && sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID));
     }
 
     @Test
-    void setReworkedStatusOnSteps_invalidatedStepMarkedNotValid() {
+    void setReworkedStatusOnSteps_acceptedInvalidatedStepMarkedNotValidInPlace() {
         BffNotificationDetailTimeline step = new BffNotificationDetailTimeline();
         step.setElementId("invalidatedStep");
         step.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
@@ -233,12 +229,45 @@ class NotificationDetailUtilityReworkedTest {
 
         NotificationDetailUtility.setReworkedStatusOnSteps(notification);
 
-        BffNotificationStatusHistory notValidEntry = notification.getNotificationStatusHistory().stream()
-                .filter(sh -> sh.getStatus() == BffNotificationStatus.ACCEPTED
-                        && sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID)
-                .findFirst().orElseThrow();
+        assertEquals(BffNotificationReworkedStatus.NOT_VALID, step.getReworkedStatus());
+        assertNull(originalAccepted.getReworkedStatus());
+    }
 
-        assertEquals(BffNotificationReworkedStatus.NOT_VALID, notValidEntry.getSteps().get(0).getReworkedStatus());
+    @Test
+    void setReworkedStatusOnSteps_acceptedStatusNotMarkedValid() {
+        BffNotificationDetailTimeline reworkedStep = new BffNotificationDetailTimeline();
+        reworkedStep.setElementId("baseId.REWORK_1");
+        reworkedStep.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
+        reworkedStep.setTimestamp(OffsetDateTime.now());
+
+        TimelineElementV28 relatedElem = new TimelineElementV28();
+        relatedElem.setElementId("baseId");
+
+        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
+        invalidated.setStatus(NotificationStatusV26.DELIVERED);
+        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
+        invalidated.setActiveFrom(OffsetDateTime.now());
+
+        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
+        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
+
+        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
+        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        reworkedEvent.setTimestamp(OffsetDateTime.now());
+        reworkedEvent.setDetails(details);
+
+        BffNotificationStatusHistory acceptedHistory = new BffNotificationStatusHistory();
+        acceptedHistory.setStatus(BffNotificationStatus.ACCEPTED);
+        acceptedHistory.setSteps(new ArrayList<>(List.of(reworkedStep)));
+        acceptedHistory.setRelatedTimelineElements(new ArrayList<>(List.of("baseId.REWORK_1")));
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent)));
+        notification.setNotificationStatusHistory(new ArrayList<>(List.of(acceptedHistory)));
+
+        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
+
+        assertNull(acceptedHistory.getReworkedStatus());
     }
 
     @Test
