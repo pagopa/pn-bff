@@ -133,7 +133,7 @@ public class VirtualKeysPgService {
     public Mono<Void> changeStatusVirtualKey(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                              String xPagopaPnCxId, String kid, Mono<BffVirtualKeyStatusRequest> bffVirtualKeyStatusRequest,
                                              List<String> xPagopaPnCxGroups, String xPagopaPnCxRole) {
-        log.info("Change virtual key {} status - senderId: {} - type: {} - groups: {}", kid, xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
+        log.info("Change virtual key status - senderId: {} - type: {} - groups: {}", xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
         return bffVirtualKeyStatusRequest.flatMap(request ->
                 pnVirtualKeysManagerClientPG.changeStatusVirtualKey(
                         xPagopaPnUid,

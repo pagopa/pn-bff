@@ -3,7 +3,7 @@ info:
 components:
   parameters:
     BffSenderId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7e64fd51324347c2002865387a0d0e1ca3839fec/docs/openapi/pn-address-book-common-components.yaml#/components/parameters/senderId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/fbf3572b07016b8962a0d749d692c31662c436a5/docs/openapi/pn-address-book-common-components.yaml#/components/parameters/senderId'
   schemas:
     BffUserAddresses:
       type: array
@@ -31,6 +31,7 @@ components:
           $ref: '#/components/schemas/BffChannelType'
         value:
           type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
         codeValid:
           type: boolean
         pecValid:
@@ -52,7 +53,7 @@ components:
         - COURTESY
 
     BffAddressVerificationRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7e64fd51324347c2002865387a0d0e1ca3839fec/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerification'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/fbf3572b07016b8962a0d749d692c31662c436a5/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerification'
 
     BffAddressVerificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/7e64fd51324347c2002865387a0d0e1ca3839fec/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/fbf3572b07016b8962a0d749d692c31662c436a5/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerificationResponse'
