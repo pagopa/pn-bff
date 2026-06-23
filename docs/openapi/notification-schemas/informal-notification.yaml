@@ -1,0 +1,50 @@
+info:
+  title: Schemas OpenApi per le comunicazioni bonarie
+  version: v1.0
+components:
+  schemas:
+    BffFullInformalNotificationV1:
+      description: >-
+        Dettaglio notifica bonaria esposto al frontend del destinatario.
+      type: object
+      required:
+        - iun
+        - senderDenomination
+        - campaignId
+        - subject
+        - recipients
+        - notificationStatus
+        - sentAt
+      properties:
+        iun:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN'
+        senderDenomination:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination'
+        campaignId:
+          type: string
+        additionalLanguages:
+          type: array
+          maxItems: 1
+          items:
+            type: string
+        subject:
+          type: string
+          maxLength: 134
+          pattern: ^.*$
+        recipients:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1'
+        documents:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument'
+        group:
+          type: string
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        notificationStatus:
+          $ref: './notification.yaml#/components/schemas/BffNotificationStatus'
+        sentAt:
+          type: string
+          format: date-time
