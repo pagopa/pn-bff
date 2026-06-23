@@ -17,9 +17,9 @@ components:
         - sentAt
       properties:
         iun:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN'
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
         senderDenomination:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination'
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
         campaignId:
           type: string
         additionalLanguages:
@@ -34,17 +34,17 @@ components:
         recipients:
           type: array
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1'
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalNotificationRecipientV1"
         documents:
           type: array
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument'
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
         group:
           type: string
           pattern: ^[ -~]*$
           maxLength: 1024
         notificationStatus:
-          $ref: './notification.yaml#/components/schemas/BffNotificationStatus'
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         sentAt:
           type: string
           format: date-time

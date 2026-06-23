@@ -1346,7 +1346,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/bozza-openapi-informal-detail/docs/openapi/api-internal-web-informal-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/api-internal-web-informal-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -1357,10 +1357,10 @@
                             </templateDirectory>
                             <configOptions>
                                 <apiPackage>
-                                    ${project.groupId}.bff.generated.openapi.msclient.notification-cost-service.api
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
                                 </apiPackage>
                                 <modelPackage>
-                                    ${project.groupId}.bff.generated.openapi.msclient.notification-cost-service.model
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>

@@ -19,7 +19,7 @@ tags:
     description: API esposte al frontend PF/PG di SEND per ottenere i dettagli delle comunicazioni bonarie
 
 paths:
-  '/bff/v1/notifications/informal/received/{IUN}':
+  '/bff/v1/notifications/informal/received/{iun}':
     get:
       summary: 'Destinatario: dettaglio comunicazione bonaria'
       tags:
