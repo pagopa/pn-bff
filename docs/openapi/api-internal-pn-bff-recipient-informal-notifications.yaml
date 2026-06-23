@@ -34,7 +34,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIunn'
       responses:
         '200':
           description: OK

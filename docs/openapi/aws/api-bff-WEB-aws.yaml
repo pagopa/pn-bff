@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: +hC308+s31hdCU6jd6hpQMXuVRb2/4LHoKDEFPdjSOI=
+  version: OAd3QBlLjBsjUAm+gBQWmvh9xgccSVdl4Tnhf2wUrkI=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3828,7 +3828,7 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
-        - $ref: '#/components/parameters/pathIun'
+        - $ref: '#/components/parameters/pathInformalIun'
       responses:
         '200':
           description: OK
@@ -4236,6 +4236,16 @@ components:
         type: string
         format: date
         example: '2023-12-06'
+    pathInformalIun:
+      description: Identificativo Univoco Notifica informale
+      name: iun
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 25
+        maxLength: 25
+        pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[A-Z]{1}$
   schemas:
     NotificationStatusV26:
       type: string
