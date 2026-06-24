@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.rest;
 
+import it.pagopa.pn.bff.generated.openapi.server.v1.api.RecipientInformalNotificationsApi;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet;
 import it.pagopa.pn.bff.service.InformalNotificationRecipientService;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @CustomLog
 @RestController
-public class InformalNotificationRecipientController {
+public class InformalNotificationRecipientController implements RecipientInformalNotificationsApi {
     private final InformalNotificationRecipientService informalNotificationRecipientService;
 
     public InformalNotificationRecipientController(InformalNotificationRecipientService informalNotificationRecipientService) {
@@ -33,6 +34,7 @@ public class InformalNotificationRecipientController {
      * @param exchange
      * @return the detail of the informal notification with a specific IUN
      */
+    @Override
     public Mono<ResponseEntity<BffFullInformalNotificationV1>> getReceivedInformalNotificationV1(
             String xPagopaPnUid,
             CxTypeAuthFleet xPagopaPnCxType,
