@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: OAd3QBlLjBsjUAm+gBQWmvh9xgccSVdl4Tnhf2wUrkI=
+  version: eKPmqY/tjZcs91I1Bq10QUWttWEFQCFdXEJ/iKfvn+k=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -3838,6 +3838,12 @@ paths:
                 $ref: '#/components/schemas/BffFullInformalNotificationV1'
         '400':
           description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
           content:
             application/problem+json:
               schema:
