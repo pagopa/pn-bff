@@ -159,4 +159,54 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnSrcChDetails
         );
     }
+
+    public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedInformalNotificationDocument(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String xPagopaPnSrcCh,
+            String iun,
+            Integer docIdx,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnSrcChDetails
+    ) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedInformalNotificationDocumentV1");
+
+        return recipientReadInformalNotificationApi.getReceivedInformalNotificationDocumentV1(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnSrcCh,
+                iun,
+                docIdx,
+                xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails
+        );
+    }
+
+    public Mono<NotificationAttachmentDownloadMetadataResponse> getReceivedInformalNotificationPaymentAttachment(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String xPagopaPnSrcCh,
+            String iun,
+            String attachmentName,
+            List<String> xPagopaPnCxGroups,
+            String xPagopaPnSrcChDetails,
+            Integer attachmentIdx
+    ) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getReceivedInformalNotificationAttachmentV1");
+
+        return recipientReadInformalNotificationApi.getReceivedInformalNotificationAttachmentV1(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                xPagopaPnSrcCh,
+                iun,
+                attachmentName,
+                xPagopaPnCxGroups,
+                xPagopaPnSrcChDetails,
+                attachmentIdx
+        );
+    }
 }

@@ -47,7 +47,7 @@ components:
     BffPathIun:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1854cc1551068b9671aa84a32c47d7740571fc43/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
 
-    BffPathInformalIunn:
+    BffPathInformalIun:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathInformalIun'
 
     BffNotificationSearchMandateId:
@@ -66,6 +66,15 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/BffDocumentType'
+
+    BffPathDocumentIdx:
+      description: Indice del documento
+      name: docIdx
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
 
     BffQueryDocumentIdx:
       description: Indice del documento
