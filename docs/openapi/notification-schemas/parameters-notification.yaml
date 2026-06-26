@@ -48,7 +48,7 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1854cc1551068b9671aa84a32c47d7740571fc43/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathIun'
 
     BffPathInformalIun:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/refs/heads/feature/PN-20222/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathInformalIun'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/parameters-notification-search.yaml#/components/parameters/pathInformalIun'
 
     BffNotificationSearchMandateId:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/1854cc1551068b9671aa84a32c47d7740571fc43/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchMandateId'
