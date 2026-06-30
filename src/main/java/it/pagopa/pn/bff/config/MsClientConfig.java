@@ -7,6 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWe
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadInformalNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.downtime_logs.api.DowntimeApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.emd.api.CheckTppApi;
@@ -281,5 +282,18 @@ public class MsClientConfig extends CommonBaseClient {
         apiClient.setBasePath(cfg.getNotificationCostServiceBaseUrl());
 
         return new NotificationCostRecipientApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    RecipientReadInformalNotificationApi recipientReadInformalNotificationApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient(
+                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.ApiClient.buildWebClientBuilder())
+                );
+
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+
+        return new RecipientReadInformalNotificationApi(apiClient);
     }
 }

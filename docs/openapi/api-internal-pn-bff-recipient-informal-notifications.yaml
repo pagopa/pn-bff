@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Recipient Informal Notifications
+  description: Documentation APIs v1.0
+  x-api-id: api-internal-pn-bff-recipient-informal
+  x-summary: 'API di pn-bff per le notifiche bonarie esposte al web per i destinatari'
+  version: '1.0.0'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: RecipientInformalNotifications
+    description: >-
+      API esposte al frontend PF/PG di SEND per ottenere i dettagli delle comunicazioni bonarie e scaricare gli allegati della notifica e del pagamento
+
+paths:
+  '/bff/v1/notifications/informal/received/{iun}':
+    get:
+      summary: 'Destinatario: dettaglio comunicazione bonaria'
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffFullInformalNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/informal/received/{iun}/attachments/documents/{docIdx}':
+    get:
+      summary: 'Destinatario: Download documento notificato'
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationDocumentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathDocumentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/informal/received/{iun}/attachments/payment/{attachmentName}':
+    get:
+      summary: "Destinatario: Download allegato per pagamento"
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationPaymentAttachmentV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'               # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet'           # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannel'         # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/headerSourceChannelDetails'  # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathAttachmentName'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffQueryAttachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./notification-schemas/notification-documents.yaml#/components/schemas/BffDocumentDownloadMetadataResponse"
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
