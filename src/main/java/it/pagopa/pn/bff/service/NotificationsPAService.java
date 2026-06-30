@@ -7,7 +7,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentC
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.LegalFactDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestStatus;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
@@ -53,22 +53,22 @@ public class NotificationsPAService {
      * @param nextPagesKey      Page size
      * @return the list of notifications sent by a Public Administration
      */
-    public Mono<BffNotificationsResponse> searchSentNotifications(String xPagopaPnUid,
-                                                                  CxTypeAuthFleet xPagopaPnCxType,
-                                                                  String xPagopaPnCxId,
-                                                                  List<String> xPagopaPnCxGroups,
-                                                                  String iun,
-                                                                  String senderId,
-                                                                  NotificationStatusV26 status,
-                                                                  String subjectRegExp,
-                                                                  OffsetDateTime startDate,
-                                                                  OffsetDateTime endDate,
-                                                                  Integer size,
-                                                                  String nextPagesKey) {
+    public Mono<BffLegalNotificationsResponse> searchSentNotifications(String xPagopaPnUid,
+                                                                       CxTypeAuthFleet xPagopaPnCxType,
+                                                                       String xPagopaPnCxId,
+                                                                       List<String> xPagopaPnCxGroups,
+                                                                       String iun,
+                                                                       String senderId,
+                                                                       NotificationStatusV26 status,
+                                                                       String subjectRegExp,
+                                                                       OffsetDateTime startDate,
+                                                                       OffsetDateTime endDate,
+                                                                       Integer size,
+                                                                       String nextPagesKey) {
         log.info("Search notifications - senderId: {} - type: {} - groups: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups);
 
-        Mono<NotificationSearchResponse> notifications = pnDeliveryClient.searchSentNotifications(
+        Mono<LegalNotificationSearchResponse> notifications = pnDeliveryClient.searchSentNotifications(
                 xPagopaPnUid,
                 CxTypeMapper.cxTypeMapper.convertDeliveryWebPACXType(xPagopaPnCxType),
                 xPagopaPnCxId,
@@ -83,7 +83,7 @@ public class NotificationsPAService {
                 nextPagesKey
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notifications.map(NotificationsSentMapper.modelMapper::toBffNotificationsResponse);
+        return notifications.map(NotificationsSentMapper.modelMapper::toBffLegalNotificationsResponse);
     }
 
     /**

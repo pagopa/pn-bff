@@ -39,7 +39,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param xPagopaPnCxGroups Receiver Group id List
      * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
      * @param senderId          Sender id
-     * @param status            Notification status
      * @param subjectRegExp     Subject regular expression
      * @param iunMatch          IUN match
      * @param size              Page size
@@ -48,22 +47,22 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @return the list of notifications received by the user
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponse>> searchReceivedNotificationsV1(String xPagopaPnUid,
-                                                                                        CxTypeAuthFleet xPagopaPnCxType,
-                                                                                        String xPagopaPnCxId,
-                                                                                        OffsetDateTime startDate,
-                                                                                        OffsetDateTime endDate,
-                                                                                        List<String> xPagopaPnCxGroups,
-                                                                                        String mandateId,
-                                                                                        String senderId,
-                                                                                        NotificationStatusV26 status,
-                                                                                        String subjectRegExp,
-                                                                                        String iunMatch,
-                                                                                        Integer size,
-                                                                                        String nextPagesKey,
-                                                                                        final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffFullNotificationsResponse>> searchReceivedNotificationsV1(String xPagopaPnUid,
+                                                                                            CxTypeAuthFleet xPagopaPnCxType,
+                                                                                            String xPagopaPnCxId,
+                                                                                            OffsetDateTime startDate,
+                                                                                            OffsetDateTime endDate,
+                                                                                            List<String> xPagopaPnCxGroups,
+                                                                                            String mandateId,
+                                                                                            String senderId,
+                                                                                            NotificationStatusV26 status,
+                                                                                            String subjectRegExp,
+                                                                                            String iunMatch,
+                                                                                            Integer size,
+                                                                                            String nextPagesKey,
+                                                                                            final ServerWebExchange exchange) {
 
-        Mono<BffNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedNotifications(
+        Mono<BffFullNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedNotifications(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
@@ -71,12 +70,12 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 xPagopaPnCxGroups,
                 mandateId,
                 senderId,
-                status,
                 startDate,
                 endDate,
                 subjectRegExp,
                 size,
-                nextPagesKey
+                nextPagesKey,
+                "communicationType"
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
@@ -103,22 +102,22 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @return the list of notifications received by the user
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponse>> searchReceivedDelegatedNotificationsV1(String xPagopaPnUid,
-                                                                                                 CxTypeAuthFleet xPagopaPnCxType,
-                                                                                                 String xPagopaPnCxId,
-                                                                                                 OffsetDateTime startDate,
-                                                                                                 OffsetDateTime endDate,
-                                                                                                 List<String> xPagopaPnCxGroups,
-                                                                                                 String senderId,
-                                                                                                 String recipientId,
-                                                                                                 String group,
-                                                                                                 NotificationStatusV26 status,
-                                                                                                 String iunMatch,
-                                                                                                 Integer size,
-                                                                                                 String nextPagesKey,
-                                                                                                 final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffLegalNotificationsResponse>> searchReceivedDelegatedNotificationsV1(String xPagopaPnUid,
+                                                                                                      CxTypeAuthFleet xPagopaPnCxType,
+                                                                                                      String xPagopaPnCxId,
+                                                                                                      OffsetDateTime startDate,
+                                                                                                      OffsetDateTime endDate,
+                                                                                                      List<String> xPagopaPnCxGroups,
+                                                                                                      String senderId,
+                                                                                                      String recipientId,
+                                                                                                      String group,
+                                                                                                      NotificationStatusV26 status,
+                                                                                                      String iunMatch,
+                                                                                                      Integer size,
+                                                                                                      String nextPagesKey,
+                                                                                                      final ServerWebExchange exchange) {
 
-        Mono<BffNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedDelegatedNotifications(
+        Mono<BffLegalNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedDelegatedNotifications(
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,

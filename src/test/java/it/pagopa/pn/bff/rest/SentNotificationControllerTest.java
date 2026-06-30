@@ -40,7 +40,7 @@ class SentNotificationControllerTest {
 
     @Test
     void searchSentNotifications() {
-        BffNotificationsResponse response = NotificationsSentMapper.modelMapper.toBffNotificationsResponse(notificationsSentMock.getNotificationSentPNMock());
+        BffNotificationsResponse response = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationsSentMock.getNotificationSentPNMock());
         Mockito.when(notificationsPAService.searchSentNotifications(
                 Mockito.any(),
                 Mockito.any(CxTypeAuthFleet.class),

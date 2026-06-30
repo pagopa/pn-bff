@@ -79,7 +79,7 @@ class NotificationPaServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationsSentMapper.modelMapper.toBffNotificationsResponse(notificationsSentMock.getNotificationSentPNMock()))
+                .expectNext(NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationsSentMock.getNotificationSentPNMock()))
                 .verifyComplete();
     }
 

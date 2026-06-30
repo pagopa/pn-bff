@@ -44,21 +44,21 @@ public class SentNotificationController implements NotificationSentApi {
      * @return the list of notifications sent by a Public Administration
      */
     @Override
-    public Mono<ResponseEntity<BffNotificationsResponse>> searchSentNotificationsV1(String xPagopaPnUid,
-                                                                                    CxTypeAuthFleet xPagopaPnCxType,
-                                                                                    String xPagopaPnCxId,
-                                                                                    OffsetDateTime startDate,
-                                                                                    OffsetDateTime endDate,
-                                                                                    List<String> xPagopaPnCxGroups,
-                                                                                    String recipientId,
-                                                                                    NotificationStatusV26 status,
-                                                                                    String subjectRegExp,
-                                                                                    String iunMatch,
-                                                                                    Integer size,
-                                                                                    String nextPagesKey,
-                                                                                    final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<BffLegalNotificationsResponse>> searchSentNotificationsV1(String xPagopaPnUid,
+                                                                                         CxTypeAuthFleet xPagopaPnCxType,
+                                                                                         String xPagopaPnCxId,
+                                                                                         OffsetDateTime startDate,
+                                                                                         OffsetDateTime endDate,
+                                                                                         List<String> xPagopaPnCxGroups,
+                                                                                         String recipientId,
+                                                                                         NotificationStatusV26 status,
+                                                                                         String subjectRegExp,
+                                                                                         String iunMatch,
+                                                                                         Integer size,
+                                                                                         String nextPagesKey,
+                                                                                         final ServerWebExchange exchange) {
 
-        Mono<BffNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
+        Mono<BffLegalNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
                 subjectRegExp, startDate, endDate, size, nextPagesKey
         );

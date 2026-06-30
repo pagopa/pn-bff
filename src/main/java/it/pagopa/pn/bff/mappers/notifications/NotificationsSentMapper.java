@@ -1,24 +1,24 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationsResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Mapstruct mapper interface, used to map the NotificationSearchResponse
- * to the BffNotificationsResponse
+ * Mapstruct mapper interface, used to map the LegalNotificationSearchResponse
+ * to the BffLegalNotificationsResponse
  */
 @Mapper
 public interface NotificationsSentMapper {
     NotificationsSentMapper modelMapper = Mappers.getMapper(NotificationsSentMapper.class);
 
     /**
-     * Maps a NotificationSearchResponse to a BffNotificationsResponse
+     * Maps a LegalNotificationSearchResponse to a BffLegalNotificationsResponse
      *
-     * @param notificationSearchResponse the NotificationSearchResponse to map
-     * @return the mapped BffNotificationsResponse
+     * @param legalNotificationSearchResponse the LegalNotificationSearchResponse to map
+     * @return the mapped BffLegalNotificationsResponse
      */
-    BffNotificationsResponse toBffNotificationsResponse(NotificationSearchResponse notificationSearchResponse);
+    BffLegalNotificationsResponse toBffLegalNotificationsResponse(LegalNotificationSearchResponse legalNotificationSearchResponse);
 
 }

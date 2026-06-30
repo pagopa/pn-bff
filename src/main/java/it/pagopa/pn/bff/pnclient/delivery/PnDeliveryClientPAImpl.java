@@ -4,7 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotifi
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
@@ -25,11 +25,11 @@ public class PnDeliveryClientPAImpl {
     private final SenderReadWebApi senderReadWebApi;
     private final NewNotificationApi newNotificationApi;
 
-    public Mono<NotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
-                                                                    String xPagopaPnCxId, OffsetDateTime startDate,
-                                                                    OffsetDateTime endDate, List<String> xPagopaPnCxGroups,
-                                                                    String recipientId, NotificationStatusV26 status, String subjectRegExp,
-                                                                    String iunMatch, Integer size, String nextPagesKey) {
+    public Mono<LegalNotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
+                                                                         String xPagopaPnCxId, OffsetDateTime startDate,
+                                                                         OffsetDateTime endDate, List<String> xPagopaPnCxGroups,
+                                                                         String recipientId, NotificationStatusV26 status, String subjectRegExp,
+                                                                         String iunMatch, Integer size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchSentNotification");
 
         return senderReadWebApi.searchSentNotification(

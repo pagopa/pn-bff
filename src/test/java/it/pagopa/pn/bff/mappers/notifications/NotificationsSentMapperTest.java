@@ -5,7 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotific
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class NotificationsSentMapperTest {
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
@@ -14,7 +15,7 @@ public class NotificationsSentMapperTest {
     void testNotificationSentMapper() {
         NotificationSearchResponse notificationSearchResponse = notificationsSentMock.getNotificationSentPNMock();
 
-        BffNotificationsResponse bffNotificationsResponse = NotificationsSentMapper.modelMapper.toBffNotificationsResponse(notificationSearchResponse);
+        BffNotificationsResponse bffNotificationsResponse = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationSearchResponse);
         assertNotNull(bffNotificationsResponse);
 
         for (int i = 0; i < bffNotificationsResponse.getResultsPage().size(); i++) {
@@ -32,7 +33,7 @@ public class NotificationsSentMapperTest {
         assertEquals(bffNotificationsResponse.getMoreResult(), notificationSearchResponse.getMoreResult());
         assertEquals(bffNotificationsResponse.getNextPagesKey(), notificationSearchResponse.getNextPagesKey());
 
-        BffNotificationsResponse bffNotificationsResponseV1Null = NotificationsSentMapper.modelMapper.toBffNotificationsResponse(null);
+        BffNotificationsResponse bffNotificationsResponseV1Null = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(null);
         assertNull(bffNotificationsResponseV1Null);
     }
 }

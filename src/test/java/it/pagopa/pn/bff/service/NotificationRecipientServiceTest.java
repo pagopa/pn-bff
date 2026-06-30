@@ -86,7 +86,7 @@ class NotificationRecipientServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock()))
+                .expectNext(NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock()))
                 .verifyComplete();
     }
 
@@ -165,7 +165,7 @@ class NotificationRecipientServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock()))
+                .expectNext(NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock()))
                 .verifyComplete();
     }
 

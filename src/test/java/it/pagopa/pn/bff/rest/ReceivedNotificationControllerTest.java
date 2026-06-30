@@ -46,7 +46,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void searchReceivedNotifications() {
-        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
         Mockito.when(notificationsRecipientService.searchReceivedNotifications(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -167,7 +167,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void searchReceivedDelegatedNotifications() {
-        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
         Mockito.when(notificationsRecipientService.searchReceivedDelegatedNotifications(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
