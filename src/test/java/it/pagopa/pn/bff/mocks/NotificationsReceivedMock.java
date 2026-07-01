@@ -1,9 +1,6 @@
 package it.pagopa.pn.bff.mocks;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationSearchRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.ResponseCheckAarMandateDto;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.RetrievalPayload;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCheckAarRequest;
 
@@ -18,7 +15,7 @@ public class NotificationsReceivedMock {
     public static final String SENDER_ID = "SENDER_ID";
     public static final String MANDATE_ID = "MANDATE_ID";
     public static final String SUBJECT_REG_EXP = "SUBJECT";
-    public static final String IUN_MATCH = "IUN";
+    public static final String IUN_MATCH = "TEUH-QGNT-UPXV-202604-Q-1";
     public static final it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26 STATUS = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED;
     public static final int SIZE = 10;
     public static final String START_DATE = "2014-04-30T00:00:00.000Z";
@@ -27,27 +24,35 @@ public class NotificationsReceivedMock {
     public static final String NEXT_PAGES_KEY = "NEXT_PAGES_KEY";
     public static final String SOURCE_CHANNEL = "WEB";
     public static final String SOURCE_CHANNEL_DETAILS = "WEB_DETAILS";
+    public static final String COMMUNICATION_TYPE = "ALL";
 
-    public NotificationSearchResponse getNotificationReceivedPNMock() {
-        NotificationSearchResponse notificationSearchResponse = new NotificationSearchResponse();
-        List<NotificationSearchRow> notificationSearchRows = new ArrayList<>();
-        NotificationSearchRow notificationSearchRowOne = new NotificationSearchRow();
+    public FullNotificationSearchResponse getNotificationReceivedPNMock() {
+        FullNotificationSearchResponse notificationSearchResponse = new FullNotificationSearchResponse();
+        List<FullNotificationSearchRow> notificationSearchRows = new ArrayList<>();
+
+        FullNotificationSearchRow notificationSearchRowOne = new FullNotificationSearchRow();
         notificationSearchRowOne.setIun("IUN1");
         notificationSearchRowOne.setPaProtocolNumber("Protocol Number One");
         notificationSearchRowOne.setSender("Sender One");
         notificationSearchRowOne.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowOne.setSubject("Subject One");
-        notificationSearchRowOne.setNotificationStatus(NotificationStatusV26.ACCEPTED);
+        notificationSearchRowOne.setNotificationStatus(UnifiedNotificationStatus.VIEWED);
+        notificationSearchRowOne.setCommunicationType(FullNotificationSearchRow.CommunicationTypeEnum.INFORMAL);
+        CommunicationOutcomes communicationOutcomes = new CommunicationOutcomes();
+        communicationOutcomes.setViewed(true);
+        notificationSearchRowOne.setCommunicationOutcomes(communicationOutcomes);
         notificationSearchRowOne.setRecipients(new ArrayList<>(Arrays.asList("Person 1", "Person 2")));
         notificationSearchRowOne.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowOne.setGroup("Group One");
-        NotificationSearchRow notificationSearchRowTwo = new NotificationSearchRow();
+
+        FullNotificationSearchRow notificationSearchRowTwo = new FullNotificationSearchRow();
         notificationSearchRowTwo.setIun("IUN2");
         notificationSearchRowTwo.setPaProtocolNumber("Protocol Number Two");
         notificationSearchRowTwo.setSender("Sender Two");
         notificationSearchRowTwo.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
         notificationSearchRowTwo.setSubject("Subject Two");
-        notificationSearchRowTwo.setNotificationStatus(NotificationStatusV26.ACCEPTED);
+        notificationSearchRowTwo.setNotificationStatus(UnifiedNotificationStatus.ACCEPTED);
+        notificationSearchRowTwo.setCommunicationType(FullNotificationSearchRow.CommunicationTypeEnum.LEGAL);
         notificationSearchRowTwo.setRecipients(new ArrayList<>(Arrays.asList("Person 3", "Person 4")));
         notificationSearchRowTwo.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowTwo.setGroup("Group Two");
@@ -56,6 +61,44 @@ public class NotificationsReceivedMock {
         notificationSearchResponse.setResultsPage(notificationSearchRows);
         notificationSearchResponse.setMoreResult(false);
         return notificationSearchResponse;
+    }
+
+    public LegalNotificationSearchResponse getLegalNotificationsReceivedMock() {
+        LegalNotificationSearchResponse legalNotificationSearchResponse = new LegalNotificationSearchResponse();
+        List<LegalNotificationSearchRow> notificationSearchRows = new ArrayList<>();
+
+        LegalNotificationSearchRow notificationSearchRowOne = new LegalNotificationSearchRow();
+        notificationSearchRowOne.setIun("IUN1");
+        notificationSearchRowOne.setPaProtocolNumber("Protocol Number One");
+        notificationSearchRowOne.setSender("Sender One");
+        notificationSearchRowOne.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
+        notificationSearchRowOne.setSubject("Subject One");
+        notificationSearchRowOne.setNotificationStatus(NotificationStatusV26.VIEWED);
+        notificationSearchRowOne.setCommunicationType(LegalNotificationSearchRow.CommunicationTypeEnum.INFORMAL);
+        notificationSearchRowOne.setRecipients(new ArrayList<>(Arrays.asList("Person 1", "Person 2")));
+        notificationSearchRowOne.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
+        notificationSearchRowOne.setGroup("Group One");
+        notificationSearchRowOne.setMandateId("MANDATE_ID");
+
+        LegalNotificationSearchRow notificationSearchRowTwo = new LegalNotificationSearchRow();
+        notificationSearchRowTwo.setIun("IUN2");
+        notificationSearchRowTwo.setPaProtocolNumber("Protocol Number Two");
+        notificationSearchRowTwo.setSender("Sender Two");
+        notificationSearchRowTwo.setSentAt(OffsetDateTime.parse("2024-04-29T13:54:42.563421537Z"));
+        notificationSearchRowTwo.setSubject("Subject Two");
+        notificationSearchRowTwo.setNotificationStatus(NotificationStatusV26.ACCEPTED);
+        notificationSearchRowTwo.setCommunicationType(LegalNotificationSearchRow.CommunicationTypeEnum.LEGAL);
+        notificationSearchRowTwo.setRecipients(new ArrayList<>(Arrays.asList("Person 3", "Person 4")));
+        notificationSearchRowTwo.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
+        notificationSearchRowTwo.setGroup("Group Two");
+        notificationSearchRowTwo.setMandateId("MANDATE_ID");
+
+        notificationSearchRows.add(notificationSearchRowOne);
+        notificationSearchRows.add(notificationSearchRowTwo);
+        legalNotificationSearchResponse.setResultsPage(notificationSearchRows);
+        legalNotificationSearchResponse.setMoreResult(false);
+        legalNotificationSearchResponse.setNextPagesKey(new ArrayList<>(Arrays.asList(NEXT_PAGES_KEY)));
+        return legalNotificationSearchResponse;
     }
 
     public ResponseCheckAarMandateDto getResponseCheckAarMandateDtoPNMock() {

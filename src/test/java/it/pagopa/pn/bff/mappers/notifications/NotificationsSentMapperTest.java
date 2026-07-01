@@ -1,10 +1,11 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationsResponse;
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -13,9 +14,9 @@ public class NotificationsSentMapperTest {
 
     @Test
     void testNotificationSentMapper() {
-        NotificationSearchResponse notificationSearchResponse = notificationsSentMock.getNotificationSentPNMock();
+        LegalNotificationSearchResponse notificationSearchResponse = notificationsSentMock.getNotificationSentPNMock();
 
-        BffNotificationsResponse bffNotificationsResponse = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationSearchResponse);
+        BffLegalNotificationsResponse bffNotificationsResponse = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationSearchResponse);
         assertNotNull(bffNotificationsResponse);
 
         for (int i = 0; i < bffNotificationsResponse.getResultsPage().size(); i++) {
@@ -33,7 +34,7 @@ public class NotificationsSentMapperTest {
         assertEquals(bffNotificationsResponse.getMoreResult(), notificationSearchResponse.getMoreResult());
         assertEquals(bffNotificationsResponse.getNextPagesKey(), notificationSearchResponse.getNextPagesKey());
 
-        BffNotificationsResponse bffNotificationsResponseV1Null = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(null);
+        BffLegalNotificationsResponse bffNotificationsResponseV1Null = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(null);
         assertNull(bffNotificationsResponseV1Null);
     }
 }

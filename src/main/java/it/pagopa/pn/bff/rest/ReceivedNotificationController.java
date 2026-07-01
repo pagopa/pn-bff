@@ -75,7 +75,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 subjectRegExp,
                 size,
                 nextPagesKey,
-                "communicationType"
+                communicationType
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

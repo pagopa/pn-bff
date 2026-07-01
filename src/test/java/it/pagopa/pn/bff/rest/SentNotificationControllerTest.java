@@ -40,7 +40,7 @@ class SentNotificationControllerTest {
 
     @Test
     void searchSentNotifications() {
-        BffNotificationsResponse response = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationsSentMock.getNotificationSentPNMock());
+        BffLegalNotificationsResponse response = NotificationsSentMapper.modelMapper.toBffLegalNotificationsResponse(notificationsSentMock.getNotificationSentPNMock());
         Mockito.when(notificationsPAService.searchSentNotifications(
                 Mockito.any(),
                 Mockito.any(CxTypeAuthFleet.class),
@@ -77,7 +77,7 @@ class SentNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponse.class)
+                .expectBody(BffLegalNotificationsResponse.class)
                 .isEqualTo(response);
 
         Mockito.verify(notificationsPAService).searchSentNotifications(
