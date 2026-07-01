@@ -35,11 +35,23 @@ components:
     BffSearchIun:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchIun'
 
+    BffSearchUnifiedIun:
+      name: iunMatch
+      description: >-
+        Se presente indica che lo IUN dei risultati deve essere uguale al valore di questo parametro. Accetta sia formato legale che bonario.
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/BffUnifiedIUN'
+
     BffNotificationSearchPageSize:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchPageSize'
 
     BffNotificationSearchNextPagesKey:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchNextPagesKey'
+
+    BffNotificationSearchCommunicationType:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchCommunicationType'
 
     ############################################################################################
     ###                     PARAMETRI DETTAGLIO NOTIFICA                                     ###
@@ -102,3 +114,6 @@ components:
         - ATTACHMENT
         - LEGAL_FACT
         - AAR
+
+    BffUnifiedIUN:
+      $ref: './notification.yaml#/components/schemas/BffUnifiedIUN'

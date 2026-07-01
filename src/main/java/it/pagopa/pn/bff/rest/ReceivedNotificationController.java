@@ -55,11 +55,11 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                             List<String> xPagopaPnCxGroups,
                                                                                             String mandateId,
                                                                                             String senderId,
-                                                                                            NotificationStatusV26 status,
                                                                                             String subjectRegExp,
                                                                                             String iunMatch,
                                                                                             Integer size,
                                                                                             String nextPagesKey,
+                                                                                            String communicationType,
                                                                                             final ServerWebExchange exchange) {
 
         Mono<BffFullNotificationsResponse> serviceResponse = notificationsRecipientService.searchReceivedNotifications(

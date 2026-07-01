@@ -6,6 +6,9 @@ components:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-emd-integration/e0a02111a8a8b044d504223724b483e6792d4cef/docs/openapi/api-private.yaml#/components/parameters/retrievalId'
 
   schemas:
+    BffUnifiedIUN:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/schemas-pn-notification.yaml#/components/schemas/UnifiedIUN'
+
     BffLegalNotificationsResponse:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/schemas-pn-notification.yaml#/components/schemas/LegalNotificationSearchResponse'
 
