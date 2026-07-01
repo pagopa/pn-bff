@@ -213,6 +213,53 @@
                         </configuration>
                     </execution>
 
+                    <!-- OPEN API PN-BFF RECIPIENT INFORMAL NOTIFICATION-->
+                    <execution>
+                        <id>pn-internal-bff-recipient-informal-notifications</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/docs/openapi/api-internal-pn-bff-recipient-informal-notifications.yaml
+                            </inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <modelNameSuffix/>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
+                            </templateDirectory>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
+                                </modelPackage>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.bff.generated.openapi.server.v1.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
                     <!-- OPEN API PN-BFF PA NOTIFICATION-->
                     <execution>
                         <id>pn-internal-bff-pa-notifications</id>
@@ -1276,6 +1323,44 @@
                                 </apiPackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.notification-cost-service.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <!-- OPEN API PN-DELIVERY RECIPIENT INFORMAL NOTIFICATIONS -->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-delivery-recipient-informal-notifications</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/api-internal-web-informal-recipient.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.model
                                 </modelPackage>
                                 <dateLibrary>java8</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
