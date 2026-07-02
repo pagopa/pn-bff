@@ -2,8 +2,8 @@ package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.RequestStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.StatusDetail;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationSearchRow;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 
 import java.time.OffsetDateTime;
@@ -23,10 +23,10 @@ public class NotificationsSentMock {
     public static final String END_DATE = "2024-04-30T00:00:00.000Z";
     public static final String NEXT_PAGES_KEY = "NEXT_PAGES_KEY";
 
-    public NotificationSearchResponse getNotificationSentPNMock() {
-        NotificationSearchResponse notificationSearchResponse = new NotificationSearchResponse();
-        List<NotificationSearchRow> notificationSearchRows = new ArrayList<>();
-        NotificationSearchRow notificationSearchRowOne = new NotificationSearchRow();
+    public LegalNotificationSearchResponse getNotificationSentPNMock() {
+        LegalNotificationSearchResponse notificationSearchResponse = new LegalNotificationSearchResponse();
+        List<LegalNotificationSearchRow> notificationSearchRows = new ArrayList<>();
+        LegalNotificationSearchRow notificationSearchRowOne = new LegalNotificationSearchRow();
         notificationSearchRowOne.setIun("IUN1");
         notificationSearchRowOne.setPaProtocolNumber("Protocol Number One");
         notificationSearchRowOne.setSender("Sender One");
@@ -36,7 +36,7 @@ public class NotificationsSentMock {
         notificationSearchRowOne.setRecipients(new ArrayList<>(Arrays.asList("Person 1", "Person 2")));
         notificationSearchRowOne.setRequestAcceptedAt(OffsetDateTime.parse("2024-04-29T13:58:57.90787261Z"));
         notificationSearchRowOne.setGroup("Group One");
-        NotificationSearchRow notificationSearchRowTwo = new NotificationSearchRow();
+        LegalNotificationSearchRow notificationSearchRowTwo = new LegalNotificationSearchRow();
         notificationSearchRowTwo.setIun("IUN2");
         notificationSearchRowTwo.setPaProtocolNumber("Protocol Number Two");
         notificationSearchRowTwo.setSender("Sender Two");
