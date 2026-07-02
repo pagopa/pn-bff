@@ -1,10 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CommunicationOutcomes;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullNotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullNotificationSearchRow;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.LegalNotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.UnifiedNotificationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationsResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationsResponse;
@@ -12,6 +8,9 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Mapstruct mapper interface, used to map the FullNotificationSearchResponse
@@ -42,17 +41,30 @@ public interface NotificationsReceivedMapper {
      */
     @AfterMapping
     default void computeIsNewNotification(FullNotificationSearchRow row, @MappingTarget BffFullNotificationSearchRow target) {
-        CommunicationOutcomes outcomes = row.getCommunicationOutcomes();
-        if (outcomes != null && outcomes.getViewed() != null) {
-            target.setIsNewNotification(!outcomes.getViewed());
-            return;
-        }
-        UnifiedNotificationStatus status = row.getNotificationStatus();
-        target.setIsNewNotification(
-                status != UnifiedNotificationStatus.VIEWED
-                        && status != UnifiedNotificationStatus.CANCELLED
-                        && status != UnifiedNotificationStatus.RETURNED_TO_SENDER
-                        && status != UnifiedNotificationStatus.EFFECTIVE_DATE
+        target.setIsNewNotification(isNewNotification(row));
+    }
+
+    default boolean isNewNotification(FullNotificationSearchRow row) {
+        FullNotificationSearchRow.CommunicationTypeEnum communicationType = row.getCommunicationType();
+
+        Set<UnifiedNotificationStatus> NOT_NEW_LEGAL_STATUSES = EnumSet.of(
+                UnifiedNotificationStatus.VIEWED,
+                UnifiedNotificationStatus.CANCELLED,
+                UnifiedNotificationStatus.RETURNED_TO_SENDER,
+                UnifiedNotificationStatus.EFFECTIVE_DATE
         );
+
+        if (communicationType == FullNotificationSearchRow.CommunicationTypeEnum.LEGAL) {
+            return !NOT_NEW_LEGAL_STATUSES.contains(row.getNotificationStatus());
+        }
+
+        if (communicationType == FullNotificationSearchRow.CommunicationTypeEnum.INFORMAL) {
+            CommunicationOutcomes outcomes = row.getCommunicationOutcomes();
+            return outcomes != null
+                    && outcomes.getViewed() != null
+                    && !outcomes.getViewed();
+        }
+
+        return false;
     }
 }

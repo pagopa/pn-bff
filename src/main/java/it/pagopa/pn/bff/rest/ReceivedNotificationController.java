@@ -43,6 +43,7 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param iunMatch          IUN match
      * @param size              Page size
      * @param nextPagesKey      Next page key
+     * @param communicationType The type of the communication (LEGAL, INFORMAL, ALL)
      * @param exchange
      * @return the list of notifications received by the user
      */

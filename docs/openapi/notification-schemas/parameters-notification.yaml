@@ -42,7 +42,7 @@ components:
       in: query
       required: false
       schema:
-        $ref: '#/components/schemas/BffUnifiedIUN'
+        $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/schemas-pn-notification.yaml#/components/schemas/UnifiedIUN'
 
     BffNotificationSearchPageSize:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchPageSize'
@@ -126,6 +126,3 @@ components:
         - ATTACHMENT
         - LEGAL_FACT
         - AAR
-
-    BffUnifiedIUN:
-      $ref: './notification.yaml#/components/schemas/BffUnifiedIUN'

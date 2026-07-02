@@ -58,6 +58,7 @@ public class NotificationsRecipientService {
      * @param subjectRegExp     Regular expression for the subject
      * @param size              Number of notifications to retrieve
      * @param nextPagesKey      Key to retrieve the next page
+     * @param communicationType The type of the communication (LEGAL, INFORMAL, ALL)
      * @return the list of notifications
      */
     public Mono<BffFullNotificationsResponse> searchReceivedNotifications(String xPagopaPnUid,

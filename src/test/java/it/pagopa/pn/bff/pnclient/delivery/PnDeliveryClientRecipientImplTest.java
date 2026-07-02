@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.pnclient.delivery;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadInformalNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
@@ -35,6 +36,8 @@ class PnDeliveryClientRecipientImplTest {
     private PnDeliveryClientRecipientImpl pnDeliveryClientRecipientImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadApi")
     private RecipientReadApi recipientReadApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadInformalNotificationApi")
+    private RecipientReadInformalNotificationApi recipientReadInformalNotificationApi;
 
     @Test
     void searchReceivedNotifications() {
