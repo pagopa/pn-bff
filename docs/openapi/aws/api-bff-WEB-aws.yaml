@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: fKjQZXjGIrQKy90Ndjer5a4tP4BHtah7NKgrrR82S2w=
+  version: kelHjNdF/DIw+mpqIn+lgECfHt3umQoeoTfvbmIAEgU=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LegalNotificationSearchResponse'
+                $ref: '#/components/schemas/BffLegalNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -596,7 +596,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LegalNotificationSearchResponse'
+                $ref: '#/components/schemas/BffLegalNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -4537,30 +4537,26 @@ components:
           properties:
             notificationStatus:
               $ref: '#/components/schemas/NotificationStatusV26'
-    LegalNotificationSearchResponse:
-      title: Elenco di notifiche legali
-      description: >-
-        Dto contenente i risultati di una ricerca di notifiche legali. Ogni
-        risposta conterrà solo una pagina di risultati relativi a una ricerca e
-        le indicazioni per raggiungere alcune pagine successive. Gli elementi
-        della pagina sono tipizzati con LegalNotificationSearchRow il cui campo
-        notificationStatus rispecchia gli stati del ciclo di vita delle
-        notifiche legali (definiti in NotificationStatusV26).
+    BffIsNewNotification:
       type: object
+      required:
+        - isNewNotification
+      properties:
+        isNewNotification:
+          type: boolean
+    BffLegalNotificationSearchRow:
+      allOf:
+        - $ref: '#/components/schemas/LegalNotificationSearchRow'
+        - $ref: '#/components/schemas/BffIsNewNotification'
+    BffLegalNotificationsResponse:
       properties:
         resultsPage:
-          description: Una pagina di risultati della query
           type: array
           items:
-            $ref: '#/components/schemas/LegalNotificationSearchRow'
+            $ref: '#/components/schemas/BffLegalNotificationSearchRow'
         moreResult:
-          description: Indica se sono presenti ulteriori pagine di risultati
           type: boolean
         nextPagesKey:
-          description: >-
-            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
-            pagine di risultati successive a quella corrente. <br/> Valorizzato
-            solo se il campo __moreResult__ ha valore __true__.
           type: array
           items:
             type: string
@@ -6979,12 +6975,7 @@ components:
     BffFullNotificationSearchRow:
       allOf:
         - $ref: '#/components/schemas/FullNotificationSearchRow'
-        - type: object
-          required:
-            - isNewNotification
-          properties:
-            isNewNotification:
-              type: boolean
+        - $ref: '#/components/schemas/BffIsNewNotification'
     BffFullNotificationsResponse:
       properties:
         resultsPage:
