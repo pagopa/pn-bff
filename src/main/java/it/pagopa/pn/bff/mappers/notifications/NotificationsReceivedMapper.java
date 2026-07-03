@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationsResponse;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -66,5 +67,25 @@ public interface NotificationsReceivedMapper {
         }
 
         return false;
+    }
+
+    /**
+     * Sets the isNewNotification flag (true if the notification has not been viewed yet) on each mapped legal row.
+     */
+    @AfterMapping
+    default void computeIsNewLegalNotification(LegalNotificationSearchRow row,
+                                               @MappingTarget BffLegalNotificationSearchRow target) {
+        target.setIsNewNotification(isNewLegalNotification(row));
+    }
+
+    default boolean isNewLegalNotification(LegalNotificationSearchRow row) {
+        Set<NotificationStatusV26> NOT_NEW_LEGAL_STATUSES = EnumSet.of(
+                NotificationStatusV26.VIEWED,
+                NotificationStatusV26.CANCELLED,
+                NotificationStatusV26.RETURNED_TO_SENDER,
+                NotificationStatusV26.EFFECTIVE_DATE
+        );
+
+        return !NOT_NEW_LEGAL_STATUSES.contains(row.getNotificationStatus());
     }
 }

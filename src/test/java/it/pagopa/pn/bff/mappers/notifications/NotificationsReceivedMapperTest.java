@@ -1,7 +1,9 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationsResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffLegalNotificationsResponse;
 import it.pagopa.pn.bff.mocks.NotificationsReceivedMock;
 import org.junit.jupiter.api.Test;
 
@@ -43,5 +45,29 @@ public class NotificationsReceivedMapperTest {
 
         BffFullNotificationsResponse bffNotificationsResponseV1Null = NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(null);
         assertNull(bffNotificationsResponseV1Null);
+    }
+
+    @Test
+    void testLegalNotificationReceivedMapper() {
+        LegalNotificationSearchResponse legalNotificationSearchResponse = notificationsReceivedMock.getLegalNotificationsReceivedMock();
+
+        BffLegalNotificationsResponse bffLegalNotificationsResponse = NotificationsReceivedMapper.modelMapper.toBffLegalNotificationsResponse(legalNotificationSearchResponse);
+        assertNotNull(bffLegalNotificationsResponse);
+
+        for (int i = 0; i < bffLegalNotificationsResponse.getResultsPage().size(); i++) {
+            assertEquals(bffLegalNotificationsResponse.getResultsPage().get(i).getIun(), legalNotificationSearchResponse.getResultsPage().get(i).getIun());
+            assertEquals(bffLegalNotificationsResponse.getResultsPage().get(i).getNotificationStatus().getValue(), legalNotificationSearchResponse.getResultsPage().get(i).getNotificationStatus().getValue());
+        }
+
+        // isNewNotification: row one has status VIEWED -> not new
+        assertFalse(bffLegalNotificationsResponse.getResultsPage().get(0).getIsNewNotification());
+        // isNewNotification: row two has status ACCEPTED -> new
+        assertTrue(bffLegalNotificationsResponse.getResultsPage().get(1).getIsNewNotification());
+
+        assertEquals(bffLegalNotificationsResponse.getMoreResult(), legalNotificationSearchResponse.getMoreResult());
+        assertEquals(bffLegalNotificationsResponse.getNextPagesKey(), legalNotificationSearchResponse.getNextPagesKey());
+
+        BffLegalNotificationsResponse bffLegalNotificationsResponseNull = NotificationsReceivedMapper.modelMapper.toBffLegalNotificationsResponse(null);
+        assertNull(bffLegalNotificationsResponseNull);
     }
 }
