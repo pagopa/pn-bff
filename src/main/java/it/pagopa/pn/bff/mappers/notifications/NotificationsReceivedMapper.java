@@ -39,6 +39,7 @@ public interface NotificationsReceivedMapper {
 
     /**
      * Sets the isNewNotification flag (true if the notification has not been viewed yet) on each mapped row.
+     * This mapper is used by PF notifications.
      */
     @AfterMapping
     default void computeIsNewNotification(FullNotificationSearchRow row, @MappingTarget BffFullNotificationSearchRow target) {
@@ -50,9 +51,9 @@ public interface NotificationsReceivedMapper {
 
         Set<UnifiedNotificationStatus> NOT_NEW_LEGAL_STATUSES = EnumSet.of(
                 UnifiedNotificationStatus.VIEWED,
+                UnifiedNotificationStatus.PAID,
                 UnifiedNotificationStatus.CANCELLED,
-                UnifiedNotificationStatus.RETURNED_TO_SENDER,
-                UnifiedNotificationStatus.EFFECTIVE_DATE
+                UnifiedNotificationStatus.RETURNED_TO_SENDER
         );
 
         if (communicationType == FullNotificationSearchRow.CommunicationTypeEnum.LEGAL) {
@@ -71,6 +72,7 @@ public interface NotificationsReceivedMapper {
 
     /**
      * Sets the isNewNotification flag (true if the notification has not been viewed yet) on each mapped legal row.
+     * This mapper is used by PG notifications.
      */
     @AfterMapping
     default void computeIsNewLegalNotification(LegalNotificationSearchRow row,
@@ -81,9 +83,9 @@ public interface NotificationsReceivedMapper {
     default boolean isNewLegalNotification(LegalNotificationSearchRow row) {
         Set<NotificationStatusV26> NOT_NEW_LEGAL_STATUSES = EnumSet.of(
                 NotificationStatusV26.VIEWED,
+                NotificationStatusV26.PAID,
                 NotificationStatusV26.CANCELLED,
-                NotificationStatusV26.RETURNED_TO_SENDER,
-                NotificationStatusV26.EFFECTIVE_DATE
+                NotificationStatusV26.RETURNED_TO_SENDER
         );
 
         return !NOT_NEW_LEGAL_STATUSES.contains(row.getNotificationStatus());
