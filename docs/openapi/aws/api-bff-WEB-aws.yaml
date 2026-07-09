@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: kelHjNdF/DIw+mpqIn+lgECfHt3umQoeoTfvbmIAEgU=
+  version: PjOW0IyOTtb4r+AfhFMcTK8QznJH5LOgr/ou9S5EK5M=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -8417,6 +8417,7 @@ components:
       required:
         - noticeCode
         - creditorTaxId
+        - amount
       properties:
         noticeCode:
           $ref: '#/components/schemas/noticeCode'
@@ -8424,7 +8425,20 @@ components:
           $ref: '#/components/schemas/paTaxId'
         attachment:
           $ref: '#/components/schemas/NotificationPaymentAttachment'
+        amount:
+          type: number
+          description: Importo del pagamento in eurocent
+          minimum: 0
+        dueDate:
+          type: string
+          format: date-time
+          description: >-
+            Data di scadenza del pagamento. Il formato data deve essere ISO-8601
+            e fuso orario UTC
     InformalNotificationPaymentItem:
+      description: >-
+        Elemento di pagamento della notifica informale. Al momento è supportato
+        esclusivamente il pagamento pagoPA.
       type: object
       additionalProperties: false
       required:
@@ -8433,12 +8447,16 @@ components:
         pagoPa:
           $ref: '#/components/schemas/PagoPaPaymentBase'
     InformalNotificationPayments:
-      description: Pagamenti collegati alla notifica per il destinatario.
+      description: >-
+        Lista dei pagamenti collegati alla notifica informale per il
+        destinatario.
       type: array
       items:
         $ref: '#/components/schemas/InformalNotificationPaymentItem'
     InformalNotificationRecipientV1:
-      description: Informazioni sui destinatari delle notifiche informali.
+      description: >-
+        Dati del destinatario specifici per una notifica informale, inclusi il
+        riferimento al messaggio e i canali opzionali di contatto.
       allOf:
         - $ref: '#/components/schemas/NotificationRecipientV24'
         - type: object
@@ -8451,7 +8469,7 @@ components:
               type: string
               format: uuid
               description: >-
-                Identificativo del messaggio da fornire e utilizzare per il
+                Identificativo del template di messaggio da utilizzare per il
                 destinatario.
             email:
               type: string
@@ -8466,13 +8484,31 @@ components:
             phoneNumber:
               type: string
               x-field-extra-annotation: '@lombok.ToString.Exclude'
-              example: 3900000000
+              example: '+3900000000'
               description: >-
                 Numero di telefono che il mittente della notifica intende
                 utilizzare per raggiungere il destinatario, espresso in formato
                 internazionale con prefisso `+` oppure `00`.
               pattern: ^(\+|00)[1-9]\d{0,3}[\s.-]?\d{1,4}[\s.-]?\d{1,4}[\s.-]?\d{1,9}$
               maxLength: 30
+            additionalLanguages:
+              description: >-
+                In questo campo è possibile definire la lingua addizionale
+                (oltre a quella italiana) da utilizzare per l'invio del
+                messaggio sui canali configurati.<br/> Le lingue accettate e
+                dunque i valori possibili degli item dell'array sono: <br/> - DE
+                <br/> - SL <br/> - FR <br/> DE (tedesco), SL (sloveno), FR
+                (francese) Attualmente è possibile indicare un solo item e
+                dunque una sola lingua aggiuntiva. Se non vengono indicate
+                lingue aggiuntive la lingua utilizzata <br/> per l'invio del
+                messaggio sui canali configurati sarà quella italiana. <br />
+                **Coerenza con messageId:** Se viene fornito un `messageId`, il
+                messaggio identificato deve essere associato alla lingua
+                indicata in questo campo. <br/>
+              type: array
+              maxItems: 1
+              items:
+                type: string
     InformalNotificationStatusV1:
       type: string
       description: |
@@ -8536,6 +8572,16 @@ components:
         sentAt:
           type: string
           format: date-time
+        senderPaId:
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        documentsAvailable:
+          type: boolean
+        filedAt:
+          type: string
+          format: date-time
+          description: Data di accettazione della notifica/comunicazione
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

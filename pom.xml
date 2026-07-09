@@ -1346,7 +1346,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/api-internal-web-informal-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/api-internal-web-informal-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
