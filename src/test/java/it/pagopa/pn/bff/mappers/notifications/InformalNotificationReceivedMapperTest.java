@@ -38,7 +38,7 @@ class InformalNotificationReceivedMapperTest {
     }
 
     @Test
-    void testFiledAtFromAcceptedStatus() {
+    void testFiledAtFromRequestAcceptedTimelineElement() {
         FullReceivedInformalNotificationV1 notification = mock.getInformalNotificationMock();
 
         BffFullInformalNotificationV1 result =
@@ -49,8 +49,8 @@ class InformalNotificationReceivedMapperTest {
     }
 
     @Test
-    void testFiledAtNullWhenNoAcceptedStatus() {
-        FullReceivedInformalNotificationV1 notification = mock.getInformalNotificationWithoutAcceptedMock();
+    void testFiledAtNullWhenNoRequestAcceptedElement() {
+        FullReceivedInformalNotificationV1 notification = mock.getInformalNotificationWithoutRequestAcceptedMock();
 
         BffFullInformalNotificationV1 result =
                 InformalNotificationReceivedMapper.modelMapper.mapReceivedInformalNotificationDetail(notification);
@@ -60,9 +60,9 @@ class InformalNotificationReceivedMapperTest {
     }
 
     @Test
-    void testFiledAtNullWhenStatusHistoryNull() {
+    void testFiledAtNullWhenTimelineNull() {
         FullReceivedInformalNotificationV1 notification = mock.getInformalNotificationMock();
-        notification.setNotificationStatusHistory(null);
+        notification.setTimeline(null);
 
         BffFullInformalNotificationV1 result =
                 InformalNotificationReceivedMapper.modelMapper.mapReceivedInformalNotificationDetail(notification);

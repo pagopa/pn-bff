@@ -1,8 +1,9 @@
 package it.pagopa.pn.bff.mocks;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedInformalNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalNotificationStatusHistoryElementV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalNotificationStatusV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementCategoryV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementV1;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -26,34 +27,33 @@ public class InformalNotificationDetailMock {
         notification.setSenderPaId(SENDER_PA_ID);
         notification.setDocumentsAvailable(true);
         notification.setNotificationStatus(InformalNotificationStatusV1.ACCEPTED);
-        notification.setNotificationStatusHistory(statusHistoryWithAccepted());
+        notification.setTimeline(timelineWithRequestAccepted());
         return notification;
     }
 
     /**
-     * Same notification but the status history has no ACCEPTED element, so filedAt cannot be derived.
+     * Same notification but the timeline has no REQUEST_ACCEPTED element, so filedAt cannot be derived.
      */
-    public FullReceivedInformalNotificationV1 getInformalNotificationWithoutAcceptedMock() {
+    public FullReceivedInformalNotificationV1 getInformalNotificationWithoutRequestAcceptedMock() {
         FullReceivedInformalNotificationV1 notification = getInformalNotificationMock();
-        notification.setNotificationStatus(InformalNotificationStatusV1.IN_VALIDATION);
-        notification.setNotificationStatusHistory(new ArrayList<>(List.of(
-                statusHistoryElement(InformalNotificationStatusV1.IN_VALIDATION, SENT_AT)
+        notification.setTimeline(new ArrayList<>(List.of(
+                timelineElement(InformalTimelineElementCategoryV1.VALIDATE_NORMALIZE_ADDRESSES_REQUEST, SENT_AT)
         )));
         return notification;
     }
 
-    private List<InformalNotificationStatusHistoryElementV1> statusHistoryWithAccepted() {
-        List<InformalNotificationStatusHistoryElementV1> history = new ArrayList<>();
-        history.add(statusHistoryElement(InformalNotificationStatusV1.IN_VALIDATION, SENT_AT));
-        history.add(statusHistoryElement(InformalNotificationStatusV1.ACCEPTED, FILED_AT));
-        return history;
+    private List<InformalTimelineElementV1> timelineWithRequestAccepted() {
+        List<InformalTimelineElementV1> timeline = new ArrayList<>();
+        timeline.add(timelineElement(InformalTimelineElementCategoryV1.VALIDATE_NORMALIZE_ADDRESSES_REQUEST, SENT_AT));
+        timeline.add(timelineElement(InformalTimelineElementCategoryV1.REQUEST_ACCEPTED, FILED_AT));
+        return timeline;
     }
 
-    private InformalNotificationStatusHistoryElementV1 statusHistoryElement(InformalNotificationStatusV1 status,
-                                                                            OffsetDateTime activeFrom) {
-        return new InformalNotificationStatusHistoryElementV1()
-                .status(status)
-                .activeFrom(activeFrom)
-                .relatedTimelineElements(new ArrayList<>());
+    private InformalTimelineElementV1 timelineElement(InformalTimelineElementCategoryV1 category,
+                                                      OffsetDateTime timestamp) {
+        return new InformalTimelineElementV1()
+                .elementId(category.getValue() + "-element")
+                .category(category)
+                .timestamp(timestamp);
     }
 }
