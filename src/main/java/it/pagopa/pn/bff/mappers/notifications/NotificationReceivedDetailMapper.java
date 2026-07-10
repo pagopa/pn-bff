@@ -1,11 +1,14 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV28;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
@@ -25,7 +28,29 @@ public interface NotificationReceivedDetailMapper {
      * @param notification the FullReceivedNotificationV28 to map
      * @return the mapped BffFullNotificationV1
      */
+    @Mapping(target = "filedAt", ignore = true) // valued in setFiledAt (@AfterMapping)
     BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification);
+
+    /**
+     * Sets the filedAt field with the acceptance date of the notification, i.e. the timestamp of the
+     * timeline element whose category is REQUEST_ACCEPTED. There is no dedicated field for it in the
+     * upstream model, so it must be derived.
+     *
+     * @param source the source FullReceivedNotificationV28
+     * @param target the mapped BffFullNotificationV1
+     */
+    @AfterMapping
+    default void setFiledAt(FullReceivedNotificationV28 source,
+                            @MappingTarget BffFullNotificationV1 target) {
+        if (source.getTimeline() == null) {
+            return;
+        }
+        source.getTimeline().stream()
+                .filter(el -> el.getCategory() == TimelineElementCategoryV28.REQUEST_ACCEPTED)
+                .map(TimelineElementV28::getTimestamp)
+                .findFirst()
+                .ifPresent(target::setFiledAt);
+    }
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)

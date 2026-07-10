@@ -72,6 +72,10 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
             notificationCostDetails:
               $ref: '#/components/schemas/BffNotificationCostDetails'
+            filedAt:
+              type: string
+              format: date-time
+              description: Data di accettazione della notifica/comunicazione
 
     BffNotificationStatusHistory:
       type: object

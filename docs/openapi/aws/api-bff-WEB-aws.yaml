@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: PjOW0IyOTtb4r+AfhFMcTK8QznJH5LOgr/ou9S5EK5M=
+  version: CVvOjsi58RpS8FdLcvgzfuOA7mDQVB+7vFlZSkUDCz4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6767,6 +6767,10 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
             notificationCostDetails:
               $ref: '#/components/schemas/BffNotificationCostDetails'
+            filedAt:
+              type: string
+              format: date-time
+              description: Data di accettazione della notifica/comunicazione
     BffDocumentType:
       type: string
       enum:
