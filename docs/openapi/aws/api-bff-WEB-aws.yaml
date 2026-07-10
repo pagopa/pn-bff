@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: CVvOjsi58RpS8FdLcvgzfuOA7mDQVB+7vFlZSkUDCz4=
+  version: B8XFm8kFNBX8CssQ6LrqrU+oqJUAd2WsNXTQME0EZek=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -8513,6 +8513,65 @@ components:
               maxItems: 1
               items:
                 type: string
+    LocalizedContent:
+      type: object
+      required:
+        - subject
+        - longBody
+        - language
+      properties:
+        subject:
+          type: string
+          maxLength: 256
+          description: Titolo del messaggio (es. Oggetto della mail o intestazione IO)
+          example: Sollecito di pagamento Tari 2023
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        longBody:
+          type: string
+          maxLength: 10000
+          description: Corpo esteso del messaggio in formato Markdown
+          example: Gentile cittadino, la informiamo che...
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        shortBody:
+          type: string
+          maxLength: 160
+          description: Versione breve per SMS o anteprime
+          example: 'Sollecito Tari: hai una nuova comunicazione da SEND.'
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        language:
+          type: string
+          description: >-
+            Lingua del messaggio. Valori accettati: - IT <br/> - DE <br/> - SL
+            <br/> - FR <br/> DE (tedesco), SL (sloveno), FR (francese).
+    NewMessageRequest:
+      type: object
+      required:
+        - primaryMessage
+      properties:
+        primaryMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto principale del messaggio, deve essere in lingua
+                italiana
+        additionalMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto aggiuntivo del messaggio, opzionale, può essere in una
+                lingua diversa dall'italiano
+    FullInformalNotificationRecipientV1:
+      allOf:
+        - $ref: '#/components/schemas/InformalNotificationRecipientV1'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              $ref: '#/components/schemas/NewMessageRequest'
     InformalNotificationStatusV1:
       type: string
       description: |
@@ -8562,7 +8621,7 @@ components:
         recipients:
           type: array
           items:
-            $ref: '#/components/schemas/InformalNotificationRecipientV1'
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
         documents:
           type: array
           items:
