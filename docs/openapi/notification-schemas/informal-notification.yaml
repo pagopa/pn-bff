@@ -17,9 +17,9 @@ components:
         - sentAt
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
         senderDenomination:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
         campaignId:
           type: string
         additionalLanguages:
@@ -34,17 +34,27 @@ components:
         recipients:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalNotificationRecipientV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
         documents:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
         group:
           type: string
           pattern: ^[ -~]*$
           maxLength: 1024
         notificationStatus:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/a26fa2b2045f4c6612f2fc28e73420d048cc4a35/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         sentAt:
           type: string
           format: date-time
+        senderPaId:
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        documentsAvailable:
+          type: boolean
+        filedAt:
+          type: string
+          format: date-time
+          description: Data di accettazione della notifica/comunicazione

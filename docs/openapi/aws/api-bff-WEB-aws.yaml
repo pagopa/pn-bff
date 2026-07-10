@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: kelHjNdF/DIw+mpqIn+lgECfHt3umQoeoTfvbmIAEgU=
+  version: B8XFm8kFNBX8CssQ6LrqrU+oqJUAd2WsNXTQME0EZek=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6767,6 +6767,10 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
             notificationCostDetails:
               $ref: '#/components/schemas/BffNotificationCostDetails'
+            filedAt:
+              type: string
+              format: date-time
+              description: Data di accettazione della notifica/comunicazione
     BffDocumentType:
       type: string
       enum:
@@ -8417,6 +8421,7 @@ components:
       required:
         - noticeCode
         - creditorTaxId
+        - amount
       properties:
         noticeCode:
           $ref: '#/components/schemas/noticeCode'
@@ -8424,7 +8429,20 @@ components:
           $ref: '#/components/schemas/paTaxId'
         attachment:
           $ref: '#/components/schemas/NotificationPaymentAttachment'
+        amount:
+          type: number
+          description: Importo del pagamento in eurocent
+          minimum: 0
+        dueDate:
+          type: string
+          format: date-time
+          description: >-
+            Data di scadenza del pagamento. Il formato data deve essere ISO-8601
+            e fuso orario UTC
     InformalNotificationPaymentItem:
+      description: >-
+        Elemento di pagamento della notifica informale. Al momento è supportato
+        esclusivamente il pagamento pagoPA.
       type: object
       additionalProperties: false
       required:
@@ -8433,12 +8451,16 @@ components:
         pagoPa:
           $ref: '#/components/schemas/PagoPaPaymentBase'
     InformalNotificationPayments:
-      description: Pagamenti collegati alla notifica per il destinatario.
+      description: >-
+        Lista dei pagamenti collegati alla notifica informale per il
+        destinatario.
       type: array
       items:
         $ref: '#/components/schemas/InformalNotificationPaymentItem'
     InformalNotificationRecipientV1:
-      description: Informazioni sui destinatari delle notifiche informali.
+      description: >-
+        Dati del destinatario specifici per una notifica informale, inclusi il
+        riferimento al messaggio e i canali opzionali di contatto.
       allOf:
         - $ref: '#/components/schemas/NotificationRecipientV24'
         - type: object
@@ -8451,7 +8473,7 @@ components:
               type: string
               format: uuid
               description: >-
-                Identificativo del messaggio da fornire e utilizzare per il
+                Identificativo del template di messaggio da utilizzare per il
                 destinatario.
             email:
               type: string
@@ -8466,13 +8488,90 @@ components:
             phoneNumber:
               type: string
               x-field-extra-annotation: '@lombok.ToString.Exclude'
-              example: 3900000000
+              example: '+3900000000'
               description: >-
                 Numero di telefono che il mittente della notifica intende
                 utilizzare per raggiungere il destinatario, espresso in formato
                 internazionale con prefisso `+` oppure `00`.
               pattern: ^(\+|00)[1-9]\d{0,3}[\s.-]?\d{1,4}[\s.-]?\d{1,4}[\s.-]?\d{1,9}$
               maxLength: 30
+            additionalLanguages:
+              description: >-
+                In questo campo è possibile definire la lingua addizionale
+                (oltre a quella italiana) da utilizzare per l'invio del
+                messaggio sui canali configurati.<br/> Le lingue accettate e
+                dunque i valori possibili degli item dell'array sono: <br/> - DE
+                <br/> - SL <br/> - FR <br/> DE (tedesco), SL (sloveno), FR
+                (francese) Attualmente è possibile indicare un solo item e
+                dunque una sola lingua aggiuntiva. Se non vengono indicate
+                lingue aggiuntive la lingua utilizzata <br/> per l'invio del
+                messaggio sui canali configurati sarà quella italiana. <br />
+                **Coerenza con messageId:** Se viene fornito un `messageId`, il
+                messaggio identificato deve essere associato alla lingua
+                indicata in questo campo. <br/>
+              type: array
+              maxItems: 1
+              items:
+                type: string
+    LocalizedContent:
+      type: object
+      required:
+        - subject
+        - longBody
+        - language
+      properties:
+        subject:
+          type: string
+          maxLength: 256
+          description: Titolo del messaggio (es. Oggetto della mail o intestazione IO)
+          example: Sollecito di pagamento Tari 2023
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        longBody:
+          type: string
+          maxLength: 10000
+          description: Corpo esteso del messaggio in formato Markdown
+          example: Gentile cittadino, la informiamo che...
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        shortBody:
+          type: string
+          maxLength: 160
+          description: Versione breve per SMS o anteprime
+          example: 'Sollecito Tari: hai una nuova comunicazione da SEND.'
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        language:
+          type: string
+          description: >-
+            Lingua del messaggio. Valori accettati: - IT <br/> - DE <br/> - SL
+            <br/> - FR <br/> DE (tedesco), SL (sloveno), FR (francese).
+    NewMessageRequest:
+      type: object
+      required:
+        - primaryMessage
+      properties:
+        primaryMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto principale del messaggio, deve essere in lingua
+                italiana
+        additionalMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto aggiuntivo del messaggio, opzionale, può essere in una
+                lingua diversa dall'italiano
+    FullInformalNotificationRecipientV1:
+      allOf:
+        - $ref: '#/components/schemas/InformalNotificationRecipientV1'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              $ref: '#/components/schemas/NewMessageRequest'
     InformalNotificationStatusV1:
       type: string
       description: |
@@ -8522,7 +8621,7 @@ components:
         recipients:
           type: array
           items:
-            $ref: '#/components/schemas/InformalNotificationRecipientV1'
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
         documents:
           type: array
           items:
@@ -8536,6 +8635,16 @@ components:
         sentAt:
           type: string
           format: date-time
+        senderPaId:
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        documentsAvailable:
+          type: boolean
+        filedAt:
+          type: string
+          format: date-time
+          description: Data di accettazione della notifica/comunicazione
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

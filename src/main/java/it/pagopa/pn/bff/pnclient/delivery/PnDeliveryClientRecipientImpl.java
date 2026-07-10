@@ -156,7 +156,8 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnSrcCh,
                 iun,
                 xPagopaPnCxGroups,
-                xPagopaPnSrcChDetails
+                xPagopaPnSrcChDetails,
+                true
         );
     }
 
