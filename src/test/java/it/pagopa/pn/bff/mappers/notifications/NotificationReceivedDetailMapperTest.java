@@ -3,12 +3,14 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
+import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 
 class NotificationReceivedDetailMapperTest {
+
+    private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
 
     @Test
     void testMapNotificationNull() {
@@ -34,6 +38,29 @@ class NotificationReceivedDetailMapperTest {
 
         assertNotNull(result);
         assertNotNull(result.getIun());
+    }
+
+    @Test
+    void testFiledAtFromRequestAcceptedTimelineElement() {
+        FullReceivedNotificationV28 notification = notificationDetailRecipientMock.getNotificationMultiRecipientMock();
+
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+
+        assertNotNull(result);
+        assertEquals(OffsetDateTime.parse("2023-08-25T09:34:58.041398918Z"), result.getFiledAt());
+    }
+
+    @Test
+    void testFiledAtNullWhenNoRequestAcceptedElement() {
+        FullReceivedNotificationV28 notification = new FullReceivedNotificationV28();
+        notification.setIun("test-iun");
+        notification.setTimeline(new ArrayList<>(List.of(new TimelineElementV28())));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+
+        assertNotNull(result);
+        assertNull(result.getFiledAt());
     }
 
     @Test

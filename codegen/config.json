@@ -14,7 +14,8 @@
         "api-internal-pn-bff-payments.yaml",
         "api-internal-pn-bff-recipient-digital-addresses.yaml",
         "api-internal-pn-bff-recipient-mandate.yaml",
-        "api-internal-pn-bff-sender-dashboard.yaml"
+        "api-internal-pn-bff-sender-dashboard.yaml",
+        "api-internal-pn-bff-recipient-informal-notifications.yaml"
       ],
       "servicePath": "bff"
     },

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 5mciR+n11QXmVBe2n3iMPDgMfkWTU9DnLFi5615YB/k=
+  version: B8XFm8kFNBX8CssQ6LrqrU+oqJUAd2WsNXTQME0EZek=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
+                $ref: '#/components/schemas/BffLegalNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -517,18 +517,18 @@ paths:
         - $ref: '#/components/parameters/notificationSearchEndDate'
         - $ref: '#/components/parameters/notificationSearchMandateId'
         - $ref: '#/components/parameters/notificationSearchSenderId'
-        - $ref: '#/components/parameters/BffNotificationSearchStatus'
         - $ref: '#/components/parameters/notificationSearchSubject'
-        - $ref: '#/components/parameters/notificationSearchIun'
+        - $ref: '#/components/parameters/BffSearchUnifiedIun'
         - $ref: '#/components/parameters/notificationSearchPageSize'
         - $ref: '#/components/parameters/notificationSearchNextPagesKey'
+        - $ref: '#/components/parameters/notificationSearchCommunicationType'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
+                $ref: '#/components/schemas/BffFullNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -596,7 +596,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationSearchResponse'
+                $ref: '#/components/schemas/BffLegalNotificationsResponse'
         '400':
           description: Bad request
           content:
@@ -3819,6 +3819,238 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/notifications/informal/received/{iun}:
+    get:
+      summary: 'Destinatario: dettaglio comunicazione bonaria'
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffFullInformalNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/received/{iun} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/received/{iun}/attachments/documents/{docIdx}:
+    get:
+      summary: 'Destinatario: Download documento notificato'
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationDocumentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+        - $ref: '#/components/parameters/BffPathDocumentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}/attachments/documents/{docIdx}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.docIdx: method.request.path.docIdx
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for
+        /v1/notifications/informal/received/{iun}/attachments/documents/{docIdx}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}/attachments/documents/{docIdx}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.docIdx: method.request.path.docIdx
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/received/{iun}/attachments/payment/{attachmentName}:
+    get:
+      summary: 'Destinatario: Download allegato per pagamento'
+      tags:
+        - RecipientInformalNotifications
+      operationId: getReceivedInformalNotificationPaymentAttachmentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+        - $ref: '#/components/parameters/pathAttachmentName'
+        - $ref: '#/components/parameters/attachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}/attachments/payment/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for
+        /v1/notifications/informal/received/{iun}/attachments/payment/{attachmentName}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/received/{iun}/attachments/payment/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -3961,6 +4193,28 @@ components:
       description: identificativo del mittente
       schema:
         type: string
+    BffSearchUnifiedIun:
+      name: iunMatch
+      description: >-
+        Se presente indica che lo IUN dei risultati deve essere uguale al valore
+        di questo parametro. Accetta sia formato legale che bonario.
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/UnifiedIUN'
+    notificationSearchCommunicationType:
+      name: communicationType
+      in: query
+      required: false
+      description: >-
+        Tipologia di notifica (LEGAL o INFORMAL). Se non specificato, di default
+        vengono ricercate le notifiche LEGAL. ALL per cercarle entrambe.
+      schema:
+        type: string
+        enum:
+          - LEGAL
+          - INFORMAL
+          - ALL
     notificationSearchGroup:
       name: group
       in: query
@@ -4169,6 +4423,23 @@ components:
         type: string
         format: date
         example: '2023-12-06'
+    pathInformalIun:
+      description: Identificativo Univoco Notifica informale
+      name: iun
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 25
+        maxLength: 25
+        pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[A-Z]{1}$
+    BffPathDocumentIdx:
+      description: Indice del documento
+      name: docIdx
+      in: path
+      required: true
+      schema:
+        type: number
   schemas:
     NotificationStatusV26:
       type: string
@@ -4197,17 +4468,28 @@ components:
         - UNREACHABLE
         - CANCELLED
         - RETURNED_TO_SENDER
-    IUN:
-      description: Identificativo Univoco Notifica
+    UnifiedIUN:
+      description: >-
+        Identificativo Univoco Notifica (valido sia per notifiche legali che
+        bonarie)
       type: string
       minLength: 25
       maxLength: 25
-      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9A-Z]{1}$
     NotificationSearchRow:
+      description: >-
+        Oggetto base per le righe di risultato della ricerca notifiche. Contiene
+        tutti i campi comuni sia alle notifiche legali che bonarie
       type: object
       properties:
+        communicationType:
+          type: string
+          description: Indica la tipologia di comunicazione (LEGAL o INFORMAL)
+          enum:
+            - LEGAL
+            - INFORMAL
         iun:
-          $ref: '#/components/schemas/IUN'
+          $ref: '#/components/schemas/UnifiedIUN'
         paProtocolNumber:
           type: string
           description: Numero protocollo associato alla notifica da parte della PA
@@ -4221,8 +4503,6 @@ components:
         subject:
           type: string
           description: Oggetto della notifica
-        notificationStatus:
-          $ref: '#/components/schemas/NotificationStatusV26'
         recipients:
           description: >-
             Elenco delle denominazioni dei destinatari della notifica. <br/>
@@ -4245,27 +4525,38 @@ components:
         mandateId:
           type: string
           description: Id delega (per notifiche delegate)
-    NotificationSearchResponse:
-      title: Elenco di notifiche
+    LegalNotificationSearchRow:
       description: >-
-        Dto contenente i risultati di una ricerca di notifiche. Ogni risposta
-        conterrà solo  una pagina di risultati relativi a una ricerca e le
-        indicazioni per raggiungere alcune pagine successive.
+        Riga di risultato della ricerca di notifiche legali. Estende
+        NotificationSearchRow aggiungendo il campo notificationStatus tipizzato
+        con NotificationStatusV26, che rappresenta il ciclo di vita delle
+        notifiche legali.
+      allOf:
+        - $ref: '#/components/schemas/NotificationSearchRow'
+        - type: object
+          properties:
+            notificationStatus:
+              $ref: '#/components/schemas/NotificationStatusV26'
+    BffIsNewNotification:
       type: object
+      required:
+        - isNewNotification
+      properties:
+        isNewNotification:
+          type: boolean
+    BffLegalNotificationSearchRow:
+      allOf:
+        - $ref: '#/components/schemas/LegalNotificationSearchRow'
+        - $ref: '#/components/schemas/BffIsNewNotification'
+    BffLegalNotificationsResponse:
       properties:
         resultsPage:
-          description: Una pagina di risultati della query
           type: array
           items:
-            $ref: '#/components/schemas/NotificationSearchRow'
+            $ref: '#/components/schemas/BffLegalNotificationSearchRow'
         moreResult:
-          description: Indica se sono presenti ulteriori pagine di risultati
           type: boolean
         nextPagesKey:
-          description: >-
-            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
-            pagine di risultati successive a quella corrente. <br/> Valorizzato
-            solo se il campo __moreResult__ ha valore __true__.
           type: array
           items:
             type: string
@@ -4659,6 +4950,12 @@ components:
       enum:
         - FLAT_RATE
         - DELIVERY_MODE
+    IUN:
+      description: Identificativo Univoco Notifica
+      type: string
+      minLength: 25
+      maxLength: 25
+      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
     PaFeeV23:
       type: number
       description: >-
@@ -6470,6 +6767,10 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailDocument'
             notificationCostDetails:
               $ref: '#/components/schemas/BffNotificationCostDetails'
+            filedAt:
+              type: string
+              format: date-time
+              description: Data di accettazione della notifica/comunicazione
     BffDocumentType:
       type: string
       enum:
@@ -6615,6 +6916,82 @@ components:
             richiesta  di notifica.
           example: PN_NOTIFICATION_ATTACHMENTS-0001-301W-B9CB-9U72-WIKD
           type: string
+    UnifiedNotificationStatus:
+      description: >-
+        Stato unificato della notifica per i destinatari. Contiene i valori di
+        NotificationStatusV26 quando il campo communicationType è LEGAL, oppure
+        i valori di InformalNotificationStatus quando il campo communicationType
+        è INFORMAL. N.B. l'enum è l'unione dei valori di NotificationStatusV26
+        (notifiche legali) e di InformalNotificationStatus (notifiche bonarie).
+        Va mantenuto allineato a tali enum.
+      type: string
+      enum:
+        - IN_VALIDATION
+        - ACCEPTED
+        - REFUSED
+        - DELIVERING
+        - DELIVERED
+        - VIEWED
+        - EFFECTIVE_DATE
+        - PAID
+        - UNREACHABLE
+        - CANCELLED
+        - RETURNED_TO_SENDER
+        - READY_TO_SEND
+        - PROCESSING
+        - SUCCESSFUL_SENDING
+        - UNSUCCESSFUL_SENDING
+    CommunicationOutcomes:
+      type: object
+      description: >-
+        Esiti della comunicazione (solo per comunicazioni post-rilascio).
+        Valorizzato esclusivamente per le notifiche bonarie (communicationType
+        INFORMAL); per le notifiche legali (communicationType LEGAL) non viene
+        mai valorizzato.
+      properties:
+        viewed:
+          type: boolean
+          description: Indica se la comunicazione è stata visualizzata dal destinatario
+        delivered:
+          type: boolean
+          description: Indica se la comunicazione è stata consegnata al destinatario
+    FullNotificationSearchRow:
+      description: >-
+        Riga di risultato della ricerca di notifiche completa (legali e
+        bonarie). Estende NotificationSearchRow aggiungendo i campi
+        notificationStatus (unificato per legali e bonarie) e
+        communicationOutcomes. Il campo notificationStatus conterrà valori di
+        NotificationStatusV26 se communicationType è LEGAL, oppure valori di
+        InformalNotificationStatus se communicationType è INFORMAL.
+      allOf:
+        - $ref: '#/components/schemas/NotificationSearchRow'
+        - type: object
+          properties:
+            notificationStatus:
+              $ref: '#/components/schemas/UnifiedNotificationStatus'
+            communicationOutcomes:
+              description: >-
+                Esiti della comunicazione. Valorizzato esclusivamente per le
+                notifiche bonarie (communicationType INFORMAL); per le notifiche
+                legali (communicationType LEGAL) non viene mai valorizzato.
+              allOf:
+                - $ref: '#/components/schemas/CommunicationOutcomes'
+    BffFullNotificationSearchRow:
+      allOf:
+        - $ref: '#/components/schemas/FullNotificationSearchRow'
+        - $ref: '#/components/schemas/BffIsNewNotification'
+    BffFullNotificationsResponse:
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffFullNotificationSearchRow'
+        moreResult:
+          type: boolean
+        nextPagesKey:
+          type: array
+          items:
+            type: string
     RequestCheckAarMandateDto:
       description: Le informazioni fornite per verificare l'AAR-QR-CodeValue
       type: object
@@ -8031,6 +8408,243 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffSenderDashboardDigitalNotificationFocus'
+    PagoPaPaymentBase:
+      title: Informazioni per effettuare il pagamento con sistema pagoPA
+      description: >-
+        Informazioni utili per effettuare il pagamento di una notifica, sono
+        associate al destinatario perché le spese di notifica possono differire
+        a seconda del canale di notifica utilizzato. <br/>
+          - _noticeCode_: "codice avviso pagoPA" di pagamento del sistema pagoPA, usato per pagamento online.<br/>
+          - _creditorTaxId_: codice fiscale dell'ente a cui fa riferimento il "codice avviso pagoPA". <br/>
+          - _attachment_: riferimento al PDF contenete il bollettino pagoPA<br/>
+      type: object
+      required:
+        - noticeCode
+        - creditorTaxId
+        - amount
+      properties:
+        noticeCode:
+          $ref: '#/components/schemas/noticeCode'
+        creditorTaxId:
+          $ref: '#/components/schemas/paTaxId'
+        attachment:
+          $ref: '#/components/schemas/NotificationPaymentAttachment'
+        amount:
+          type: number
+          description: Importo del pagamento in eurocent
+          minimum: 0
+        dueDate:
+          type: string
+          format: date-time
+          description: >-
+            Data di scadenza del pagamento. Il formato data deve essere ISO-8601
+            e fuso orario UTC
+    InformalNotificationPaymentItem:
+      description: >-
+        Elemento di pagamento della notifica informale. Al momento è supportato
+        esclusivamente il pagamento pagoPA.
+      type: object
+      additionalProperties: false
+      required:
+        - pagoPa
+      properties:
+        pagoPa:
+          $ref: '#/components/schemas/PagoPaPaymentBase'
+    InformalNotificationPayments:
+      description: >-
+        Lista dei pagamenti collegati alla notifica informale per il
+        destinatario.
+      type: array
+      items:
+        $ref: '#/components/schemas/InformalNotificationPaymentItem'
+    InformalNotificationRecipientV1:
+      description: >-
+        Dati del destinatario specifici per una notifica informale, inclusi il
+        riferimento al messaggio e i canali opzionali di contatto.
+      allOf:
+        - $ref: '#/components/schemas/NotificationRecipientV24'
+        - type: object
+          required:
+            - messageId
+          properties:
+            payments:
+              $ref: '#/components/schemas/InformalNotificationPayments'
+            messageId:
+              type: string
+              format: uuid
+              description: >-
+                Identificativo del template di messaggio da utilizzare per il
+                destinatario.
+            email:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              example: account@domain.it
+              description: >-
+                Indirizzo email che il mittente della notifica intende
+                utilizzare per  raggiungere il destinatario.
+              pattern: >-
+                ^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$
+              maxLength: 320
+            phoneNumber:
+              type: string
+              x-field-extra-annotation: '@lombok.ToString.Exclude'
+              example: '+3900000000'
+              description: >-
+                Numero di telefono che il mittente della notifica intende
+                utilizzare per raggiungere il destinatario, espresso in formato
+                internazionale con prefisso `+` oppure `00`.
+              pattern: ^(\+|00)[1-9]\d{0,3}[\s.-]?\d{1,4}[\s.-]?\d{1,4}[\s.-]?\d{1,9}$
+              maxLength: 30
+            additionalLanguages:
+              description: >-
+                In questo campo è possibile definire la lingua addizionale
+                (oltre a quella italiana) da utilizzare per l'invio del
+                messaggio sui canali configurati.<br/> Le lingue accettate e
+                dunque i valori possibili degli item dell'array sono: <br/> - DE
+                <br/> - SL <br/> - FR <br/> DE (tedesco), SL (sloveno), FR
+                (francese) Attualmente è possibile indicare un solo item e
+                dunque una sola lingua aggiuntiva. Se non vengono indicate
+                lingue aggiuntive la lingua utilizzata <br/> per l'invio del
+                messaggio sui canali configurati sarà quella italiana. <br />
+                **Coerenza con messageId:** Se viene fornito un `messageId`, il
+                messaggio identificato deve essere associato alla lingua
+                indicata in questo campo. <br/>
+              type: array
+              maxItems: 1
+              items:
+                type: string
+    LocalizedContent:
+      type: object
+      required:
+        - subject
+        - longBody
+        - language
+      properties:
+        subject:
+          type: string
+          maxLength: 256
+          description: Titolo del messaggio (es. Oggetto della mail o intestazione IO)
+          example: Sollecito di pagamento Tari 2023
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        longBody:
+          type: string
+          maxLength: 10000
+          description: Corpo esteso del messaggio in formato Markdown
+          example: Gentile cittadino, la informiamo che...
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        shortBody:
+          type: string
+          maxLength: 160
+          description: Versione breve per SMS o anteprime
+          example: 'Sollecito Tari: hai una nuova comunicazione da SEND.'
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
+        language:
+          type: string
+          description: >-
+            Lingua del messaggio. Valori accettati: - IT <br/> - DE <br/> - SL
+            <br/> - FR <br/> DE (tedesco), SL (sloveno), FR (francese).
+    NewMessageRequest:
+      type: object
+      required:
+        - primaryMessage
+      properties:
+        primaryMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto principale del messaggio, deve essere in lingua
+                italiana
+        additionalMessage:
+          allOf:
+            - $ref: '#/components/schemas/LocalizedContent'
+            - description: >-
+                Contenuto aggiuntivo del messaggio, opzionale, può essere in una
+                lingua diversa dall'italiano
+    FullInformalNotificationRecipientV1:
+      allOf:
+        - $ref: '#/components/schemas/InformalNotificationRecipientV1'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              $ref: '#/components/schemas/NewMessageRequest'
+    InformalNotificationStatusV1:
+      type: string
+      description: |
+        stato di avanzamento del processo di notifica bonaria:
+          * `IN_VALIDATION` - Fase di validazione formale, sintattica (sincrona) ed asincrona (verifica allegati e coerenza della campagna)
+          * `PROCESSING` - Stato assunto non appena la validazione ha esito positivo e l'orchestratore avvia il workflow sequenziale di consegna sui canali
+          * `COMPLETED_REACHED` - Stato finale di terminazione positiva; Il destinatario è stato raggiunto alla destinazione più vicina al cittadino, ma non è stato ancora ottenuto il feedback di arresto finale desiderato dall'ente;
+          * `COMPLETED_UNREACHED` - Stato finale di terminazione negativa; Il destinatario non è stato raggiunto alla destinazione più vicina al cittadino;
+          * `UNDELIVERABLE` - Stato di irreperibilità totale; raggiungibile solo se la validazione asincrona consente l'ingresso di notifiche prive di qualsiasi recapito utile o di profilo IO associato
+          * `REFUSED` - Notifica rifiutata a seguito della validazione
+          * `ACCEPTED` - Notifica accettato a seguito della validazione
+      enum:
+        - IN_VALIDATION
+        - PROCESSING
+        - COMPLETED_REACHED
+        - COMPLETED_UNREACHED
+        - UNDELIVERABLE
+        - REFUSED
+        - ACCEPTED
+    BffFullInformalNotificationV1:
+      description: Dettaglio notifica bonaria esposto al frontend del destinatario.
+      type: object
+      required:
+        - iun
+        - senderDenomination
+        - campaignId
+        - subject
+        - recipients
+        - notificationStatus
+        - sentAt
+      properties:
+        iun:
+          $ref: '#/components/schemas/IUN'
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        campaignId:
+          type: string
+        additionalLanguages:
+          type: array
+          maxItems: 1
+          items:
+            type: string
+        subject:
+          type: string
+          maxLength: 134
+          pattern: ^.*$
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+        group:
+          type: string
+          pattern: ^[ -~]*$
+          maxLength: 1024
+        notificationStatus:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        sentAt:
+          type: string
+          format: date-time
+        senderPaId:
+          type: string
+          pattern: ^.*$
+          maxLength: 256
+        documentsAvailable:
+          type: boolean
+        filedAt:
+          type: string
+          format: date-time
+          description: Data di accettazione della notifica/comunicazione
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -8083,6 +8697,11 @@ tags:
     description: Invocazioni utilizzate per la gestione delle deleghe.
   - name: SenderDashboard
     description: Invocazioni per il recupero dei dati da mostrare nella dashboard mittenti.
+  - name: RecipientInformalNotifications
+    description: >-
+      API esposte al frontend PF/PG di SEND per ottenere i dettagli delle
+      comunicazioni bonarie e scaricare gli allegati della notifica e del
+      pagamento
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

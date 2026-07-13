@@ -46,7 +46,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void searchReceivedNotifications() {
-        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        BffFullNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffFullNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
         Mockito.when(notificationsRecipientService.searchReceivedNotifications(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -55,11 +55,11 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(NotificationStatusV26.class),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.anyString(),
                         Mockito.anyInt(),
+                        Mockito.anyString(),
                         Mockito.anyString()
                 ))
                 .thenReturn(Mono.just(response));
@@ -71,12 +71,12 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
                                 .queryParam("mandateId", NotificationsReceivedMock.MANDATE_ID)
                                 .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
-                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
                                 .queryParam("startDate", NotificationsReceivedMock.START_DATE)
                                 .queryParam("endDate", NotificationsReceivedMock.END_DATE)
                                 .queryParam("subjectRegExp", NotificationsReceivedMock.SUBJECT_REG_EXP)
                                 .queryParam("size", NotificationsReceivedMock.SIZE)
                                 .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .queryParam("communicationType", NotificationsReceivedMock.COMMUNICATION_TYPE)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -86,7 +86,7 @@ class ReceivedNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponse.class)
+                .expectBody(BffFullNotificationsResponse.class)
                 .isEqualTo(response);
 
         Mockito.verify(notificationsRecipientService).searchReceivedNotifications(
@@ -97,12 +97,12 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationsReceivedMock.STATUS,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
-                NotificationsReceivedMock.NEXT_PAGES_KEY
+                NotificationsReceivedMock.NEXT_PAGES_KEY,
+                NotificationsReceivedMock.COMMUNICATION_TYPE
         );
     }
 
@@ -116,11 +116,11 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyList(),
                         Mockito.anyString(),
                         Mockito.anyString(),
-                        Mockito.any(NotificationStatusV26.class),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.anyString(),
                         Mockito.anyInt(),
+                        Mockito.anyString(),
                         Mockito.anyString()
                 ))
                 .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
@@ -132,12 +132,12 @@ class ReceivedNotificationControllerTest {
                                 .queryParam("iunMatch", NotificationsReceivedMock.IUN_MATCH)
                                 .queryParam("mandateId", NotificationsReceivedMock.MANDATE_ID)
                                 .queryParam("senderId", NotificationsReceivedMock.SENDER_ID)
-                                .queryParam("status", NotificationsReceivedMock.STATUS.getValue())
                                 .queryParam("startDate", NotificationsReceivedMock.START_DATE)
                                 .queryParam("endDate", NotificationsReceivedMock.END_DATE)
                                 .queryParam("subjectRegExp", NotificationsReceivedMock.SUBJECT_REG_EXP)
                                 .queryParam("size", NotificationsReceivedMock.SIZE)
                                 .queryParam("nextPagesKey", NotificationsReceivedMock.NEXT_PAGES_KEY)
+                                .queryParam("communicationType", NotificationsReceivedMock.COMMUNICATION_TYPE)
                                 .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
@@ -156,18 +156,20 @@ class ReceivedNotificationControllerTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationsReceivedMock.STATUS,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
-                NotificationsReceivedMock.NEXT_PAGES_KEY
+                NotificationsReceivedMock.NEXT_PAGES_KEY,
+                NotificationsReceivedMock.COMMUNICATION_TYPE
         );
     }
 
     @Test
     void searchReceivedDelegatedNotifications() {
-        BffNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffNotificationsResponse(notificationsReceivedMock.getNotificationReceivedPNMock());
+        BffLegalNotificationsResponse response = NotificationsReceivedMapper.modelMapper.toBffLegalNotificationsResponse(
+                notificationsReceivedMock.getLegalNotificationsReceivedMock()
+        );
         Mockito.when(notificationsRecipientService.searchReceivedDelegatedNotifications(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
@@ -207,7 +209,7 @@ class ReceivedNotificationControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(BffNotificationsResponse.class)
+                .expectBody(BffLegalNotificationsResponse.class)
                 .isEqualTo(response);
 
         Mockito.verify(notificationsRecipientService).searchReceivedDelegatedNotifications(

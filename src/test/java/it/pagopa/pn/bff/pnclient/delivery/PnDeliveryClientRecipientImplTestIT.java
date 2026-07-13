@@ -88,12 +88,12 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
-                NotificationsReceivedMock.NEXT_PAGES_KEY
+                NotificationsReceivedMock.NEXT_PAGES_KEY,
+                NotificationsReceivedMock.COMMUNICATION_TYPE
         )).expectNext(notificationsReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
     }
 
@@ -110,18 +110,18 @@ class PnDeliveryClientRecipientImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 NotificationsReceivedMock.MANDATE_ID,
                 NotificationsReceivedMock.SENDER_ID,
-                NotificationStatusV26.ACCEPTED,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
-                NotificationsReceivedMock.NEXT_PAGES_KEY
+                NotificationsReceivedMock.NEXT_PAGES_KEY,
+                NotificationsReceivedMock.COMMUNICATION_TYPE
         )).expectError(WebClientResponseException.class).verify();
     }
 
     @Test
     void searchReceivedDelegatedNotifications() throws JsonProcessingException {
-        String response = objectMapper.writeValueAsString(notificationsReceivedMock.getNotificationReceivedPNMock());
+        String response = objectMapper.writeValueAsString(notificationsReceivedMock.getLegalNotificationsReceivedMock());
         mockServerClient.when(request().withMethod("GET").withPath(notificationListPath + "/delegated"))
                 .respond(response()
                         .withStatusCode(200)
@@ -143,7 +143,7 @@ class PnDeliveryClientRecipientImplTestIT {
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY
-        )).expectNext(notificationsReceivedMock.getNotificationReceivedPNMock()).verifyComplete();
+        )).expectNext(notificationsReceivedMock.getLegalNotificationsReceivedMock()).verifyComplete();
     }
 
     @Test
