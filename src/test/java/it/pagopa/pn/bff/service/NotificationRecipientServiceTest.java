@@ -242,6 +242,9 @@ class NotificationRecipientServiceTest {
         StepVerifier.create(result)
                 .expectNext(expected)
                 .verifyComplete();
+
+        // no NOTIFICATION_TIMELINE_REWORKED in the timeline: the rework API must not be invoked
+        Mockito.verify(pnDeliveryPushClient, Mockito.never()).getRework(Mockito.anyString());
     }
 
     @Test

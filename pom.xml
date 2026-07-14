@@ -1151,6 +1151,43 @@
                         </configuration>
                     </execution>
 
+                    <!-- OPEN API PN-DELIVERY-PUSH REWORK (private) -->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-delivery-push-rework</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/6b4b2ffeefe952b06b044edb04de6cb4557d7d17/docs/openapi/api-rework-private.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-push-rework.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-push-rework.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
                     <!-- OPEN API PN-MANDATE-->
                     <execution>
                         <phase>generate-resources</phase>

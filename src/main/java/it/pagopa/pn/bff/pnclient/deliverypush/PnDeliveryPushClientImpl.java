@@ -4,6 +4,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWe
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.*;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.api.NotificationReworkApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItemsResponse;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class PnDeliveryPushClientImpl {
     private final DocumentsWebApi documentsWebApi;
     private final LegalFactsApi legalFactsApi;
     private final NotificationCancellationApi notificationCancellationApi;
+    private final NotificationReworkApi notificationReworkApi;
 
     public Mono<DocumentDownloadMetadataResponse> getDocumentsWeb(String xPagopaPnUid,
                                                                   CxTypeAuthFleet xPagopaPnCxType,
@@ -77,5 +80,17 @@ public class PnDeliveryPushClientImpl {
                 xPagopaPnCxId,
                 iun,
                 xPagopaPnCxGroups);
+    }
+
+    /**
+     * Retrieve the list of timeline corrections (rework) for a notification.
+     *
+     * @param iun Notification IUN
+     * @return the rework items of the notification
+     */
+    public Mono<ReworkItemsResponse> getRework(String iun) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY_PUSH, "retrieveNotificationRework");
+
+        return notificationReworkApi.retrieveNotificationRework(iun, null);
     }
 }

@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.utils;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
@@ -452,18 +453,59 @@ public class NotificationDetailUtility {
         }
     }
 
-    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1) {
+    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1, List<ReworkItem> reworkItems) {
         List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
         for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            // resolve and expose the correction type on the reworked marker element
+            timelineElement.setRequestType(resolveRequestType(timelineElement, reworkItems));
+
             BffNotificationStatusHistory reworkedStatusHistory = new BffNotificationStatusHistory();
             reworkedStatusHistory.setStatus(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED);
             reworkedStatusHistory.setActiveFrom(timelineElement.getTimestamp());
 
             bffFullNotificationV1.getNotificationStatusHistory().add(reworkedStatusHistory);
         }
+    }
+
+    /**
+     * Resolves the correction type ({@link BffReworkRequestType}) for a
+     * {@code NOTIFICATION_TIMELINE_REWORKED} marker element, correlating it with the rework items
+     * retrieved from pn-delivery-push.
+     * <p>
+     * The marker element does not expose the {@code reworkId} directly, but both the {@code reworkId}
+     * ({@code REWORK_<idx>.TRY_<tryIdx>}) and the marker {@code elementId}
+     * ({@code NOTIFICATION_TIMELINE_REWORKED.IUN_<iun>.RECINDEX_<r>.ATTEMPT_<a>.REWORK_<idx>}) share
+     * the {@code REWORK_<idx>} and {@code RECINDEX_<r>} segments. Once the rework items in
+     * {@code ERROR} status are discarded, the pair ({@code REWORK_<idx>}, {@code RECINDEX_<r>}) has a
+     * 1:1 correspondence with each marker (confirmed by backend), so the correlation matches on both.
+     *
+     * @param marker      the reworked marker timeline element
+     * @param reworkItems the rework items of the notification (may be null/empty)
+     * @return the resolved correction type, or {@code null} if it cannot be determined
+     */
+    private static BffReworkRequestType resolveRequestType(BffNotificationDetailTimeline marker, List<ReworkItem> reworkItems) {
+        if (reworkItems == null || reworkItems.isEmpty() || marker.getElementId() == null) {
+            return null;
+        }
+
+        return reworkItems.stream()
+                // discard rework requests ended in ERROR: they don't produce a marker in timeline
+                .filter(item -> item.getStatus() != ReworkItem.StatusEnum.ERROR)
+                .filter(item -> item.getReworkId() != null && item.getRequestType() != null)
+                .filter(item -> {
+                    String reworkIdxSegment = item.getReworkId().split("\\.")[0]; // e.g. "REWORK_0"
+                    boolean reworkMatch = marker.getElementId().endsWith("." + reworkIdxSegment);
+                    // recIndex is e.g. "RECINDEX_0" and appears as a ".RECINDEX_0." segment in the elementId
+                    boolean recIndexMatch = item.getRecIndex() == null
+                            || marker.getElementId().contains("." + item.getRecIndex() + ".");
+                    return reworkMatch && recIndexMatch;
+                })
+                .map(item -> BffReworkRequestType.fromValue(item.getRequestType().getValue()))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -475,6 +517,10 @@ public class NotificationDetailUtility {
      * invalidated element (or of category {@code SEND_ANALOG_PROGRESS}) are marked {@code VALID},
      * and their parent status history is marked {@code VALID} as well (unless {@code VIEWED} or
      * {@code DELIVERING}). The new invalidated entries are appended to the status history list.
+     * <p>
+     * Punctual corrections ({@code INVALIDATE_ELEMENTS}, resolved onto the marker by
+     * {@link #insertReworkedStatus}) are an exception: their invalidated events are still marked
+     * {@code NOT_VALID}, but no synthetic {@code NOT_VALID} status is created and no status is marked.
      *
      * @param bffFullNotificationV1 the notification to update in place
      */
@@ -501,6 +547,12 @@ public class NotificationDetailUtility {
         List<BffNotificationStatusHistory> newNotValidStatusHistories = new ArrayList<>();
 
         for (BffNotificationDetailTimeline reworkedEvent : reworkedEvents) {
+            // Punctual correction (INVALIDATE_ELEMENTS): only the events are marked NOT_VALID (SECOND STEP),
+            // no synthetic NOT_VALID status is created and no status is marked. Skip the FIRST STEP for it.
+            if (reworkedEvent.getRequestType() == BffReworkRequestType.INVALIDATE_ELEMENTS) {
+                continue;
+            }
+
             for (NotificationStatusHistoryInvalidatedElement invalidatedStatus : reworkedEvent.getDetails().getInvalidatedTimelineAndStatusHistory()) {
 
                 // skip ACCEPTED (PN-20141), DELIVERING and VIEWED status - keep everything together

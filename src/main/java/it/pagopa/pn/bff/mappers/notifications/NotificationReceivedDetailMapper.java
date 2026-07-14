@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementCategoryV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.TimelineElementV28;
@@ -7,10 +8,13 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNot
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * Mapstruct mapper interface, used to map the FullReceivedNotificationV28
@@ -26,10 +30,22 @@ public interface NotificationReceivedDetailMapper {
      * Maps a FullReceivedNotificationV28 to a BffFullNotificationV1
      *
      * @param notification the FullReceivedNotificationV28 to map
+     * @param reworkItems  the rework items retrieved from pn-delivery-push (for correction type resolution)
      * @return the mapped BffFullNotificationV1
      */
     @Mapping(target = "filedAt", ignore = true) // valued in setFiledAt (@AfterMapping)
-    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification);
+    BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification,
+                                                        @Context List<ReworkItem> reworkItems);
+
+    /**
+     * Convenience overload used when there is no correction to resolve.
+     *
+     * @param notification the FullReceivedNotificationV28 to map
+     * @return the mapped BffFullNotificationV1
+     */
+    default BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification) {
+        return mapReceivedNotificationDetail(notification, List.of());
+    }
 
     /**
      * Sets the filedAt field with the acceptance date of the notification, i.e. the timestamp of the
@@ -64,8 +80,9 @@ public interface NotificationReceivedDetailMapper {
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertReworkedStatus(BffFullNotificationV1)
      */
     @AfterMapping
-    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1,
+                                      @Context List<ReworkItem> reworkItems) {
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1, reworkItems);
     }
 
     /**

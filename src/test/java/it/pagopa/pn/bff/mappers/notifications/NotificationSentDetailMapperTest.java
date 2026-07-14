@@ -56,7 +56,7 @@ class NotificationSentDetailMapperTest {
 
             // Assert each method is called exactly once
             mockUtil.verify(() -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()), times(1));
-            mockUtil.verify(() -> NotificationDetailUtility.insertReworkedStatus(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.insertReworkedStatus(any(), any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.cleanRelatedTimelineElements(any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.populateOtherDocuments(any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.checkRADDInTimeline(any()), times(1));
@@ -70,7 +70,7 @@ class NotificationSentDetailMapperTest {
             // (inverting any two consecutive inOrder.verify calls would make this test fail)
             InOrder inOrder = inOrder(NotificationDetailUtility.class);
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()));
-            inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertReworkedStatus(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.insertReworkedStatus(any(), any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.cleanRelatedTimelineElements(any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.populateOtherDocuments(any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.checkRADDInTimeline(any()));
