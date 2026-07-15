@@ -4,9 +4,7 @@ package it.pagopa.pn.bff.service;
 import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentDownloadMetadataResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullNotificationSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedNotificationV28;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
@@ -44,6 +42,7 @@ public class NotificationsRecipientService {
     private final PnBffExceptionUtility pnBffExceptionUtility;
     private final PnEmdClientImpl pnEmdClient;
     private final PnNotificationCostServiceClientImpl pnNotificationCostServiceClient;
+    private final ReworkItemsService reworkItemsService;
 
     /**
      * Search received notifications for a recipient user.
@@ -175,34 +174,10 @@ public class NotificationsRecipientService {
                         xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
                 )
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .flatMap(notification -> getReworkItems(notification, iun)
+                .flatMap(notification -> reworkItemsService.getReworkItems(notification)
                         .map(reworkItems -> NotificationReceivedDetailMapper.modelMapper
                                 .mapReceivedNotificationDetail(notification, reworkItems)))
                 .flatMap(notification -> enrichWithCostDetails(notification, iun));
-    }
-
-    /**
-     * Retrieves the rework items of the notification (used to resolve the correction type on the
-     * {@code NOTIFICATION_TIMELINE_REWORKED} markers). The rework API is invoked only when the
-     * notification timeline contains at least one {@code NOTIFICATION_TIMELINE_REWORKED} element,
-     * otherwise an empty list is returned without any extra call.
-     *
-     * @param notification the received notification detail
-     * @param iun          the notification IUN
-     * @return the rework items (empty if there is no correction)
-     */
-    private Mono<List<ReworkItem>> getReworkItems(FullReceivedNotificationV28 notification, String iun) {
-        boolean hasRework = notification.getTimeline() != null && notification.getTimeline().stream()
-                .anyMatch(el -> el.getCategory() == it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model
-                        .TimelineElementCategoryV28.NOTIFICATION_TIMELINE_REWORKED);
-
-        if (!hasRework) {
-            return Mono.just(List.of());
-        }
-
-        return pnDeliveryPushClient.getRework(iun)
-                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .map(response -> response.getItems() == null ? List.<ReworkItem>of() : response.getItems());
     }
 
     /**

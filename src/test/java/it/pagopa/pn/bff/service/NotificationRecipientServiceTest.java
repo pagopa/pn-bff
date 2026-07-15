@@ -48,7 +48,8 @@ class NotificationRecipientServiceTest {
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         pnEmdClient = mock(PnEmdClientImpl.class);
         pnNotificationCostServiceClient = mock(PnNotificationCostServiceClientImpl.class);
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient, pnNotificationCostServiceClient);
+        ReworkItemsService reworkItemsService = new ReworkItemsService(pnDeliveryPushClient, pnBffExceptionUtility);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient, pnNotificationCostServiceClient, reworkItemsService);
     }
 
     @Test

@@ -11,7 +11,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNo
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.*;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -36,6 +35,7 @@ public class NotificationsPAService {
     private final PnDeliveryClientPAImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final ReworkItemsService reworkItemsService;
 
     /**
      * Search the notifications sent by a Public Administration
@@ -114,33 +114,9 @@ public class NotificationsPAService {
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return notificationDetail.flatMap(notification ->
-                getReworkItems(notification, iun)
+                reworkItemsService.getReworkItems(notification)
                         .map(reworkItems -> NotificationSentDetailMapper.modelMapper
                                 .mapSentNotificationDetail(notification, reworkItems)));
-    }
-
-    /**
-     * Retrieves the rework items of the notification (used to resolve the correction type on the
-     * {@code NOTIFICATION_TIMELINE_REWORKED} markers). The rework API is invoked only when the
-     * notification timeline contains at least one {@code NOTIFICATION_TIMELINE_REWORKED} element,
-     * otherwise an empty list is returned without any extra call.
-     *
-     * @param notification the sent notification detail
-     * @param iun          the notification IUN
-     * @return the rework items (empty if there is no correction)
-     */
-    private Mono<List<ReworkItem>> getReworkItems(FullSentNotificationV29 notification, String iun) {
-        boolean hasRework = notification.getTimeline() != null && notification.getTimeline().stream()
-                .anyMatch(el -> el.getCategory() == it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model
-                        .TimelineElementCategoryV28.NOTIFICATION_TIMELINE_REWORKED);
-
-        if (!hasRework) {
-            return Mono.just(List.of());
-        }
-
-        return pnDeliveryPushClient.getRework(iun)
-                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .map(response -> response.getItems() == null ? List.<ReworkItem>of() : response.getItems());
     }
 
     /**

@@ -43,7 +43,8 @@ class NotificationPaServiceTest {
         pnDeliveryClientPA = mock(PnDeliveryClientPAImpl.class);
         pnDeliveryPushClient = mock(PnDeliveryPushClientImpl.class);
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
-        notificationsPAService = new NotificationsPAService(pnDeliveryClientPA, pnDeliveryPushClient, pnBffExceptionUtility);
+        ReworkItemsService reworkItemsService = new ReworkItemsService(pnDeliveryPushClient, pnBffExceptionUtility);
+        notificationsPAService = new NotificationsPAService(pnDeliveryClientPA, pnDeliveryPushClient, pnBffExceptionUtility, reworkItemsService);
     }
 
     @Test
