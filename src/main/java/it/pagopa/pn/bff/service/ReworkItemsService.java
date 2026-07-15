@@ -14,10 +14,10 @@ import java.util.List;
 
 /**
  * Shared helper to retrieve the rework items of a notification (used to resolve the correction type
- * on the {@code NOTIFICATION_TIMELINE_REWORKED} markers). It is used by both the recipient and the
- * sender flows: the notification and timeline models come from two different generated clients
- * ({@code delivery_recipient} / {@code delivery_b2b_pa}) and share no common supertype, hence the
- * two overloads.
+ * on the {@code NOTIFICATION_TIMELINE_REWORKED} reworkedTimelineElements). It is used by both the
+ * recipient and the sender flows: the notification and timeline models come from two different
+ * generated clients ({@code delivery_recipient} / {@code delivery_b2b_pa}) and share no common
+ * supertype, hence the two overloads.
  */
 @Component
 @RequiredArgsConstructor
@@ -55,13 +55,7 @@ public class ReworkItemsService {
     }
 
     /**
-     * Common part: the rework API is invoked only when the timeline contains at least one
-     * {@code NOTIFICATION_TIMELINE_REWORKED} element, otherwise an empty list is returned without any
-     * extra call.
-     *
-     * @param hasRework whether the notification timeline contains a rework marker
-     * @param iun       the notification IUN
-     * @return the rework items (empty if there is no correction)
+     * Common part: invokes the rework API only when {@code hasRework} is {@code true}.
      */
     private Mono<List<ReworkItem>> getReworkItems(boolean hasRework, String iun) {
         if (!hasRework) {

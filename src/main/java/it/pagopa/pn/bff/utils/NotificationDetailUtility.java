@@ -459,7 +459,7 @@ public class NotificationDetailUtility {
                 .toList();
 
         for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
-            // resolve and expose the correction type on the reworked marker element
+            // resolve and expose the correction type on the reworked timeline element
             timelineElement.setRequestType(resolveRequestType(timelineElement, reworkItems));
 
             BffNotificationStatusHistory reworkedStatusHistory = new BffNotificationStatusHistory();
@@ -471,36 +471,31 @@ public class NotificationDetailUtility {
     }
 
     /**
-     * Resolves the correction type ({@link BffReworkRequestType}) for a
-     * {@code NOTIFICATION_TIMELINE_REWORKED} marker element, correlating it with the rework items
-     * retrieved from pn-delivery-push.
-     * <p>
-     * The marker element does not expose the {@code reworkId} directly, but both the {@code reworkId}
-     * ({@code REWORK_<idx>.TRY_<tryIdx>}) and the marker {@code elementId}
-     * ({@code NOTIFICATION_TIMELINE_REWORKED.IUN_<iun>.RECINDEX_<r>.ATTEMPT_<a>.REWORK_<idx>}) share
-     * the {@code REWORK_<idx>} and {@code RECINDEX_<r>} segments. Once the rework items in
-     * {@code ERROR} status are discarded, the pair ({@code REWORK_<idx>}, {@code RECINDEX_<r>}) has a
-     * 1:1 correspondence with each marker (confirmed by backend), so the correlation matches on both.
+     * Resolves the correction type ({@link BffReworkRequestType}) for a reworked timeline element,
+     * correlating it with the rework items retrieved from pn-delivery-push by matching the
+     * {@code REWORK_<idx>} and {@code RECINDEX_<r>} segments shared by the reworkId
+     * ({@code REWORK_<idx>.TRY_<tryIdx>}) and the elementId
+     * ({@code NOTIFICATION_TIMELINE_REWORKED.IUN_<iun>.RECINDEX_<r>.ATTEMPT_<a>.REWORK_<idx>}).
+     * Rework items in {@code ERROR} status are discarded.
      *
-     * @param marker      the reworked marker timeline element
-     * @param reworkItems the rework items of the notification (may be null/empty)
+     * @param reworkedTimelineElement the reworked timeline element
+     * @param reworkItems             the rework items of the notification (may be null/empty)
      * @return the resolved correction type, or {@code null} if it cannot be determined
      */
-    private static BffReworkRequestType resolveRequestType(BffNotificationDetailTimeline marker, List<ReworkItem> reworkItems) {
-        if (reworkItems == null || reworkItems.isEmpty() || marker.getElementId() == null) {
+    private static BffReworkRequestType resolveRequestType(BffNotificationDetailTimeline reworkedTimelineElement, List<ReworkItem> reworkItems) {
+        if (reworkItems == null || reworkItems.isEmpty() || reworkedTimelineElement.getElementId() == null) {
             return null;
         }
 
         return reworkItems.stream()
-                // discard rework requests ended in ERROR: they don't produce a marker in timeline
+                // discard rework requests ended in ERROR: they don't produce a reworked element in timeline
                 .filter(item -> item.getStatus() != ReworkItem.StatusEnum.ERROR)
                 .filter(item -> item.getReworkId() != null && item.getRequestType() != null)
                 .filter(item -> {
-                    String reworkIdxSegment = item.getReworkId().split("\\.")[0]; // e.g. "REWORK_0"
-                    boolean reworkMatch = marker.getElementId().endsWith("." + reworkIdxSegment);
-                    // recIndex is e.g. "RECINDEX_0" and appears as a ".RECINDEX_0." segment in the elementId
+                    String reworkIdxSegment = item.getReworkId().split("\\.")[0];
+                    boolean reworkMatch = reworkedTimelineElement.getElementId().endsWith("." + reworkIdxSegment);
                     boolean recIndexMatch = item.getRecIndex() == null
-                            || marker.getElementId().contains("." + item.getRecIndex() + ".");
+                            || reworkedTimelineElement.getElementId().contains("." + item.getRecIndex() + ".");
                     return reworkMatch && recIndexMatch;
                 })
                 .map(item -> BffReworkRequestType.fromValue(item.getRequestType().getValue()))
