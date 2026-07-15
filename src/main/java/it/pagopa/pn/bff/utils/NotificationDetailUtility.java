@@ -493,9 +493,9 @@ public class NotificationDetailUtility {
                 .filter(item -> item.getReworkId() != null && item.getRequestType() != null)
                 .filter(item -> {
                     String reworkIdxSegment = item.getReworkId().split("\\.")[0];
-                    boolean reworkMatch = reworkedTimelineElement.getElementId().endsWith("." + reworkIdxSegment);
+                    boolean reworkMatch = reworkedTimelineElement.getElementId().endsWith(reworkIdxSegment);
                     boolean recIndexMatch = item.getRecIndex() == null
-                            || reworkedTimelineElement.getElementId().contains("." + item.getRecIndex() + ".");
+                            || reworkedTimelineElement.getElementId().contains(item.getRecIndex());
                     return reworkMatch && recIndexMatch;
                 })
                 .map(item -> BffReworkRequestType.fromValue(item.getRequestType().getValue()))
