@@ -310,7 +310,8 @@ class NotificationDetailUtilityReworkedTest {
     }
 
     @Test
-    void setReworkedStatusOnSteps_viewedStatusNotMarkedValid() {
+    void setReworkedStatusOnSteps_viewedStatusMarkedValid() {
+        // VIEWED must be duplicated/marked like any other status (no special skip)
         BffNotificationDetailTimeline reworkedStep = new BffNotificationDetailTimeline();
         reworkedStep.setElementId("baseId.REWORK_1");
         reworkedStep.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
@@ -343,7 +344,7 @@ class NotificationDetailUtilityReworkedTest {
 
         NotificationDetailUtility.setReworkedStatusOnSteps(notification);
 
-        assertNull(viewedHistory.getReworkedStatus());
+        assertEquals(BffNotificationReworkedStatus.VALID, viewedHistory.getReworkedStatus());
     }
 
     @Test
