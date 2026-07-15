@@ -234,7 +234,7 @@ class NotificationRecipientServiceTest {
         );
 
         BffFullNotificationV1 expected = NotificationReceivedDetailMapper.modelMapper
-                .mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
+                .mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null);
         BffNotificationCostDetails unavailableCost = new BffNotificationCostDetails();
         unavailableCost.setStatus(BffNotificationCostDetails.StatusEnum.UNAVAILABLE);
         expected.setNotificationCostDetails(unavailableCost);

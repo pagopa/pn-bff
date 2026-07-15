@@ -22,10 +22,10 @@ class NotificationSentDetailMapperTest {
     @Test
     void testMapNotificationNull() {
         FullSentNotificationV29 notification = new FullSentNotificationV29();
-        BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
+        BffFullNotificationV1 actualMapSentNotificationDetailResult = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, null);
         assertNotNull(actualMapSentNotificationDetailResult);
 
-        BffFullNotificationV1 mapSentNotificationNull = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(null);
+        BffFullNotificationV1 mapSentNotificationNull = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(null, null);
         assertNull(mapSentNotificationNull);
     }
 
@@ -34,7 +34,7 @@ class NotificationSentDetailMapperTest {
         FullSentNotificationV29 notification = new FullSentNotificationV29();
         notification.setSenderPaId("sent-id-123");
 
-        BffFullNotificationV1 result = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
+        BffFullNotificationV1 result = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, null);
 
         assertNotNull(result);
         assertNotNull(result.getSenderPaId());
@@ -52,7 +52,7 @@ class NotificationSentDetailMapperTest {
             mockUtil.when(() -> NotificationDetailUtility.timelineElementMustBeShown(any())).thenReturn(false);
 
             // Act
-            NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification);
+            NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, null);
 
             // Assert each method is called exactly once
             mockUtil.verify(() -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()), times(1));

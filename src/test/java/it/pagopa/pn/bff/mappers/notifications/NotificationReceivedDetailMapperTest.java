@@ -25,7 +25,7 @@ class NotificationReceivedDetailMapperTest {
 
     @Test
     void testMapNotificationNull() {
-        BffFullNotificationV1 mapNotificationNull = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(null);
+        BffFullNotificationV1 mapNotificationNull = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(null, null);
         assertNull(mapNotificationNull);
     }
 
@@ -34,7 +34,7 @@ class NotificationReceivedDetailMapperTest {
         FullReceivedNotificationV28 notification = new FullReceivedNotificationV28();
         notification.setIun("id-test-123");
 
-        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification, null);
 
         assertNotNull(result);
         assertNotNull(result.getIun());
@@ -44,7 +44,7 @@ class NotificationReceivedDetailMapperTest {
     void testFiledAtFromRequestAcceptedTimelineElement() {
         FullReceivedNotificationV28 notification = notificationDetailRecipientMock.getNotificationMultiRecipientMock();
 
-        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification, null);
 
         assertNotNull(result);
         assertEquals(OffsetDateTime.parse("2023-08-25T09:34:58.041398918Z"), result.getFiledAt());
@@ -57,7 +57,7 @@ class NotificationReceivedDetailMapperTest {
         notification.setTimeline(new ArrayList<>(List.of(new TimelineElementV28())));
         notification.setNotificationStatusHistory(new ArrayList<>());
 
-        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+        BffFullNotificationV1 result = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification, null);
 
         assertNotNull(result);
         assertNull(result.getFiledAt());
@@ -75,7 +75,7 @@ class NotificationReceivedDetailMapperTest {
             mockUtil.when(() -> NotificationDetailUtility.timelineElementMustBeShown(any())).thenReturn(false);
 
             // Act
-            NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification);
+            NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notification, null);
 
             // Assert each method is called exactly once
             mockUtil.verify(() -> NotificationDetailUtility.insertInvalidateElementsInTimeline(any()), times(1));

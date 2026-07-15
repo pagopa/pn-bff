@@ -34,16 +34,6 @@ public interface NotificationSentDetailMapper {
                                                     @Context List<ReworkItem> reworkItems);
 
     /**
-     * Convenience overload used when there is no correction to resolve.
-     *
-     * @param notification the FullSentNotificationV29 to map
-     * @return the mapped BffFullNotificationV1
-     */
-    default BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV29 notification) {
-        return mapSentNotificationDetail(notification, List.of());
-    }
-
-    /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
      */
     @AfterMapping

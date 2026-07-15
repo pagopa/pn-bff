@@ -38,16 +38,6 @@ public interface NotificationReceivedDetailMapper {
                                                         @Context List<ReworkItem> reworkItems);
 
     /**
-     * Convenience overload used when there is no correction to resolve.
-     *
-     * @param notification the FullReceivedNotificationV28 to map
-     * @return the mapped BffFullNotificationV1
-     */
-    default BffFullNotificationV1 mapReceivedNotificationDetail(FullReceivedNotificationV28 notification) {
-        return mapReceivedNotificationDetail(notification, List.of());
-    }
-
-    /**
      * Sets the filedAt field with the acceptance date of the notification, i.e. the timestamp of the
      * timeline element whose category is REQUEST_ACCEPTED. There is no dedicated field for it in the
      * upstream model, so it must be derived.

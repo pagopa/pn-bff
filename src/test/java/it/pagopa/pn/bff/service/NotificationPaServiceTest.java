@@ -140,7 +140,7 @@ class NotificationPaServiceTest {
         );
 
         StepVerifier.create(result)
-                .expectNext(NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock()))
+                .expectNext(NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock(), null))
                 .verifyComplete();
     }
 

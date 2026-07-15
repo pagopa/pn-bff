@@ -290,7 +290,7 @@ class ReceivedNotificationControllerTest {
 
     @Test
     void getReceivedNotification() {
-        BffFullNotificationV1 response = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
+        BffFullNotificationV1 response = NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null);
         Mockito.when(notificationsRecipientService.getNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),
