@@ -54,6 +54,6 @@ public class InformalNotificationDetailMock {
         return new InformalTimelineElementV1()
                 .elementId(category.getValue() + "-element")
                 .category(category)
-                .timestamp(timestamp);
+                .eventTimestamp(timestamp);
     }
 }

@@ -11,6 +11,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import java.util.Objects;
+
 /**
  * Mapstruct mapper interface, used to map the FullReceivedInformalNotificationV1
  * to the BffFullInformalNotificationV1
@@ -46,7 +48,8 @@ public interface InformalNotificationReceivedMapper {
                             @MappingTarget BffFullInformalNotificationV1 target) {
         source.getTimeline().stream()
                 .filter(el -> el.getCategory() == InformalTimelineElementCategoryV1.REQUEST_ACCEPTED)
-                .map(InformalTimelineElementV1::getTimestamp)
+                .map(InformalTimelineElementV1::getEventTimestamp)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .ifPresent(target::setFiledAt);
     }
