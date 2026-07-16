@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.Recipi
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.api.RecipientReadInformalNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.SenderContactInfo;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -51,7 +52,6 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString(),
                 Mockito.anyString()
@@ -67,7 +67,6 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE
@@ -86,7 +85,6 @@ class PnDeliveryClientRecipientImplTest {
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString(),
                 Mockito.anyString()
@@ -102,7 +100,6 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE
@@ -377,5 +374,28 @@ class PnDeliveryClientRecipientImplTest {
                 NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void getSenderContacts() {
+        SenderContactInfo senderContacts = new SenderContactInfo()
+                .senderId(NotificationsReceivedMock.SENDER_ID)
+                .email("sender@example.com");
+        when(recipientReadInformalNotificationApi.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .thenReturn(Mono.just(senderContacts));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .expectNext(senderContacts)
+                .verifyComplete();
+    }
+
+    @Test
+    void getSenderContactsError() {
+        when(recipientReadInformalNotificationApi.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientRecipientImpl.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .expectError(WebClientResponseException.class)
+                .verify();
     }
 }

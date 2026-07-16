@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedInformalNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.SenderContactInfo;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullInformalNotificationV1;
 import it.pagopa.pn.bff.mocks.InformalNotificationDetailMock;
 import org.junit.jupiter.api.Test;
@@ -60,14 +61,22 @@ class InformalNotificationReceivedMapperTest {
     }
 
     @Test
-    void testFiledAtNullWhenTimelineNull() {
-        FullReceivedInformalNotificationV1 notification = mock.getInformalNotificationMock();
-        notification.setTimeline(null);
+    void testMapSenderContacts() {
+        SenderContactInfo senderContacts = new SenderContactInfo()
+                .senderId(InformalNotificationDetailMock.SENDER_PA_ID)
+                .email("sender@example.com")
+                .pec("sender@pec.example.com")
+                .phone("+390212345678")
+                .site("https://example.com");
 
-        BffFullInformalNotificationV1 result =
-                InformalNotificationReceivedMapper.modelMapper.mapReceivedInformalNotificationDetail(notification);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.SenderContactInfo result =
+                InformalNotificationReceivedMapper.modelMapper.mapSenderContacts(senderContacts);
 
         assertNotNull(result);
-        assertNull(result.getFiledAt());
+        assertEquals(senderContacts.getSenderId(), result.getSenderId());
+        assertEquals(senderContacts.getEmail(), result.getEmail());
+        assertEquals(senderContacts.getPec(), result.getPec());
+        assertEquals(senderContacts.getPhone(), result.getPhone());
+        assertEquals(senderContacts.getSite(), result.getSite());
     }
 }

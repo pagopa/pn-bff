@@ -59,7 +59,19 @@ public class InformalNotificationRecipientService {
                 xPagopaPnSrcChDetails
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return informalNotification.map(InformalNotificationReceivedMapper.modelMapper::mapReceivedInformalNotificationDetail);
+        return informalNotification
+                .map(InformalNotificationReceivedMapper.modelMapper::mapReceivedInformalNotificationDetail)
+                .flatMap(notification -> Mono.defer(() -> pnDeliveryClient.getSenderContacts(notification.getSenderPaId()))
+                        .map(InformalNotificationReceivedMapper.modelMapper::mapSenderContacts)
+                        .map(senderContacts -> {
+                            notification.setSenderContacts(senderContacts);
+                            return notification;
+                        })
+                        .switchIfEmpty(Mono.just(notification))
+                        .onErrorResume(error -> {
+                            log.warn("Unable to retrieve sender contacts for sender id: {}", notification.getSenderPaId(), error);
+                            return Mono.just(notification);
+                        }));
     }
 
     /**

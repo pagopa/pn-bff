@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mappers.notifications;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementCategoryV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.SenderContactInfo;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullInformalNotificationV1;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -25,8 +26,12 @@ public interface InformalNotificationReceivedMapper {
      * @param notification the FullReceivedInformalNotificationV1 to map
      * @return the mapped BffFullInformalNotificationV1
      */
-    @Mapping(target = "filedAt", ignore = true) // valued in setFiledAt (@AfterMapping)
+    @Mapping(target = "filedAt", ignore = true)
+    @Mapping(target = "senderContacts", ignore = true)
     BffFullInformalNotificationV1 mapReceivedInformalNotificationDetail(FullReceivedInformalNotificationV1 notification);
+
+    it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.SenderContactInfo mapSenderContacts(
+            SenderContactInfo senderContacts);
 
     /**
      * Sets the filedAt field with the acceptance date of the notification, i.e. the timestamp of the
@@ -39,9 +44,6 @@ public interface InformalNotificationReceivedMapper {
     @AfterMapping
     default void setFiledAt(FullReceivedInformalNotificationV1 source,
                             @MappingTarget BffFullInformalNotificationV1 target) {
-        if (source.getTimeline() == null) {
-            return;
-        }
         source.getTimeline().stream()
                 .filter(el -> el.getCategory() == InformalTimelineElementCategoryV1.REQUEST_ACCEPTED)
                 .map(InformalTimelineElementV1::getTimestamp)

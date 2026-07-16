@@ -39,7 +39,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
      * @param xPagopaPnCxGroups Receiver Group id List
      * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
      * @param senderId          Sender id
-     * @param subjectRegExp     Subject regular expression
      * @param iunMatch          IUN match
      * @param size              Page size
      * @param nextPagesKey      Next page key
@@ -56,7 +55,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                                                                                             List<String> xPagopaPnCxGroups,
                                                                                             String mandateId,
                                                                                             String senderId,
-                                                                                            String subjectRegExp,
                                                                                             String iunMatch,
                                                                                             Integer size,
                                                                                             String nextPagesKey,
@@ -73,7 +71,6 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
                 senderId,
                 startDate,
                 endDate,
-                subjectRegExp,
                 size,
                 nextPagesKey,
                 communicationType

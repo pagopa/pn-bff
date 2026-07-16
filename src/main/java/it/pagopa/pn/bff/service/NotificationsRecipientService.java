@@ -55,7 +55,6 @@ public class NotificationsRecipientService {
      * @param senderId          Sender id
      * @param startDate         Start date
      * @param endDate           End date
-     * @param subjectRegExp     Regular expression for the subject
      * @param size              Number of notifications to retrieve
      * @param nextPagesKey      Key to retrieve the next page
      * @param communicationType The type of the communication (LEGAL, INFORMAL, ALL)
@@ -70,7 +69,6 @@ public class NotificationsRecipientService {
                                                                           String senderId,
                                                                           OffsetDateTime startDate,
                                                                           OffsetDateTime endDate,
-                                                                          String subjectRegExp,
                                                                           Integer size,
                                                                           String nextPagesKey,
                                                                           String communicationType) {
@@ -87,7 +85,6 @@ public class NotificationsRecipientService {
                 senderId,
                 startDate,
                 endDate,
-                subjectRegExp,
                 size,
                 nextPagesKey,
                 communicationType

@@ -24,7 +24,6 @@ public class PnDeliveryClientRecipientImpl {
     public Mono<FullNotificationSearchResponse> searchReceivedNotifications(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
                                                                             String xPagopaPnCxId, String iunMatch, List<String> xPagopaPnCxGroups,
                                                                             String mandateId, String senderId, OffsetDateTime startDate, OffsetDateTime endDate,
-                                                                            String subjectRegExp,
                                                                             int size, String nextPagesKey, String communicationType) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchReceivedNotification");
 
@@ -37,7 +36,6 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnCxGroups,
                 mandateId,
                 senderId,
-                subjectRegExp,
                 iunMatch,
                 size,
                 nextPagesKey,
@@ -208,6 +206,14 @@ public class PnDeliveryClientRecipientImpl {
                 xPagopaPnCxGroups,
                 xPagopaPnSrcChDetails,
                 attachmentIdx
+        );
+    }
+
+    public Mono<SenderContactInfo> getSenderContacts(String senderId) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSenderContacts");
+
+        return recipientReadInformalNotificationApi.getSenderContacts(
+                senderId
         );
     }
 }
