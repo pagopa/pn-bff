@@ -52,7 +52,6 @@ class PnDeliveryClientPAImplTest {
                 Mockito.anyString(),
                 Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationsSentMock.getNotificationSentPNMock()));
@@ -66,7 +65,6 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
                 NotificationStatusV26.ACCEPTED,
-                NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
                 NotificationsSentMock.NEXT_PAGES_KEY
@@ -85,7 +83,6 @@ class PnDeliveryClientPAImplTest {
                 Mockito.anyString(),
                 Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
@@ -99,7 +96,6 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_GROUPS,
                 NotificationsSentMock.RECIPIENT_ID,
                 NotificationStatusV26.ACCEPTED,
-                NotificationsSentMock.SUBJECT_REG_EXP,
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SIZE,
                 NotificationsSentMock.NEXT_PAGES_KEY

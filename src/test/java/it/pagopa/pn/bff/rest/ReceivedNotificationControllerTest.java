@@ -57,7 +57,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.any(OffsetDateTime.class),
-                        Mockito.anyString(),
                         Mockito.anyInt(),
                         Mockito.anyString(),
                         Mockito.anyString()
@@ -99,7 +98,6 @@ class ReceivedNotificationControllerTest {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE
@@ -118,7 +116,6 @@ class ReceivedNotificationControllerTest {
                         Mockito.anyString(),
                         Mockito.any(OffsetDateTime.class),
                         Mockito.any(OffsetDateTime.class),
-                        Mockito.anyString(),
                         Mockito.anyInt(),
                         Mockito.anyString(),
                         Mockito.anyString()
@@ -158,7 +155,6 @@ class ReceivedNotificationControllerTest {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE

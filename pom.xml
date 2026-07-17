@@ -750,7 +750,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/api-internal-web-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/884ef1962869dd5c930647e0cb1f68eba392bd8e/docs/openapi/api-internal-web-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -787,7 +787,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/api-internal-b2b-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/884ef1962869dd5c930647e0cb1f68eba392bd8e/docs/openapi/api-internal-b2b-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -824,7 +824,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/dddd0cbea9ad342537040a5f38faac3b8391ee0a/docs/openapi/api-internal-web-pa.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/884ef1962869dd5c930647e0cb1f68eba392bd8e/docs/openapi/api-internal-web-pa.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
@@ -1346,7 +1346,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery/19b51414cb672aacd10cf3cea37c27df4df99117/docs/openapi/api-internal-web-informal-recipient.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/884ef1962869dd5c930647e0cb1f68eba392bd8e/docs/openapi/api-internal-web-informal-recipient.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>

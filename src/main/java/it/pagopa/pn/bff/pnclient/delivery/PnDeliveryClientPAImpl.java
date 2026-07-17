@@ -28,7 +28,7 @@ public class PnDeliveryClientPAImpl {
     public Mono<LegalNotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                          String xPagopaPnCxId, OffsetDateTime startDate,
                                                                          OffsetDateTime endDate, List<String> xPagopaPnCxGroups,
-                                                                         String recipientId, NotificationStatusV26 status, String subjectRegExp,
+                                                                         String recipientId, NotificationStatusV26 status,
                                                                          String iunMatch, Integer size, String nextPagesKey) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchSentNotification");
 
@@ -41,7 +41,6 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxGroups,
                 recipientId,
                 status,
-                subjectRegExp,
                 iunMatch,
                 size,
                 nextPagesKey
