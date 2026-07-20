@@ -23,6 +23,7 @@ public class PnBffConfigs {
     private String userAttributesBaseUrl;
     private String downtimeLogsBaseUrl;
     private String authFleetBaseUrl;
+    private String deliveryPushBaseUrl;
     private String mandateBaseUrl;
     private String selfcareBaseUrl;
     private String selfcareSendProdId;
