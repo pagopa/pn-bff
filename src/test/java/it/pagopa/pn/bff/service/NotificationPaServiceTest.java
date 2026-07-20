@@ -59,7 +59,6 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.just(notificationsSentMock.getNotificationSentPNMock()));
@@ -72,7 +71,6 @@ class NotificationPaServiceTest {
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
-                NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 NotificationsSentMock.SIZE,
@@ -96,7 +94,6 @@ class NotificationPaServiceTest {
                 Mockito.anyString(),
                 Mockito.any(NotificationStatusV26.class),
                 Mockito.anyString(),
-                Mockito.anyString(),
                 Mockito.anyInt(),
                 Mockito.anyString()
         )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
@@ -109,7 +106,6 @@ class NotificationPaServiceTest {
                 NotificationsSentMock.IUN_MATCH,
                 NotificationsSentMock.SENDER_ID,
                 it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.NotificationStatusV26.ACCEPTED,
-                NotificationsSentMock.SUBJECT_REG_EXP,
                 OffsetDateTime.parse(NotificationsSentMock.START_DATE),
                 OffsetDateTime.parse(NotificationsSentMock.END_DATE),
                 NotificationsSentMock.SIZE,

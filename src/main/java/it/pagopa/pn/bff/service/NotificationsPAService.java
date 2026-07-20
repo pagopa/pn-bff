@@ -47,7 +47,6 @@ public class NotificationsPAService {
      * @param iun               Notification IUN
      * @param senderId          Sender Identifier
      * @param status            Notification Status
-     * @param subjectRegExp     Regular Expression for the subject
      * @param startDate         Start Date
      * @param endDate           End Date
      * @param size              Page number
@@ -61,7 +60,6 @@ public class NotificationsPAService {
                                                                        String iun,
                                                                        String senderId,
                                                                        NotificationStatusV26 status,
-                                                                       String subjectRegExp,
                                                                        OffsetDateTime startDate,
                                                                        OffsetDateTime endDate,
                                                                        Integer size,
@@ -78,7 +76,6 @@ public class NotificationsPAService {
                 xPagopaPnCxGroups,
                 senderId,
                 NotificationStatusMapper.notificationStatusMapper.convertDeliveryWebPANotificationStatus(status),
-                subjectRegExp,
                 iun,
                 size,
                 nextPagesKey

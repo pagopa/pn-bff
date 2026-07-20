@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: hhJE7d7fOgJlAzplTOYmexRlpUy8UhHMMmv1iC2vV90=
+  version: yaS/01e3u26ukR1CsEBB/9IDtl0SiFy5jEUIS6nvO2E=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -25,7 +25,6 @@ paths:
         - $ref: '#/components/parameters/notificationSearchEndDate'
         - $ref: '#/components/parameters/notificationSearchRecipientId'
         - $ref: '#/components/parameters/BffNotificationSearchStatus'
-        - $ref: '#/components/parameters/notificationSearchSubject'
         - $ref: '#/components/parameters/notificationSearchIun'
         - $ref: '#/components/parameters/notificationSearchPageSize'
         - $ref: '#/components/parameters/notificationSearchNextPagesKey'
@@ -517,7 +516,6 @@ paths:
         - $ref: '#/components/parameters/notificationSearchEndDate'
         - $ref: '#/components/parameters/notificationSearchMandateId'
         - $ref: '#/components/parameters/notificationSearchSenderId'
-        - $ref: '#/components/parameters/notificationSearchSubject'
         - $ref: '#/components/parameters/BffSearchUnifiedIun'
         - $ref: '#/components/parameters/notificationSearchPageSize'
         - $ref: '#/components/parameters/notificationSearchNextPagesKey'
@@ -4085,15 +4083,6 @@ components:
       description: stato della notifica
       schema:
         $ref: '#/components/schemas/NotificationStatusV26'
-    notificationSearchSubject:
-      name: subjectRegExp
-      description: >-
-        Regular expression usata, se presente, per filtrare i risultati in base
-        al subject  delle notifiche.
-      in: query
-      required: false
-      schema:
-        type: string
     notificationSearchIun:
       name: iunMatch
       description: >-
@@ -4956,6 +4945,16 @@ components:
       minLength: 25
       maxLength: 25
       pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[0-9]{1}$
+    taxonomyCode:
+      type: string
+      minLength: 7
+      maxLength: 7
+      pattern: ^([0-9]{6}[A-Z]{1})$
+      description: >-
+        Codice tassonomico della notifica basato sulla definizione presente
+        nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
+        PIATTAFORMA NOTIFICHE
+        DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
     PaFeeV23:
       type: number
       description: >-
@@ -5047,7 +5046,12 @@ components:
         senderDenomination:
           $ref: '#/components/schemas/Denomination'
         senderTaxId:
-          $ref: '#/components/schemas/paTaxId'
+          description: Sender PA fiscal code
+          example: '77777777777'
+          type: string
+          maxLength: 11
+          minLength: 11
+          pattern: ^\d+$
         group:
           type: string
           description: Gruppo di utenti dell'ente mittente che può visualizzare la notifica
@@ -5065,15 +5069,7 @@ components:
             Data di scadenza del pagamento nel formato YYYY-MM-DD riferito
             all'Italia
         taxonomyCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: ^([0-9]{6}[A-Z]{1})$
-          description: >-
-            Codice tassonomico della notifica basato sulla definizione presente
-            nell'allegato 2 capitolo C del bando [__AVVISO PUBBLICO MISURA 1.4.5
-            PIATTAFORMA NOTIFICHE
-            DIGITALI__](https://pnrrcomuni.fondazioneifel.it/bandi_public/Bando/325)
+          $ref: '#/components/schemas/taxonomyCode'
         paFee:
           $ref: '#/components/schemas/PaFeeV23'
         vat:
@@ -6948,10 +6944,10 @@ components:
         - UNREACHABLE
         - CANCELLED
         - RETURNED_TO_SENDER
-        - READY_TO_SEND
         - PROCESSING
-        - SUCCESSFUL_SENDING
-        - UNSUCCESSFUL_SENDING
+        - COMPLETED_REACHED
+        - COMPLETED_UNREACHED
+        - UNDELIVERABLE
     CommunicationOutcomes:
       type: object
       description: >-
@@ -8602,6 +8598,33 @@ components:
         - UNDELIVERABLE
         - REFUSED
         - ACCEPTED
+    SenderContactInfo:
+      description: >-
+        Le informazioni riguardanti i contatti dell'ente mittente della notifica
+        bonaria.
+      type: object
+      required:
+        - senderId
+        - pec
+        - email
+        - phone
+        - site
+      properties:
+        senderId:
+          type: string
+          description: Identificativo del mittente della notifica bonaria
+        email:
+          type: string
+          description: Email del mittente della notifica bonaria
+        pec:
+          type: string
+          description: PEC del mittente della notifica bonaria
+        phone:
+          type: string
+          description: Telefono del mittente della notifica bonaria
+        site:
+          type: string
+          description: Sito web del mittente della notifica bonaria
     BffFullInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del destinatario.
       type: object
@@ -8656,6 +8679,8 @@ components:
           type: string
           format: date-time
           description: Data di accettazione della notifica/comunicazione
+        senderContacts:
+          $ref: '#/components/schemas/SenderContactInfo'
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

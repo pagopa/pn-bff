@@ -36,7 +36,6 @@ public class SentNotificationController implements NotificationSentApi {
      * @param xPagopaPnCxGroups Public Administration Group id List
      * @param recipientId       Recipient id
      * @param status            Notification status
-     * @param subjectRegExp     Regular expression for the subject
      * @param iunMatch          IUN match
      * @param size              Page size
      * @param nextPagesKey      Next page key
@@ -52,7 +51,6 @@ public class SentNotificationController implements NotificationSentApi {
                                                                                          List<String> xPagopaPnCxGroups,
                                                                                          String recipientId,
                                                                                          NotificationStatusV26 status,
-                                                                                         String subjectRegExp,
                                                                                          String iunMatch,
                                                                                          Integer size,
                                                                                          String nextPagesKey,
@@ -60,7 +58,7 @@ public class SentNotificationController implements NotificationSentApi {
 
         Mono<BffLegalNotificationsResponse> serviceResponse = notificationsPAService.searchSentNotifications(
                 xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnCxGroups, iunMatch, recipientId, status,
-                subjectRegExp, startDate, endDate, size, nextPagesKey
+                startDate, endDate, size, nextPagesKey
         );
 
         return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));

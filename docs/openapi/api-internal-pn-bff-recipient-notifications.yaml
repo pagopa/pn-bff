@@ -45,7 +45,6 @@ paths:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchMandateId'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSenderId'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchSubject'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchUnifiedIun'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchPageSize'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchNextPagesKey'

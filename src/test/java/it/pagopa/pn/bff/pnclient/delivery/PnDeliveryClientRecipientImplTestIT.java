@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationStatusV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.SenderContactInfo;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -45,6 +46,7 @@ class PnDeliveryClientRecipientImplTestIT {
     private final String notificationQrCodePath = "/delivery/notifications/received/check-aar-qr-code";
     private final String documentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/documents/" + docIdx;
     private final String paymentDownloadPath = "/delivery/notifications/received/" + iun + "/attachments/payment/" + attachmentName;
+    private final String senderContactsPath = "/delivery/v1/sender/contacts";
     private final NotificationsReceivedMock notificationsReceivedMock = new NotificationsReceivedMock();
     private final NotificationDetailRecipientMock notificationDetailRecipientMock = new NotificationDetailRecipientMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
@@ -90,7 +92,6 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE
@@ -112,7 +113,6 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationsReceivedMock.SENDER_ID,
                 OffsetDateTime.parse(NotificationsReceivedMock.START_DATE),
                 OffsetDateTime.parse(NotificationsReceivedMock.END_DATE),
-                NotificationsReceivedMock.SUBJECT_REG_EXP,
                 NotificationsReceivedMock.SIZE,
                 NotificationsReceivedMock.NEXT_PAGES_KEY,
                 NotificationsReceivedMock.COMMUNICATION_TYPE
@@ -323,5 +323,42 @@ class PnDeliveryClientRecipientImplTestIT {
                 NotificationAarQrCodeMapper.modelMapper.toRequestCheckAarMandateDto(notificationsReceivedMock.getRequestCheckAarMandateDtoPNMock()),
                 UserMock.PN_CX_GROUPS
         )).expectError().verify();
+    }
+
+    @Test
+    void getSenderContacts() throws JsonProcessingException {
+        SenderContactInfo senderContacts = new SenderContactInfo()
+                .senderId(NotificationsReceivedMock.SENDER_ID)
+                .email("sender@example.com")
+                .pec("sender@pec.example.com")
+                .phone("+390212345678")
+                .site("https://example.com");
+        String responseBody = objectMapper.writeValueAsString(senderContacts);
+        mockServerClient.when(request()
+                        .withMethod("GET")
+                        .withPath(senderContactsPath)
+                        .withQueryStringParameter("senderId", NotificationsReceivedMock.SENDER_ID))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(responseBody)
+                );
+
+        StepVerifier.create(pnDeliveryClient.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .expectNext(senderContacts)
+                .verifyComplete();
+    }
+
+    @Test
+    void getSenderContactsError() {
+        mockServerClient.when(request()
+                        .withMethod("GET")
+                        .withPath(senderContactsPath)
+                        .withQueryStringParameter("senderId", NotificationsReceivedMock.SENDER_ID))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.getSenderContacts(NotificationsReceivedMock.SENDER_ID))
+                .expectError(WebClientResponseException.NotFound.class)
+                .verify();
     }
 }
