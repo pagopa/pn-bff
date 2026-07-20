@@ -149,7 +149,7 @@ class SentNotificationControllerTest {
 
     @Test
     void getSentNotification() {
-        BffFullNotificationV1 response = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock());
+        BffFullNotificationV1 response = NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDetailPaMock.getNotificationMultiRecipientMock(), null);
         Mockito.when(notificationsPAService.getSentNotificationDetail(
                         Mockito.anyString(),
                         Mockito.any(CxTypeAuthFleet.class),

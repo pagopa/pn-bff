@@ -570,7 +570,7 @@ public class NotificationDetailPaMock {
     public BffFullNotificationV1 notificationToFERADD() {
         FullSentNotificationV29 notificationDTORadd = getNotificationMultiRecipientMock();
         notificationDTORadd.setTimeline(getTimelineRADDMock());
-        return NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd);
+        return NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notificationDTORadd, null);
     }
 
     public TimelineElementV28 getTimelineElem(TimelineElementCategoryV28 category, TimelineElementDetailsV28 details) {

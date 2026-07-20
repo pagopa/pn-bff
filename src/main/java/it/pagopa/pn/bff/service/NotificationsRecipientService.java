@@ -42,6 +42,7 @@ public class NotificationsRecipientService {
     private final PnBffExceptionUtility pnBffExceptionUtility;
     private final PnEmdClientImpl pnEmdClient;
     private final PnNotificationCostServiceClientImpl pnNotificationCostServiceClient;
+    private final ReworkItemsService reworkItemsService;
 
     /**
      * Search received notifications for a recipient user.
@@ -170,7 +171,9 @@ public class NotificationsRecipientService {
                         xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
                 )
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .map(NotificationReceivedDetailMapper.modelMapper::mapReceivedNotificationDetail)
+                .flatMap(notification -> reworkItemsService.getReworkItems(notification)
+                        .map(reworkItems -> NotificationReceivedDetailMapper.modelMapper
+                                .mapReceivedNotificationDetail(notification, reworkItems)))
                 .flatMap(notification -> enrichWithCostDetails(notification, iun));
     }
 

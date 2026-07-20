@@ -35,6 +35,7 @@ public class NotificationsPAService {
     private final PnDeliveryClientPAImpl pnDeliveryClient;
     private final PnDeliveryPushClientImpl pnDeliveryPushClient;
     private final PnBffExceptionUtility pnBffExceptionUtility;
+    private final ReworkItemsService reworkItemsService;
 
     /**
      * Search the notifications sent by a Public Administration
@@ -109,7 +110,10 @@ public class NotificationsPAService {
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return notificationDetail.map(NotificationSentDetailMapper.modelMapper::mapSentNotificationDetail);
+        return notificationDetail.flatMap(notification ->
+                reworkItemsService.getReworkItems(notification)
+                        .map(reworkItems -> NotificationSentDetailMapper.modelMapper
+                                .mapSentNotificationDetail(notification, reworkItems)));
     }
 
     /**

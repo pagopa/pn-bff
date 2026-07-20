@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.utils;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
@@ -452,12 +453,15 @@ public class NotificationDetailUtility {
         }
     }
 
-    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1) {
+    public static void insertReworkedStatus(BffFullNotificationV1 bffFullNotificationV1, List<ReworkItem> reworkItems) {
         List<BffNotificationDetailTimeline> reworkedTimelineElements = bffFullNotificationV1.getTimeline().stream()
                 .filter(el -> el.getCategory() == BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED)
                 .toList();
 
         for (BffNotificationDetailTimeline timelineElement : reworkedTimelineElements) {
+            // resolve and expose the correction type on the reworked timeline element
+            timelineElement.setRequestType(resolveRequestType(timelineElement, reworkItems));
+
             BffNotificationStatusHistory reworkedStatusHistory = new BffNotificationStatusHistory();
             reworkedStatusHistory.setStatus(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED);
             reworkedStatusHistory.setActiveFrom(timelineElement.getTimestamp());
@@ -467,14 +471,52 @@ public class NotificationDetailUtility {
     }
 
     /**
+     * Resolves the correction type ({@link BffReworkRequestType}) for a reworked timeline element,
+     * correlating it with the rework items retrieved from pn-delivery-push by matching the
+     * {@code REWORK_<idx>} and {@code RECINDEX_<r>} segments shared by the reworkId
+     * ({@code REWORK_<idx>.TRY_<tryIdx>}) and the elementId
+     * ({@code NOTIFICATION_TIMELINE_REWORKED.IUN_<iun>.RECINDEX_<r>.ATTEMPT_<a>.REWORK_<idx>}).
+     * Rework items in {@code ERROR} status are discarded.
+     *
+     * @param reworkedTimelineElement the reworked timeline element
+     * @param reworkItems             the rework items of the notification (may be null/empty)
+     * @return the resolved correction type, or {@code null} if it cannot be determined
+     */
+    private static BffReworkRequestType resolveRequestType(BffNotificationDetailTimeline reworkedTimelineElement, List<ReworkItem> reworkItems) {
+        if (reworkItems == null || reworkItems.isEmpty() || reworkedTimelineElement.getElementId() == null) {
+            return null;
+        }
+
+        return reworkItems.stream()
+                // discard rework requests ended in ERROR: they don't produce a reworked element in timeline
+                .filter(item -> item.getStatus() != ReworkItem.StatusEnum.ERROR)
+                .filter(item -> item.getReworkId() != null && item.getRequestType() != null)
+                .filter(item -> {
+                    String reworkIdxSegment = item.getReworkId().split("\\.")[0];
+                    boolean reworkMatch = reworkedTimelineElement.getElementId().endsWith("." + reworkIdxSegment);
+                    boolean recIndexMatch = item.getRecIndex() == null
+                            || reworkedTimelineElement.getElementId().contains("." + item.getRecIndex() + ".");
+                    return reworkMatch && recIndexMatch;
+                })
+                .map(item -> BffReworkRequestType.fromValue(item.getRequestType().getValue()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Processes {@code NOTIFICATION_TIMELINE_REWORKED} events and updates the notification status
      * history to reflect invalidated statuses and steps.
      * <p>
-     * For each invalidated status (skipping {@code DELIVERING}), moves the related steps from their
-     * original status history into a new entry marked {@code NOT_VALID}. Steps correcting an
-     * invalidated element (or of category {@code SEND_ANALOG_PROGRESS}) are marked {@code VALID},
-     * and their parent status history is marked {@code VALID} as well (unless {@code VIEWED} or
-     * {@code DELIVERING}). The new invalidated entries are appended to the status history list.
+     * For each invalidated status (skipping {@code ACCEPTED} and {@code DELIVERING}), moves the
+     * related steps from their original status history into a new entry marked {@code NOT_VALID}.
+     * Steps correcting an invalidated element (or of category {@code SEND_ANALOG_PROGRESS}) are
+     * marked {@code VALID}, and their parent status history is marked {@code VALID} as well (unless
+     * {@code ACCEPTED} or {@code DELIVERING}). The new invalidated entries are appended to the status
+     * history list.
+     * <p>
+     * Punctual corrections ({@code INVALIDATE_ELEMENTS}, resolved onto the marker by
+     * {@link #insertReworkedStatus}) are an exception: their invalidated events are still marked
+     * {@code NOT_VALID}, but no synthetic {@code NOT_VALID} status is created and no status is marked.
      *
      * @param bffFullNotificationV1 the notification to update in place
      */
@@ -496,17 +538,22 @@ public class NotificationDetailUtility {
         boolean firstRefinementNotInvalidated = false;
 
         /* FIRST STEP
-         * create new status history entries for each invalidated statuses in REWORKED events (except DELIVERING and VIEWED), moving the related steps from the original status history to the new one
+         * create new status history entries for each invalidated statuses in REWORKED events (except ACCEPTED and DELIVERING), moving the related steps from the original status history to the new one
          */
         List<BffNotificationStatusHistory> newNotValidStatusHistories = new ArrayList<>();
 
         for (BffNotificationDetailTimeline reworkedEvent : reworkedEvents) {
+            // Punctual correction (INVALIDATE_ELEMENTS): only the events are marked NOT_VALID (SECOND STEP),
+            // no synthetic NOT_VALID status is created and no status is marked. Skip the FIRST STEP for it.
+            if (reworkedEvent.getRequestType() == BffReworkRequestType.INVALIDATE_ELEMENTS) {
+                continue;
+            }
+
             for (NotificationStatusHistoryInvalidatedElement invalidatedStatus : reworkedEvent.getDetails().getInvalidatedTimelineAndStatusHistory()) {
 
-                // skip ACCEPTED (PN-20141), DELIVERING and VIEWED status - keep everything together
+                // skip ACCEPTED (PN-20141) and DELIVERING status - keep everything together
                 if (invalidatedStatus.getStatus() == NotificationStatusV26.ACCEPTED ||
-                        invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING ||
-                        invalidatedStatus.getStatus() == NotificationStatusV26.VIEWED) {
+                        invalidatedStatus.getStatus() == NotificationStatusV26.DELIVERING) {
                     continue;
                 }
 
@@ -574,7 +621,7 @@ public class NotificationDetailUtility {
         bffFullNotificationV1.getNotificationStatusHistory().addAll(newNotValidStatusHistories);
 
         /* SECOND STEP
-         * mark the steps that correct an invalidated element as VALID, and the ones that are invalidated as NOT_VALID. Then, mark the parent status history as VALID as well (except for VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
+         * mark the steps that correct an invalidated element as VALID, and the ones that are invalidated as NOT_VALID. Then, mark the parent status history as VALID as well (except for ACCEPTED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
          */
 
         // mark all statusHistory steps (including new invalidated ones) with reworkedStatus
@@ -604,10 +651,9 @@ public class NotificationDetailUtility {
                 }
             }
 
-            // if statusHistory contains reworked steps, mark it as VALID (except for ACCEPTED, VIEWED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
+            // if statusHistory contains reworked steps, mark it as VALID (except for ACCEPTED, DELIVERING and EFFECTIVE_DATE when duplication must be avoided)
             if (hasReworkedSteps &&
                     statusHistory.getStatus() != BffNotificationStatus.ACCEPTED &&
-                    statusHistory.getStatus() != BffNotificationStatus.VIEWED &&
                     statusHistory.getStatus() != BffNotificationStatus.DELIVERING &&
                     !(statusHistory.getStatus() == BffNotificationStatus.EFFECTIVE_DATE && firstRefinementNotInvalidated)) {
                 statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);

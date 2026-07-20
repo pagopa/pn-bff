@@ -48,7 +48,8 @@ class NotificationRecipientServiceTest {
         pnBffExceptionUtility = new PnBffExceptionUtility(new ObjectMapper());
         pnEmdClient = mock(PnEmdClientImpl.class);
         pnNotificationCostServiceClient = mock(PnNotificationCostServiceClientImpl.class);
-        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient, pnNotificationCostServiceClient);
+        ReworkItemsService reworkItemsService = new ReworkItemsService(pnDeliveryPushClient, pnBffExceptionUtility);
+        notificationsRecipientService = new NotificationsRecipientService(pnDeliveryClientRecipient, pnDeliveryPushClient, pnBffExceptionUtility, pnEmdClient, pnNotificationCostServiceClient, reworkItemsService);
     }
 
     @Test
@@ -230,7 +231,7 @@ class NotificationRecipientServiceTest {
         );
 
         BffFullNotificationV1 expected = NotificationReceivedDetailMapper.modelMapper
-                .mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock());
+                .mapReceivedNotificationDetail(notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null);
         BffNotificationCostDetails unavailableCost = new BffNotificationCostDetails();
         unavailableCost.setStatus(BffNotificationCostDetails.StatusEnum.UNAVAILABLE);
         expected.setNotificationCostDetails(unavailableCost);
@@ -238,6 +239,9 @@ class NotificationRecipientServiceTest {
         StepVerifier.create(result)
                 .expectNext(expected)
                 .verifyComplete();
+
+        // no NOTIFICATION_TIMELINE_REWORKED in the timeline: the rework API must not be invoked
+        Mockito.verify(pnDeliveryPushClient, Mockito.never()).getRework(Mockito.anyString());
     }
 
     @Test

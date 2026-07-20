@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Xx21vfH4JC3mEVzH9eBhaCIxwMxtH6Qd2tTQSzKTRXQ=
+  version: yaS/01e3u26ukR1CsEBB/9IDtl0SiFy5jEUIS6nvO2E=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6603,6 +6603,15 @@ components:
       enum:
         - VALID
         - NOT_VALID
+    BffReworkRequestType:
+      description: >-
+        Type of the timeline correction (rework). Present only on the
+        NOTIFICATION_TIMELINE_REWORKED timeline element.
+      type: string
+      enum:
+        - REWORK
+        - RESTART
+        - INVALIDATE_ELEMENTS
     BffNotificationDetailTimeline:
       type: object
       required:
@@ -6631,6 +6640,8 @@ components:
           type: number
         reworkedStatus:
           $ref: '#/components/schemas/BffNotificationReworkedStatus'
+        requestType:
+          $ref: '#/components/schemas/BffReworkRequestType'
     BffNotificationDeliveryMode:
       type: string
       enum:

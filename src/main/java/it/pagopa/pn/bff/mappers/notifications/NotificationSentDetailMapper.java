@@ -1,13 +1,17 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.FullSentNotificationV29;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimeline;
 import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * Mapstruct mapper interface, used to map the FullSentNotificationV29
@@ -23,9 +27,11 @@ public interface NotificationSentDetailMapper {
      * Maps a FullSentNotificationV29 to a BffFullNotificationV1
      *
      * @param notification the FullSentNotificationV29 to map
+     * @param reworkItems  the rework items retrieved from pn-delivery-push (for correction type resolution)
      * @return the mapped BffFullNotificationV1
      */
-    BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV29 notification);
+    BffFullNotificationV1 mapSentNotificationDetail(FullSentNotificationV29 notification,
+                                                    @Context List<ReworkItem> reworkItems);
 
     /**
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertInvalidateElementsInTimeline(BffFullNotificationV1)
@@ -39,8 +45,9 @@ public interface NotificationSentDetailMapper {
      * @see it.pagopa.pn.bff.utils.NotificationDetailUtility#insertReworkedStatus(BffFullNotificationV1)
      */
     @AfterMapping
-    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
-        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+    default void insertReworkedStatus(@MappingTarget BffFullNotificationV1 bffFullNotificationV1,
+                                      @Context List<ReworkItem> reworkItems) {
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1, reworkItems);
     }
 
     /**

@@ -130,6 +130,16 @@ components:
         - VALID
         - NOT_VALID
 
+    BffReworkRequestType:
+      description: >-
+        Type of the timeline correction (rework). Present only on the
+        NOTIFICATION_TIMELINE_REWORKED timeline element.
+      type: string
+      enum:
+        - REWORK
+        - RESTART
+        - INVALIDATE_ELEMENTS
+
     BffNotificationDeliveryMode:
       type: string
       enum:
@@ -228,6 +238,8 @@ components:
           type: integer
         reworkedStatus:
           $ref: '#/components/schemas/BffNotificationReworkedStatus'
+        requestType:
+          $ref: '#/components/schemas/BffReworkRequestType'
 
     BffTimelineCategory:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/8aee4a81cb5a71d2daa93b2af507148128526958/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementCategoryV28'

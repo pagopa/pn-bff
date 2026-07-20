@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.utils;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class NotificationDetailUtilityReworkedTest {
 
         timeline.add(singleElementTimeline);
         bffFullNotificationV1.setTimeline(timeline);
-        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1);
+        NotificationDetailUtility.insertReworkedStatus(bffFullNotificationV1, List.of());
 
         assertEquals(1, bffFullNotificationV1.getNotificationStatusHistory().stream()
                 .filter(status -> status.getStatus().equals(BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED)).toList().size()
@@ -309,7 +310,8 @@ class NotificationDetailUtilityReworkedTest {
     }
 
     @Test
-    void setReworkedStatusOnSteps_viewedStatusNotMarkedValid() {
+    void setReworkedStatusOnSteps_viewedStatusMarkedValid() {
+        // VIEWED must be duplicated/marked like any other status (no special skip)
         BffNotificationDetailTimeline reworkedStep = new BffNotificationDetailTimeline();
         reworkedStep.setElementId("baseId.REWORK_1");
         reworkedStep.setCategory(BffTimelineCategory.SEND_DIGITAL_DOMICILE);
@@ -342,7 +344,7 @@ class NotificationDetailUtilityReworkedTest {
 
         NotificationDetailUtility.setReworkedStatusOnSteps(notification);
 
-        assertNull(viewedHistory.getReworkedStatus());
+        assertEquals(BffNotificationReworkedStatus.VALID, viewedHistory.getReworkedStatus());
     }
 
     @Test
@@ -562,6 +564,172 @@ class NotificationDetailUtilityReworkedTest {
         NotificationDetailUtility.setReworkedStatusOnSteps(notification);
 
         assertEquals(BffNotificationReworkedStatus.VALID, analogProgressStep.getReworkedStatus());
+    }
+
+    @Test
+    void setReworkedStatusOnSteps_punctualCorrection_noNotValidStatusCreated_eventMarkedNotValid() {
+        // A punctual correction (INVALIDATE_ELEMENTS, resolved onto the marker) invalidates a single
+        // event inside DELIVERED. Unlike a classic rework, no synthetic NOT_VALID DELIVERED status must
+        // be created and the status must not be marked: only the event is marked NOT_VALID in place.
+        BffNotificationDetailTimeline invalidatedStep = new BffNotificationDetailTimeline();
+        invalidatedStep.setElementId("analogProgressId");
+        invalidatedStep.setCategory(BffTimelineCategory.SEND_ANALOG_PROGRESS);
+        invalidatedStep.setTimestamp(OffsetDateTime.now());
+
+        TimelineElementV28 relatedElem = new TimelineElementV28();
+        relatedElem.setElementId("analogProgressId");
+
+        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
+        invalidated.setStatus(NotificationStatusV26.DELIVERED);
+        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
+        invalidated.setActiveFrom(OffsetDateTime.now());
+
+        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
+        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
+
+        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
+        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        reworkedEvent.setTimestamp(OffsetDateTime.now());
+        reworkedEvent.setDetails(details);
+        // punctual correction type already resolved onto the marker (see insertReworkedStatus)
+        reworkedEvent.setRequestType(BffReworkRequestType.INVALIDATE_ELEMENTS);
+
+        BffNotificationStatusHistory deliveredHistory = new BffNotificationStatusHistory();
+        deliveredHistory.setStatus(BffNotificationStatus.DELIVERED);
+        deliveredHistory.setSteps(new ArrayList<>(List.of(invalidatedStep)));
+        deliveredHistory.setRelatedTimelineElements(new ArrayList<>(List.of("analogProgressId")));
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent)));
+        notification.setNotificationStatusHistory(new ArrayList<>(List.of(deliveredHistory)));
+
+        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
+
+        // no synthetic NOT_VALID DELIVERED status was created
+        assertEquals(1, notification.getNotificationStatusHistory().size());
+        assertTrue(notification.getNotificationStatusHistory().stream()
+                .noneMatch(sh -> sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID));
+        // the DELIVERED status is not marked
+        assertNull(deliveredHistory.getReworkedStatus());
+        // the invalidated event stays in place and is marked NOT_VALID
+        assertEquals(1, deliveredHistory.getSteps().size());
+        assertEquals(BffNotificationReworkedStatus.NOT_VALID, invalidatedStep.getReworkedStatus());
+    }
+
+    // endregion
+
+    // region insertReworkedStatus - requestType resolution (reworkId <-> elementId)
+
+    @Test
+    void insertReworkedStatus_resolvesRequestTypeOnMarker_matchingReworkIdSegment() {
+        // marker elementId ends with the REWORK_<idx> segment shared with the reworkId (REWORK_0.TRY_0)
+        BffNotificationDetailTimeline marker = new BffNotificationDetailTimeline();
+        marker.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        marker.setElementId("NOTIFICATION_TIMELINE_REWORKED.IUN_ABCD-EFGH-IJKL-202401-A-1.RECINDEX_0.ATTEMPT_0.REWORK_0");
+        marker.setTimestamp(OffsetDateTime.now());
+
+        ReworkItem item = new ReworkItem();
+        item.setReworkId("REWORK_0.TRY_0");
+        item.setRequestType(ReworkItem.RequestTypeEnum.INVALIDATE_ELEMENTS);
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(marker)));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        NotificationDetailUtility.insertReworkedStatus(notification, List.of(item));
+
+        assertEquals(BffReworkRequestType.INVALIDATE_ELEMENTS, marker.getRequestType());
+        assertEquals(1, notification.getNotificationStatusHistory().stream()
+                .filter(sh -> sh.getStatus() == BffNotificationStatus.NOTIFICATION_TIMELINE_REWORKED).count());
+    }
+
+    @Test
+    void insertReworkedStatus_requestTypeNull_whenNoMatchingReworkItem() {
+        BffNotificationDetailTimeline marker = new BffNotificationDetailTimeline();
+        marker.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        marker.setElementId("NOTIFICATION_TIMELINE_REWORKED.IUN_x.RECINDEX_0.ATTEMPT_0.REWORK_5");
+        marker.setTimestamp(OffsetDateTime.now());
+
+        ReworkItem item = new ReworkItem();
+        item.setReworkId("REWORK_0.TRY_0"); // idx 0, does not match REWORK_5
+        item.setRequestType(ReworkItem.RequestTypeEnum.REWORK);
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(marker)));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        NotificationDetailUtility.insertReworkedStatus(notification, List.of(item));
+
+        assertNull(marker.getRequestType());
+    }
+
+    @Test
+    void insertReworkedStatus_requestTypeNull_whenNoReworkItems() {
+        BffNotificationDetailTimeline marker = new BffNotificationDetailTimeline();
+        marker.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        marker.setElementId("NOTIFICATION_TIMELINE_REWORKED.IUN_x.RECINDEX_0.ATTEMPT_0.REWORK_0");
+        marker.setTimestamp(OffsetDateTime.now());
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(marker)));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        NotificationDetailUtility.insertReworkedStatus(notification, List.of());
+
+        assertNull(marker.getRequestType());
+    }
+
+    @Test
+    void insertReworkedStatus_discardsErrorReworkItems() {
+        // an ERROR rework request with matching reworkIdx/recIndex must be ignored (no marker produced)
+        BffNotificationDetailTimeline marker = new BffNotificationDetailTimeline();
+        marker.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        marker.setElementId("NOTIFICATION_TIMELINE_REWORKED.IUN_x.RECINDEX_0.ATTEMPT_0.REWORK_0");
+        marker.setTimestamp(OffsetDateTime.now());
+
+        ReworkItem errored = new ReworkItem();
+        errored.setReworkId("REWORK_0.TRY_0");
+        errored.setRecIndex("RECINDEX_0");
+        errored.setRequestType(ReworkItem.RequestTypeEnum.INVALIDATE_ELEMENTS);
+        errored.setStatus(ReworkItem.StatusEnum.ERROR);
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(marker)));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        NotificationDetailUtility.insertReworkedStatus(notification, List.of(errored));
+
+        assertNull(marker.getRequestType());
+    }
+
+    @Test
+    void insertReworkedStatus_disambiguatesByRecIndex() {
+        // two rework requests share reworkIdx 0 but on different recipients: the marker for RECINDEX_1
+        // must resolve to the RECINDEX_1 rework item
+        BffNotificationDetailTimeline marker = new BffNotificationDetailTimeline();
+        marker.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        marker.setElementId("NOTIFICATION_TIMELINE_REWORKED.IUN_x.RECINDEX_1.ATTEMPT_0.REWORK_0");
+        marker.setTimestamp(OffsetDateTime.now());
+
+        ReworkItem rec0 = new ReworkItem();
+        rec0.setReworkId("REWORK_0.TRY_0");
+        rec0.setRecIndex("RECINDEX_0");
+        rec0.setRequestType(ReworkItem.RequestTypeEnum.REWORK);
+        rec0.setStatus(ReworkItem.StatusEnum.DONE);
+
+        ReworkItem rec1 = new ReworkItem();
+        rec1.setReworkId("REWORK_0.TRY_0");
+        rec1.setRecIndex("RECINDEX_1");
+        rec1.setRequestType(ReworkItem.RequestTypeEnum.INVALIDATE_ELEMENTS);
+        rec1.setStatus(ReworkItem.StatusEnum.DONE);
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(marker)));
+        notification.setNotificationStatusHistory(new ArrayList<>());
+
+        NotificationDetailUtility.insertReworkedStatus(notification, List.of(rec0, rec1));
+
+        assertEquals(BffReworkRequestType.INVALIDATE_ELEMENTS, marker.getRequestType());
     }
 
     // endregion

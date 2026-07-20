@@ -5,6 +5,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsA
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.DocumentCategory;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.api.NotificationReworkApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.model.ReworkItemsResponse;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.NotificationsSentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
@@ -37,6 +39,8 @@ class PnDeliveryPushClientImplTest {
     private LegalFactsApi legalFactsApi;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi")
     private NotificationCancellationApi notificationCancellationApi;
+    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.api.NotificationReworkApi")
+    private NotificationReworkApi notificationReworkApi;
 
     @Test
     void getDocumentsWeb() throws RestClientException {
@@ -170,5 +174,26 @@ class PnDeliveryPushClientImplTest {
                 "IUN",
                 UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void getRework() {
+        ReworkItemsResponse reworkItemsResponse = new ReworkItemsResponse();
+        reworkItemsResponse.setIun("IUN");
+        when(notificationReworkApi.retrieveNotificationRework(Mockito.anyString(), Mockito.any()))
+                .thenReturn(Mono.just(reworkItemsResponse));
+
+        StepVerifier.create(pnDeliveryPushClient.getRework("IUN"))
+                .expectNext(reworkItemsResponse)
+                .verifyComplete();
+    }
+
+    @Test
+    void getReworkError() {
+        when(notificationReworkApi.retrieveNotificationRework(Mockito.anyString(), Mockito.any()))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryPushClient.getRework("IUN"))
+                .expectError(WebClientResponseException.class).verify();
     }
 }
