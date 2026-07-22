@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: yaS/01e3u26ukR1CsEBB/9IDtl0SiFy5jEUIS6nvO2E=
+  version: p4ot7KjslXIppugRR04ucWHFaDPKdGeIP/YnP/21h5I=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -8605,10 +8605,6 @@ components:
       type: object
       required:
         - senderId
-        - pec
-        - email
-        - phone
-        - site
       properties:
         senderId:
           type: string
