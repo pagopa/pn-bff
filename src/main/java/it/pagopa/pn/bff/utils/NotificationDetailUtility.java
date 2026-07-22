@@ -590,6 +590,7 @@ public class NotificationDetailUtility {
 
                 // populate steps and relatedElementId by finding each step in notificationStatusHistory
                 for (String elementId : relatedElementIds) {
+                    boolean found = false;
                     for (BffNotificationStatusHistory statusHistory : bffFullNotificationV1.getNotificationStatusHistory()) {
                         // move the step from the original status history to the new one
                         BffNotificationDetailTimeline step = statusHistory.getSteps().stream()
@@ -603,7 +604,24 @@ public class NotificationDetailUtility {
                             // clean the step and relatedTimelineElements from the original status history
                             statusHistory.getSteps().remove(step);
                             statusHistory.getRelatedTimelineElements().remove(elementId);
+                            found = true;
                         }
+                    }
+
+                    // fallback: the invalidated element may only exist in the timeline and never be
+                    // attached to an existing status history (e.g. an invalidated VIEWED with no valid
+                    // VIEWED status to hang it on). In that case build the step directly from the
+                    // timeline so the NOT_VALID status is not rendered empty.
+                    if (!found) {
+                        bffFullNotificationV1.getTimeline().stream()
+                                .filter(t -> elementId.equals(t.getElementId()))
+                                .findFirst()
+                                .ifPresent(timelineElement -> {
+                                    BffNotificationDetailTimeline step = new BffNotificationDetailTimeline();
+                                    BeanUtils.copyProperties(timelineElement, step);
+                                    newStatusHistory.getRelatedTimelineElements().add(elementId);
+                                    newStatusHistory.getSteps().add(step);
+                                });
                     }
                 }
 

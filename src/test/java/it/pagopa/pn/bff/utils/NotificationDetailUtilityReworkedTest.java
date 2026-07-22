@@ -616,6 +616,122 @@ class NotificationDetailUtilityReworkedTest {
         assertEquals(BffNotificationReworkedStatus.NOT_VALID, invalidatedStep.getReworkedStatus());
     }
 
+    @Test
+    void setReworkedStatusOnSteps_punctualCorrection_viewedIsAlwaysDuplicated() {
+        // A punctual correction (INVALIDATE_ELEMENTS) does not duplicate statuses, EXCEPT for VIEWED:
+        // the invalidated VIEWED event must still get its own synthetic NOT_VALID status, while the
+        // reworked (VALID) VIEWED status is kept.
+        BffNotificationDetailTimeline reworkedViewedStep = new BffNotificationDetailTimeline();
+        reworkedViewedStep.setElementId("viewedId.REWORK_0");
+        reworkedViewedStep.setCategory(BffTimelineCategory.NOTIFICATION_VIEWED);
+        reworkedViewedStep.setTimestamp(OffsetDateTime.now());
+
+        BffNotificationDetailTimeline invalidatedViewedStep = new BffNotificationDetailTimeline();
+        invalidatedViewedStep.setElementId("viewedId");
+        invalidatedViewedStep.setCategory(BffTimelineCategory.NOTIFICATION_VIEWED);
+        invalidatedViewedStep.setTimestamp(OffsetDateTime.now());
+
+        TimelineElementV28 relatedElem = new TimelineElementV28();
+        relatedElem.setElementId("viewedId");
+
+        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
+        invalidated.setStatus(NotificationStatusV26.VIEWED);
+        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
+        invalidated.setActiveFrom(OffsetDateTime.now());
+
+        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
+        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
+
+        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
+        reworkedEvent.setElementId("reworkMarker.REWORK_0");
+        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        reworkedEvent.setTimestamp(OffsetDateTime.now());
+        reworkedEvent.setDetails(details);
+        reworkedEvent.setRequestType(BffReworkRequestType.INVALIDATE_ELEMENTS);
+
+        // single VIEWED status holding both the reworked (valid) and the invalidated event
+        BffNotificationStatusHistory viewedHistory = new BffNotificationStatusHistory();
+        viewedHistory.setStatus(BffNotificationStatus.VIEWED);
+        viewedHistory.setSteps(new ArrayList<>(List.of(reworkedViewedStep, invalidatedViewedStep)));
+        viewedHistory.setRelatedTimelineElements(new ArrayList<>(List.of("viewedId.REWORK_0", "viewedId")));
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent)));
+        notification.setNotificationStatusHistory(new ArrayList<>(List.of(viewedHistory)));
+
+        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
+
+        // a synthetic NOT_VALID VIEWED status has been created (duplication)
+        List<BffNotificationStatusHistory> viewedStatuses = notification.getNotificationStatusHistory().stream()
+                .filter(sh -> sh.getStatus() == BffNotificationStatus.VIEWED)
+                .toList();
+        assertEquals(2, viewedStatuses.size());
+
+        BffNotificationStatusHistory notValidViewed = viewedStatuses.stream()
+                .filter(sh -> sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID)
+                .findFirst()
+                .orElseThrow();
+        assertEquals(1, notValidViewed.getSteps().size());
+        assertEquals("viewedId", notValidViewed.getSteps().get(0).getElementId());
+        assertEquals(BffNotificationReworkedStatus.NOT_VALID, notValidViewed.getSteps().get(0).getReworkedStatus());
+
+        // the original VIEWED keeps only the reworked event and is marked VALID
+        assertEquals(BffNotificationReworkedStatus.VALID, viewedHistory.getReworkedStatus());
+        assertEquals(1, viewedHistory.getSteps().size());
+        assertEquals("viewedId.REWORK_0", viewedHistory.getSteps().get(0).getElementId());
+    }
+
+    @Test
+    void setReworkedStatusOnSteps_invalidatedViewedOnlyInTimeline_stepBuiltFromTimeline() {
+        // The invalidated VIEWED exists only in the timeline (never attached to a VIEWED status
+        // history, e.g. because there is no valid VIEWED status). The synthetic NOT_VALID VIEWED
+        // status must not be empty: its event is rebuilt from the timeline.
+        BffNotificationDetailTimeline viewedTimelineElement = new BffNotificationDetailTimeline();
+        viewedTimelineElement.setElementId("viewedId");
+        viewedTimelineElement.setCategory(BffTimelineCategory.NOTIFICATION_VIEWED);
+        viewedTimelineElement.setTimestamp(OffsetDateTime.now());
+
+        TimelineElementV28 relatedElem = new TimelineElementV28();
+        relatedElem.setElementId("viewedId");
+
+        NotificationStatusHistoryInvalidatedElement invalidated = new NotificationStatusHistoryInvalidatedElement();
+        invalidated.setStatus(NotificationStatusV26.VIEWED);
+        invalidated.setRelatedTimelineElements(new ArrayList<>(List.of(relatedElem)));
+        invalidated.setActiveFrom(OffsetDateTime.now());
+
+        BffNotificationDetailTimelineDetails details = new BffNotificationDetailTimelineDetails();
+        details.setInvalidatedTimelineAndStatusHistory(new ArrayList<>(List.of(invalidated)));
+
+        BffNotificationDetailTimeline reworkedEvent = new BffNotificationDetailTimeline();
+        reworkedEvent.setElementId("reworkMarker.REWORK_0");
+        reworkedEvent.setCategory(BffTimelineCategory.NOTIFICATION_TIMELINE_REWORKED);
+        reworkedEvent.setTimestamp(OffsetDateTime.now());
+        reworkedEvent.setDetails(details);
+        reworkedEvent.setRequestType(BffReworkRequestType.INVALIDATE_ELEMENTS);
+
+        // no VIEWED status in history: only an unrelated status
+        BffNotificationStatusHistory effectiveDateHistory = new BffNotificationStatusHistory();
+        effectiveDateHistory.setStatus(BffNotificationStatus.EFFECTIVE_DATE);
+        effectiveDateHistory.setSteps(new ArrayList<>());
+        effectiveDateHistory.setRelatedTimelineElements(new ArrayList<>());
+
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setTimeline(new ArrayList<>(List.of(reworkedEvent, viewedTimelineElement)));
+        notification.setNotificationStatusHistory(new ArrayList<>(List.of(effectiveDateHistory)));
+
+        NotificationDetailUtility.setReworkedStatusOnSteps(notification);
+
+        BffNotificationStatusHistory notValidViewed = notification.getNotificationStatusHistory().stream()
+                .filter(sh -> sh.getStatus() == BffNotificationStatus.VIEWED
+                        && sh.getReworkedStatus() == BffNotificationReworkedStatus.NOT_VALID)
+                .findFirst()
+                .orElseThrow();
+        // the status is not empty: the step was rebuilt from the timeline
+        assertEquals(1, notValidViewed.getSteps().size());
+        assertEquals("viewedId", notValidViewed.getSteps().get(0).getElementId());
+        assertEquals(BffNotificationReworkedStatus.NOT_VALID, notValidViewed.getSteps().get(0).getReworkedStatus());
+    }
+
     // endregion
 
     // region insertReworkedStatus - requestType resolution (reworkId <-> elementId)
