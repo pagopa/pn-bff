@@ -1160,7 +1160,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/6b4b2ffeefe952b06b044edb04de6cb4557d7d17/docs/openapi/api-rework-private.yaml
+                                https://raw.githubusercontent.com/pagopa/pn-delivery-push/ab845eb5219cac1e5edc710767b8a9de5d91ded8/docs/openapi/api-rework-private.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
