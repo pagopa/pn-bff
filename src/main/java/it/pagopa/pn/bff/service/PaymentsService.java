@@ -1,5 +1,6 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.emd.model.PaymentUrlResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentInfoV21;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_payment_info.model.PaymentResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
@@ -68,10 +69,7 @@ public class PaymentsService {
     }
 
     /**
-     * Payments tpp.
-     * First checks retrievalId validity. If that fails the error is propagated
-     * and getPaymentUrl is never called. Otherwise, if the check is successful,
-     * it calls getPaymentUrl to retrieve the url where to pay the payment.
+     * Get TPP payment URL
      *
      * @param retrievalId The retrieval id
      * @param noticeCode  The notice code
@@ -80,12 +78,11 @@ public class PaymentsService {
      * @return the url where to pay the payment
      */
     public Mono<BffPaymentTppResponse> paymentsTpp(String retrievalId, String noticeCode, String paTaxId, Integer amount) {
-        log.info("Get payment cart tpp");
+        log.info("Get TPP payment URL");
 
-        return pnEmdClient.checkTpp(retrievalId)
-                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                .flatMap(__ -> pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount)
-                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
-                        .map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse));
+        Mono<PaymentUrlResponse> paymentUrl = pnEmdClient.getPaymentUrl(retrievalId, noticeCode, paTaxId, amount)
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return paymentUrl.map(PaymentsTppMapper.modelMapper::mapPaymentTppResponse);
     }
 }
