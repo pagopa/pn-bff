@@ -360,7 +360,7 @@ public class NotificationDetailUtility {
      * So in this method:
      * - we move the timeline elements from the status ACCEPTED to the next one
      * - we move the timeline elements from DELIVERED to DELIVERING, if the digital workflow fails
-     * - we enrich the status with the information about the user that has opened the notification
+     * - we enrich the VIEWED status with the information about the user that has opened the notification
      *
      * @param bffFullNotificationV1 the notification to populate
      */
