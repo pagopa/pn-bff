@@ -360,7 +360,9 @@ public class NotificationDetailUtility {
      * So in this method:
      * - we move the timeline elements from the status ACCEPTED to the next one
      * - we move the timeline elements from DELIVERED to DELIVERING, if the digital workflow fails
-     * - we enrich the VIEWED status with the information about the user that has opened the notification
+     * - we enrich the
+     *
+     * status with the information about the user that has opened the notification
      *
      * @param bffFullNotificationV1 the notification to populate
      */
@@ -543,13 +545,16 @@ public class NotificationDetailUtility {
         List<BffNotificationStatusHistory> newNotValidStatusHistories = new ArrayList<>();
 
         for (BffNotificationDetailTimeline reworkedEvent : reworkedEvents) {
-            // Punctual correction (INVALIDATE_ELEMENTS): only the events are marked NOT_VALID (SECOND STEP),
-            // no synthetic NOT_VALID status is created and no status is marked. Skip the FIRST STEP for it.
-            if (reworkedEvent.getRequestType() == BffReworkRequestType.INVALIDATE_ELEMENTS) {
-                continue;
-            }
+            boolean punctualCorrection = reworkedEvent.getRequestType() == BffReworkRequestType.INVALIDATE_ELEMENTS;
 
             for (NotificationStatusHistoryInvalidatedElement invalidatedStatus : reworkedEvent.getDetails().getInvalidatedTimelineAndStatusHistory()) {
+
+                // Punctual correction (INVALIDATE_ELEMENTS): no synthetic NOT_VALID status is created,
+                // the events are only marked NOT_VALID (SECOND STEP). VIEWED is an exception: it must be
+                // duplicated (synthetic NOT_VALID status) even for punctual corrections.
+                if (punctualCorrection && invalidatedStatus.getStatus() != NotificationStatusV26.VIEWED) {
+                    continue;
+                }
 
                 // skip ACCEPTED (PN-20141) and DELIVERING status - keep everything together
                 if (invalidatedStatus.getStatus() == NotificationStatusV26.ACCEPTED ||
