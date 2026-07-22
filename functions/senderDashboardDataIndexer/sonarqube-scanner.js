@@ -1,20 +1,26 @@
 const options = {
-  "sonar.organization": "pagopa",
-  "sonar.projectKey": "pagopa_pn-bff-senderdashboarddataindexerlambda",
+  'sonar.organization': 'pagopa',
+  'sonar.projectKey': 'pagopa_pn-bff-senderdashboarddataindexerlambda',
 };
 
 if (process.env.PR_NUM) {
-  options["sonar.pullrequest.base"] = process.env.BRANCH_TARGET;
-  options["sonar.pullrequest.branch"] = process.env.BRANCH_NAME;
-  options["sonar.pullrequest.key"] = process.env.PR_NUM;
+  options['sonar.pullrequest.base'] = process.env.BRANCH_TARGET;
+  options['sonar.pullrequest.branch'] = process.env.BRANCH_NAME;
+  options['sonar.pullrequest.key'] = process.env.PR_NUM;
 }
 
-const scanner = require("sonarqube-scanner");
+const scanner = require('sonarqube-scanner').default;
 
 scanner(
   {
-    serverUrl: "https://sonarcloud.io",
+    serverUrl: 'https://sonarcloud.io',
     options: options,
   },
-  () => process.exit()
+  (error) => {
+    if (error) {
+      console.error(error);
+      process.exit(1);
+    }
+    process.exit();
+  }
 );
