@@ -36,6 +36,14 @@ class InformalNotificationReceivedMapperTest {
         // fields added on the BFF schema
         assertEquals(InformalNotificationDetailMock.SENDER_PA_ID, result.getSenderPaId());
         assertEquals(Boolean.TRUE, result.getDocumentsAvailable());
+
+        // timeline
+        var mock_timeline = notification.getTimeline();
+        var result_timeline = result.getTimeline();
+
+        assertNotNull(result_timeline);
+        assertEquals(mock_timeline.size(), result_timeline.size());
+        assertEquals(mock_timeline.get(0).getElementId(), result_timeline.get(0).getElementId());
     }
 
     @Test

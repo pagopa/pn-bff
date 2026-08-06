@@ -60,3 +60,8 @@ components:
           description: Data di accettazione della notifica/comunicazione
         senderContacts:
           $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/api-internal-web-informal-recipient.yaml#/components/schemas/SenderContactInfo"
+        timeline:
+          type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/remote-refs.yaml#/components/schemas/InformalTimelineElementV1"
