@@ -17,9 +17,9 @@ components:
         - sentAt
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
         senderDenomination:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
         campaignId:
           type: string
         additionalLanguages:
@@ -34,11 +34,11 @@ components:
         recipients:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
         documents:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/790e4bf014cc4be022a0b28472ee04ac3dfe9866/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
         group:
           type: string
           pattern: ^[ -~]*$
