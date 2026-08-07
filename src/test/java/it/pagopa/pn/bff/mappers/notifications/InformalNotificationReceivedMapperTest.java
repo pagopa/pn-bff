@@ -1,10 +1,13 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedInformalNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.SenderContactInfo;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullInformalNotificationV1;
 import it.pagopa.pn.bff.mocks.InformalNotificationDetailMock;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,12 +41,28 @@ class InformalNotificationReceivedMapperTest {
         assertEquals(Boolean.TRUE, result.getDocumentsAvailable());
 
         // timeline
-        var mock_timeline = notification.getTimeline();
-        var result_timeline = result.getTimeline();
+        List<InformalTimelineElementV1> sourceTimeline = notification.getTimeline();
+        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1> mappedTimeline =
+                result.getTimeline();
 
-        assertNotNull(result_timeline);
-        assertEquals(mock_timeline.size(), result_timeline.size());
-        assertEquals(mock_timeline.get(0).getElementId(), result_timeline.get(0).getElementId());
+        assertNotNull(mappedTimeline);
+        assertEquals(sourceTimeline.size(), mappedTimeline.size());
+
+        InformalTimelineElementV1 sourceRequestAccepted = sourceTimeline.get(1);
+        it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1 mappedRequestAccepted =
+                mappedTimeline.get(1);
+
+        assertEquals(sourceRequestAccepted.getElementId(), mappedRequestAccepted.getElementId());
+        assertNotNull(sourceRequestAccepted.getCategory());
+        assertEquals(sourceRequestAccepted.getCategory().getValue(), mappedRequestAccepted.getCategory().getValue());
+        assertEquals(sourceRequestAccepted.getEventTimestamp(), mappedRequestAccepted.getEventTimestamp());
+        assertNotNull(mappedRequestAccepted.getDetails());
+        assertEquals(InformalNotificationDetailMock.NOTIFICATION_REQUEST_ID,
+                mappedRequestAccepted.getDetails().getNotificationRequestId());
+        assertEquals(InformalNotificationDetailMock.PA_PROTOCOL_NUMBER,
+                mappedRequestAccepted.getDetails().getPaProtocolNumber());
+        assertEquals(InformalNotificationDetailMock.IDEMPOTENCE_TOKEN,
+                mappedRequestAccepted.getDetails().getIdempotenceToken());
     }
 
     @Test

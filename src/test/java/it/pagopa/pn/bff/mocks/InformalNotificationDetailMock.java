@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.mocks;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.FullReceivedInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementCategoryV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementDetailsV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.InformalTimelineElementV1;
 
 import java.time.OffsetDateTime;
@@ -13,6 +14,9 @@ public class InformalNotificationDetailMock {
 
     public static final String IUN = "IUN-INFORMAL-123";
     public static final String SENDER_PA_ID = "sender-pa-id-1234";
+    public static final String NOTIFICATION_REQUEST_ID = "notification-request-id-123";
+    public static final String PA_PROTOCOL_NUMBER = "protocol-number-123";
+    public static final String IDEMPOTENCE_TOKEN = "idempotence-token-123";
     public static final OffsetDateTime SENT_AT = OffsetDateTime.parse("2024-01-01T10:00:00Z");
     public static final OffsetDateTime FILED_AT = OffsetDateTime.parse("2024-01-02T11:30:00Z");
 
@@ -45,8 +49,18 @@ public class InformalNotificationDetailMock {
     private List<InformalTimelineElementV1> timelineWithRequestAccepted() {
         List<InformalTimelineElementV1> timeline = new ArrayList<>();
         timeline.add(timelineElement(InformalTimelineElementCategoryV1.VALIDATE_NORMALIZE_ADDRESSES_REQUEST, SENT_AT));
-        timeline.add(timelineElement(InformalTimelineElementCategoryV1.REQUEST_ACCEPTED, FILED_AT));
+        timeline.add(requestAcceptedTimelineElement());
         return timeline;
+    }
+
+    private InformalTimelineElementV1 requestAcceptedTimelineElement() {
+        InformalTimelineElementDetailsV1 details = new InformalTimelineElementDetailsV1()
+                .notificationRequestId(NOTIFICATION_REQUEST_ID)
+                .paProtocolNumber(PA_PROTOCOL_NUMBER)
+                .idempotenceToken(IDEMPOTENCE_TOKEN);
+
+        return timelineElement(InformalTimelineElementCategoryV1.REQUEST_ACCEPTED, FILED_AT)
+                .details(details);
     }
 
     private InformalTimelineElementV1 timelineElement(InformalTimelineElementCategoryV1 category,
