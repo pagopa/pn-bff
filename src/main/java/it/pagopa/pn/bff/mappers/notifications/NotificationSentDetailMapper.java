@@ -114,6 +114,8 @@ public interface NotificationSentDetailMapper {
         NotificationDetailUtility.setReworkedStatusOnSteps(bffFullNotificationV1);
     }
 
+    // TODO - Estrarlo e chiamarlo nel service direttamente
+
     /**
      * @see NotificationDetailUtility#sortNotificationStatusHistory(BffFullNotificationV1)
      */
