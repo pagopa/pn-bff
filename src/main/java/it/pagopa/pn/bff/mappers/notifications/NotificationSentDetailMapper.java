@@ -116,6 +116,8 @@ public interface NotificationSentDetailMapper {
         NotificationDetailUtility.setAarDocumentAvailability(bffFullNotificationV1);
     }
 
+    // TODO - Estrarlo e chiamarlo nel service direttamente
+
     /**
      * @see NotificationDetailUtility#sortNotificationStatusHistory(BffFullNotificationV1)
      */
