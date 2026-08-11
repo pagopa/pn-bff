@@ -18,6 +18,7 @@ public interface NotificationTimelineMapper {
      * Maps the existing notification detail to the new timeline response.
      * notificationStatusHistory is populated in the after-mapping phase.
      */
+    @Mapping(source = "recipients", target = "recipients")
     @Mapping(target = "notificationStatusHistory", ignore = true)
     BffNotificationTimelineResponse mapSentNotificationTimeline(BffFullNotificationV1 notification);
 

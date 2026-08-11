@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Wrw6epNrVqqxxmtkqbU/UDXKViEwkqgn9Bu30VtUuCU=
+  version: ZBf/KGgex3hO1nEu9SfNEwUjbFkjfoPspmLDkRgAtn0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7001,12 +7001,17 @@ components:
       required:
         - iun
         - subject
+        - recipients
         - notificationStatusHistory
       properties:
         iun:
           type: string
         subject:
           type: string
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV24'
         notificationStatusHistory:
           type: array
           items:
