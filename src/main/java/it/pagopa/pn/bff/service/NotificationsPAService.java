@@ -141,9 +141,9 @@ public class NotificationsPAService {
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        //return notificationDetail.map(NotificationSentTimelineMapper.modelMapper::map);
-
-        return Mono.empty();
+        return notificationDetail.flatMap(notification -> reworkItemsService.getReworkItems(notification)
+                        .map(reworkItems -> NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, reworkItems)))
+                .map(NotificationTimelineMapper.modelMapper::mapSentNotificationTimeline);
     }
 
     /**

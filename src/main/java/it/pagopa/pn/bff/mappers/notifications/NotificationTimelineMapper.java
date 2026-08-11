@@ -9,10 +9,10 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface NotificationSentTimelineMapper {
+public interface NotificationTimelineMapper {
 
     // Instance of the mapper
-    NotificationSentTimelineMapper modelMapper = Mappers.getMapper(NotificationSentTimelineMapper.class);
+    NotificationTimelineMapper modelMapper = Mappers.getMapper(NotificationTimelineMapper.class);
 
     /**
      * Maps the existing notification detail to the new timeline response.
