@@ -54,6 +54,9 @@ public class NotificationTimelineUtility {
         List<BffNotificationTimelineStep> outputSteps =
                 new ArrayList<>();
 
+        List<BffNotificationTimelineEvent> prepareFailures = new ArrayList<>();
+        List<BffNotificationTimelineEvent> analogWorkflowFailures = new ArrayList<>();
+
         for (BffNotificationDetailTimeline sourceStep : CommonUtility.safeList(sourceStatusHistory.getSteps())) {
             // Discard hidden events that do not contain legal facts
             if (!shouldKeep(sourceStep)) {
@@ -61,6 +64,18 @@ public class NotificationTimelineUtility {
             }
 
             BffNotificationTimelineEvent event = mapper.mapTimelineElement(sourceStep);
+
+            // These analog failure events do not expose all grouping fields. They are resolved
+            // after the ordinary analog groups have been collected for the current status.
+            if (event.getCategory() == BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE) {
+                prepareFailures.add(event);
+                continue;
+            }
+
+            if (event.getCategory() == BffTimelineCategory.ANALOG_FAILURE_WORKFLOW) {
+                analogWorkflowFailures.add(event);
+                continue;
+            }
 
             // Check the event to determine whether it belongs to a delivery group
             BffNotificationTimelineGroupCategory groupCategory =
@@ -125,11 +140,103 @@ public class NotificationTimelineUtility {
             group.addEventsItem(event);
         }
 
+        associatePrepareFailures(prepareFailures, groups, outputSteps, recipients, sourceStatusHistory);
+        associateAnalogWorkflowFailures(analogWorkflowFailures, groups, outputSteps);
+
         // Complete group metadata and apply the ordering
         sortAndEnrichGroups(groups.values());
         sortOutputSteps(outputSteps);
 
         return outputSteps;
+    }
+
+    /**
+     * Associates a prepare failure with its attempt. Since the event does not expose a channel,
+     * the channel is inherited from the latest known analog attempt of the same recipient.
+     */
+    private static void associatePrepareFailures(
+            List<BffNotificationTimelineEvent> prepareFailures,
+            Map<String, BffNotificationTimelineGroup> groups,
+            List<BffNotificationTimelineStep> outputSteps,
+            List<NotificationRecipientV24> recipients,
+            BffNotificationStatusHistory sourceStatusHistory) {
+
+        for (BffNotificationTimelineEvent event : prepareFailures) {
+            Integer recIndex = TimelineEventUtility.extractRecIndex(event);
+            Integer attempt = TimelineEventUtility.extractPrepareFailureAttempt(event);
+            Optional<NotificationRecipientV24> recipient = findRecipient(recipients, recIndex);
+            Optional<BffNotificationTimelineGroup> latestGroup = findLatestAnalogGroup(groups.values(), recIndex);
+
+            if (attempt == null || recipient.isEmpty() || latestGroup.isEmpty()) {
+                outputSteps.add(event);
+                continue;
+            }
+
+            String channel = latestGroup.orElseThrow().getChannel();
+            String groupId = buildGroupId(
+                    sourceStatusHistory,
+                    BffNotificationTimelineGroupCategory.ANALOG,
+                    channel,
+                    recIndex,
+                    attempt
+            );
+
+            BffNotificationTimelineGroup group = groups.get(groupId);
+
+            if (group == null) {
+                group = createGroup(
+                        groupId,
+                        BffNotificationTimelineGroupCategory.ANALOG,
+                        channel,
+                        recIndex,
+                        attempt,
+                        recipient.orElseThrow()
+                );
+                groups.put(groupId, group);
+                outputSteps.add(group);
+            }
+
+            group.addEventsItem(event);
+        }
+    }
+
+    /**
+     * Associates the analog workflow failure with the latest analog attempt resolved
+     * for the same recipient in the current status.
+     */
+    private static void associateAnalogWorkflowFailures(
+            List<BffNotificationTimelineEvent> analogWorkflowFailures,
+            Map<String, BffNotificationTimelineGroup> groups,
+            List<BffNotificationTimelineStep> outputSteps) {
+
+        for (BffNotificationTimelineEvent event : analogWorkflowFailures) {
+            Integer recIndex = TimelineEventUtility.extractRecIndex(event);
+
+            findLatestAnalogGroup(groups.values(), recIndex)
+                    .ifPresentOrElse(
+                            group -> group.addEventsItem(event),
+                            () -> outputSteps.add(event)
+                    );
+        }
+    }
+
+    /**
+     * Finds the highest analog attempt for a recipient.
+     * Groups without an attempt, such as simple registered letters, cannot be used as fallback.
+     */
+    private static Optional<BffNotificationTimelineGroup> findLatestAnalogGroup(
+            Collection<BffNotificationTimelineGroup> groups,
+            Integer recIndex) {
+
+        if (recIndex == null) {
+            return Optional.empty();
+        }
+
+        return groups.stream()
+                .filter(group -> group.getCategory() == BffNotificationTimelineGroupCategory.ANALOG)
+                .filter(group -> Objects.equals(group.getRecIndex(), recIndex))
+                .filter(group -> group.getAttempt() != null)
+                .max(Comparator.comparing(BffNotificationTimelineGroup::getAttempt));
     }
 
     /**

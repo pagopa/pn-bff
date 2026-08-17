@@ -68,7 +68,7 @@ public class TimelineEventUtility {
                             BffNotificationTimelineGroupCategory.ANALOG
                     )
             );
-    
+
     /**
      * Returns the group category associated with a timeline event category
      *
@@ -196,6 +196,21 @@ public class TimelineEventUtility {
 
         // Fall back to the element ID for events without an attempt field
         return extractNumber(ATTEMPT_PATTERN, event.getElementId(), true);
+    }
+
+    /**
+     * Extracts the one-based attempt of an analog prepare failure from its related prepare request.
+     * The attempt encoded in the request ID is zero-based.
+     *
+     * @param event analog prepare failure event
+     * @return the one-based attempt, or null when it cannot be determined
+     */
+    public static Integer extractPrepareFailureAttempt(BffNotificationTimelineEvent event) {
+        BffNotificationDetailTimelineDetails details = event.getDetails();
+
+        return details != null
+                ? extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true)
+                : null;
     }
 
     /**
