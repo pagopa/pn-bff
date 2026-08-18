@@ -33,7 +33,6 @@ public interface NotificationTimelineMapper {
     /**
      * Maps an existing timeline element to the new event model.
      */
-    @Mapping(target = "stepType", expression = "java(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineStepType.EVENT)")
     @Mapping(target = "isHidden", expression = "java(Boolean.TRUE.equals(timelineElement.getHidden()))")
     BffNotificationTimelineEvent mapTimelineElement(BffNotificationDetailTimeline timelineElement);
 

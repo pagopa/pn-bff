@@ -83,7 +83,7 @@ public class NotificationTimelineUtility {
 
             // Non-groupable categories remain plain events
             if (groupCategory == null) {
-                outputSteps.add(event);
+                outputSteps.add(asStep(event));
                 continue;
             }
 
@@ -106,7 +106,7 @@ public class NotificationTimelineUtility {
                     attempt,
                     recipient
             )) {
-                outputSteps.add(event);
+                outputSteps.add(asStep(event));
                 continue;
             }
 
@@ -133,7 +133,7 @@ public class NotificationTimelineUtility {
 
                 groups.put(groupId, group);
 
-                outputSteps.add(group);
+                outputSteps.add(asStep(group));
             }
 
             // Add the event to the group
@@ -168,7 +168,7 @@ public class NotificationTimelineUtility {
             Optional<BffNotificationTimelineGroup> latestGroup = findLatestAnalogGroup(groups.values(), recIndex);
 
             if (attempt == null || recipient.isEmpty() || latestGroup.isEmpty()) {
-                outputSteps.add(event);
+                outputSteps.add(asStep(event));
                 continue;
             }
 
@@ -193,7 +193,7 @@ public class NotificationTimelineUtility {
                         recipient.orElseThrow()
                 );
                 groups.put(groupId, group);
-                outputSteps.add(group);
+                outputSteps.add(asStep(group));
             }
 
             group.addEventsItem(event);
@@ -215,7 +215,7 @@ public class NotificationTimelineUtility {
             findLatestAnalogGroup(groups.values(), recIndex)
                     .ifPresentOrElse(
                             group -> group.addEventsItem(event),
-                            () -> outputSteps.add(event)
+                            () -> outputSteps.add(asStep(event))
                     );
         }
     }
@@ -359,7 +359,6 @@ public class NotificationTimelineUtility {
 
         BffNotificationTimelineGroup group = new BffNotificationTimelineGroup();
 
-        group.setStepType(BffNotificationTimelineStepType.GROUP);
         group.setGroupId(groupId);
         group.setCategory(category);
         group.setChannel(TimelineEventUtility.normalizeChannel(channel));
@@ -440,8 +439,8 @@ public class NotificationTimelineUtility {
 
         // Sort groups independently of plain events
         List<BffNotificationTimelineGroup> sortedGroups = outputSteps.stream()
-                .filter(BffNotificationTimelineGroup.class::isInstance)
-                .map(BffNotificationTimelineGroup.class::cast)
+                .map(BffNotificationTimelineStep::getGroup)
+                .filter(Objects::nonNull)
                 .sorted(
                         Comparator
                                 .comparing(BffNotificationTimelineGroup::getRecIndex)
@@ -456,23 +455,53 @@ public class NotificationTimelineUtility {
             Iterator<BffNotificationTimelineGroup> sortedGroupIterator = sortedGroups.iterator();
 
             // Reinsert sorted groups into their original slots, preserving plain-event positions
-            for (int index = 0; index < outputSteps.size(); index++) {
-                if (outputSteps.get(index) instanceof BffNotificationTimelineGroup) {
-                    outputSteps.set(index, sortedGroupIterator.next());
+            for (BffNotificationTimelineStep step : outputSteps) {
+                if (step.getGroup() != null) {
+                    step.setGroup(sortedGroupIterator.next());
                 }
             }
         }
 
-        boolean onlyEvents = outputSteps.stream().allMatch(BffNotificationTimelineEvent.class::isInstance);
+        boolean onlyEvents = outputSteps.stream().allMatch(step -> step.getEvent() != null);
 
         // When no groups are present, sort the whole event list by timestamp
         if (onlyEvents) {
             outputSteps.sort(
                     Comparator.comparing(
-                            step -> ((BffNotificationTimelineEvent) step).getTimestamp(),
+                            (BffNotificationTimelineStep step) -> step.getEvent().getTimestamp(),
                             Comparator.nullsLast(Comparator.naturalOrder())
                     ).reversed()
             );
         }
+    }
+
+    /**
+     * Wraps a plain event into a timeline step
+     *
+     * @param event timeline event
+     * @return the step exposing the event
+     */
+    private static BffNotificationTimelineStep asStep(BffNotificationTimelineEvent event) {
+        BffNotificationTimelineStep step = new BffNotificationTimelineStep();
+
+        step.setStepType(BffNotificationTimelineStepType.EVENT);
+        step.setEvent(event);
+
+        return step;
+    }
+
+    /**
+     * Wraps a group into a timeline step
+     *
+     * @param group group of events
+     * @return the step exposing the group
+     */
+    private static BffNotificationTimelineStep asStep(BffNotificationTimelineGroup group) {
+        BffNotificationTimelineStep step = new BffNotificationTimelineStep();
+
+        step.setStepType(BffNotificationTimelineStepType.GROUP);
+        step.setGroup(group);
+
+        return step;
     }
 }
