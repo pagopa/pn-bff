@@ -297,6 +297,7 @@
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
                                 <additionalModelTypeAnnotations>
+                                    @lombok.Builder(toBuilder = true);
                                     @lombok.NoArgsConstructor;
                                     @lombok.AllArgsConstructor
                                 </additionalModelTypeAnnotations>
