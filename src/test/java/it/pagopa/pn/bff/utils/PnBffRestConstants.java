@@ -17,6 +17,7 @@ public class PnBffRestConstants {
     public static final String NOTIFICATION_RETRIEVAL_ID_PATH = NOTIFICATIONS_RECEIVED_PATH + "/check-tpp";
     public static final String NOTIFICATIONS_RECEIVED_DELEGATED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/delegated";
     public static final String NOTIFICATION_RECEIVED_PATH = NOTIFICATIONS_RECEIVED_PATH + "/{iun}";
+    public static final String NOTIFICATION_RECEIVED_TIMELINE_PATH = NOTIFICATION_RECEIVED_PATH + "/timeline";
     public static final String NOTIFICATION_RECEIVED_DOCUMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/documents/{documentType}";
     public static final String NOTIFICATION_RECEIVED_PAYMENT_PATH = NOTIFICATION_RECEIVED_PATH + "/payments/{attachmentName}";
     public static final String NOTIFICATIONS_SENT_PATH = BFF_PATH + VERSION_1 + "/notifications/sent";

@@ -13,6 +13,7 @@ import it.pagopa.pn.bff.pnclient.deliverypush.PnDeliveryPushClientImpl;
 import it.pagopa.pn.bff.pnclient.emd.PnEmdClientImpl;
 import it.pagopa.pn.bff.pnclient.notificationcostservice.PnNotificationCostServiceClientImpl;
 import it.pagopa.pn.bff.utils.CommonUtility;
+import it.pagopa.pn.bff.utils.NotificationDetailUtility;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,9 +23,11 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -392,6 +395,75 @@ class NotificationRecipientServiceTest {
                     assert costDetails.getTotalCost() == null;
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void getNotificationTimeline() {
+        // the cost details are not part of the timeline: the cost service must not be invoked
+        Mockito.reset(pnNotificationCostServiceClient);
+
+        when(pnDeliveryClientRecipient.getReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(notificationDetailRecipientMock.getNotificationMultiRecipientMock()));
+
+        Mono<BffNotificationTimelineResponse> result = notificationsRecipientService.getNotificationTimeline(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
+        BffNotificationTimelineResponse expected = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(
+                NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(
+                        notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null));
+
+        StepVerifier.create(result)
+                .expectNext(expected)
+                .verifyComplete();
+
+        Mockito.verify(pnNotificationCostServiceClient, Mockito.never())
+                .getNotificationCostRecipient(Mockito.anyString(), Mockito.anyInt());
+    }
+
+    @Test
+    void getNotificationTimelineError() {
+        when(pnDeliveryClientRecipient.getReceivedNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffNotificationTimelineResponse> result = notificationsRecipientService.getNotificationTimeline(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof PnBffException
+                        && ((PnBffException) throwable).getProblem().getStatus() == 404)
+                .verify();
     }
 
     @Test
