@@ -317,9 +317,7 @@ public class NotificationTimelineUtility {
             Integer recIndex,
             Integer attempt) {
 
-        String activeFrom = status.getActiveFrom() != null
-                ? status.getActiveFrom().toInstant().toString()
-                : "NO_ACTIVE_FROM";
+        String activeFrom = status.getActiveFrom().toInstant().toString();
 
         String reworkStatus = status.getReworkedStatus() != null
                 ? status.getReworkedStatus().getValue()

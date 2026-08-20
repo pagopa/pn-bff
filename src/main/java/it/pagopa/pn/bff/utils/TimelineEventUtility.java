@@ -4,9 +4,12 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotific
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineEvent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineGroupCategory;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffTimelineCategory;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.DigitalAddress;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.ServiceLevel;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,28 +127,22 @@ public class TimelineEventUtility {
 
         BffNotificationDetailTimelineDetails details = event.getDetails();
 
-        if (details == null) {
-            return null;
-        }
-
-        // Digital events expose the channel in the digital address type
+        // Digital events expose the channel in the digital address type. Progress events may not
+        // carry it: in that case the event cannot be grouped and is returned as a plain event.
         if (groupCategory == BffNotificationTimelineGroupCategory.DIGITAL) {
-
-            if (details.getDigitalAddress() == null) {
-                return null;
-            }
-
-            return normalizeChannel(details.getDigitalAddress().getType());
+            return Optional.ofNullable(details.getDigitalAddress())
+                    .map(DigitalAddress::getType)
+                    .map(TimelineEventUtility::normalizeChannel)
+                    .orElse(null);
         }
 
-        // Analog events expose the channel in the delivery service level
+        // Analog events expose the channel in the delivery service level. Progress events may not
+        // carry it: in that case the event cannot be grouped and is returned as a plain event.
         if (groupCategory == BffNotificationTimelineGroupCategory.ANALOG) {
-
-            if (details.getServiceLevel() == null) {
-                return null;
-            }
-
-            return normalizeChannel(details.getServiceLevel().getValue());
+            return Optional.ofNullable(details.getServiceLevel())
+                    .map(ServiceLevel::getValue)
+                    .map(TimelineEventUtility::normalizeChannel)
+                    .orElse(null);
         }
 
         return null;
@@ -178,7 +175,6 @@ public class TimelineEventUtility {
         // Digital events has retryNumber as attempt. The counters are zero-based
         if (groupCategory
                 == BffNotificationTimelineGroupCategory.DIGITAL
-                && details != null
                 && details.getRetryNumber() != null
                 && details.getRetryNumber() >= 0) {
 
@@ -187,7 +183,6 @@ public class TimelineEventUtility {
 
         if (groupCategory
                 == BffNotificationTimelineGroupCategory.ANALOG
-                && details != null
                 && details.getSentAttemptMade() != null
                 && details.getSentAttemptMade() >= 0) {
 
@@ -208,9 +203,7 @@ public class TimelineEventUtility {
     public static Integer extractPrepareFailureAttempt(BffNotificationTimelineEvent event) {
         BffNotificationDetailTimelineDetails details = event.getDetails();
 
-        return details != null
-                ? extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true)
-                : null;
+        return extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true);
     }
 
     /**
