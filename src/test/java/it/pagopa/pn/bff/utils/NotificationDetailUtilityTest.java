@@ -89,8 +89,6 @@ class NotificationDetailUtilityTest {
 
         assertEquals(1, calculatedParsedNotification.getOtherDocuments().size());
 
-        calculatedParsedNotification.getOtherDocuments().get(0).setDocumentAvailable(null);
-
         assertEquals(new BffNotificationDetailDocument()
                         .recIndex(0)
                         .documentId(AARTimelineElements.get(0).getDetails().getGeneratedAarUrl())
@@ -117,8 +115,6 @@ class NotificationDetailUtilityTest {
 
         int index = 0;
         for (TimelineElementV28 element : AARTimelineElementsMultiRecipient) {
-            calculatedParsedNotification.getOtherDocuments().get(index).setDocumentAvailable(null);
-
             assertEquals(new BffNotificationDetailDocument()
                             .recIndex(element.getDetails().getRecIndex())
                             .documentId(element.getDetails().getGeneratedAarUrl())
@@ -138,33 +134,33 @@ class NotificationDetailUtilityTest {
     }
 
     @Test
-    void setAarDocumentsAvailability_available() {
+    void setAarDocumentAvailability_available() {
         Clock clock = Clock.fixed(Instant.parse("2036-01-01T09:59:59Z"), ZoneOffset.UTC);
 
         BffFullNotificationV1 notification = buildNotificationForAarAvailability(
                 List.of(buildEffectiveDate("2026-01-01T10:00:00Z", null))
         );
 
-        NotificationDetailUtility.setAarDocumentsAvailability(notification, clock);
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
 
-        assertTrue(notification.getOtherDocuments().get(0).getDocumentAvailable());
+        assertTrue(notification.getAarDocumentAvailable());
     }
 
     @Test
-    void setAarDocumentsAvailability_notAvailable() {
+    void setAarDocumentAvailability_notAvailable() {
         Clock clock = Clock.fixed(Instant.parse("2036-01-01T10:00:00Z"), ZoneOffset.UTC);
 
         BffFullNotificationV1 notification = buildNotificationForAarAvailability(
                 List.of(buildEffectiveDate("2026-01-01T10:00:00Z", null))
         );
 
-        NotificationDetailUtility.setAarDocumentsAvailability(notification, clock);
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
 
-        assertFalse(notification.getOtherDocuments().get(0).getDocumentAvailable());
+        assertFalse(notification.getAarDocumentAvailable());
     }
 
     @Test
-    void setAarDocumentsAvailability_usesValidEffectiveDateAfterRework() {
+    void setAarDocumentAvailability_usesValidEffectiveDateAfterRework() {
         Clock clock = Clock.fixed(Instant.parse("2036-06-22T10:00:00Z"), ZoneOffset.UTC);
 
         BffNotificationStatusHistory oldEffectiveDate = buildEffectiveDate(
@@ -179,20 +175,20 @@ class NotificationDetailUtilityTest {
                 List.of(oldEffectiveDate, newEffectiveDate)
         );
 
-        NotificationDetailUtility.setAarDocumentsAvailability(notification, clock);
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
 
-        assertTrue(notification.getOtherDocuments().get(0).getDocumentAvailable());
+        assertTrue(notification.getAarDocumentAvailable());
     }
 
     @Test
-    void setAarDocumentsAvailability_availableWhenEffectiveDateIsMissing() {
+    void setAarDocumentAvailability_availableWhenEffectiveDateIsMissing() {
         Clock clock = Clock.fixed(Instant.parse("2050-01-01T10:00:00Z"), ZoneOffset.UTC);
 
         BffFullNotificationV1 notification = buildNotificationForAarAvailability(List.of());
 
-        NotificationDetailUtility.setAarDocumentsAvailability(notification, clock);
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
 
-        assertTrue(notification.getOtherDocuments().get(0).getDocumentAvailable());
+        assertTrue(notification.getAarDocumentAvailable());
     }
 
     @Test
@@ -747,12 +743,8 @@ class NotificationDetailUtilityTest {
     private BffFullNotificationV1 buildNotificationForAarAvailability(
             List<BffNotificationStatusHistory> notificationStatusHistory
     ) {
-        BffNotificationDetailDocument aarDocument = new BffNotificationDetailDocument()
-                .documentType(BffLegalFactType.AAR.toString());
-
         BffFullNotificationV1 notification = new BffFullNotificationV1();
         notification.setNotificationStatusHistory(new ArrayList<>(notificationStatusHistory));
-        notification.setOtherDocuments(new ArrayList<>(List.of(aarDocument)));
 
         return notification;
     }

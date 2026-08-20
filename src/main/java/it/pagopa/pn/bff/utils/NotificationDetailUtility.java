@@ -684,11 +684,11 @@ public class NotificationDetailUtility {
         }
     }
 
-    public static void setAarDocumentsAvailability(BffFullNotificationV1 bffFullNotificationV1) {
-        setAarDocumentsAvailability(bffFullNotificationV1, Clock.systemUTC());
+    public static void setAarDocumentAvailability(BffFullNotificationV1 bffFullNotificationV1) {
+        setAarDocumentAvailability(bffFullNotificationV1, Clock.systemUTC());
     }
 
-    static void setAarDocumentsAvailability(BffFullNotificationV1 bffFullNotificationV1, Clock clock) {
+    static void setAarDocumentAvailability(BffFullNotificationV1 bffFullNotificationV1, Clock clock) {
         OffsetDateTime effectiveDate = bffFullNotificationV1.getNotificationStatusHistory().stream()
                 .filter(status -> status.getStatus() == BffNotificationStatus.EFFECTIVE_DATE)
                 .filter(status -> status.getReworkedStatus() != BffNotificationReworkedStatus.NOT_VALID)
@@ -696,11 +696,9 @@ public class NotificationDetailUtility {
                 .max(Comparator.naturalOrder())
                 .orElse(null);
 
-        boolean documentAvailable = effectiveDate == null || OffsetDateTime.now(clock).isBefore(effectiveDate.plusYears(10));
+        boolean aarDocumentAvailable = effectiveDate == null || OffsetDateTime.now(clock).isBefore(effectiveDate.plusYears(10));
 
-        bffFullNotificationV1.getOtherDocuments().stream()
-                .filter(document -> BffLegalFactType.AAR.toString().equals(document.getDocumentType()))
-                .forEach(document -> document.setDocumentAvailable(documentAvailable));
+        bffFullNotificationV1.setAarDocumentAvailable(aarDocumentAvailable);
     }
 
     public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {

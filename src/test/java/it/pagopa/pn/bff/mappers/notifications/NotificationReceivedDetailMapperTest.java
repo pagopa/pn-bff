@@ -87,7 +87,7 @@ class NotificationReceivedDetailMapperTest {
             mockUtil.verify(() -> NotificationDetailUtility.timelineElementMustBeShown(any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.populateMacroSteps(any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.setReworkedStatusOnSteps(any()), times(1));
-            mockUtil.verify(() -> NotificationDetailUtility.setAarDocumentsAvailability(any()), times(1));
+            mockUtil.verify(() -> NotificationDetailUtility.setAarDocumentAvailability(any()), times(1));
             mockUtil.verify(() -> NotificationDetailUtility.sortNotificationStatusHistory(any()), times(1));
 
             // Assert methods are called in the exact order
@@ -102,7 +102,7 @@ class NotificationReceivedDetailMapperTest {
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.timelineElementMustBeShown(any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.populateMacroSteps(any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.setReworkedStatusOnSteps(any()));
-            inOrder.verify(mockUtil, () -> NotificationDetailUtility.setAarDocumentsAvailability(any()));
+            inOrder.verify(mockUtil, () -> NotificationDetailUtility.setAarDocumentAvailability(any()));
             inOrder.verify(mockUtil, () -> NotificationDetailUtility.sortNotificationStatusHistory(any()));
         }
     }

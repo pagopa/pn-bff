@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: DkUf+u5TGkAh6OY6iQJFAzIdlYJfJpN5/qmoFP38ADg=
+  version: H7qlK9SHaFqDCMl1mo4ZdNdgmWiBzjOAmER2QciXIwY=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6709,8 +6709,6 @@ components:
               type: string
             documentType:
               type: string
-            documentAvailable:
-              type: boolean
             recIndex:
               type: number
             recipient:
@@ -6770,6 +6768,8 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
               $ref: '#/components/schemas/BffNotificationDetailTimeline'
+            aarDocumentAvailable:
+              type: boolean
             otherDocuments:
               type: array
               items:

@@ -66,6 +66,8 @@ components:
                 $ref: '#/components/schemas/BffNotificationDetailTimeline'
             radd:
               $ref: '#/components/schemas/BffNotificationDetailTimeline'
+            aarDocumentAvailable:
+              type: boolean
             otherDocuments:
               type: array
               items:
@@ -167,8 +169,6 @@ components:
               type: string
             documentType:
               type: string
-            documentAvailable:
-              type: boolean
             recIndex:
               type: integer
             recipient:
