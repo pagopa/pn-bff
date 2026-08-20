@@ -167,6 +167,8 @@ components:
               type: string
             documentType:
               type: string
+            documentAvailable:
+              type: boolean
             recIndex:
               type: integer
             recipient:

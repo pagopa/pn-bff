@@ -133,10 +133,12 @@ public interface NotificationReceivedDetailMapper {
 
     /**
      * @see NotificationDetailUtility#setReworkedStatusOnSteps(BffFullNotificationV1)
+     * @see NotificationDetailUtility#setAarDocumentsAvailability(BffFullNotificationV1)
      */
     @AfterMapping
     default void setReworkedStatusOnSteps(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.setReworkedStatusOnSteps(bffFullNotificationV1);
+        NotificationDetailUtility.setAarDocumentsAvailability(bffFullNotificationV1);
     }
 
     /**
