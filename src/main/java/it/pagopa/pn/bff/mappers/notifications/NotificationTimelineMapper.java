@@ -20,7 +20,7 @@ public interface NotificationTimelineMapper {
      */
     @Mapping(source = "recipients", target = "recipients")
     @Mapping(target = "notificationStatusHistory", ignore = true)
-    BffNotificationTimelineResponse mapSentNotificationTimeline(BffFullNotificationV1 notification);
+    BffNotificationTimelineResponse mapNotificationTimeline(BffFullNotificationV1 notification);
 
     /**
      * Maps the simple status-history fields.

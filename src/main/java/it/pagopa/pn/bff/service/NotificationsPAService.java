@@ -143,7 +143,7 @@ public class NotificationsPAService {
 
         return notificationDetail.flatMap(notification -> reworkItemsService.getReworkItems(notification)
                         .map(reworkItems -> NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, reworkItems)))
-                .map(NotificationTimelineMapper.modelMapper::mapSentNotificationTimeline);
+                .map(NotificationTimelineMapper.modelMapper::mapNotificationTimeline);
     }
 
     /**
