@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: H7qlK9SHaFqDCMl1mo4ZdNdgmWiBzjOAmER2QciXIwY=
+  version: M4Guz1uQKU8lnPISjYn7Nulb38Zoim9OjK+vAjvqPJ8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6754,6 +6754,7 @@ components:
             - notificationStatusHistory
             - notificationStatus
             - timeline
+            - aarDocumentAvailable
           properties:
             notificationStatusHistory:
               type: array

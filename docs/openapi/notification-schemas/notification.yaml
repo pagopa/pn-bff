@@ -52,6 +52,7 @@ components:
             - notificationStatusHistory
             - notificationStatus
             - timeline
+            - aarDocumentAvailable
           properties:
             notificationStatusHistory:
               type: array
