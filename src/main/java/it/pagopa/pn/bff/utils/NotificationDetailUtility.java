@@ -6,6 +6,8 @@ import it.pagopa.pn.bff.mappers.notifications.BffTimelineMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -680,6 +682,23 @@ public class NotificationDetailUtility {
                 statusHistory.setReworkedStatus(BffNotificationReworkedStatus.VALID);
             }
         }
+    }
+
+    public static void setAarDocumentAvailability(BffFullNotificationV1 bffFullNotificationV1) {
+        setAarDocumentAvailability(bffFullNotificationV1, Clock.systemUTC());
+    }
+
+    static void setAarDocumentAvailability(BffFullNotificationV1 bffFullNotificationV1, Clock clock) {
+        OffsetDateTime effectiveDate = bffFullNotificationV1.getNotificationStatusHistory().stream()
+                .filter(status -> status.getStatus() == BffNotificationStatus.EFFECTIVE_DATE)
+                .filter(status -> status.getReworkedStatus() != BffNotificationReworkedStatus.NOT_VALID)
+                .map(BffNotificationStatusHistory::getActiveFrom)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
+
+        boolean aarDocumentAvailable = effectiveDate == null || OffsetDateTime.now(clock).isBefore(effectiveDate.plusYears(10));
+
+        bffFullNotificationV1.setAarDocumentAvailable(aarDocumentAvailable);
     }
 
     public static void insertInvalidateElementsInTimeline(BffFullNotificationV1 bffFullNotificationV1) {
