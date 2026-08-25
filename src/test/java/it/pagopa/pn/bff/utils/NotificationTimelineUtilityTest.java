@@ -147,13 +147,15 @@ class NotificationTimelineUtilityTest {
     }
 
     @Test
-    void buildGroupIdFallsBackToSentinelsWhenStatusOrActiveFromAreMissing() {
-        List<BffNotificationTimelineStep> steps = statusSteps(null, null,
+    void groupIdIsIndependentOfStatusAndActiveFrom() {
+        List<BffNotificationTimelineStep> withStatus = deliveringSteps(
+                digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"));
+        List<BffNotificationTimelineStep> withoutStatus = statusSteps(null, null,
                 digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"));
 
-        assertEquals(1, steps.size());
-        assertEquals(BffNotificationTimelineStepType.GROUP, steps.get(0).getStepType());
-        assertNotNull(steps.get(0).getGroup().getGroupId());
+        assertEquals(
+                withStatus.get(0).getGroup().getGroupId(),
+                withoutStatus.get(0).getGroup().getGroupId());
     }
 
     @Test
@@ -256,5 +258,8 @@ class NotificationTimelineUtilityTest {
         assertEquals(
                 List.of("SERCQ", "SIMPLE_REGISTERED_LETTER"),
                 steps.stream().map(step -> step.getGroup().getChannel()).sorted().toList());
+
+        // the group id has no placeholder for the missing attempt
+        assertTrue(steps.stream().noneMatch(step -> step.getGroup().getGroupId().contains("ATTEMPT")));
     }
 }

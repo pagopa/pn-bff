@@ -111,7 +111,6 @@ public class NotificationTimelineUtility {
             }
 
             String groupId = buildGroupId(
-                    sourceStatusHistory,
                     groupCategory,
                     channel,
                     recIndex,
@@ -140,7 +139,7 @@ public class NotificationTimelineUtility {
             group.addEventsItem(event);
         }
 
-        associatePrepareFailures(prepareFailures, groups, outputSteps, recipients, sourceStatusHistory);
+        associatePrepareFailures(prepareFailures, groups, outputSteps, recipients);
         associateAnalogWorkflowFailures(analogWorkflowFailures, groups, outputSteps);
 
         // Complete group metadata and apply the ordering
@@ -158,8 +157,7 @@ public class NotificationTimelineUtility {
             List<BffNotificationTimelineEvent> prepareFailures,
             Map<String, BffNotificationTimelineGroup> groups,
             List<BffNotificationTimelineStep> outputSteps,
-            List<NotificationRecipientV24> recipients,
-            BffNotificationStatusHistory sourceStatusHistory) {
+            List<NotificationRecipientV24> recipients) {
 
         for (BffNotificationTimelineEvent event : prepareFailures) {
             Integer recIndex = TimelineEventUtility.extractRecIndex(event);
@@ -174,7 +172,6 @@ public class NotificationTimelineUtility {
 
             String channel = latestGroup.orElseThrow().getChannel();
             String groupId = buildGroupId(
-                    sourceStatusHistory,
                     BffNotificationTimelineGroupCategory.ANALOG,
                     channel,
                     recIndex,
@@ -301,9 +298,10 @@ public class NotificationTimelineUtility {
     }
 
     /**
-     * Builds the identifier used both as group ID and grouping map key
+     * Builds the identifier used both as group ID and grouping map key.
+     * Scoped to the steps of a single status: category, channel and recipient index already
+     * make the group unique there, attempt is only added when the flow has one.
      *
-     * @param status   The current status
      * @param category Current category
      * @param channel  Channel
      * @param recIndex Recipient Index
@@ -311,30 +309,22 @@ public class NotificationTimelineUtility {
      * @return the group identifier
      */
     private static String buildGroupId(
-            BffNotificationStatusHistory status,
             BffNotificationTimelineGroupCategory category,
             String channel,
             Integer recIndex,
             Integer attempt) {
 
-        String activeFrom = status.getActiveFrom() != null
-                ? status.getActiveFrom().toInstant().toString()
-                : "NO_ACTIVE_FROM";
-
-        String reworkStatus = status.getReworkedStatus() != null
-                ? status.getReworkedStatus().getValue()
-                : "NO_REWORK";
-
-        return String.join(
-                "_",
-                status.getStatus() != null ? status.getStatus().getValue() : "NO_STATUS",
-                activeFrom,
-                reworkStatus,
+        List<String> parts = new ArrayList<>(List.of(
                 category.getValue(),
                 TimelineEventUtility.normalizeChannel(channel),
-                "RECINDEX_" + recIndex,
-                attempt != null ? "ATTEMPT_" + attempt : "NO_ATTEMPT"
-        );
+                "RECINDEX_" + recIndex
+        ));
+
+        if (attempt != null) {
+            parts.add("ATTEMPT_" + attempt);
+        }
+
+        return String.join("_", parts);
     }
 
 
