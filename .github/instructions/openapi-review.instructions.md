@@ -4,8 +4,8 @@ applyTo: "docs/openapi/api-internal-*.yaml,docs/openapi/*-schemas/*.yaml,docs/op
 
 # Istruzioni per la review delle sorgenti OpenAPI
 
-Applica severità, confini di fiducia, fail closed, privacy, test e formato dei
-commenti definiti in `.github/copilot-instructions.md`.
+Applica severità, confini di fiducia, fail closed, privacy, test, lingua e
+formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Queste istruzioni riguardano esclusivamente le sorgenti OpenAPI mantenute
 manualmente:
@@ -245,6 +245,8 @@ configurazione del codegen.
 
 ## Focus del commento
 
+Tutti i commenti devono essere scritti in inglese.
+
 Indica sempre:
 
 - operazione, modello, `$ref` o marker interessato;
@@ -255,7 +257,7 @@ Indica sempre:
 
 Non produrre commenti generici come:
 
-- “allineare internal ed external”;
-- “aggiungere gli header all'external”;
-- “modificare il file generato”;
-- “migliorare il modello”.
+- `Align the internal and external specifications`;
+- `Add the authorization headers to the external specification`;
+- `Modify the generated file`;
+- `Improve this model`.

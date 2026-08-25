@@ -88,6 +88,9 @@ Ogni commento deve iniziare con una delle seguenti classificazioni:
 
 Non utilizzare classificazioni differenti da quelle elencate.
 
+Le classificazioni devono rimanere esattamente in questo formato, anche se il
+testo del commento deve essere scritto in inglese.
+
 ### `[BLOCCANTE][AUTORIZZAZIONE]`
 
 Utilizza questa severità quando la modifica consente concretamente:
@@ -207,11 +210,24 @@ Esempi appropriati:
 - dipendenze inutilizzate o configurazioni obsolete introdotte dalla PR;
 - codice irraggiungibile o strutture non utilizzate introdotte dalla modifica.
 
-Non utilizzare `[BASSA][MANUTENIBILITÀ]` per naming, formattazione, ordine dei
-metodi, costrutti equivalenti o richieste generiche di refactoring.
+Non utilizzare `[BASSA][MANUTENIBILITÀ]` per:
 
-Un rilievo di manutenibilità deve spiegare il rischio concreto di divergenza o
-errore e proporre una correzione minima.
+- preferenze di naming;
+- formattazione;
+- ordine dei metodi o degli import;
+- scelta tra costrutti equivalenti;
+- richieste generiche di refactoring;
+- estrazione di metodi senza un beneficio concreto;
+- riduzione del numero di righe;
+- problemi preesistenti non aggravati dalla pull request.
+
+Un rilievo di manutenibilità deve spiegare:
+
+1. quale duplicazione, accoppiamento o complessità viene introdotta;
+2. quale modifica futura potrebbe produrre una divergenza o un errore;
+3. quale correzione minima riduce il rischio.
+
+Non elevare un problema di sola manutenibilità a una severità superiore.
 
 ## Confini di fiducia
 
@@ -432,7 +448,8 @@ Quando una pull request modifica `.github/workflows/**`, verifica:
 
 Classifica come `[BLOCCANTE][SICUREZZA]`:
 
-- esecuzione del codice di una PR non attendibile con secret o token in scrittura;
+- esecuzione del codice di una PR non attendibile con secret o token in
+  scrittura;
 - uso vulnerabile di `pull_request_target`;
 - interpolazione diretta di input controllabile in comandi shell;
 - action non attendibili eseguite con permessi privilegiati;
@@ -521,7 +538,52 @@ Diventa bloccante soltanto quando la modifica mostra già un bypass concreto.
 Non richiedere test per una segnalazione di sola manutenibilità, salvo che la
 correzione proposta modifichi anche il comportamento osservabile.
 
+## Lingua dei commenti
+
+Scrivi tutti i commenti della code review in inglese.
+
+Questo requisito si applica a:
+
+- titolo e testo del rilievo;
+- descrizione dello scenario;
+- spiegazione dell'impatto;
+- correzione suggerita;
+- indicazioni sui test;
+- richieste di verifica;
+- commenti relativi a sicurezza, autorizzazione, privacy, contratto,
+  affidabilità, correttezza e manutenibilità.
+
+Mantieni invariati:
+
+- nomi di classi, metodi, variabili e parametri;
+- path dei file;
+- `operationId`;
+- nomi degli header;
+- codici di errore;
+- messaggi che devono essere citati testualmente;
+- identificatori e termini tecnici presenti nel repository.
+
+Utilizza un inglese tecnico, diretto e professionale.
+
+Non mescolare italiano e inglese nello stesso commento, salvo quando è
+necessario citare testualmente codice, messaggi, descrizioni o identificatori
+esistenti.
+
+Le classificazioni di severità devono rimanere esattamente nel formato definito
+in queste istruzioni:
+
+- `[BLOCCANTE][SICUREZZA]`
+- `[BLOCCANTE][AUTORIZZAZIONE]`
+- `[ALTA][PRIVACY]`
+- `[ALTA][CONTRATTO]`
+- `[ALTA][AFFIDABILITÀ]`
+- `[ALTA][CORRETTEZZA]`
+- `[MEDIA][CORRETTEZZA]`
+- `[BASSA][MANUTENIBILITÀ]`
+
 ## Requisiti dei commenti
+
+Tutti i commenti devono essere scritti in inglese.
 
 Prima di segnalare un problema identifica:
 
@@ -531,9 +593,9 @@ Prima di segnalare un problema identifica:
 4. l'effetto concreto;
 5. la correzione minima.
 
-Per sicurezza e autorizzazione usa uno scenario simile a:
+Per sicurezza e autorizzazione usa uno scenario equivalente a:
 
-`Un chiamante con ruolo X può utilizzare Y per accedere o modificare Z perché il controllo W è assente, alterato o non propagato.`
+`A caller with role X can use Y to access or modify Z because control W is missing, altered, or not propagated.`
 
 Ogni commento deve:
 
@@ -544,56 +606,87 @@ Ogni commento deve:
 - proporre una correzione attuabile;
 - indicare un test solo quando utile a prevenire la regressione.
 
-Per un rilievo di manutenibilità, descrivi il rischio di divergenza, errore o
-difficoltà di modifica introdotto dalla pull request.
+Per un rilievo di manutenibilità, descrivi in inglese il rischio di divergenza,
+errore o difficoltà di modifica introdotto dalla pull request.
 
 Non produrre commenti generici come:
 
-- “migliorare la validazione”;
-- “aggiungere più test”;
-- “valutare un refactoring”;
-- “semplificare questo codice”;
-- “aggiornare le dipendenze”;
-- “verificare il workflow”.
+- `Improve validation`;
+- `Add more tests`;
+- `Consider refactoring this`;
+- `Simplify this code`;
+- `Update the dependencies`;
+- `Check the workflow`;
+- `Improve readability`.
 
-Indica sempre comportamento o struttura interessata, scenario, impatto e
-correzione.
+Indica sempre il comportamento o la struttura interessata, lo scenario,
+l'impatto e la correzione.
 
 ## Esempi di commenti
 
-Esempio di autorizzazione:
+### Autorizzazione
 
-> **[BLOCCANTE][AUTORIZZAZIONE]** Il `mandateId` ricevuto dal controller non
-> viene propagato al client downstream. Un destinatario che opera come delegato
-> può richiedere il documento tramite un IUN valido senza applicare il vincolo
-> del mandato. Propaga `mandateId` attraverso service e `pnclient` e aggiungi un
-> test negativo con un mandato appartenente a un altro soggetto.
+> **[BLOCCANTE][AUTORIZZAZIONE]** The controller receives `mandateId`, but the
+> service does not propagate it to the downstream client. A recipient acting as
+> a delegate can therefore request the document using a valid IUN without
+> enforcing the mandate constraint. Propagate `mandateId` through the service
+> and `pnclient`, and add a negative test using a mandate owned by another
+> subject.
 
-Esempio di workflow:
+### Sicurezza del workflow
 
-> **[BLOCCANTE][SICUREZZA]** Questo job usa `pull_request_target`, esegue il
-> codice della PR e dispone di un token con permesso `contents: write`. Un autore
-> esterno può modificare lo script eseguito e utilizzare il token del repository.
-> Non eseguire il checkout della PR nel contesto privilegiato oppure separa la
-> validazione non attendibile dal job che utilizza il token.
+> **[BLOCCANTE][SICUREZZA]** This job uses `pull_request_target`, checks out the
+> pull request code, and has a token with `contents: write`. An external
+> contributor can modify the executed script and use the repository token.
+> Avoid running pull request code in the privileged context, or separate the
+> untrusted validation job from the job that uses the write token.
 
-Esempio di codegen:
+### Contratto e codegen
 
-> **[ALTA][CONTRATTO]** La nuova specifica downstream è referenziata tramite il
-> branch `develop`, quindi la build può generare client differenti senza
-> modifiche al repository. Fissa `inputSpec` a un commit immutabile e rigenera
-> gli artefatti correlati.
+> **[ALTA][CONTRATTO]** The downstream OpenAPI specification is referenced
+> through the `develop` branch, so identical repository revisions can generate
+> different clients over time. Pin `inputSpec` to an immutable commit and
+> regenerate the affected clients and artifacts.
 
-Esempio di script:
+### Affidabilità dello script
 
-> **[ALTA][AFFIDABILITÀ]** Il comando di generazione ignora il fallimento di
-> Docker e prosegue con gli artefatti precedenti, che possono essere pubblicati
-> come aggiornati. Propaga l'exit code e interrompi lo script prima degli step
-> successivi.
+> **[ALTA][AFFIDABILITÀ]** The generation script ignores the Docker failure and
+> continues with stale artifacts, which can then be published as if they were
+> updated. Propagate the non-zero exit code and stop before any subsequent
+> publication step.
 
-Esempio di manutenibilità:
+### Affidabilità e performance
 
-> **[BASSA][MANUTENIBILITÀ]** Questa modifica duplica nel workflow la versione
-> del codegen già dichiarata nel `pom.xml`. I due valori possono divergere nei
-> prossimi aggiornamenti. Ricava la versione dalla fonte esistente oppure
-> mantieni una sola configurazione canonica.
+> **[ALTA][AFFIDABILITÀ]** This transformation performs a linear lookup for
+> every timeline entry, resulting in quadratic complexity for an unbounded
+> collection. Build the identifier index once and reuse it during mapping,
+> while preserving ordering and duplicate handling.
+
+### Privacy
+
+> **[ALTA][PRIVACY]** This log records the complete downstream error body, which
+> can contain recipient and notification data. Log the status code and trace ID
+> instead, and keep the response body out of application logs.
+
+### Correttezza
+
+> **[ALTA][CORRETTEZZA]** `senderId` and `recipientId` are passed in the reverse
+> order to the service. Both parameters are strings, so the code compiles, but
+> the query is executed for the wrong subject. Restore the generated-client
+> argument order and add a test that verifies both values independently.
+
+### Manutenibilità
+
+> **[BASSA][MANUTENIBILITÀ]** This change duplicates the codegen version in the
+> workflow even though `pom.xml` is already the canonical source. The values can
+> diverge during the next update and generate artifacts with different tool
+> versions. Read the version from `pom.xml` or keep a single canonical
+> configuration.
+
+### Artefatto generato
+
+> **[ALTA][CONTRATTO]** This change only affects the generated external
+> specification and has no corresponding change in the internal source,
+> schemas, or codegen configuration. It will be lost during the next
+> generation. Apply the change to the appropriate source and regenerate the
+> external and AWS artifacts.

@@ -4,8 +4,8 @@ applyTo: "src/**/*.java"
 
 # Istruzioni per la review Java
 
-Applica severità, confini di fiducia, fail closed, privacy, requisiti dei test e
-formato dei commenti definiti in `.github/copilot-instructions.md`.
+Applica severità, confini di fiducia, fail closed, privacy, requisiti dei test,
+lingua e formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Queste istruzioni contengono soltanto controlli specifici per Java, Spring
 WebFlux, MapStruct e per l'architettura di `pn-bff`.
@@ -415,6 +415,8 @@ Per una correzione prestazionale:
 
 ## Focus del commento
 
+Tutti i commenti devono essere scritti in inglese.
+
 Nel commento Java indica sempre:
 
 - classe o metodo;
@@ -428,8 +430,8 @@ complessità o del numero di chiamate.
 
 Non produrre commenti generici come:
 
-- “ottimizzare questo metodo”;
-- “usare uno Stream”;
-- “considerare una cache”;
-- “estrarre un metodo”;
-- “aggiungere più test”.
+- `Optimize this method`;
+- `Use a Stream`;
+- `Consider adding a cache`;
+- `Extract this into a method`;
+- `Add more tests`.

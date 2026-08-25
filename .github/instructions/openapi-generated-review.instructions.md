@@ -4,7 +4,7 @@ applyTo: "docs/openapi/api-external-*.yaml,docs/openapi/aws/*.yaml"
 
 # Istruzioni per la review degli artefatti OpenAPI generati
 
-Applica severità, sicurezza, privacy e formato dei commenti definiti in
+Applica severità, sicurezza, privacy, lingua e formato dei commenti definiti in
 `.github/copilot-instructions.md`.
 
 Questi file sono generati e non devono essere corretti manualmente:
@@ -154,6 +154,8 @@ La sola assenza di automazione non è bloccante.
 
 ## Focus del commento
 
+Tutti i commenti devono essere scritti in inglese.
+
 Indica sempre:
 
 - artefatto interessato;
@@ -164,7 +166,7 @@ Indica sempre:
 
 Non produrre commenti come:
 
-- “allineare internal ed external”;
-- “correggere direttamente questo file”;
-- “rigenerare tutto” senza identificare la causa;
-- “aggiungere gli header internal all'external”.
+- `Align the internal and external specifications`;
+- `Fix this generated file directly`;
+- `Regenerate everything`, without identifying the underlying cause;
+- `Add the internal headers to the external specification`.

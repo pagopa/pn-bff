@@ -4,8 +4,8 @@ applyTo: "functions/**/*"
 
 # Istruzioni per la review delle AWS Lambda
 
-Applica severità, confini di fiducia, fail closed, privacy, test e formato dei
-commenti definiti in `.github/copilot-instructions.md`.
+Applica severità, confini di fiducia, fail closed, privacy, test, lingua e
+formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Ogni directory direttamente sotto `functions/` rappresenta una Lambda
 indipendente con runtime, dipendenze, test e packaging propri.
@@ -195,6 +195,8 @@ tenant, richiedi un test negativo sul confine modificato.
 
 ## Focus del commento
 
+Tutti i commenti devono essere scritti in inglese.
+
 Indica sempre:
 
 - handler e operazione;
@@ -206,7 +208,7 @@ Indica sempre:
 
 Non produrre commenti generici come:
 
-- “validare meglio l'input”;
-- “migliorare la gestione degli errori”;
-- “aggiungere un retry”;
-- “considerare una cache”.
+- `Improve input validation`;
+- `Improve error handling`;
+- `Add a retry`;
+- `Consider adding a cache`.
