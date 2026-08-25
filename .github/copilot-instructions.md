@@ -218,7 +218,7 @@ Non utilizzare `[BASSA][MANUTENIBILITÀ]` per:
 - scelta tra costrutti equivalenti;
 - richieste generiche di refactoring;
 - estrazione di metodi senza un beneficio concreto;
-- riduzione del numero di righe;
+- riduzione del numero di righe fine a sé stessa; la concisione è segnalabile solo quando il codice introdotto dalla pull request è verboso o duplicato e una forma equivalente più breve migliora anche la leggibilità;
 - problemi preesistenti non aggravati dalla pull request.
 
 Un rilievo di manutenibilità deve spiegare:

@@ -25,7 +25,8 @@ Dopo le priorità globali, presta particolare attenzione a:
 5. mapping e nullabilità;
 6. performance di mapper e utility;
 7. chiamate downstream N+1;
-8. test del comportamento modificato.
+8. leggibilità e concisione del codice introdotto;
+9. test del comportamento modificato.
 
 Non produrre micro-ottimizzazioni speculative o suggerimenti stilistici.
 
@@ -389,6 +390,78 @@ CORS ampliato, endpoint arbitrari o disattivazione di controlli esistenti sono
 bloccanti soltanto con uno scenario concreto e raggiungibile nell'ambiente
 interessato.
 
+## Leggibilità e concisione
+
+Oltre a sicurezza, correttezza, affidabilità e performance, valuta la
+leggibilità e la lunghezza del codice introdotto dalla pull request.
+
+Considera solo il codice aggiunto o modificato dalla pull request.
+
+### Leggibilità
+
+Segnala:
+
+- catene reattive con annidamenti profondi di `flatMap`, `map` o `zip` che
+  rendono difficile seguire il flusso principale;
+- condizioni booleane composte non estratte in una variabile o in un metodo con
+  nome esplicativo;
+- metodi che concentrano validazione, mapping, chiamata downstream e gestione
+  degli errori nello stesso percorso;
+- blocchi `if/else` annidati sostituibili con early return o guard clause;
+- variabili temporanee prive di significato o commenti che spiegano codice che
+  può essere reso auto-esplicativo;
+- conversioni scritte a mano che replicano logica già esprimibile in modo
+  dichiarativo con MapStruct.
+
+### Lunghezza e concisione
+
+A parità di comportamento osservabile, preferisci la soluzione che utilizza
+meno righe di codice.
+
+Segnala il codice più verboso del necessario quando esiste un costrutto
+equivalente più breve e altrettanto chiaro, ad esempio:
+
+- `Optional.map` e `orElse` al posto di catene di `if` sui valori nulli;
+- `Stream` e `Collectors` al posto di cicli di accumulo manuale;
+- `List.of` o `Map.of` per collezioni immutabili;
+- `var` soltanto dove il tipo resta evidente dal contesto;
+- text block per stringhe multilinea;
+- `switch` espressivo al posto di catene `if/else` sullo stesso valore;
+- un metodo condiviso quando la pull request introduce blocchi identici
+  duplicati;
+- rimozione di boilerplate evitabile, come null check già garantiti dalla
+  validazione a monte o `try/catch` che si limitano a rilanciare.
+
+La riduzione delle righe non deve mai peggiorare:
+
+- la leggibilità del percorso principale;
+- la gestione e il contesto degli errori;
+- la tracciabilità nei log;
+- il comportamento reattivo, che non deve introdurre operazioni bloccanti;
+- la semantica di ordinamento, duplicati e nullabilità.
+
+### Cosa non segnalare
+
+- pura preferenza stilistica, formattazione, ordine di import o di metodi;
+- one-liner criptici, ternari annidati o catene di stream illeggibili proposti
+  solo per ridurre le righe;
+- codice preesistente non toccato dalla pull request;
+- rinomine di variabili senza un beneficio concreto sulla comprensione.
+
+### Severità e forma del rilievo
+
+Classifica i rilievi di leggibilità e concisione come `[BASSA][MANUTENIBILITÀ]`
+e non elevarli a una severità superiore.
+
+Ogni rilievo deve indicare:
+
+1. classe o metodo interessato;
+2. il punto specifico poco leggibile o verboso;
+3. il motivo concreto per cui rende più difficile la comprensione o la
+   manutenzione;
+4. una correzione minima e attuabile, preferibilmente con un esempio breve del
+   costrutto equivalente più conciso.
+
 ## Test Java
 
 Scegli il livello più vicino al comportamento:
@@ -413,6 +486,9 @@ Per una correzione prestazionale:
   dalla complessità algoritmica;
 - non richiedere benchmark per ogni mapper.
 
+Non richiedere nuovi test per un rilievo di sola leggibilità o concisione,
+salvo che la correzione proposta modifichi il comportamento osservabile.
+
 ## Focus del commento
 
 Tutti i commenti devono essere scritti in inglese.
@@ -428,10 +504,15 @@ Nel commento Java indica sempre:
 Per le performance indica anche dimensione dell'input e variazione della
 complessità o del numero di chiamate.
 
+Per leggibilità e concisione indica il punto specifico e il costrutto
+equivalente proposto, non un principio generale.
+
 Non produrre commenti generici come:
 
 - `Optimize this method`;
 - `Use a Stream`;
 - `Consider adding a cache`;
 - `Extract this into a method`;
-- `Add more tests`.
+- `Add more tests`;
+- `Improve readability`;
+- `Make this shorter`.
