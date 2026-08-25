@@ -426,8 +426,8 @@ public class NotificationTimelineUtility {
     }
 
     /**
-     * Orders groups by recipient and descending attempt while preserving plain-event positions.
-     * A list containing only events is ordered from newest to oldest.
+     * Orders groups by recipient and descending attempt, and plain events from newest to oldest,
+     * each independently of the other while preserving their original slot positions.
      *
      * @param outputSteps timeline steps to order
      */
@@ -462,16 +462,27 @@ public class NotificationTimelineUtility {
             }
         }
 
-        boolean onlyEvents = outputSteps.stream().allMatch(step -> step.getEvent() != null);
+        // Sort plain events independently of groups
+        List<BffNotificationTimelineEvent> sortedEvents = outputSteps.stream()
+                .map(BffNotificationTimelineStep::getEvent)
+                .filter(Objects::nonNull)
+                .sorted(
+                        Comparator.comparing(
+                                BffNotificationTimelineEvent::getTimestamp,
+                                Comparator.nullsLast(Comparator.naturalOrder())
+                        ).reversed()
+                )
+                .toList();
 
-        // When no groups are present, sort the whole event list by timestamp
-        if (onlyEvents) {
-            outputSteps.sort(
-                    Comparator.comparing(
-                            (BffNotificationTimelineStep step) -> step.getEvent().getTimestamp(),
-                            Comparator.nullsLast(Comparator.naturalOrder())
-                    ).reversed()
-            );
+        if (sortedEvents.size() > 1) {
+            Iterator<BffNotificationTimelineEvent> sortedEventIterator = sortedEvents.iterator();
+
+            // Reinsert sorted events into their original slots, preserving group positions
+            for (BffNotificationTimelineStep step : outputSteps) {
+                if (step.getEvent() != null) {
+                    step.setEvent(sortedEventIterator.next());
+                }
+            }
         }
     }
 

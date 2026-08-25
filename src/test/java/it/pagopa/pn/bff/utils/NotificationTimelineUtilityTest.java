@@ -221,6 +221,26 @@ class NotificationTimelineUtilityTest {
     }
 
     @Test
+    void sortPlainEventsWhenMixedWithGroups() {
+        // plain events are sorted from newest to oldest independently of the groups around them
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"),
+                step("REQUEST_ACCEPTED", "2023-08-25T09:15:00Z", BffTimelineCategory.REQUEST_ACCEPTED, null),
+                step("NOTIFICATION_VIEWED", "2023-08-25T09:25:00Z", BffTimelineCategory.NOTIFICATION_VIEWED, null));
+
+        assertEquals(3, steps.size());
+        assertEquals(BffNotificationTimelineStepType.GROUP, steps.get(0).getStepType());
+
+        // the two plain events keep their original slots, but the newest one comes first
+        assertEquals(
+                List.of("NOTIFICATION_VIEWED", "REQUEST_ACCEPTED"),
+                steps.stream()
+                        .filter(step -> step.getStepType() == BffNotificationTimelineStepType.EVENT)
+                        .map(step -> step.getEvent().getElementId())
+                        .toList());
+    }
+
+    @Test
     void groupFlowsWithoutAttempt() {
         List<BffNotificationTimelineStep> steps = deliveringSteps(
                 digitalDelivery(0, 0, "SERCQ", "2023-08-25T09:10:00Z"),
