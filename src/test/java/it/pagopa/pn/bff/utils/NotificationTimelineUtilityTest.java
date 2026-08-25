@@ -36,12 +36,20 @@ class NotificationTimelineUtilityTest {
      * Runs the utility on a single DELIVERING status and returns its steps
      */
     private List<BffNotificationTimelineStep> deliveringSteps(BffNotificationDetailTimeline... steps) {
+        return statusSteps(BffNotificationStatus.DELIVERING, OffsetDateTime.parse("2023-08-25T09:00:00Z"), steps);
+    }
+
+    /**
+     * Runs the utility on a single status with the given status/activeFrom and returns its steps
+     */
+    private List<BffNotificationTimelineStep> statusSteps(BffNotificationStatus status, OffsetDateTime activeFrom,
+                                                            BffNotificationDetailTimeline... steps) {
         BffFullNotificationV1 source = new BffFullNotificationV1()
                 .iun("RTRD-UDGU-QTQY-202308-P-1")
                 .recipients(RECIPIENTS)
                 .notificationStatusHistory(List.of(new BffNotificationStatusHistory()
-                        .status(BffNotificationStatus.DELIVERING)
-                        .activeFrom(OffsetDateTime.parse("2023-08-25T09:00:00Z"))
+                        .status(status)
+                        .activeFrom(activeFrom)
                         .steps(List.of(steps))));
 
         BffNotificationTimelineResponse target = new BffNotificationTimelineResponse();
@@ -136,6 +144,16 @@ class NotificationTimelineUtilityTest {
         assertEquals(1, steps.size());
         assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
         assertEquals("SEND_DIGITAL.RECINDEX_0.ATTEMPT_0", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
+    void buildGroupIdFallsBackToSentinelsWhenStatusOrActiveFromAreMissing() {
+        List<BffNotificationTimelineStep> steps = statusSteps(null, null,
+                digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.GROUP, steps.get(0).getStepType());
+        assertNotNull(steps.get(0).getGroup().getGroupId());
     }
 
     @Test
