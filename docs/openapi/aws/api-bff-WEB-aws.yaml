@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: M4Guz1uQKU8lnPISjYn7Nulb38Zoim9OjK+vAjvqPJ8=
+  version: On4mmnQn9Lu+mT0rtMoe6JO/3CaNRDdiRfqfBvcESJs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -199,6 +199,73 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/sent/{iun}/timeline:
+    get:
+      summary: 'Mittente: Timeline di una notifica'
+      tags:
+        - NotificationSent
+      operationId: getSentNotificationTimelineV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffNotificationTimelineResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/timeline
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/sent/{iun}/timeline API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/sent/{iun}/timeline
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -6781,6 +6848,176 @@ components:
               type: string
               format: date-time
               description: Data di accettazione della notifica/comunicazione
+    BffNotificationTimelineStepType:
+      description: >-
+        Discriminante che indica se lo step rappresenta un evento singolo oppure
+        un gruppo di eventi.
+      type: string
+      enum:
+        - EVENT
+        - GROUP
+    BffNotificationTimelineEvent:
+      description: Evento singolo della timeline esposto al frontend
+      type: object
+      required:
+        - elementId
+        - timestamp
+        - category
+        - details
+        - isHidden
+      properties:
+        elementId:
+          type: string
+          description: Identificativo univoco dell'evento nella timeline
+          maxLength: 512
+        timestamp:
+          type: string
+          format: date-time
+          description: Data e ora dell'evento
+        details:
+          allOf:
+            - $ref: '#/components/schemas/TimelineElementDetailsV28'
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        legalFactsIds:
+          type: array
+          description: Attestazioni opponibili a terzi associate all'evento
+          items:
+            $ref: '#/components/schemas/BffLegalFactId'
+        category:
+          $ref: '#/components/schemas/TimelineElementCategoryV28'
+        isHidden:
+          type: boolean
+          description: >-
+            Indica che il contenuto dell'evento non deve essere mostrato. Un
+            evento nascosto viene comunque restituito quando contiene almeno un
+            legal fact
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
+    BffNotificationTimelineGroupCategory:
+      description: Tipologia del flusso di invio aggregato
+      type: string
+      enum:
+        - COURTESY
+        - DIGITAL
+        - ANALOG
+    BffNotificationTimelineGroup:
+      description: >-
+        Gruppo di eventi relativi allo stesso destinatario, canale e tentativo
+        di invio
+      type: object
+      required:
+        - denomination
+        - taxId
+        - recIndex
+        - category
+        - channel
+        - groupId
+        - hasReworkedEvents
+        - events
+      properties:
+        denomination:
+          type: string
+          description: Denominazione del destinatario
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        taxId:
+          type: string
+          description: Codice fiscale del destinatario
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        recIndex:
+          type: number
+          minimum: 0
+          description: Indice del destinatario nella notifica
+        category:
+          $ref: '#/components/schemas/BffNotificationTimelineGroupCategory'
+        channel:
+          type: string
+          description: Canale utilizzato per l'invio
+        attempt:
+          type: number
+          minimum: 1
+          description: Numero del tentativo di invio, espresso a partire da 1
+        registeredLetterCode:
+          type: string
+          maxLength: 128
+          description: Codice della raccomandata più recente associata al gruppo
+        groupId:
+          type: string
+          maxLength: 512
+          description: Identificativo del gruppo
+        hasReworkedEvents:
+          type: boolean
+          description: >-
+            Indica che almeno un evento appartenente al gruppo è stato coinvolto
+            in un rework e presenta reworkedStatus valorizzato
+        events:
+          type: array
+          minItems: 1
+          description: Eventi che appartengono al gruppo
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/BffNotificationTimelineEvent'
+    BffNotificationTimelineStep:
+      description: >-
+        Elemento della nuova timeline. Può rappresentare un singolo evento
+        oppure un gruppo di eventi appartenenti allo stesso invio.
+      type: object
+      required:
+        - stepType
+      properties:
+        stepType:
+          $ref: '#/components/schemas/BffNotificationTimelineStepType'
+        event:
+          description: Valorizzato quando stepType è EVENT
+          allOf:
+            - $ref: '#/components/schemas/BffNotificationTimelineEvent'
+        group:
+          description: Valorizzato quando stepType è GROUP
+          allOf:
+            - $ref: '#/components/schemas/BffNotificationTimelineGroup'
+    BffNotificationTimelineStatusHistory:
+      type: object
+      required:
+        - status
+        - activeFrom
+        - steps
+      properties:
+        status:
+          $ref: '#/components/schemas/BffNotificationStatus'
+        activeFrom:
+          type: string
+          format: date-time
+        viewedByMandate:
+          type: string
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+        deliveryMode:
+          $ref: '#/components/schemas/BffNotificationDeliveryMode'
+        reworkedStatus:
+          $ref: '#/components/schemas/BffNotificationReworkedStatus'
+        steps:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/BffNotificationTimelineStep'
+    BffNotificationTimelineResponse:
+      type: object
+      required:
+        - iun
+        - subject
+        - recipients
+        - notificationStatusHistory
+      properties:
+        iun:
+          type: string
+        subject:
+          type: string
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationRecipientV24'
+        notificationStatusHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffNotificationTimelineStatusHistory'
     BffDocumentType:
       type: string
       enum:

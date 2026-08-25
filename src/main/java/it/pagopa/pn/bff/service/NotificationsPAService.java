@@ -117,6 +117,36 @@ public class NotificationsPAService {
     }
 
     /**
+     * Get the timeline of a notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the timeline of the notification with a specific IUN
+     */
+    public Mono<BffNotificationTimelineResponse> getSentNotificationTimeline(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups) {
+
+        Mono<FullSentNotificationV29> notificationDetail = pnDeliveryClient.getSentNotification(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryB2bPACXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return notificationDetail.flatMap(notification -> reworkItemsService.getReworkItems(notification)
+                        .map(reworkItems -> NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(notification, reworkItems)))
+                .map(NotificationTimelineMapper.modelMapper::mapNotificationTimeline);
+    }
+
+    /**
      * Download the document linked to a notification. This is for a Public Administration user
      *
      * @param xPagopaPnUid      User Identifier
