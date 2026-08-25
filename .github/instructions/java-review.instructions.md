@@ -5,7 +5,7 @@ applyTo: "src/**/*.java"
 # Istruzioni per la review Java
 
 Applica severità, confini di fiducia, fail closed, privacy, requisiti dei test,
-lingua e formato dei commenti definiti in `.github/copilot-instructions.md`.
+gestione dei dubbi, lingua e formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Queste istruzioni contengono soltanto controlli specifici per Java, Spring
 WebFlux, MapStruct e per l'architettura di `pn-bff`.

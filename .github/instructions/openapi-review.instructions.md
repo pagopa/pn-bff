@@ -4,7 +4,7 @@ applyTo: "docs/openapi/api-internal-*.yaml,docs/openapi/*-schemas/*.yaml,docs/op
 
 # Istruzioni per la review delle sorgenti OpenAPI
 
-Applica severità, confini di fiducia, fail closed, privacy, test, lingua e
+Applica severità, confini di fiducia, fail closed, privacy, test, gestione dei dubbi, lingua e
 formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Queste istruzioni riguardano esclusivamente le sorgenti OpenAPI mantenute

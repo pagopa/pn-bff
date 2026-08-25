@@ -4,7 +4,7 @@ applyTo: "docs/openapi/api-external-*.yaml,docs/openapi/aws/*.yaml"
 
 # Istruzioni per la review degli artefatti OpenAPI generati
 
-Applica severità, sicurezza, privacy, lingua e formato dei commenti definiti in
+Applica severità, sicurezza, privacy, gestione dei dubbi, lingua e formato dei commenti definiti in
 `.github/copilot-instructions.md`.
 
 Questi file sono generati e non devono essere corretti manualmente:

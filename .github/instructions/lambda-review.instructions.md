@@ -4,7 +4,7 @@ applyTo: "functions/**/*"
 
 # Istruzioni per la review delle AWS Lambda
 
-Applica severità, confini di fiducia, fail closed, privacy, test, lingua e
+Applica severità, confini di fiducia, fail closed, privacy, test, gestione dei dubbi, lingua e
 formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Ogni directory direttamente sotto `functions/` rappresenta una Lambda

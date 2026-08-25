@@ -86,7 +86,7 @@ Ogni commento deve iniziare con una delle seguenti classificazioni:
 - `[MEDIA][CORRETTEZZA]`
 - `[BASSA][MANUTENIBILITÀ]`
 
-Non utilizzare classificazioni differenti da quelle elencate.
+Non utilizzare classificazioni differenti da quelle elencate, con la sola eccezione del marcatore `[VERIFICA]`, riservato ai dubbi non confermati e definito nella sezione "Gestione dei dubbi".
 
 Le classificazioni devono rimanere esattamente in questo formato, anche se il
 testo del commento deve essere scritto in inglese.
@@ -580,6 +580,52 @@ in queste istruzioni:
 - `[ALTA][CORRETTEZZA]`
 - `[MEDIA][CORRETTEZZA]`
 - `[BASSA][MANUTENIBILITÀ]`
+
+## Gestione dei dubbi
+
+Se durante la review hai un dubbio, non improvvisare e non presentare
+un'ipotesi come se fosse un fatto verificato.
+
+Considera un dubbio, ad esempio, quando:
+
+- non riesci a determinare se un controllo è applicato altrove nel flusso;
+- non hai visibilità sul comportamento del servizio downstream;
+- non puoi verificare il contenuto di un file non incluso nel diff;
+- non sai se una collezione o un input è limitato contrattualmente;
+- non puoi stabilire se lo scenario che immagini è realmente raggiungibile;
+- l'intento della modifica non è deducibile dal codice e dal contesto della
+  pull request.
+
+In questi casi:
+
+1. dichiara esplicitamente che si tratta di un dubbio e non di un problema
+   confermato;
+2. indica quale informazione manca e perché è necessaria;
+3. descrivi la verifica concreta che il reviewer umano può eseguire;
+4. non proporre una correzione come obbligatoria, ma solo come possibile esito
+   della verifica.
+
+Non trasformare un dubbio in un rilievo bloccante. Assegna una severità
+`[BLOCCANTE]` o `[ALTA]` soltanto quando lo scenario è confermato dal codice
+visibile nella pull request.
+
+Non produrre un rilievo quando l'unico fondamento è una supposizione su codice,
+configurazioni o comportamenti che non puoi osservare.
+
+Se il dubbio riguarda un confine di sicurezza, autorizzazione o privacy,
+segnalalo comunque come richiesta di verifica esplicita, senza affermare che la
+vulnerabilità esiste.
+
+Formato consigliato per un dubbio:
+
+> **[VERIFICA]** I cannot determine from this pull request whether X is
+> enforced, because Y is not visible in the diff. If X is not enforced,
+> Z becomes possible. Please confirm the behaviour of Y, and apply W only if
+> the check is actually missing.
+
+Il marcatore `[VERIFICA]` è ammesso in aggiunta alle classificazioni di
+severità ed è l'unico consentito per i rilievi non confermati. Non combinarlo
+con una classificazione di severità nello stesso commento.
 
 ## Requisiti dei commenti
 
