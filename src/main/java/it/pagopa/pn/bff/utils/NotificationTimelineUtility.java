@@ -54,7 +54,6 @@ public class NotificationTimelineUtility {
         List<BffNotificationTimelineStep> outputSteps =
                 new ArrayList<>();
 
-        List<BffNotificationTimelineEvent> prepareFailures = new ArrayList<>();
         List<BffNotificationTimelineEvent> analogWorkflowFailures = new ArrayList<>();
 
         for (BffNotificationDetailTimeline sourceStep : CommonUtility.safeList(sourceStatusHistory.getSteps())) {
@@ -65,10 +64,23 @@ public class NotificationTimelineUtility {
 
             BffNotificationTimelineEvent event = mapper.mapTimelineElement(sourceStep);
 
-            // These analog failure events do not expose all grouping fields. They are resolved
-            // after the ordinary analog groups have been collected for the current status.
+            // This event only exposes recIndex and its own attempt (from the prepare request
+            // id): it joins the existing analog group for that attempt, already created by the
+            // successful send that always precedes it in the same attempt cycle.
             if (event.getCategory() == BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE) {
-                prepareFailures.add(event);
+                Integer prepareRecIndex = TimelineEventUtility.extractRecIndex(event);
+                Integer prepareAttempt = TimelineEventUtility.extractPrepareFailureAttempt(event);
+
+                BffNotificationTimelineGroup prepareGroup = prepareAttempt != null
+                        ? groups.get(buildGroupId(BffNotificationTimelineGroupCategory.ANALOG, prepareRecIndex, prepareAttempt))
+                        : null;
+
+                if (prepareGroup != null) {
+                    prepareGroup.addEventsItem(event);
+                } else {
+                    outputSteps.add(asStep(event));
+                }
+
                 continue;
             }
 
@@ -112,7 +124,6 @@ public class NotificationTimelineUtility {
 
             String groupId = buildGroupId(
                     groupCategory,
-                    channel,
                     recIndex,
                     attempt
             );
@@ -139,7 +150,6 @@ public class NotificationTimelineUtility {
             group.addEventsItem(event);
         }
 
-        associatePrepareFailures(prepareFailures, groups, outputSteps, recipients);
         associateAnalogWorkflowFailures(analogWorkflowFailures, groups, outputSteps);
 
         // Complete group metadata and apply the ordering
@@ -147,54 +157,6 @@ public class NotificationTimelineUtility {
         sortOutputSteps(outputSteps);
 
         return outputSteps;
-    }
-
-    /**
-     * Associates a prepare failure with its attempt. Since the event does not expose a channel,
-     * the channel is inherited from the latest known analog attempt of the same recipient.
-     */
-    private static void associatePrepareFailures(
-            List<BffNotificationTimelineEvent> prepareFailures,
-            Map<String, BffNotificationTimelineGroup> groups,
-            List<BffNotificationTimelineStep> outputSteps,
-            List<NotificationRecipientV24> recipients) {
-
-        for (BffNotificationTimelineEvent event : prepareFailures) {
-            Integer recIndex = TimelineEventUtility.extractRecIndex(event);
-            Integer attempt = TimelineEventUtility.extractPrepareFailureAttempt(event);
-            Optional<NotificationRecipientV24> recipient = findRecipient(recipients, recIndex);
-            Optional<BffNotificationTimelineGroup> latestGroup = findLatestAnalogGroup(groups.values(), recIndex);
-
-            if (attempt == null || recipient.isEmpty() || latestGroup.isEmpty()) {
-                outputSteps.add(asStep(event));
-                continue;
-            }
-
-            String channel = latestGroup.orElseThrow().getChannel();
-            String groupId = buildGroupId(
-                    BffNotificationTimelineGroupCategory.ANALOG,
-                    channel,
-                    recIndex,
-                    attempt
-            );
-
-            BffNotificationTimelineGroup group = groups.get(groupId);
-
-            if (group == null) {
-                group = createGroup(
-                        groupId,
-                        BffNotificationTimelineGroupCategory.ANALOG,
-                        channel,
-                        recIndex,
-                        attempt,
-                        recipient.orElseThrow()
-                );
-                groups.put(groupId, group);
-                outputSteps.add(asStep(group));
-            }
-
-            group.addEventsItem(event);
-        }
     }
 
     /**
@@ -299,24 +261,22 @@ public class NotificationTimelineUtility {
 
     /**
      * Builds the identifier used both as group ID and grouping map key.
-     * Scoped to the steps of a single status: category, channel and recipient index already
-     * make the group unique there, attempt is only added when the flow has one.
+     * Scoped to the steps of a single status: category and recipient index already make the
+     * group unique there (the channel cannot change across attempts of the same category for a
+     * given recipient), attempt is only added when the flow has one.
      *
      * @param category Current category
-     * @param channel  Channel
      * @param recIndex Recipient Index
      * @param attempt  Current attempt
      * @return the group identifier
      */
     private static String buildGroupId(
             BffNotificationTimelineGroupCategory category,
-            String channel,
             Integer recIndex,
             Integer attempt) {
 
         List<String> parts = new ArrayList<>(List.of(
                 category.getValue(),
-                TimelineEventUtility.normalizeChannel(channel),
                 "RECINDEX_" + recIndex
         ));
 
