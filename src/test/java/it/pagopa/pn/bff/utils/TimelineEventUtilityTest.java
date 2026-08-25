@@ -61,6 +61,27 @@ class TimelineEventUtilityTest {
     }
 
     @Test
+    void extractChannelWithoutDetails() {
+        BffNotificationTimelineEvent event = event(BffTimelineCategory.SEND_DIGITAL_DOMICILE, null);
+
+        assertNull(TimelineEventUtility.extractChannel(event, BffNotificationTimelineGroupCategory.DIGITAL));
+    }
+
+    @Test
+    void extractAttemptWithoutDetailsFallsBackOnElementId() {
+        BffNotificationTimelineEvent event = event(BffTimelineCategory.SEND_DIGITAL_DOMICILE, null);
+
+        assertEquals(3, TimelineEventUtility.extractAttempt(event, BffNotificationTimelineGroupCategory.DIGITAL, "PEC"));
+    }
+
+    @Test
+    void extractPrepareFailureAttemptWithoutDetails() {
+        BffNotificationTimelineEvent event = event(BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE, null);
+
+        assertNull(TimelineEventUtility.extractPrepareFailureAttempt(event));
+    }
+
+    @Test
     void extractAttemptOfFlowWithoutAttempts() {
         BffNotificationTimelineEvent courtesy = event(BffTimelineCategory.SEND_COURTESY_MESSAGE,
                 new BffNotificationDetailTimelineDetails().retryNumber(0));

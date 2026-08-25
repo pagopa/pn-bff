@@ -128,6 +128,17 @@ class NotificationTimelineUtilityTest {
     }
 
     @Test
+    void fallbackToEventWhenDetailsAreMissing() {
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("SEND_DIGITAL.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_DIGITAL_DOMICILE,
+                        null));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
+        assertEquals("SEND_DIGITAL.RECINDEX_0.ATTEMPT_0", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
     void associateAnalogFailuresToLatestAttempt() {
         // the analog failures do not expose the channel: they are resolved on the latest analog attempt
         List<BffNotificationTimelineStep> steps = deliveringSteps(

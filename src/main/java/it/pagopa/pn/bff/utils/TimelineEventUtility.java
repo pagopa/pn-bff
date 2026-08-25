@@ -127,6 +127,10 @@ public class TimelineEventUtility {
 
         BffNotificationDetailTimelineDetails details = event.getDetails();
 
+        if (details == null) {
+            return null;
+        }
+
         // Digital events expose the channel in the digital address type. Progress events may not
         // carry it: in that case the event cannot be grouped and is returned as a plain event.
         if (groupCategory == BffNotificationTimelineGroupCategory.DIGITAL) {
@@ -173,7 +177,8 @@ public class TimelineEventUtility {
         BffNotificationDetailTimelineDetails details = event.getDetails();
 
         // Digital events has retryNumber as attempt. The counters are zero-based
-        if (groupCategory
+        if (details != null
+                && groupCategory
                 == BffNotificationTimelineGroupCategory.DIGITAL
                 && details.getRetryNumber() != null
                 && details.getRetryNumber() >= 0) {
@@ -181,7 +186,8 @@ public class TimelineEventUtility {
             return details.getRetryNumber() + 1;
         }
 
-        if (groupCategory
+        if (details != null
+                && groupCategory
                 == BffNotificationTimelineGroupCategory.ANALOG
                 && details.getSentAttemptMade() != null
                 && details.getSentAttemptMade() >= 0) {
@@ -202,6 +208,10 @@ public class TimelineEventUtility {
      */
     public static Integer extractPrepareFailureAttempt(BffNotificationTimelineEvent event) {
         BffNotificationDetailTimelineDetails details = event.getDetails();
+
+        if (details == null) {
+            return null;
+        }
 
         return extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true);
     }
