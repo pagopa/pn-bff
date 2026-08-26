@@ -61,7 +61,7 @@ Una modifica a un artefatto deve derivare da una modifica coerente a:
 - `codegen/config.json`;
 - versione o configurazione del codegen.
 
-Segnala come `[ALTA][CONTRATTO]`:
+Segnala come `[HIGH][CONTRACT]`:
 
 - modifiche presenti soltanto nell'output;
 - modifiche non derivabili dalle fonti;
@@ -82,7 +82,7 @@ Verifica che:
 - endpoint esclusivamente internal non diventino external;
 - modelli e `$ref` necessari non vengano rimossi.
 
-Classifica come `[BLOCCANTE][AUTORIZZAZIONE]` un output che:
+Classifica come `[BLOCKING][AUTHORIZATION]` un output che:
 
 - espone un endpoint protetto senza `bearerAuth`;
 - rende external un'operazione solo internal;
@@ -90,7 +90,7 @@ Classifica come `[BLOCCANTE][AUTORIZZAZIONE]` un output che:
 - espone dati protetti a causa di un marker errato.
 
 Token, credenziali o segreti nell'output sono
-`[BLOCCANTE][SICUREZZA]`.
+`[BLOCKING][SECURITY]`.
 
 ## Artefatti AWS
 
@@ -105,7 +105,7 @@ Per `docs/openapi/aws/*.yaml` verifica coerenza con:
 - configurazione API Gateway;
 - utilizzo `WEB` o `PUBLIC`.
 
-Segnala come `[ALTA][CONTRATTO]` operazioni mancanti, output nel servizio
+Segnala come `[HIGH][CONTRACT]` operazioni mancanti, output nel servizio
 errato, riferimenti non validi o modifiche prive di una fonte corrispondente.
 
 Usa una severità bloccante se l'output AWS rende concretamente pubblico un

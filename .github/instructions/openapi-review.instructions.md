@@ -52,7 +52,7 @@ Per ogni operazione modificata verifica:
 - minimizzazione dei dati;
 - coerenza dei marker.
 
-Segnala come `[ALTA][CONTRATTO]` rimozioni o rinomine incompatibili non
+Segnala come `[HIGH][CONTRACT]` rimozioni o rinomine incompatibili non
 versionate di operazioni, parametri, campi, enum, header o response code.
 
 Non segnalare una modifica incompatibile esplicitamente dichiarata se la pull
@@ -63,7 +63,7 @@ request gestisce versionamento, migrazione e aggiornamento dei consumer.
 Valuta l'autorizzazione sulla sorgente internal e sulla trasformazione prodotta
 dal codegen.
 
-Segnala come `[BLOCCANTE][AUTORIZZAZIONE]` una modifica che:
+Segnala come `[BLOCKING][AUTHORIZATION]` una modifica che:
 
 - rimuove un header necessario a identità, ruolo, gruppo o delega;
 - elimina gruppi o `mandateId` da un'operazione che li richiede;
@@ -84,7 +84,7 @@ Per ogni blocco con marker verifica che:
 - la security external rimanga presente.
 
 Un marker che produce YAML o riferimenti non validi è
-`[ALTA][CONTRATTO]`. Usa una severità bloccante solo con un bypass concreto.
+`[HIGH][CONTRACT]`. Usa una severità bloccante solo con un bypass concreto.
 
 ## `$ref` e specifiche remote
 
@@ -99,7 +99,7 @@ Verifica che:
 - il modello referenziato sia quello corretto;
 - gli schemi necessari all'external non siano esclusi dai marker.
 
-Segnala come `[ALTA][CONTRATTO]` `$ref` non risolvibili, riferimenti a branch
+Segnala come `[HIGH][CONTRACT]` `$ref` non risolvibili, riferimenti a branch
 mobili o modifiche che impediscono la generazione.
 
 ## Naming dei modelli BFF
@@ -112,7 +112,7 @@ Esempi corretti:
 - `BffDocumentDownloadMetadataResponse`;
 - `BffPaymentInfo`.
 
-Segnala come `[ALTA][CONTRATTO]`:
+Segnala come `[HIGH][CONTRACT]`:
 
 - nuovi modelli BFF privi del prefisso;
 - rimozione del prefisso da modelli modificati;
@@ -144,7 +144,7 @@ pochi campi scalari e privo di oggetti annidati, composizioni o collezioni
 complesse.
 
 Classifica normalmente la posizione errata come
-`[MEDIA][CORRETTEZZA]`; usa `[ALTA][CONTRATTO]` se causa divergenze,
+`[MEDIUM][CORRECTNESS]`; usa `[HIGH][CONTRACT]` se causa divergenze,
 generazione errata o `$ref` non validi.
 
 ## Riuso dei modelli dei microservizi
@@ -166,8 +166,8 @@ evolvere indipendentemente dal downstream.
 
 Non suggerire il riuso se amplia la superficie dati esposta.
 
-Classifica una duplicazione evitabile come `[MEDIA][CORRETTEZZA]`; usa
-`[ALTA][CONTRATTO]` quando esiste già una divergenza funzionale o incompatibile.
+Classifica una duplicazione evitabile come `[MEDIUM][CORRECTNESS]`; usa
+`[HIGH][CONTRACT]` quando esiste già una divergenza funzionale o incompatibile.
 
 ## Required, nullabilità, composizioni ed enum
 

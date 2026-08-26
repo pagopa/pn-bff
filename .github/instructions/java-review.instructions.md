@@ -51,7 +51,7 @@ Segnala:
 - richieste costruite manualmente quando il client generato espone già
   l'operazione.
 
-Usa `[BASSA][MANUTENIBILITÀ]` solo quando la collocazione errata introduce una
+Usa `[LOW][MAINTAINABILITY]` solo quando la collocazione errata introduce una
 duplicazione o un rischio concreto di divergenza, non per preferenze
 architetturali.
 
@@ -89,7 +89,7 @@ Controlla che:
 - venga invocata la variante downstream corretta;
 - `401` e `403` non vengano convertiti in fallback con dati protetti.
 
-Classifica come `[BLOCCANTE][AUTORIZZAZIONE]` soltanto uno scenario concreto
+Classifica come `[BLOCKING][AUTHORIZATION]` soltanto uno scenario concreto
 che consenta accesso non autorizzato, escalation o perdita di ownership.
 
 Non assumere che il possesso di un identificativo autorizzi l'accesso o che il
@@ -112,9 +112,9 @@ La compilazione non rileva lo scambio di parametri dello stesso tipo.
 
 Classifica lo scambio come:
 
-- `[BLOCCANTE][AUTORIZZAZIONE]` se altera identità, ruolo, delega o ownership;
-- `[ALTA][CORRETTEZZA]` se causa una regressione funzionale rilevante;
-- `[MEDIA][CORRETTEZZA]` se l'impatto è circoscritto.
+- `[BLOCKING][AUTHORIZATION]` se altera identità, ruolo, delega o ownership;
+- `[HIGH][CORRECTNESS]` se causa una regressione funzionale rilevante;
+- `[MEDIUM][CORRECTNESS]` se l'impatto è circoscritto.
 
 ## Controller
 
@@ -175,7 +175,7 @@ configurazione del generatore o al `pnclient`, non al sorgente generato.
 
 ## Spring WebFlux e Reactor
 
-Segnala come `[ALTA][AFFIDABILITÀ]`, quando introdotti nel percorso reattivo:
+Segnala come `[HIGH][RELIABILITY]`, quando introdotti nel percorso reattivo:
 
 - `block()`, `blockOptional()` o attese sincrone equivalenti;
 - `Thread.sleep(...)`;
@@ -315,12 +315,12 @@ Controlla soprattutto:
 
 Classifica come:
 
-- `[ALTA][AFFIDABILITÀ]` complessità non limitata, N+1, blocco dei thread o
+- `[HIGH][RELIABILITY]` complessità non limitata, N+1, blocco dei thread o
   rischio concreto di esaurimento delle risorse;
-- `[ALTA][CORRETTEZZA]` regressioni prestazionali rilevanti e riproducibili su
+- `[HIGH][CORRECTNESS]` regressioni prestazionali rilevanti e riproducibili su
   percorsi frequenti;
-- `[MEDIA][CORRETTEZZA]` inefficienze concrete ma circoscritte;
-- `[BASSA][MANUTENIBILITÀ]` solo complessità non necessaria che aumenta il
+- `[MEDIUM][CORRECTNESS]` inefficienze concrete ma circoscritte;
+- `[LOW][MAINTAINABILITY]` solo complessità non necessaria che aumenta il
   rischio di future regressioni, senza impatto prestazionale attuale rilevante.
 
 ### Ottimizzazioni ammesse
@@ -450,7 +450,7 @@ La riduzione delle righe non deve mai peggiorare:
 
 ### Severità e forma del rilievo
 
-Classifica i rilievi di leggibilità e concisione come `[BASSA][MANUTENIBILITÀ]`
+Classifica i rilievi di leggibilità e concisione come `[LOW][MAINTAINABILITY]`
 e non elevarli a una severità superiore.
 
 Ogni rilievo deve indicare:

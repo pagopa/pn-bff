@@ -30,7 +30,7 @@ Account, ambiente, tenant, bucket, chiave, ruolo, ARN, distribution ID,
 parametro SSM ed endpoint devono provenire da configurazione attendibile o da
 una allowlist restrittiva.
 
-Segnala come `[BLOCCANTE][SICUREZZA]`:
+Segnala come `[BLOCKING][SECURITY]`:
 
 - bucket, ruoli, ARN o endpoint arbitrari;
 - accesso S3 senza vincoli su bucket e prefisso;
@@ -42,7 +42,7 @@ Segnala come `[BLOCCANTE][SICUREZZA]`:
 - segreti nel codice, test o eventi di esempio.
 
 L'accesso alle risorse di un altro tenant, ente o ambiente è
-`[BLOCCANTE][AUTORIZZAZIONE]`.
+`[BLOCKING][AUTHORIZATION]`.
 
 ## Validazione dell'evento
 
@@ -87,7 +87,7 @@ Verifica che:
 Il riuso globale di client AWS configurati in modo immutabile è ammesso.
 
 Un'operazione AWS non attesa o concorrenza non limitata è
-`[ALTA][AFFIDABILITÀ]` quando può lasciare operazioni incomplete o esaurire
+`[HIGH][RELIABILITY]` quando può lasciare operazioni incomplete o esaurire
 risorse.
 
 ## Idempotenza
@@ -168,7 +168,7 @@ Per ogni Lambda verifica:
 - assenza di segreti nel package.
 
 Una dipendenza runtime eliminata dal package è
-`[ALTA][AFFIDABILITÀ]`.
+`[HIGH][RELIABILITY]`.
 
 Prima di segnalare un client AWS nelle `devDependencies`, verifica se runtime o
 packaging lo forniscano effettivamente.

@@ -77,21 +77,20 @@ una preferenza stilistica o quando il beneficio suggerito non è concreto.
 
 Ogni commento deve iniziare con una delle seguenti classificazioni:
 
-- `[BLOCCANTE][SICUREZZA]`
-- `[BLOCCANTE][AUTORIZZAZIONE]`
-- `[ALTA][PRIVACY]`
-- `[ALTA][CONTRATTO]`
-- `[ALTA][AFFIDABILITÀ]`
-- `[ALTA][CORRETTEZZA]`
-- `[MEDIA][CORRETTEZZA]`
-- `[BASSA][MANUTENIBILITÀ]`
+- `[BLOCKING][SECURITY]`
+- `[BLOCKING][AUTHORIZATION]`
+- `[HIGH][PRIVACY]`
+- `[HIGH][CONTRACT]`
+- `[HIGH][RELIABILITY]`
+- `[HIGH][CORRECTNESS]`
+- `[MEDIUM][CORRECTNESS]`
+- `[LOW][MAINTAINABILITY]`
 
-Non utilizzare classificazioni differenti da quelle elencate, con la sola eccezione del marcatore `[VERIFICA]`, riservato ai dubbi non confermati e definito nella sezione "Gestione dei dubbi".
+Non utilizzare classificazioni differenti da quelle elencate, con la sola eccezione del marcatore `[VERIFY]`, riservato ai dubbi non confermati e definito nella sezione "Gestione dei dubbi".
 
-Le classificazioni devono rimanere esattamente in questo formato, anche se il
-testo del commento deve essere scritto in inglese.
+Le classificazioni devono essere riprodotte esattamente in questo formato, in maiuscolo e senza spazi tra le due parentesi.
 
-### `[BLOCCANTE][AUTORIZZAZIONE]`
+### `[BLOCKING][AUTHORIZATION]`
 
 Utilizza questa severità quando la modifica consente concretamente:
 
@@ -103,7 +102,7 @@ Utilizza questa severità quando la modifica consente concretamente:
 - accesso basato sul solo possesso di un identificativo;
 - conversione di un accesso negato in una risposta contenente dati protetti.
 
-### `[BLOCCANTE][SICUREZZA]`
+### `[BLOCKING][SECURITY]`
 
 Utilizza questa severità quando la modifica consente concretamente:
 
@@ -135,7 +134,7 @@ Non utilizzare severità bloccanti per:
 - sola assenza di test;
 - preferenze implementative.
 
-### `[ALTA][PRIVACY]`
+### `[HIGH][PRIVACY]`
 
 Utilizza questa severità per:
 
@@ -145,7 +144,7 @@ Utilizza questa severità per:
 - violazioni concrete del principio di minimizzazione;
 - URL prefirmati con durata o ambito eccessivi.
 
-### `[ALTA][CONTRATTO]`
+### `[HIGH][CONTRACT]`
 
 Utilizza questa severità per:
 
@@ -157,7 +156,7 @@ Utilizza questa severità per:
 - modifiche che impediscono o alterano involontariamente la generazione;
 - modifiche manuali destinate a essere perse alla rigenerazione.
 
-### `[ALTA][AFFIDABILITÀ]`
+### `[HIGH][RELIABILITY]`
 
 Utilizza questa severità per:
 
@@ -172,7 +171,7 @@ Utilizza questa severità per:
 - concorrenza non limitata;
 - pipeline CI/CD che può pubblicare artefatti incompleti o non verificati.
 
-### `[ALTA][CORRETTEZZA]`
+### `[HIGH][CORRECTNESS]`
 
 Utilizza questa severità per:
 
@@ -183,7 +182,7 @@ Utilizza questa severità per:
 - errori che compromettono stabilmente il comportamento previsto senza
   costituire un bypass di sicurezza.
 
-### `[MEDIA][CORRETTEZZA]`
+### `[MEDIUM][CORRECTNESS]`
 
 Utilizza questa severità per problemi:
 
@@ -194,7 +193,7 @@ Utilizza questa severità per problemi:
   principali;
 - che causano inefficienze concrete ma limitate.
 
-### `[BASSA][MANUTENIBILITÀ]`
+### `[LOW][MAINTAINABILITY]`
 
 Utilizza questa severità soltanto quando la modifica introduce un problema
 concreto che aumenta significativamente il rischio di errori futuri o rende
@@ -210,7 +209,7 @@ Esempi appropriati:
 - dipendenze inutilizzate o configurazioni obsolete introdotte dalla PR;
 - codice irraggiungibile o strutture non utilizzate introdotte dalla modifica.
 
-Non utilizzare `[BASSA][MANUTENIBILITÀ]` per:
+Non utilizzare `[LOW][MAINTAINABILITY]` per:
 
 - preferenze di naming;
 - formattazione;
@@ -352,10 +351,10 @@ Per `openapi-generator-maven-plugin`, verifica inoltre:
 - assenza di modifiche manuali al codice generato;
 - compatibilità degli output con i contratti BFF.
 
-Segnala come `[ALTA][CONTRATTO]` un aggiornamento della specifica downstream che
+Segnala come `[HIGH][CONTRACT]` un aggiornamento della specifica downstream che
 modifica il client generato senza i corrispondenti adeguamenti applicativi.
 
-Segnala come `[ALTA][AFFIDABILITÀ]` una configurazione Maven che rende la build
+Segnala come `[HIGH][RELIABILITY]` una configurazione Maven che rende la build
 non riproducibile o omette dalla build gli artefatti runtime necessari.
 
 Non proporre aggiornamenti di dipendenze non collegati alla pull request.
@@ -384,8 +383,8 @@ Se cambia la versione di `pn-codegen`, verifica che:
 - non siano mescolate modifiche manuali agli artefatti generati.
 
 Una modifica a `codegen/config.json` che espone concretamente un'API protetta
-nel contesto errato può essere `[BLOCCANTE][SICUREZZA]` o
-`[BLOCCANTE][AUTORIZZAZIONE]`.
+nel contesto errato può essere `[BLOCKING][SECURITY]` o
+`[BLOCKING][AUTHORIZATION]`.
 
 ## Script di build e generazione
 
@@ -414,11 +413,11 @@ Per `scripts/generate-code.sh`, verifica in particolare:
 - assenza di privilegi o accessi al Docker daemon non necessari;
 - rigenerazione coerente di external e AWS.
 
-Classifica come `[BLOCCANTE][SICUREZZA]` una command injection concretamente
+Classifica come `[BLOCKING][SECURITY]` una command injection concretamente
 attivabile o l'esecuzione di un'immagine non attendibile con accesso
 privilegiato.
 
-Classifica come `[ALTA][AFFIDABILITÀ]` uno script che ignora un fallimento e
+Classifica come `[HIGH][RELIABILITY]` uno script che ignora un fallimento e
 produce artefatti parziali considerati validi.
 
 ## GitHub Actions e automazione
@@ -446,7 +445,7 @@ Quando una pull request modifica `.github/workflows/**`, verifica:
 - artifact prodotti soltanto dopo build e test riusciti;
 - protezione degli ambienti e dei deployment.
 
-Classifica come `[BLOCCANTE][SICUREZZA]`:
+Classifica come `[BLOCKING][SECURITY]`:
 
 - esecuzione del codice di una PR non attendibile con secret o token in
   scrittura;
@@ -456,7 +455,7 @@ Classifica come `[BLOCCANTE][SICUREZZA]`:
 - esposizione di secret;
 - pubblicazione o deployment attivabili da un soggetto non autorizzato.
 
-Classifica come `[ALTA][AFFIDABILITÀ]`:
+Classifica come `[HIGH][RELIABILITY]`:
 
 - workflow che può pubblicare senza completare le verifiche richieste;
 - errori ignorati;
@@ -572,14 +571,14 @@ esistenti.
 Le classificazioni di severità devono rimanere esattamente nel formato definito
 in queste istruzioni:
 
-- `[BLOCCANTE][SICUREZZA]`
-- `[BLOCCANTE][AUTORIZZAZIONE]`
-- `[ALTA][PRIVACY]`
-- `[ALTA][CONTRATTO]`
-- `[ALTA][AFFIDABILITÀ]`
-- `[ALTA][CORRETTEZZA]`
-- `[MEDIA][CORRETTEZZA]`
-- `[BASSA][MANUTENIBILITÀ]`
+- `[BLOCKING][SECURITY]`
+- `[BLOCKING][AUTHORIZATION]`
+- `[HIGH][PRIVACY]`
+- `[HIGH][CONTRACT]`
+- `[HIGH][RELIABILITY]`
+- `[HIGH][CORRECTNESS]`
+- `[MEDIUM][CORRECTNESS]`
+- `[LOW][MAINTAINABILITY]`
 
 ## Gestione dei dubbi
 
@@ -606,7 +605,7 @@ In questi casi:
    della verifica.
 
 Non trasformare un dubbio in un rilievo bloccante. Assegna una severità
-`[BLOCCANTE]` o `[ALTA]` soltanto quando lo scenario è confermato dal codice
+`[BLOCKING]` o `[HIGH]` soltanto quando lo scenario è confermato dal codice
 visibile nella pull request.
 
 Non produrre un rilievo quando l'unico fondamento è una supposizione su codice,
@@ -618,12 +617,12 @@ vulnerabilità esiste.
 
 Formato consigliato per un dubbio:
 
-> **[VERIFICA]** I cannot determine from this pull request whether X is
+> **[VERIFY]** I cannot determine from this pull request whether X is
 > enforced, because Y is not visible in the diff. If X is not enforced,
 > Z becomes possible. Please confirm the behaviour of Y, and apply W only if
 > the check is actually missing.
 
-Il marcatore `[VERIFICA]` è ammesso in aggiunta alle classificazioni di
+Il marcatore `[VERIFY]` è ammesso in aggiunta alle classificazioni di
 severità ed è l'unico consentito per i rilievi non confermati. Non combinarlo
 con una classificazione di severità nello stesso commento.
 
@@ -672,7 +671,7 @@ l'impatto e la correzione.
 
 ### Autorizzazione
 
-> **[BLOCCANTE][AUTORIZZAZIONE]** The controller receives `mandateId`, but the
+> **[BLOCKING][AUTHORIZATION]** The controller receives `mandateId`, but the
 > service does not propagate it to the downstream client. A recipient acting as
 > a delegate can therefore request the document using a valid IUN without
 > enforcing the mandate constraint. Propagate `mandateId` through the service
@@ -681,7 +680,7 @@ l'impatto e la correzione.
 
 ### Sicurezza del workflow
 
-> **[BLOCCANTE][SICUREZZA]** This job uses `pull_request_target`, checks out the
+> **[BLOCKING][SECURITY]** This job uses `pull_request_target`, checks out the
 > pull request code, and has a token with `contents: write`. An external
 > contributor can modify the executed script and use the repository token.
 > Avoid running pull request code in the privileged context, or separate the
@@ -689,41 +688,41 @@ l'impatto e la correzione.
 
 ### Contratto e codegen
 
-> **[ALTA][CONTRATTO]** The downstream OpenAPI specification is referenced
+> **[HIGH][CONTRACT]** The downstream OpenAPI specification is referenced
 > through the `develop` branch, so identical repository revisions can generate
 > different clients over time. Pin `inputSpec` to an immutable commit and
 > regenerate the affected clients and artifacts.
 
 ### Affidabilità dello script
 
-> **[ALTA][AFFIDABILITÀ]** The generation script ignores the Docker failure and
+> **[HIGH][RELIABILITY]** The generation script ignores the Docker failure and
 > continues with stale artifacts, which can then be published as if they were
 > updated. Propagate the non-zero exit code and stop before any subsequent
 > publication step.
 
 ### Affidabilità e performance
 
-> **[ALTA][AFFIDABILITÀ]** This transformation performs a linear lookup for
+> **[HIGH][RELIABILITY]** This transformation performs a linear lookup for
 > every timeline entry, resulting in quadratic complexity for an unbounded
 > collection. Build the identifier index once and reuse it during mapping,
 > while preserving ordering and duplicate handling.
 
 ### Privacy
 
-> **[ALTA][PRIVACY]** This log records the complete downstream error body, which
+> **[HIGH][PRIVACY]** This log records the complete downstream error body, which
 > can contain recipient and notification data. Log the status code and trace ID
 > instead, and keep the response body out of application logs.
 
 ### Correttezza
 
-> **[ALTA][CORRETTEZZA]** `senderId` and `recipientId` are passed in the reverse
+> **[HIGH][CORRECTNESS]** `senderId` and `recipientId` are passed in the reverse
 > order to the service. Both parameters are strings, so the code compiles, but
 > the query is executed for the wrong subject. Restore the generated-client
 > argument order and add a test that verifies both values independently.
 
 ### Manutenibilità
 
-> **[BASSA][MANUTENIBILITÀ]** This change duplicates the codegen version in the
+> **[LOW][MAINTAINABILITY]** This change duplicates the codegen version in the
 > workflow even though `pom.xml` is already the canonical source. The values can
 > diverge during the next update and generate artifacts with different tool
 > versions. Read the version from `pom.xml` or keep a single canonical
@@ -731,7 +730,7 @@ l'impatto e la correzione.
 
 ### Artefatto generato
 
-> **[ALTA][CONTRATTO]** This change only affects the generated external
+> **[HIGH][CONTRACT]** This change only affects the generated external
 > specification and has no corresponding change in the internal source,
 > schemas, or codegen configuration. It will be lost during the next
 > generation. Apply the change to the appropriate source and regenerate the
