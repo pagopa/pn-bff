@@ -166,6 +166,37 @@ public class ReceivedNotificationController implements NotificationReceivedApi {
     }
 
     /**
+     * GET bff/v1/notifications/received/{iun}/timeline: Notification timeline
+     * Get the timeline of a notification. This is for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param exchange
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the timeline of the notification with a specific IUN
+     */
+    @Override
+    public Mono<ResponseEntity<BffNotificationTimelineResponse>> getReceivedNotificationTimelineV1(String xPagopaPnUid,
+                                                                                                  CxTypeAuthFleet xPagopaPnCxType,
+                                                                                                  String xPagopaPnCxId,
+                                                                                                  String xPagopaPnSrcCh,
+                                                                                                  String iun,
+                                                                                                  List<String> xPagopaPnCxGroups,
+                                                                                                  String xPagopaPnSrcChDetails,
+                                                                                                  String mandateId,
+                                                                                                  final ServerWebExchange exchange) {
+
+        Mono<BffNotificationTimelineResponse> serviceResponse = notificationsRecipientService.getNotificationTimeline(
+                xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun, xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId
+        );
+
+        return serviceResponse.map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
      * GET bff/v1/notifications/received/{iun}/documents/{documentType}: Notification document
      * Download the document linked to a notification
      *

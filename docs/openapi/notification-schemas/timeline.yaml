@@ -120,8 +120,6 @@ components:
         di invio
       type: object
       required:
-        - denomination
-        - taxId
         - recIndex
         - category
         - channel
