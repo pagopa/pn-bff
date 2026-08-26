@@ -432,6 +432,17 @@ class NotificationRecipientServiceTest {
                 .expectNext(expected)
                 .verifyComplete();
 
+        Mockito.verify(pnDeliveryClientRecipient).getReceivedNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                "IUN",
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                "MANDATE_ID"
+        );
+
         Mockito.verify(pnNotificationCostServiceClient, Mockito.never())
                 .getNotificationCostRecipient(Mockito.anyString(), Mockito.anyInt());
     }
