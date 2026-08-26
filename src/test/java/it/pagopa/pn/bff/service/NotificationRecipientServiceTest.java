@@ -401,6 +401,7 @@ class NotificationRecipientServiceTest {
     void getNotificationTimeline() {
         // the cost details are not part of the timeline: the cost service must not be invoked
         Mockito.reset(pnNotificationCostServiceClient);
+        Mockito.reset(pnDeliveryClientRecipient);
 
         when(pnDeliveryClientRecipient.getReceivedNotification(
                 Mockito.anyString(),

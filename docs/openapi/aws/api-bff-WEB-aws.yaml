@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Z5y7NTtdv+G7GczTzzFgoLkRWJjYdaxcWXhRjI2V5jg=
+  version: yZA60aLiXHB3y1bpJ3qq+O0/jiRqIPAbeg/mOfJZWpk=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6986,17 +6986,11 @@ components:
       properties:
         denomination:
           type: string
-          description: >-
-            Denominazione del destinatario. Non valorizzata per i destinatari
-            anonimizzati, ovvero, nella vista destinatario di una notifica
-            multi-destinatario, tutti quelli diversi dal richiedente
+          description: Denominazione del destinatario
           x-field-extra-annotation: '@lombok.ToString.Exclude'
         taxId:
           type: string
-          description: >-
-            Codice fiscale del destinatario. Non valorizzato per i destinatari
-            anonimizzati, ovvero, nella vista destinatario di una notifica
-            multi-destinatario, tutti quelli diversi dal richiedente
+          description: Codice fiscale del destinatario
           x-field-extra-annotation: '@lombok.ToString.Exclude'
         recIndex:
           type: number

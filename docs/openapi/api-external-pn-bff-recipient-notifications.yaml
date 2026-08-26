@@ -147,7 +147,7 @@ paths:
 
   '/bff/v1/notifications/received/{iun}/timeline':
     get:
-      summary: "Destinatario: Timeline di una notifica"
+      summary: 'Destinatario: Timeline di una notifica'
       description: >-
         Utilizzato da Persone Fisiche e Persone Giuridiche per accedere alla timeline delle
         notifiche ricevute.
