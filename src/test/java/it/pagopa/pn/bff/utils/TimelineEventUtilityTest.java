@@ -20,7 +20,7 @@ class TimelineEventUtilityTest {
         BffNotificationTimelineEvent event = event(BffTimelineCategory.SEND_DIGITAL_DOMICILE,
                 new BffNotificationDetailTimelineDetails().digitalAddress(new DigitalAddress().type("pec")));
 
-        assertEquals("PEC", TimelineEventUtility.extractChannel(event, BffNotificationTimelineGroupCategory.DIGITAL));
+        assertEquals(BffNotificationTimelineGroupChannel.PEC, TimelineEventUtility.extractChannel(event, BffNotificationTimelineGroupCategory.DIGITAL));
     }
 
     @Test
@@ -28,7 +28,7 @@ class TimelineEventUtilityTest {
         BffNotificationTimelineEvent event = event(BffTimelineCategory.SEND_ANALOG_DOMICILE,
                 new BffNotificationDetailTimelineDetails().serviceLevel(ServiceLevel.AR_REGISTERED_LETTER));
 
-        assertEquals("AR_REGISTERED_LETTER", TimelineEventUtility.extractChannel(event, BffNotificationTimelineGroupCategory.ANALOG));
+        assertEquals(BffNotificationTimelineGroupChannel.AR_REGISTERED_LETTER, TimelineEventUtility.extractChannel(event, BffNotificationTimelineGroupCategory.ANALOG));
     }
 
     @Test
@@ -56,8 +56,8 @@ class TimelineEventUtilityTest {
         BffNotificationTimelineEvent analog = event(BffTimelineCategory.SEND_ANALOG_DOMICILE,
                 new BffNotificationDetailTimelineDetails().sentAttemptMade(1));
 
-        assertEquals(1, TimelineEventUtility.extractAttempt(digital, BffNotificationTimelineGroupCategory.DIGITAL, "PEC"));
-        assertEquals(2, TimelineEventUtility.extractAttempt(analog, BffNotificationTimelineGroupCategory.ANALOG, "AR_REGISTERED_LETTER"));
+        assertEquals(1, TimelineEventUtility.extractAttempt(digital, BffNotificationTimelineGroupCategory.DIGITAL, BffNotificationTimelineGroupChannel.PEC));
+        assertEquals(2, TimelineEventUtility.extractAttempt(analog, BffNotificationTimelineGroupCategory.ANALOG, BffNotificationTimelineGroupChannel.AR_REGISTERED_LETTER));
     }
 
     @Test
@@ -71,7 +71,7 @@ class TimelineEventUtilityTest {
     void extractAttemptWithoutDetailsFallsBackOnElementId() {
         BffNotificationTimelineEvent event = event(BffTimelineCategory.SEND_DIGITAL_DOMICILE, null);
 
-        assertEquals(3, TimelineEventUtility.extractAttempt(event, BffNotificationTimelineGroupCategory.DIGITAL, "PEC"));
+        assertEquals(3, TimelineEventUtility.extractAttempt(event, BffNotificationTimelineGroupCategory.DIGITAL, BffNotificationTimelineGroupChannel.PEC));
     }
 
     @Test
@@ -86,7 +86,7 @@ class TimelineEventUtilityTest {
         BffNotificationTimelineEvent courtesy = event(BffTimelineCategory.SEND_COURTESY_MESSAGE,
                 new BffNotificationDetailTimelineDetails().retryNumber(0));
 
-        assertNull(TimelineEventUtility.extractAttempt(courtesy, BffNotificationTimelineGroupCategory.COURTESY, "COURTESY"));
+        assertNull(TimelineEventUtility.extractAttempt(courtesy, BffNotificationTimelineGroupCategory.COURTESY, BffNotificationTimelineGroupChannel.COURTESY));
     }
 
     @Test

@@ -101,7 +101,7 @@ public class NotificationTimelineUtility {
 
             // Extract all data required by the grouping key
             Integer recIndex = TimelineEventUtility.extractRecIndex(event);
-            String channel = TimelineEventUtility.extractChannel(event, groupCategory);
+            BffNotificationTimelineGroupChannel channel = TimelineEventUtility.extractChannel(event, groupCategory);
             Integer attempt = TimelineEventUtility.extractAttempt(
                     event,
                     groupCategory,
@@ -244,7 +244,7 @@ public class NotificationTimelineUtility {
      */
     private static boolean canBeGrouped(
             BffNotificationTimelineGroupCategory category,
-            String channel,
+            BffNotificationTimelineGroupChannel channel,
             Integer recIndex,
             Integer attempt,
             Optional<NotificationRecipientV24> recipient) {
@@ -302,7 +302,7 @@ public class NotificationTimelineUtility {
     private static BffNotificationTimelineGroup createGroup(
             String groupId,
             BffNotificationTimelineGroupCategory category,
-            String channel,
+            BffNotificationTimelineGroupChannel channel,
             Integer recIndex,
             Integer attempt,
             NotificationRecipientV24 recipient) {
@@ -311,7 +311,7 @@ public class NotificationTimelineUtility {
 
         group.setGroupId(groupId);
         group.setCategory(category);
-        group.setChannel(TimelineEventUtility.normalizeChannel(channel));
+        group.setChannel(channel);
         group.setRecIndex(recIndex);
         group.setAttempt(attempt);
         group.setDenomination(recipient.getDenomination());

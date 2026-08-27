@@ -89,7 +89,7 @@ class NotificationTimelineUtilityTest {
         // the two events of the first attempt are collapsed, from the newest to the oldest
         BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
         assertEquals(1, firstAttempt.getAttempt());
-        assertEquals("PEC", firstAttempt.getChannel());
+        assertEquals(BffNotificationTimelineGroupChannel.PEC, firstAttempt.getChannel());
         assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, firstAttempt.getCategory());
         assertEquals(RECIPIENTS.get(0).getTaxId(), firstAttempt.getTaxId());
         assertEquals(RECIPIENTS.get(0).getDenomination(), firstAttempt.getDenomination());
@@ -177,7 +177,7 @@ class NotificationTimelineUtilityTest {
         assertEquals(1, steps.size());
 
         BffNotificationTimelineGroup group = steps.get(0).getGroup();
-        assertEquals("AR_REGISTERED_LETTER", group.getChannel());
+        assertEquals(BffNotificationTimelineGroupChannel.AR_REGISTERED_LETTER, group.getChannel());
         assertEquals(1, group.getAttempt());
         assertEquals(
                 List.of("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0",
@@ -271,7 +271,7 @@ class NotificationTimelineUtilityTest {
         assertTrue(steps.stream().allMatch(step -> step.getStepType() == BffNotificationTimelineStepType.GROUP));
         assertTrue(steps.stream().allMatch(step -> step.getGroup().getAttempt() == null));
         assertEquals(
-                List.of("SERCQ", "SIMPLE_REGISTERED_LETTER"),
+                List.of(BffNotificationTimelineGroupChannel.SIMPLE_REGISTERED_LETTER, BffNotificationTimelineGroupChannel.SERCQ),
                 steps.stream().map(step -> step.getGroup().getChannel()).sorted().toList());
 
         // the group id has no placeholder for the missing attempt

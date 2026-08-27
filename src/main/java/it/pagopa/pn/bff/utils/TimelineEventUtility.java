@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.utils;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimelineDetails;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineEvent;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineGroupCategory;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineGroupChannel;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffTimelineCategory;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.DigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.ServiceLevel;
@@ -22,12 +23,6 @@ public class TimelineEventUtility {
 
     private static final Pattern ATTEMPT_PATTERN =
             Pattern.compile("(?:^|\\.)ATTEMPT_(\\d+)(?:\\.|$)");
-
-    private static final String SERCQ_CHANNEL = "SERCQ";
-
-    private static final String COURTESY_CHANNEL = "COURTESY";
-
-    public static final String SIMPLE_REGISTERED_LETTER_CHANNEL = "SIMPLE_REGISTERED_LETTER";
 
     /**
      * Maps each groupable event category to the related group category
@@ -108,7 +103,7 @@ public class TimelineEventUtility {
      * @param groupCategory group category of the event
      * @return the normalized channel, or null when it cannot be determined
      */
-    public static String extractChannel(
+    public static BffNotificationTimelineGroupChannel extractChannel(
             BffNotificationTimelineEvent event,
             BffNotificationTimelineGroupCategory groupCategory) {
 
@@ -118,11 +113,11 @@ public class TimelineEventUtility {
 
         // Use conventional channels for flows without a meaningful source channel
         if (isSimpleRegisteredLetter(event.getCategory())) {
-            return SIMPLE_REGISTERED_LETTER_CHANNEL;
+            return BffNotificationTimelineGroupChannel.SIMPLE_REGISTERED_LETTER;
         }
 
         if (groupCategory == BffNotificationTimelineGroupCategory.COURTESY) {
-            return COURTESY_CHANNEL;
+            return BffNotificationTimelineGroupChannel.COURTESY;
         }
 
         BffNotificationDetailTimelineDetails details = event.getDetails();
@@ -163,7 +158,7 @@ public class TimelineEventUtility {
     public static Integer extractAttempt(
             BffNotificationTimelineEvent event,
             BffNotificationTimelineGroupCategory groupCategory,
-            String channel) {
+            BffNotificationTimelineGroupChannel channel) {
 
         // Exclude flows for which an attempt is not part of the grouping key
         if (groupCategory == null
@@ -228,15 +223,21 @@ public class TimelineEventUtility {
     }
 
     /**
-     * Normalizes a channel for comparisons and group identifiers
+     * Normalizes a raw channel value and resolves it to the corresponding group channel
      *
-     * @param channel event channel
-     * @return the trimmed uppercase channel, or null when blank
+     * @param channel raw event channel
+     * @return the matching group channel, or null when blank or unrecognized
      */
-    public static String normalizeChannel(String channel) {
-        return channel == null || channel.isBlank()
-                ? null
-                : channel.trim().toUpperCase(Locale.ROOT);
+    public static BffNotificationTimelineGroupChannel normalizeChannel(String channel) {
+        if (channel == null || channel.isBlank()) {
+            return null;
+        }
+
+        try {
+            return BffNotificationTimelineGroupChannel.fromValue(channel.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
+            return null;
+        }
     }
 
     /**
@@ -248,13 +249,13 @@ public class TimelineEventUtility {
      */
     public static boolean requiresAttempt(
             BffNotificationTimelineGroupCategory category,
-            String channel) {
+            BffNotificationTimelineGroupChannel channel) {
 
         if (category == BffNotificationTimelineGroupCategory.COURTESY) {
             return false;
         }
 
-        if (TimelineEventUtility.SIMPLE_REGISTERED_LETTER_CHANNEL.equals(channel)) {
+        if (channel == BffNotificationTimelineGroupChannel.SIMPLE_REGISTERED_LETTER) {
             return false;
         }
 
@@ -268,10 +269,10 @@ public class TimelineEventUtility {
      * @param channel  event channel
      * @return true for digital SERCQ events
      */
-    public static boolean isSercqSendEvent(BffNotificationTimelineGroupCategory category, String channel) {
+    public static boolean isSercqSendEvent(BffNotificationTimelineGroupCategory category, BffNotificationTimelineGroupChannel channel) {
         return category
                 == BffNotificationTimelineGroupCategory.DIGITAL
-                && SERCQ_CHANNEL.equalsIgnoreCase(channel);
+                && channel == BffNotificationTimelineGroupChannel.SERCQ;
     }
 
     /**
