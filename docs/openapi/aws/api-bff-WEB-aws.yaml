@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: yZA60aLiXHB3y1bpJ3qq+O0/jiRqIPAbeg/mOfJZWpk=
+  version: k22m6Fvtxf4aHZCPAnDZLDmk+rFMv7axnKrBY9Q5wQo=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6971,6 +6971,16 @@ components:
         - COURTESY
         - DIGITAL
         - ANALOG
+    BffNotificationTimelineGroupChannel:
+      description: The channel of the group
+      type: string
+      enum:
+        - AR_REGISTERED_LETTER
+        - REGISTERED_LETTER_890
+        - SIMPLE_REGISTERED_LETTER
+        - PEC
+        - SERCQ
+        - COURTESY
     BffNotificationTimelineGroup:
       description: >-
         Gruppo di eventi relativi allo stesso destinatario, canale e tentativo
@@ -6999,8 +7009,7 @@ components:
         category:
           $ref: '#/components/schemas/BffNotificationTimelineGroupCategory'
         channel:
-          type: string
-          description: Canale utilizzato per l'invio
+          $ref: '#/components/schemas/BffNotificationTimelineGroupChannel'
         attempt:
           type: number
           minimum: 1

@@ -143,8 +143,7 @@ components:
         category:
           $ref: '#/components/schemas/BffNotificationTimelineGroupCategory'
         channel:
-          type: string
-          description: Canale utilizzato per l'invio
+          $ref: '#/components/schemas/BffNotificationTimelineGroupChannel'
         attempt:
           type: integer
           format: int32
@@ -178,3 +177,14 @@ components:
         - COURTESY
         - DIGITAL
         - ANALOG
+
+    BffNotificationTimelineGroupChannel:
+      description: The channel of the group
+      type: string
+      enum:
+        - AR_REGISTERED_LETTER
+        - REGISTERED_LETTER_890
+        - SIMPLE_REGISTERED_LETTER
+        - PEC
+        - SERCQ
+        - COURTESY
