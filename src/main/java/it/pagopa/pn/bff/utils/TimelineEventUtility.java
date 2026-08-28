@@ -8,9 +8,11 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffTimelin
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.DigitalAddress;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.ServiceLevel;
 
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,6 +78,31 @@ public class TimelineEventUtility {
     public static BffNotificationTimelineGroupCategory extractGroupCategory(BffTimelineCategory eventCategory) {
         return eventCategory != null
                 ? GROUP_CATEGORY_BY_EVENT.get(eventCategory)
+                : null;
+    }
+
+    /**
+     * Maps each event category with no attempt of its own to the group categories it can close
+     */
+    private static final Map<BffTimelineCategory, Set<BffNotificationTimelineGroupCategory>> CLOSING_TARGET_CATEGORIES =
+            Map.of(
+                    BffTimelineCategory.ANALOG_FAILURE_WORKFLOW,
+                    EnumSet.of(BffNotificationTimelineGroupCategory.ANALOG, BffNotificationTimelineGroupCategory.ANALOG_FAILURE),
+                    BffTimelineCategory.COMPLETELY_UNREACHABLE,
+                    EnumSet.of(BffNotificationTimelineGroupCategory.ANALOG, BffNotificationTimelineGroupCategory.ANALOG_FAILURE),
+                    BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW,
+                    EnumSet.of(BffNotificationTimelineGroupCategory.DIGITAL)
+            );
+
+    /**
+     * Returns the group categories a closing event of the given category can join
+     *
+     * @param eventCategory timeline event category
+     * @return the candidate group categories, or null when the event is not a closing event
+     */
+    public static Set<BffNotificationTimelineGroupCategory> extractClosingTargetCategories(BffTimelineCategory eventCategory) {
+        return eventCategory != null
+                ? CLOSING_TARGET_CATEGORIES.get(eventCategory)
                 : null;
     }
 

@@ -122,7 +122,6 @@ components:
       required:
         - recIndex
         - category
-        - channel
         - groupId
         - hasReworkedEvents
         - events
@@ -177,6 +176,7 @@ components:
         - COURTESY
         - DIGITAL
         - ANALOG
+        - ANALOG_FAILURE
 
     BffNotificationTimelineGroupChannel:
       description: The channel of the group

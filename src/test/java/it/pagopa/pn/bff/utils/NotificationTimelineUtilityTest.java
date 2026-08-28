@@ -159,9 +159,10 @@ class NotificationTimelineUtilityTest {
     }
 
     @Test
-    void associateAnalogFailuresToLatestAttempt() {
-        // the prepare failure joins the group of the matching attempt (from its prepare request
-        // id); the workflow failure has no attempt of its own and joins the latest analog group
+    void prepareFailureFormsItsOwnGroupWithARealAttempt() {
+        // the prepare failure of a second attempt that never produced a send forms its own
+        // ANALOG_FAILURE group, carrying the real attempt number from its prepare request id;
+        // the earlier send stays in its own, unrelated attempt group
         List<BffNotificationTimelineStep> steps = deliveringSteps(
                 step("SEND_ANALOG.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_ANALOG_DOMICILE,
                         new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)
@@ -169,34 +170,232 @@ class NotificationTimelineUtilityTest {
                 step("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0", "2023-08-25T09:20:00Z",
                         BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
                         new BffNotificationDetailTimelineDetails().recIndex(0)
-                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_0.ATTEMPT_0")),
+                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_0.ATTEMPT_1")));
+
+        assertEquals(2, steps.size());
+
+        // its attempt (2) is higher than the send's (1): it sorts first with no special-casing
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
+        assertNull(failureGroup.getChannel());
+        assertEquals(2, failureGroup.getAttempt());
+        assertEquals(
+                List.of("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
+                failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup sendGroup = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
+        assertEquals(1, sendGroup.getAttempt());
+    }
+
+    @Test
+    void workflowFailureJoinsThePrepareFailureGroupWhenBothExist() {
+        // the workflow failure has no attempt of its own: when a prepare failure already created
+        // an ANALOG_FAILURE group more recent than the send group, it joins that one
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("SEND_ANALOG.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_ANALOG_DOMICILE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)
+                                .serviceLevel(ServiceLevel.AR_REGISTERED_LETTER)),
+                step("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0", "2023-08-25T09:20:00Z",
+                        BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)
+                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_0.ATTEMPT_1")),
                 step("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "2023-08-25T09:30:00Z",
+                        BffTimelineCategory.ANALOG_FAILURE_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(2, steps.size());
+
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
+        assertEquals(2, failureGroup.getAttempt());
+        assertEquals(
+                List.of("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
+                failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup sendGroup = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
+        assertEquals(1, sendGroup.getAttempt());
+        assertEquals(
+                List.of("SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
+                sendGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+    }
+
+    @Test
+    void workflowFailureJoinsTheLatestSendGroupWhenNoPrepareFailureExists() {
+        // a successfully prepared attempt that still fails on its own outcome closes out with a
+        // workflow failure alone: it joins the existing send group, no ANALOG_FAILURE group is
+        // created for it
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("SEND_ANALOG.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_ANALOG_DOMICILE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)
+                                .serviceLevel(ServiceLevel.AR_REGISTERED_LETTER)),
+                step("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "2023-08-25T09:20:00Z",
                         BffTimelineCategory.ANALOG_FAILURE_WORKFLOW,
                         new BffNotificationDetailTimelineDetails().recIndex(0)));
 
         assertEquals(1, steps.size());
 
         BffNotificationTimelineGroup group = steps.get(0).getGroup();
-        assertEquals(BffNotificationTimelineGroupChannel.AR_REGISTERED_LETTER, group.getChannel());
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, group.getCategory());
         assertEquals(1, group.getAttempt());
         assertEquals(
-                List.of("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0",
-                        "SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
+                List.of("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
                 group.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
     }
 
     @Test
-    void prepareFailureFallsBackToEventWhenNoMatchingGroupExists() {
-        // no analog send exists at all for this recipient: the failure cannot join any group
+    void completelyUnreachableJoinsThePrepareFailureGroupWhenBothExist() {
+        // COMPLETELY_UNREACHABLE has no attempt of its own either: it is resolved exactly like
+        // ANALOG_FAILURE_WORKFLOW, joining the ANALOG_FAILURE group already created by the
+        // prepare failure
         List<BffNotificationTimelineStep> steps = deliveringSteps(
-                step("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0", "2023-08-25T09:10:00Z",
+                step("SEND_ANALOG.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_ANALOG_DOMICILE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)
+                                .serviceLevel(ServiceLevel.AR_REGISTERED_LETTER)),
+                step("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0", "2023-08-25T09:20:00Z",
                         BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
                         new BffNotificationDetailTimelineDetails().recIndex(0)
-                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_0.ATTEMPT_0")));
+                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_0.ATTEMPT_1")),
+                step("COMPLETELY_UNREACHABLE.RECINDEX_0", "2023-08-25T09:30:00Z",
+                        BffTimelineCategory.COMPLETELY_UNREACHABLE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(2, steps.size());
+
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
+        assertEquals(2, failureGroup.getAttempt());
+        assertEquals(
+                List.of("COMPLETELY_UNREACHABLE.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
+                failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+    }
+
+    @Test
+    void completelyUnreachableJoinsTheLatestSendGroupWhenNoPrepareFailureExists() {
+        // no prepare failure exists: COMPLETELY_UNREACHABLE joins the existing send group, no
+        // ANALOG_FAILURE group is created for it
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("SEND_ANALOG.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:10:00Z", BffTimelineCategory.SEND_ANALOG_DOMICILE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)
+                                .serviceLevel(ServiceLevel.AR_REGISTERED_LETTER)),
+                step("COMPLETELY_UNREACHABLE.RECINDEX_0", "2023-08-25T09:20:00Z",
+                        BffTimelineCategory.COMPLETELY_UNREACHABLE,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(1, steps.size());
+
+        BffNotificationTimelineGroup group = steps.get(0).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, group.getCategory());
+        assertEquals(1, group.getAttempt());
+        assertEquals(
+                List.of("COMPLETELY_UNREACHABLE.RECINDEX_0", "SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
+                group.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+    }
+
+    @Test
+    void prepareFailureFallsBackToEventWhenRecipientCannotBeResolved() {
+        // an out-of-range recipient index cannot be resolved: the failure cannot join any group
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_9", "2023-08-25T09:10:00Z",
+                        BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
+                        new BffNotificationDetailTimelineDetails().recIndex(9)
+                                .prepareRequestId("PREPARE_ANALOG_DOMICILE.RECINDEX_9.ATTEMPT_0")));
 
         assertEquals(1, steps.size());
         assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
-        assertEquals("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0", steps.get(0).getEvent().getElementId());
+        assertEquals("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_9", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
+    void workflowFailureFallsBackToEventWhenNoAnalogGroupExists() {
+        // no analog activity at all for this recipient: the workflow failure cannot join any group
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "2023-08-25T09:10:00Z",
+                        BffTimelineCategory.ANALOG_FAILURE_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
+        assertEquals("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
+    void digitalFailureWorkflowJoinsTheLatestDigitalGroup() {
+        // DIGITAL_FAILURE_WORKFLOW has no attempt of its own either: there is no digital
+        // prepare-failure category, so it always joins the most recent existing DIGITAL group
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"),
+                digitalDelivery(0, 1, "PEC", "2023-08-25T09:20:00Z"),
+                step("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", "2023-08-25T09:30:00Z",
+                        BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(2, steps.size());
+
+        BffNotificationTimelineGroup latestAttempt = steps.get(0).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, latestAttempt.getCategory());
+        assertEquals(2, latestAttempt.getAttempt());
+        assertEquals(
+                List.of("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", "SEND_DIGITAL.RECINDEX_0.ATTEMPT_1"),
+                latestAttempt.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
+        assertEquals(1, firstAttempt.getAttempt());
+    }
+
+    @Test
+    void digitalFailureWorkflowFallsBackToEventWhenNoDigitalGroupExists() {
+        // no digital activity at all for this recipient: the workflow failure cannot join any group
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", "2023-08-25T09:10:00Z",
+                        BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
+        assertEquals("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
+    void scheduleDigitalWorkflowJoinsTheNextDigitalGroup() {
+        // the schedule event carries no attempt of its own and always precedes the attempt it
+        // announces: it must join the closest following DIGITAL group of the same recipient,
+        // not be left as a plain event between the two attempt groups
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                digitalDelivery(1, 0, "PEC", "2023-08-25T08:59:24Z"),
+                step("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_1.ATTEMPT_0", "2023-08-25T09:00:34Z",
+                        BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(1).sentAttemptMade(0)),
+                digitalDelivery(1, 1, "PEC", "2023-08-25T09:03:39Z"));
+
+        assertEquals(2, steps.size());
+        assertTrue(steps.stream().allMatch(step -> step.getStepType() == BffNotificationTimelineStepType.GROUP));
+
+        // the second (most recent) attempt is exposed first and contains the schedule event
+        BffNotificationTimelineGroup secondAttempt = steps.get(0).getGroup();
+        assertEquals(2, secondAttempt.getAttempt());
+        assertTrue(secondAttempt.getEvents().stream()
+                .anyMatch(event -> event.getElementId().equals("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_1.ATTEMPT_0")));
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
+        assertEquals(1, firstAttempt.getAttempt());
+        assertTrue(firstAttempt.getEvents().stream()
+                .noneMatch(event -> event.getElementId().equals("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_1.ATTEMPT_0")));
+    }
+
+    @Test
+    void scheduleDigitalWorkflowFallsBackToEventWhenNoFollowingGroupExists() {
+        // no later digital attempt materializes for this recipient: the schedule event cannot
+        // join any group
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_0.ATTEMPT_0", "2023-08-25T09:00:00Z",
+                        BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0).sentAttemptMade(0)));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
+        assertEquals("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_0.ATTEMPT_0", steps.get(0).getEvent().getElementId());
     }
 
     @Test
