@@ -3,7 +3,6 @@ package it.pagopa.pn.bff.utils;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationTimelineMapper;
 
-import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -56,10 +55,6 @@ public class NotificationTimelineUtility {
         List<BffNotificationTimelineStep> outputSteps =
                 new ArrayList<>();
 
-        List<BffNotificationTimelineEvent> analogPrepareFailures = new ArrayList<>();
-
-        List<BffNotificationTimelineEvent> digitalScheduleWorkflows = new ArrayList<>();
-
         // Events with no attempt of their own
         List<BffNotificationTimelineEvent> closingEvents = new ArrayList<>();
 
@@ -71,16 +66,6 @@ public class NotificationTimelineUtility {
 
             BffNotificationTimelineEvent event = mapper.mapTimelineElement(sourceStep);
 
-            if (event.getCategory() == BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE) {
-                analogPrepareFailures.add(event);
-                continue;
-            }
-
-            if (event.getCategory() == BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW) {
-                digitalScheduleWorkflows.add(event);
-                continue;
-            }
-
             if (TimelineEventUtility.extractClosingTargetCategories(event.getCategory()) != null) {
                 closingEvents.add(event);
                 continue;
@@ -89,8 +74,6 @@ public class NotificationTimelineUtility {
             handleGroupableEvent(event, recipients, groups, outputSteps);
         }
 
-        associateAnalogPrepareFailures(analogPrepareFailures, recipients, groups, outputSteps);
-        associateDigitalScheduleWorkflows(digitalScheduleWorkflows, groups, outputSteps);
         associateClosingEvents(closingEvents, groups, outputSteps);
 
         // Complete group metadata and apply the ordering
@@ -165,6 +148,10 @@ public class NotificationTimelineUtility {
                 outputSteps
         );
 
+        if (group.getChannel() == null) {
+            group.setChannel(channel);
+        }
+
         // Add the event to the group
         group.addEventsItem(event);
     }
@@ -223,46 +210,6 @@ public class NotificationTimelineUtility {
     }
 
     /**
-     * Groups each analog prepare failure into a dedicated ANALOG_FAILURE group for its
-     * recipient, carrying the real attempt number of the failed preparation
-     *
-     * @param analogPrepareFailures prepare failure events
-     * @param recipients            notification recipients
-     * @param groups                groups accumulated, keyed by group id
-     * @param outputSteps           timeline steps
-     */
-    private static void associateAnalogPrepareFailures(
-            List<BffNotificationTimelineEvent> analogPrepareFailures,
-            List<NotificationRecipientV24> recipients,
-            Map<String, BffNotificationTimelineGroup> groups,
-            List<BffNotificationTimelineStep> outputSteps) {
-
-        associateOrFallback(analogPrepareFailures, event -> {
-            Integer recIndex = TimelineEventUtility.extractRecIndex(event);
-            Integer attempt = TimelineEventUtility.extractPrepareFailureAttempt(event);
-            Optional<NotificationRecipientV24> recipient = findRecipient(recipients, recIndex);
-
-            // No group when the failed attempt or the recipient cannot be resolved
-            if (recIndex == null || attempt == null || recipient.isEmpty()) {
-                return Optional.empty();
-            }
-
-            String groupId = buildGroupId(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, recIndex, attempt);
-
-            return Optional.of(getOrCreateGroup(
-                    groupId,
-                    BffNotificationTimelineGroupCategory.ANALOG_FAILURE,
-                    null,
-                    recIndex,
-                    attempt,
-                    recipient.get(),
-                    groups,
-                    outputSteps
-            ));
-        }, outputSteps);
-    }
-
-    /**
      * Associates each closing event with the most recent group it can close, resolved for the
      * same recipient among the group categories its own category maps.
      * None of these events carry an attempt of their own
@@ -299,53 +246,6 @@ public class NotificationTimelineUtility {
                 .filter(group -> Objects.equals(group.getRecIndex(), recIndex))
                 .filter(group -> group.getAttempt() != null)
                 .max(Comparator.comparing(BffNotificationTimelineGroup::getAttempt));
-    }
-
-    /**
-     * Associates each digital schedule-workflow event with the DIGITAL group of the attempt it announces
-     */
-    private static void associateDigitalScheduleWorkflows(
-            List<BffNotificationTimelineEvent> digitalScheduleWorkflows,
-            Map<String, BffNotificationTimelineGroup> groups,
-            List<BffNotificationTimelineStep> outputSteps) {
-
-        associateOrFallback(digitalScheduleWorkflows, event -> {
-            Integer recIndex = TimelineEventUtility.extractRecIndex(event);
-
-            return findNextDigitalGroup(groups.values(), recIndex, event.getTimestamp());
-        }, outputSteps);
-    }
-
-    /**
-     * Finds the DIGITAL group of a recipient whose earliest event starts right after the given
-     * timestamp: the closest such group is the attempt cycle a schedule-workflow event, which
-     * has no attempt of its own, is announcing.
-     */
-    private static Optional<BffNotificationTimelineGroup> findNextDigitalGroup(
-            Collection<BffNotificationTimelineGroup> groups,
-            Integer recIndex,
-            OffsetDateTime after) {
-
-        if (recIndex == null || after == null) {
-            return Optional.empty();
-        }
-
-        return groups.stream()
-                .filter(group -> group.getCategory() == BffNotificationTimelineGroupCategory.DIGITAL)
-                .filter(group -> Objects.equals(group.getRecIndex(), recIndex))
-                .filter(group -> earliestEventTimestamp(group) != null && earliestEventTimestamp(group).isAfter(after))
-                .min(Comparator.comparing(NotificationTimelineUtility::earliestEventTimestamp));
-    }
-
-    /**
-     * Returns the timestamp of the earliest event in a group
-     */
-    private static OffsetDateTime earliestEventTimestamp(BffNotificationTimelineGroup group) {
-        return group.getEvents().stream()
-                .map(BffNotificationTimelineEvent::getTimestamp)
-                .filter(Objects::nonNull)
-                .min(Comparator.naturalOrder())
-                .orElse(null);
     }
 
     /**
@@ -400,7 +300,6 @@ public class NotificationTimelineUtility {
             Optional<NotificationRecipientV24> recipient) {
 
         if (category == null
-                || channel == null
                 || recIndex == null
                 || recipient.isEmpty()) {
             return false;
@@ -544,10 +443,6 @@ public class NotificationTimelineUtility {
                 .sorted(
                         Comparator
                                 .comparing(BffNotificationTimelineGroup::getRecIndex)
-                                .thenComparing(
-                                        BffNotificationTimelineGroup::getAttempt,
-                                        Comparator.nullsLast(Comparator.reverseOrder())
-                                )
                 )
                 .toList();
 
@@ -558,29 +453,6 @@ public class NotificationTimelineUtility {
             for (BffNotificationTimelineStep step : outputSteps) {
                 if (step.getGroup() != null) {
                     step.setGroup(sortedGroupIterator.next());
-                }
-            }
-        }
-
-        // Sort plain events independently of groups
-        List<BffNotificationTimelineEvent> sortedEvents = outputSteps.stream()
-                .map(BffNotificationTimelineStep::getEvent)
-                .filter(Objects::nonNull)
-                .sorted(
-                        Comparator.comparing(
-                                BffNotificationTimelineEvent::getTimestamp,
-                                Comparator.nullsLast(Comparator.naturalOrder())
-                        ).reversed()
-                )
-                .toList();
-
-        if (sortedEvents.size() > 1) {
-            Iterator<BffNotificationTimelineEvent> sortedEventIterator = sortedEvents.iterator();
-
-            // Reinsert sorted events into their original slots, preserving group positions
-            for (BffNotificationTimelineStep step : outputSteps) {
-                if (step.getEvent() != null) {
-                    step.setEvent(sortedEventIterator.next());
                 }
             }
         }

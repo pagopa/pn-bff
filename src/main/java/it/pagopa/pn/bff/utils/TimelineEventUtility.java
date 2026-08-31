@@ -1,18 +1,8 @@
 package it.pagopa.pn.bff.utils;
 
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationDetailTimelineDetails;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineEvent;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineGroupCategory;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationTimelineGroupChannel;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffTimelineCategory;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.DigitalAddress;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.ServiceLevel;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 
-import java.util.EnumSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +56,14 @@ public class TimelineEventUtility {
                     Map.entry(
                             BffTimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
                             BffNotificationTimelineGroupCategory.ANALOG
+                    ),
+                    Map.entry(
+                            BffTimelineCategory.PREPARE_ANALOG_DOMICILE_FAILURE,
+                            BffNotificationTimelineGroupCategory.ANALOG_FAILURE
+                    ),
+                    Map.entry(
+                            BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
+                            BffNotificationTimelineGroupCategory.DIGITAL
                     )
             );
 
@@ -217,6 +215,12 @@ public class TimelineEventUtility {
             return incrementAttempt(details.getSentAttemptMade());
         }
 
+        if (details != null
+                && groupCategory == BffNotificationTimelineGroupCategory.ANALOG_FAILURE
+                && details.getPrepareRequestId() != null) {
+            return extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true);
+        }
+
         // Fall back to the element ID for events without an attempt field
         return extractNumber(ATTEMPT_PATTERN, event.getElementId(), true);
     }
@@ -236,6 +240,18 @@ public class TimelineEventUtility {
         }
 
         return extractNumber(ATTEMPT_PATTERN, details.getPrepareRequestId(), true);
+    }
+
+    /**
+     * Extracts the one-based attempt of a digital schedule-workflow event from its own element ID.
+     * The attempt encoded in the element ID is zero-based, and matches the same attempt cycle of
+     * the DIGITAL group the event announces.
+     *
+     * @param event digital schedule-workflow event
+     * @return the one-based attempt, or null when it cannot be determined
+     */
+    public static Integer extractScheduleAttempt(BffNotificationTimelineEvent event) {
+        return extractNumber(ATTEMPT_PATTERN, event.getElementId(), true);
     }
 
     /**
