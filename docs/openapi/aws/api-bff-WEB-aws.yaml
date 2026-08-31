@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 2hAZPmPfjbYLpuxBFT4rJUgDY2cstje68FEZnauNzlI=
+  version: 7KEqoECHpPHsS8fJXN5JQckTnQqv2ikWzN7ZLRsmqQc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7082,6 +7082,7 @@ components:
         - iun
         - subject
         - recipients
+        - notificationStatus
         - notificationStatusHistory
       properties:
         iun:
@@ -7092,6 +7093,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotificationRecipientV24'
+        isCancelled:
+          type: boolean
+          description: >-
+            Flag that indicates whether the timeline contains an element with
+            the category NOTIFICATION_CANCELLED  or
+            NOTIFICATION_CANCELLATION_REQUEST.
         notificationStatusHistory:
           type: array
           items:

@@ -20,7 +20,21 @@ public interface NotificationTimelineMapper {
      */
     @Mapping(source = "recipients", target = "recipients")
     @Mapping(target = "notificationStatusHistory", ignore = true)
+    @Mapping(target = "isCancelled", ignore = true)
     BffNotificationTimelineResponse mapNotificationTimeline(BffFullNotificationV1 notification);
+
+    /**
+     * Sets the flag indicating whether the timeline contains a cancellation event.
+     */
+    @AfterMapping
+    default void populateIsCancelled(
+            BffFullNotificationV1 notification,
+            @MappingTarget BffNotificationTimelineResponse response) {
+
+        response.setIsCancelled(
+                NotificationTimelineUtility.hasCancellationInTimeline(notification)
+        );
+    }
 
     /**
      * Maps the simple status-history fields.

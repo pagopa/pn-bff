@@ -37,6 +37,18 @@ public class NotificationTimelineUtility {
     }
 
     /**
+     * Checks whether the notification's timeline contains a cancellation event
+     *
+     * @param source source notification already processed
+     * @return true when the timeline contains a NOTIFICATION_CANCELLED or NOTIFICATION_CANCELLATION_REQUEST element
+     */
+    public static boolean hasCancellationInTimeline(BffFullNotificationV1 source) {
+        return CommonUtility.safeList(source.getTimeline()).stream()
+                .anyMatch(element -> element.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLED
+                        || element.getCategory() == BffTimelineCategory.NOTIFICATION_CANCELLATION_REQUEST);
+    }
+
+    /**
      * Filters, maps and groups the steps of a notification status
      *
      * @param sourceStatusHistory Source notification status history
