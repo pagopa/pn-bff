@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: k22m6Fvtxf4aHZCPAnDZLDmk+rFMv7axnKrBY9Q5wQo=
+  version: 2hAZPmPfjbYLpuxBFT4rJUgDY2cstje68FEZnauNzlI=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -6971,6 +6971,7 @@ components:
         - COURTESY
         - DIGITAL
         - ANALOG
+        - ANALOG_FAILURE
     BffNotificationTimelineGroupChannel:
       description: The channel of the group
       type: string
@@ -6989,7 +6990,6 @@ components:
       required:
         - recIndex
         - category
-        - channel
         - groupId
         - hasReworkedEvents
         - events
