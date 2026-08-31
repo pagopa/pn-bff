@@ -33,7 +33,6 @@ class NotificationTimelineMapperTest {
         assertEquals(detail.getSubject(), timeline.getSubject());
         assertEquals(detail.getRecipients(), timeline.getRecipients());
         assertEquals(detail.getNotificationStatusHistory().size(), timeline.getNotificationStatusHistory().size());
-        assertEquals(detail.getNotificationStatus(), timeline.getNotificationStatus());
 
         for (int i = 0; i < timeline.getNotificationStatusHistory().size(); i++) {
             BffNotificationStatusHistory source = detail.getNotificationStatusHistory().get(i);
@@ -53,7 +52,7 @@ class NotificationTimelineMapperTest {
 
         BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
 
-        assertFalse(timeline.getCancellationInTimeline());
+        assertFalse(timeline.getIsCancelled());
     }
 
     @Test
@@ -63,7 +62,7 @@ class NotificationTimelineMapperTest {
 
         BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
 
-        assertTrue(timeline.getCancellationInTimeline());
+        assertTrue(timeline.getIsCancelled());
     }
 
     @Test
@@ -73,7 +72,7 @@ class NotificationTimelineMapperTest {
 
         BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
 
-        assertTrue(timeline.getCancellationInTimeline());
+        assertTrue(timeline.getIsCancelled());
     }
 
     @Test

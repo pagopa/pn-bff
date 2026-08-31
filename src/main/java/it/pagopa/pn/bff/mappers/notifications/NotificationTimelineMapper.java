@@ -19,24 +19,23 @@ public interface NotificationTimelineMapper {
      * notificationStatusHistory is populated in the after-mapping phase.
      */
     @Mapping(source = "recipients", target = "recipients")
-    @Mapping(source = "notificationStatus", target = "notificationStatus")
     @Mapping(target = "notificationStatusHistory", ignore = true)
-    @Mapping(target = "cancellationInTimeline", ignore = true)
+    @Mapping(target = "isCancelled", ignore = true)
     BffNotificationTimelineResponse mapNotificationTimeline(BffFullNotificationV1 notification);
 
     /**
      * Sets the flag indicating whether the timeline contains a cancellation event.
      */
     @AfterMapping
-    default void populateCancellationInTimeline(
+    default void populateIsCancelled(
             BffFullNotificationV1 notification,
             @MappingTarget BffNotificationTimelineResponse response) {
 
-        response.setCancellationInTimeline(
+        response.setIsCancelled(
                 NotificationTimelineUtility.hasCancellationInTimeline(notification)
         );
     }
-    
+
     /**
      * Maps the simple status-history fields.
      * Steps are populated by NotificationTimelineUtility.
