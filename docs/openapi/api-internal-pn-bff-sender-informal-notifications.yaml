@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Sender Informal Notifications
+  description: Documentation APIs v1.0
+  x-api-id: api-internal-pn-bff-sender-informal
+  x-summary: 'API di pn-bff per le notifiche bonarie esposte al web per i mittenti'
+  version: '1.0.0'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: SenderInformalNotifications
+    description: >-
+      API esposte al frontend PA di SEND per ottenere la lista delle campagne
+
+paths:
+  '/bff/v1/notifications/informal/campaigns':
+    get:
+      summary: 'Mittente: Lista Campagne'
+      tags:
+        - SenderInformalNotifications
+      operationId: getListCampaignsV1
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSenderIdParam'    # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationPageSizeParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationNextPagesKeyParam'
+      responses:
+        '200':
+          description: Lista campagne paginata
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignSearchResponseV1' # TODO naming?
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem' # TODO ref problem ?
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem' # TODO ref problem ?
