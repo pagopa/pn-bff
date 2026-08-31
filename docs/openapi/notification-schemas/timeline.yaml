@@ -8,6 +8,7 @@ components:
         - iun
         - subject
         - recipients
+        - notificationStatus
         - notificationStatusHistory
       properties:
         iun:
@@ -18,6 +19,13 @@ components:
           type: array
           items:
             $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV24'
+        notificationStatus:
+          $ref: './notification.yaml#/components/schemas/BffNotificationStatus'
+        cancellationInTimeline:
+          type: boolean
+          description: >-
+            Flag that indicates whether the timeline contains an element with the category NOTIFICATION_CANCELLED 
+            or NOTIFICATION_CANCELLATION_REQUEST.
         notificationStatusHistory:
           type: array
           items:

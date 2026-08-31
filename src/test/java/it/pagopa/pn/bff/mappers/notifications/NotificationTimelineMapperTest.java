@@ -33,6 +33,7 @@ class NotificationTimelineMapperTest {
         assertEquals(detail.getSubject(), timeline.getSubject());
         assertEquals(detail.getRecipients(), timeline.getRecipients());
         assertEquals(detail.getNotificationStatusHistory().size(), timeline.getNotificationStatusHistory().size());
+        assertEquals(detail.getNotificationStatus(), timeline.getNotificationStatus());
 
         for (int i = 0; i < timeline.getNotificationStatusHistory().size(); i++) {
             BffNotificationStatusHistory source = detail.getNotificationStatusHistory().get(i);
@@ -43,6 +44,36 @@ class NotificationTimelineMapperTest {
             assertEquals(source.getRecipient(), mapped.getViewedByMandate());
             assertNotNull(mapped.getSteps());
         }
+    }
+
+    @Test
+    void mapNotificationTimelineCancellationInTimelineFalseWhenNoCancellationEvent() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.REQUEST_ACCEPTED)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertFalse(timeline.getCancellationInTimeline());
+    }
+
+    @Test
+    void mapNotificationTimelineCancellationInTimelineTrueOnCancellationRequest() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertTrue(timeline.getCancellationInTimeline());
+    }
+
+    @Test
+    void mapNotificationTimelineCancellationInTimelineTrueOnNotificationCancelled() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.NOTIFICATION_CANCELLED)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertTrue(timeline.getCancellationInTimeline());
     }
 
     @Test
