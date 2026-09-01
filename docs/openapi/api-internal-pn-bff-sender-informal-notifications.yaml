@@ -29,25 +29,24 @@ paths:
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSenderIdParam'    # NO EXTERNAL
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationPageSizeParam'
-        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationNextPagesKeyParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
       responses:
         '200':
           description: Lista campagne paginata
           content:
             application/json:
               schema:
-                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignSearchResponseV1' # TODO naming?
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignSearchResponseV1'
         '400':
           description: Bad request
           content:
             application/problem+json:
               schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem' # TODO ref problem ?
+                $ref: './common-refs.yaml#/components/schemas/Problem'
         '500':
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: './common-refs.yaml#/components/schemas/Problem' # TODO ref problem ?
+                $ref: './common-refs.yaml#/components/schemas/Problem'
