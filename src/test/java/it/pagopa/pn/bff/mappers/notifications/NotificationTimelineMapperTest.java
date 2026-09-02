@@ -46,6 +46,36 @@ class NotificationTimelineMapperTest {
     }
 
     @Test
+    void mapNotificationTimelineCancellationInTimelineFalseWhenNoCancellationEvent() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.REQUEST_ACCEPTED)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertFalse(timeline.getIsCancelled());
+    }
+
+    @Test
+    void mapNotificationTimelineCancellationInTimelineTrueOnCancellationRequest() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.NOTIFICATION_CANCELLATION_REQUEST)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertTrue(timeline.getIsCancelled());
+    }
+
+    @Test
+    void mapNotificationTimelineCancellationInTimelineTrueOnNotificationCancelled() {
+        BffFullNotificationV1 detail = new BffFullNotificationV1()
+                .timeline(List.of(new BffNotificationDetailTimeline().category(BffTimelineCategory.NOTIFICATION_CANCELLED)));
+
+        BffNotificationTimelineResponse timeline = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(detail);
+
+        assertTrue(timeline.getIsCancelled());
+    }
+
+    @Test
     void mapStatusHistoryViewedByMandate() {
         BffNotificationStatusHistory source = new BffNotificationStatusHistory()
                 .status(BffNotificationStatus.VIEWED)
