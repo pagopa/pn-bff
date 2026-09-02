@@ -5,6 +5,28 @@ components:
   schemas:
     BffCampaignSearchResponseV1:
       $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignSearchResponse"
+
+    BffCampaignDetailResponseV1:
+      type: object
+      properties:
+        campaignId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        campaignStatus:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignStatus"
+        serviceName:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/ChannelType"
+
     BffFullInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del destinatario.
       type: object
