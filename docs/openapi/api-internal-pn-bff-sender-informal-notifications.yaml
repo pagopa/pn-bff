@@ -29,6 +29,7 @@ paths:
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
       responses:
