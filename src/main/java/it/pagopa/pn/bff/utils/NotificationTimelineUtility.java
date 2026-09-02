@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.utils;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationTimelineMapper;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -437,37 +438,54 @@ public class NotificationTimelineUtility {
     }
 
     /**
-     * Orders groups by recipient and descending attempt, and plain events from newest to oldest,
-     * each independently of the other while preserving their original slot positions.
+     * Orders groups and plain events together, first by recipient index, then by timestamp.
      *
      * @param outputSteps timeline steps to order
      */
     private static void sortOutputSteps(List<BffNotificationTimelineStep> outputSteps) {
 
-        if (outputSteps.isEmpty()) {
-            return;
-        }
-
-        // Sort groups independently of plain events
-        List<BffNotificationTimelineGroup> sortedGroups = outputSteps.stream()
-                .map(BffNotificationTimelineStep::getGroup)
-                .filter(Objects::nonNull)
-                .sorted(
-                        Comparator
-                                .comparing(BffNotificationTimelineGroup::getRecIndex)
-                )
+        List<BffNotificationTimelineStep> sortedRecipientSteps = outputSteps.stream()
+                .filter(step -> stepRecIndex(step) != null)
+                .sorted(Comparator.comparing(NotificationTimelineUtility::stepRecIndex)
+                        .thenComparing(NotificationTimelineUtility::stepStartTimestamp, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
 
-        if (sortedGroups.size() > 1) {
-            Iterator<BffNotificationTimelineGroup> sortedGroupIterator = sortedGroups.iterator();
+        Iterator<BffNotificationTimelineStep> sortedIterator = sortedRecipientSteps.iterator();
 
-            // Reinsert sorted groups into their original slots, preserving plain-event positions
-            for (BffNotificationTimelineStep step : outputSteps) {
-                if (step.getGroup() != null) {
-                    step.setGroup(sortedGroupIterator.next());
-                }
+        // Reinsert sorted steps into their original slots, preserving anchored steps positions
+        for (int i = 0; i < outputSteps.size(); i++) {
+            if (stepRecIndex(outputSteps.get(i)) != null) {
+                outputSteps.set(i, sortedIterator.next());
             }
         }
+    }
+
+    /**
+     * Returns the recipient index of a step
+     *
+     * @param step timeline step
+     * @return the recipient index, or null when the step is not recipient scoped
+     */
+    private static Integer stepRecIndex(BffNotificationTimelineStep step) {
+        return step.getGroup() != null
+                ? step.getGroup().getRecIndex()
+                : TimelineEventUtility.extractRecIndex(step.getEvent());
+    }
+
+    /**
+     * Returns the timestamp of a step: a plain event's own timestamp or a group's oldest event timestamp
+     *
+     * @param step timeline step
+     * @return the step's start timestamp, or null when it cannot be determined
+     */
+    private static OffsetDateTime stepStartTimestamp(BffNotificationTimelineStep step) {
+        if (step.getGroup() == null) {
+            return step.getEvent().getTimestamp();
+        }
+
+        List<BffNotificationTimelineEvent> events = step.getGroup().getEvents();
+
+        return events.isEmpty() ? null : events.get(events.size() - 1).getTimestamp();
     }
 
     /**
