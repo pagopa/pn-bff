@@ -65,7 +65,7 @@ paths:
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
       responses:
         '200':
-          description: Lista campagne paginata
+          description: Dettaglio Campagna
           content:
             application/json:
               schema:

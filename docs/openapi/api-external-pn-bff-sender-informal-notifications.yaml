@@ -63,7 +63,7 @@ paths:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
       responses:
         '200':
-          description: Lista campagne paginata
+          description: Dettaglio Campagna
           content:
             application/json:
               schema:

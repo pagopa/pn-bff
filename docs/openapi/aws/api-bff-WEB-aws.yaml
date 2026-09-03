@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: +iH+7egQxPJgsi5wj92wOiRQfY1nvQnHFcj/58MzxK8=
+  version: 2ownDp8EXO50kqQoYvGvFsikE/Gt9NC55OLKy5gPo/U=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4259,7 +4259,7 @@ paths:
         - $ref: '#/components/parameters/CampaignIdParam'
       responses:
         '200':
-          description: Lista campagne paginata
+          description: Dettaglio Campagna
           content:
             application/json:
               schema:
