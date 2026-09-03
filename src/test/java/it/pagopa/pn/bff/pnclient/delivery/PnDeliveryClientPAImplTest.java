@@ -4,9 +4,9 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotifi
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -365,5 +365,31 @@ class PnDeliveryClientPAImplTest {
                 )
                 .expectError(WebClientResponseException.class)
                 .verify();
+    }
+
+    @Test
+    void getCampaignDetail() throws RestClientException {
+        when(campaignsApi.getCampaign(
+                Mockito.anyString(),
+                Mockito.any(UUID.class)
+        )).thenReturn(Mono.just(campaignMock.getCampaignDetailMock()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getCampaignDetail(
+                CampaignMock.CAMPAIGN_ID,
+                UUID.fromString(CampaignMock.SENDER_ID)
+        )).expectNext(campaignMock.getCampaignDetailMock()).verifyComplete();
+    }
+
+    @Test
+    void getCampaignDetailError() {
+        when(campaignsApi.getCampaign(
+                Mockito.anyString(),
+                Mockito.any(UUID.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getCampaignDetail(
+                CampaignMock.CAMPAIGN_ID,
+                UUID.fromString(CampaignMock.SENDER_ID)
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

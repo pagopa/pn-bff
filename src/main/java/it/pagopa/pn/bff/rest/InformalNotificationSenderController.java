@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 @CustomLog
 @RestController
 public class InformalNotificationSenderController implements SenderInformalNotificationsApi {
@@ -47,19 +45,19 @@ public class InformalNotificationSenderController implements SenderInformalNotif
     /**
      * Get the detail of a campaign
      *
-     * @param campaignId - The ID of the campaign
-     * @param senderId   - The ID of the sender
+     * @param campaignId    - The ID of the campaign
+     * @param xPagopaPnCxId - Public Administration id
      * @return the details of the requested campaign
      */
     @Override
     public Mono<ResponseEntity<BffCampaignDetailResponseV1>> getCampaignDetailV1(
             String campaignId,
-            UUID senderId,
+            String xPagopaPnCxId,
             final ServerWebExchange exchange) {
 
         Mono<BffCampaignDetailResponseV1> campaignDetail = informalNotificationSenderService.getCampaignDetail(
                 campaignId,
-                senderId
+                xPagopaPnCxId
         );
 
         return campaignDetail.map(response ->

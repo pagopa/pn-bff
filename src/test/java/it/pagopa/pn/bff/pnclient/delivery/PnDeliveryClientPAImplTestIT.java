@@ -43,6 +43,7 @@ class PnDeliveryClientPAImplTestIT {
     private final String newNotificationPath = "/delivery/v2.6/requests";
     private final String preloadRequestPath = "/delivery/attachments/preload";
     private final String campaignsListPath = "/delivery-private/v1/campaigns";
+    private final String campaignDetailPath = "/delivery-private/v1/campaigns/" + CampaignMock.CAMPAIGN_ID;
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
@@ -356,6 +357,51 @@ class PnDeliveryClientPAImplTestIT {
                                 UUID.fromString(CampaignMock.SENDER_ID),
                                 10,
                                 "next-page-key"
+                        )
+                )
+                .expectError()
+                .verify();
+    }
+
+    @Test
+    void getCampaignDetail() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(campaignMock.getCampaignDetailMock());
+
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignDetailPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.getCampaignDetail(
+                                CampaignMock.CAMPAIGN_ID,
+                                UUID.fromString(CampaignMock.SENDER_ID)
+                        )
+                )
+                .expectNext(campaignMock.getCampaignDetailMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void getCampaignDetailError() {
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignDetailPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+        ).respond(response().withStatusCode(404));
+
+        StepVerifier.create(
+                        pnDeliveryClient.getCampaignDetail(
+                                CampaignMock.CAMPAIGN_ID,
+                                UUID.fromString(CampaignMock.SENDER_ID)
                         )
                 )
                 .expectError()

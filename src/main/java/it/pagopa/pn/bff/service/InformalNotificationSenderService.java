@@ -55,18 +55,18 @@ public class InformalNotificationSenderService {
     /**
      * Get the detail of a campaign
      *
-     * @param campaignId - The ID of the campaign
-     * @param senderId   - The ID of the sender
+     * @param campaignId    - The ID of the campaign
+     * @param xPagopaPnCxId - Public Administration id
      * @return the details of the requested campaign
      */
     public Mono<BffCampaignDetailResponseV1> getCampaignDetail(
             String campaignId,
-            UUID senderId
+            String xPagopaPnCxId
     ) {
         log.info("Get campaign detail with ID: {}", campaignId);
 
         Mono<CampaignDetail> campaignDetail = pnDeliveryClient
-                .getCampaignDetail(campaignId, senderId)
+                .getCampaignDetail(campaignId, UUID.fromString(xPagopaPnCxId))
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return campaignDetail.map(CampaignMapper.modelMapper::mapCampaignDetail);

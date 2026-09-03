@@ -29,7 +29,6 @@ paths:
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
       responses:
@@ -58,11 +57,10 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getCampaignDetailV1
-#      security:                                      # ONLY EXTERNAL
-#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
-        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
       responses:
         '200':
           description: Lista campagne paginata
