@@ -315,7 +315,10 @@ public class MsClientConfig extends CommonBaseClient {
     CampaignsApi campaignsApi(PnBffConfigs cfg) {
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient apiClient =
                 new it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient(
-                        initWebClient(it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient.buildWebClientBuilder())
+                        initWebClient(
+                                it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient
+                                        .buildWebClientBuilder()
+                        )
                 );
 
         apiClient.setBasePath(cfg.getDeliveryBaseUrl());

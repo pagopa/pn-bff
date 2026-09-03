@@ -26,8 +26,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getListCampaignsV1
-      #      security:                                      # ONLY EXTERNAL
-      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
         - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'

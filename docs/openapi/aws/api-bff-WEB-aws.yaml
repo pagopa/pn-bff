@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 2ownDp8EXO50kqQoYvGvFsikE/Gt9NC55OLKy5gPo/U=
+  version: Tla9u/Xptm9FuZXT72guh4CjIoa1ZHxN35a6EZEXaTQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4193,6 +4193,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getListCampaignsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
         - $ref: '#/components/parameters/PageSizeParam'
         - $ref: '#/components/parameters/NextPagesKeyParam'
@@ -4215,8 +4217,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-      security:
-        - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns
