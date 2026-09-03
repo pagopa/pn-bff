@@ -447,7 +447,7 @@ public class NotificationTimelineUtility {
         List<BffNotificationTimelineStep> sortedRecipientSteps = outputSteps.stream()
                 .filter(step -> stepRecIndex(step) != null)
                 .sorted(Comparator.comparing(NotificationTimelineUtility::stepRecIndex)
-                        .thenComparing(NotificationTimelineUtility::stepStartTimestamp, Comparator.nullsLast(Comparator.naturalOrder())))
+                        .thenComparing(NotificationTimelineUtility::stepLatestTimestamp,Comparator.nullsLast(Comparator.reverseOrder())))
                 .toList();
 
         Iterator<BffNotificationTimelineStep> sortedIterator = sortedRecipientSteps.iterator();
@@ -473,19 +473,20 @@ public class NotificationTimelineUtility {
     }
 
     /**
-     * Returns the timestamp of a step: a plain event's own timestamp or a group's oldest event timestamp
+     * Returns the timestamp of a step: a plain event's own timestamp
+     * or a group's latest event timestamp.
      *
      * @param step timeline step
-     * @return the step's start timestamp, or null when it cannot be determined
+     * @return the step's last timestamp, or null when it cannot be determined
      */
-    private static OffsetDateTime stepStartTimestamp(BffNotificationTimelineStep step) {
+    private static OffsetDateTime stepLatestTimestamp(BffNotificationTimelineStep step) {
         if (step.getGroup() == null) {
             return step.getEvent().getTimestamp();
         }
 
         List<BffNotificationTimelineEvent> events = step.getGroup().getEvents();
 
-        return events.isEmpty() ? null : events.get(events.size() - 1).getTimestamp();
+        return events.isEmpty() ? null : events.get(0).getTimestamp();
     }
 
     /**
