@@ -6,6 +6,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @CustomLog
@@ -24,6 +27,7 @@ public class PnDeliveryClientPAImpl {
     private final SenderReadB2BApi senderReadB2BApi;
     private final SenderReadWebApi senderReadWebApi;
     private final NewNotificationApi newNotificationApi;
+    private final CampaignsApi campaignsApi;
 
     public Mono<LegalNotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                          String xPagopaPnCxId, OffsetDateTime startDate,
@@ -120,6 +124,23 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnCxType,
                 xPagopaPnCxId,
                 preLoadRequest
+        );
+    }
+
+    public Mono<CampaignSearchResponse> listCampaigns(
+            UUID senderId,
+            Integer size,
+            String nextPagesKey
+    ) {
+        log.logInvokingExternalService(
+                PnLogger.EXTERNAL_SERVICES.PN_DELIVERY,
+                "listCampaigns"
+        );
+
+        return campaignsApi.listCampaigns(
+                senderId,
+                size,
+                nextPagesKey
         );
     }
 }

@@ -25,6 +25,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsA
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -306,5 +307,21 @@ public class MsClientConfig extends CommonBaseClient {
         apiClient.setBasePath(cfg.getDeliveryBaseUrl());
 
         return new RecipientReadInformalNotificationApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    CampaignsApi campaignsApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient(
+                        initWebClient(
+                                it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.ApiClient
+                                        .buildWebClientBuilder()
+                        )
+                );
+
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+
+        return new CampaignsApi(apiClient);
     }
 }
