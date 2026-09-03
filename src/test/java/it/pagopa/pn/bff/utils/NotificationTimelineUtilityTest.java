@@ -104,7 +104,7 @@ class NotificationTimelineUtilityTest {
     @Test
     void keepHiddenEventsOnlyWithLegalFacts() {
         BffNotificationDetailTimeline withLegalFacts = step("HIDDEN_WITH_LEGAL_FACTS", "2023-08-25T09:20:00Z",
-                BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW, null)
+                BffTimelineCategory.REFINEMENT, null)
                 .legalFactsIds(List.of(new BffLegalFactId().key("legal-fact-key")))
                 .hidden(true);
         BffNotificationDetailTimeline withoutLegalFacts = step("HIDDEN_WITHOUT_LEGAL_FACTS", "2023-08-25T09:30:00Z",
@@ -366,6 +366,40 @@ class NotificationTimelineUtilityTest {
         assertEquals(1, steps.size());
         assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
         assertEquals("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", steps.get(0).getEvent().getElementId());
+    }
+
+    @Test
+    void digitalSuccessWorkflowJoinsTheLatestDigitalGroup() {
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                digitalDelivery(0, 0, "PEC", "2023-08-25T09:10:00Z"),
+                digitalDelivery(0, 1, "PEC", "2023-08-25T09:20:00Z"),
+                step("DIGITAL_SUCCESS_WORKFLOW.RECINDEX_0", "2023-08-25T09:30:00Z",
+                        BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(2, steps.size());
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(0).getGroup();
+        assertEquals(1, firstAttempt.getAttempt());
+
+        BffNotificationTimelineGroup latestAttempt = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, latestAttempt.getCategory());
+        assertEquals(2, latestAttempt.getAttempt());
+        assertEquals(
+                List.of("DIGITAL_SUCCESS_WORKFLOW.RECINDEX_0", "SEND_DIGITAL.RECINDEX_0.ATTEMPT_1"),
+                latestAttempt.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+    }
+
+    @Test
+    void digitalSuccessWorkflowFallsBackToEventWhenNoDigitalGroupExists() {
+        List<BffNotificationTimelineStep> steps = deliveringSteps(
+                step("DIGITAL_SUCCESS_WORKFLOW.RECINDEX_0", "2023-08-25T09:10:00Z",
+                        BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW,
+                        new BffNotificationDetailTimelineDetails().recIndex(0)));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(0).getStepType());
+        assertEquals("DIGITAL_SUCCESS_WORKFLOW.RECINDEX_0", steps.get(0).getEvent().getElementId());
     }
 
     @Test
