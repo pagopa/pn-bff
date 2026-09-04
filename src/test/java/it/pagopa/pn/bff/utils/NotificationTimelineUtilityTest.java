@@ -86,7 +86,10 @@ class NotificationTimelineUtilityTest {
         assertEquals(2, steps.size());
         assertTrue(steps.stream().allMatch(step -> step.getStepType() == BffNotificationTimelineStepType.GROUP));
 
-        BffNotificationTimelineGroup firstAttempt = steps.get(0).getGroup();
+        BffNotificationTimelineGroup secondAttempt = steps.get(0).getGroup();
+        assertEquals(2, secondAttempt.getAttempt());
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
         assertEquals(1, firstAttempt.getAttempt());
         assertEquals(BffNotificationTimelineGroupChannel.PEC, firstAttempt.getChannel());
         assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, firstAttempt.getCategory());
@@ -96,8 +99,6 @@ class NotificationTimelineUtilityTest {
                 List.of("SEND_DIGITAL_FEEDBACK.RECINDEX_0.ATTEMPT_0", "SEND_DIGITAL.RECINDEX_0.ATTEMPT_0"),
                 firstAttempt.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
 
-        BffNotificationTimelineGroup secondAttempt = steps.get(1).getGroup();
-        assertEquals(2, secondAttempt.getAttempt());
         assertNotEquals(firstAttempt.getGroupId(), secondAttempt.getGroupId());
     }
 
@@ -183,17 +184,17 @@ class NotificationTimelineUtilityTest {
 
         assertEquals(2, steps.size());
 
-        BffNotificationTimelineGroup sendGroup = steps.get(0).getGroup();
-        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
-        assertEquals(1, sendGroup.getAttempt());
-
-        BffNotificationTimelineGroup failureGroup = steps.get(1).getGroup();
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
         assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
         assertNull(failureGroup.getChannel());
         assertEquals(2, failureGroup.getAttempt());
         assertEquals(
                 List.of("PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
                 failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup sendGroup = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
+        assertEquals(1, sendGroup.getAttempt());
     }
 
     @Test
@@ -214,19 +215,19 @@ class NotificationTimelineUtilityTest {
 
         assertEquals(2, steps.size());
 
-        BffNotificationTimelineGroup sendGroup = steps.get(0).getGroup();
-        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
-        assertEquals(1, sendGroup.getAttempt());
-        assertEquals(
-                List.of("SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
-                sendGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
-
-        BffNotificationTimelineGroup failureGroup = steps.get(1).getGroup();
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
         assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
         assertEquals(2, failureGroup.getAttempt());
         assertEquals(
                 List.of("ANALOG_FAILURE_WORKFLOW.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
                 failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup sendGroup = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
+        assertEquals(1, sendGroup.getAttempt());
+        assertEquals(
+                List.of("SEND_ANALOG.RECINDEX_0.ATTEMPT_0"),
+                sendGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
     }
 
     @Test
@@ -271,15 +272,15 @@ class NotificationTimelineUtilityTest {
 
         assertEquals(2, steps.size());
 
-        BffNotificationTimelineGroup sendGroup = steps.get(0).getGroup();
-        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
-
-        BffNotificationTimelineGroup failureGroup = steps.get(1).getGroup();
+        BffNotificationTimelineGroup failureGroup = steps.get(0).getGroup();
         assertEquals(BffNotificationTimelineGroupCategory.ANALOG_FAILURE, failureGroup.getCategory());
         assertEquals(2, failureGroup.getAttempt());
         assertEquals(
                 List.of("COMPLETELY_UNREACHABLE.RECINDEX_0", "PREPARE_ANALOG_DOMICILE_FAILURE.RECINDEX_0"),
                 failureGroup.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup sendGroup = steps.get(1).getGroup();
+        assertEquals(BffNotificationTimelineGroupCategory.ANALOG, sendGroup.getCategory());
     }
 
     @Test
@@ -344,15 +345,15 @@ class NotificationTimelineUtilityTest {
 
         assertEquals(2, steps.size());
 
-        BffNotificationTimelineGroup firstAttempt = steps.get(0).getGroup();
-        assertEquals(1, firstAttempt.getAttempt());
-
-        BffNotificationTimelineGroup latestAttempt = steps.get(1).getGroup();
+        BffNotificationTimelineGroup latestAttempt = steps.get(0).getGroup();
         assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, latestAttempt.getCategory());
         assertEquals(2, latestAttempt.getAttempt());
         assertEquals(
                 List.of("DIGITAL_FAILURE_WORKFLOW.RECINDEX_0", "SEND_DIGITAL.RECINDEX_0.ATTEMPT_1"),
                 latestAttempt.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
+        assertEquals(1, firstAttempt.getAttempt());
     }
 
     @Test
@@ -379,15 +380,15 @@ class NotificationTimelineUtilityTest {
 
         assertEquals(2, steps.size());
 
-        BffNotificationTimelineGroup firstAttempt = steps.get(0).getGroup();
-        assertEquals(1, firstAttempt.getAttempt());
-
-        BffNotificationTimelineGroup latestAttempt = steps.get(1).getGroup();
+        BffNotificationTimelineGroup latestAttempt = steps.get(0).getGroup();
         assertEquals(BffNotificationTimelineGroupCategory.DIGITAL, latestAttempt.getCategory());
         assertEquals(2, latestAttempt.getAttempt());
         assertEquals(
                 List.of("DIGITAL_SUCCESS_WORKFLOW.RECINDEX_0", "SEND_DIGITAL.RECINDEX_0.ATTEMPT_1"),
                 latestAttempt.getEvents().stream().map(BffNotificationTimelineEvent::getElementId).toList());
+
+        BffNotificationTimelineGroup firstAttempt = steps.get(1).getGroup();
+        assertEquals(1, firstAttempt.getAttempt());
     }
 
     @Test
@@ -475,10 +476,9 @@ class NotificationTimelineUtilityTest {
                 digitalDelivery(0, 1, "PEC", "2023-08-25T09:30:00Z"),
                 digitalDelivery(1, 1, "PEC", "2023-08-25T09:40:00Z"));
 
-        // the plain event keeps its position
         assertEquals(BffNotificationTimelineStepType.EVENT, steps.get(1).getStepType());
         assertEquals(
-                List.of("0/1", "0/2", "1/1", "1/2"),
+                List.of("0/2", "0/1", "1/2", "1/1"),
                 steps.stream()
                         .filter(step -> step.getStepType() == BffNotificationTimelineStepType.GROUP)
                         .map(step -> step.getGroup().getRecIndex() + "/" + step.getGroup().getAttempt())
