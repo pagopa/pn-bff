@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.rest;
 
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mocks.CampaignMock;
@@ -104,6 +105,61 @@ class InformalNotificationSenderControllerTest {
                 UserMock.PN_CX_ID,
                 SIZE,
                 NEXT_PAGES_KEY
+        );
+    }
+
+    @Test
+    void getReceivedInformalNotification() {
+        BffCampaignDetailResponseV1 response =
+                CampaignMapper.modelMapper.mapCampaignDetail(
+                        campaignMock.getCampaignDetailMock()
+                );
+
+        Mockito.when(informalNotificationSenderService.getCampaignDetail(
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.CAMPAIGN_DETAIL_PATH)
+                        .build(CampaignMock.CAMPAIGN_ID))
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffCampaignDetailResponseV1.class)
+                .isEqualTo(response);
+
+        Mockito.verify(informalNotificationSenderService).getCampaignDetail(
+                CampaignMock.CAMPAIGN_ID,
+                UserMock.PN_CX_ID
+        );
+    }
+
+    @Test
+    void getReceivedInformalNotificationError() {
+        Mockito.when(informalNotificationSenderService.getCampaignDetail(
+                Mockito.anyString(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.CAMPAIGN_DETAIL_PATH)
+                                .build(CampaignMock.CAMPAIGN_ID)
+                )
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(informalNotificationSenderService).getCampaignDetail(
+                CampaignMock.CAMPAIGN_ID,
+                UserMock.PN_CX_ID
         );
     }
 }

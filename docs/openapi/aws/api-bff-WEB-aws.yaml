@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: u86ZVb4iST5PYnh9khIlkfUH8MvrRsnUijR4NhHBV8E=
+  version: HlPHTSHjz19unfN/231UgklUmaEjLyesqovlavgIUqc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4247,6 +4247,73 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/notifications/informal/campaigns/{campaignId}:
+    get:
+      summary: 'Mittente: Dettaglio Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: getCampaignDetailV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/CampaignIdParam'
+      responses:
+        '200':
+          description: Dettaglio Campagna
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffCampaignDetailResponseV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns/{campaignId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/campaigns/{campaignId} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns/{campaignId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -4642,6 +4709,13 @@ components:
       in: query
       required: false
       description: Chiave della pagina successiva ritornata dalla precedente invocazione.
+      schema:
+        type: string
+    CampaignIdParam:
+      name: campaignId
+      in: path
+      required: true
+      description: Identificativo univoco della campagna.
       schema:
         type: string
   schemas:
@@ -9784,6 +9858,34 @@ components:
             successive.
           items:
             type: string
+    BffCampaignDetailResponseV1:
+      type: object
+      required:
+        - campaignId
+        - title
+        - description
+        - startDate
+        - campaignStatus
+        - serviceName
+        - channels
+      properties:
+        campaignId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        campaignStatus:
+          $ref: '#/components/schemas/CampaignStatus'
+        serviceName:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelType'
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

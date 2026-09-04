@@ -2,7 +2,9 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mocks.CampaignMock;
@@ -94,6 +96,47 @@ class InformalNotificationSenderServiceTest {
                         CampaignMock.SENDER_ID,
                         10,
                         null
+                );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable ->
+                        throwable instanceof PnBffException
+                                && ((PnBffException) throwable)
+                                .getProblem()
+                                .getStatus() == 404
+                )
+                .verify();
+    }
+
+    @Test
+    void getCampaignDetail() {
+        CampaignDetail campaignDetailResponse = campaignMock.getCampaignDetailMock();
+
+        when(pnDeliveryClient.getCampaignDetail(Mockito.anyString(), Mockito.any(UUID.class)))
+                .thenReturn(Mono.just(campaignDetailResponse));
+
+        BffCampaignDetailResponseV1 expected = CampaignMapper.modelMapper.mapCampaignDetail(campaignDetailResponse);
+
+        Mono<BffCampaignDetailResponseV1> result =
+                informalNotificationSenderService.getCampaignDetail(
+                        CampaignMock.CAMPAIGN_ID,
+                        CampaignMock.SENDER_ID
+                );
+
+        StepVerifier.create(result)
+                .expectNext(expected)
+                .verifyComplete();
+    }
+
+    @Test
+    void getCampaignDetailError() {
+        when(pnDeliveryClient.getCampaignDetail(Mockito.anyString(), Mockito.any(UUID.class)))
+                .thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        Mono<BffCampaignDetailResponseV1> result =
+                informalNotificationSenderService.getCampaignDetail(
+                        CampaignMock.CAMPAIGN_ID,
+                        CampaignMock.SENDER_ID
                 );
 
         StepVerifier.create(result)
