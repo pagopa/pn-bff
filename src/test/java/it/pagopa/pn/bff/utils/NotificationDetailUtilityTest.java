@@ -12,7 +12,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,6 +131,64 @@ class NotificationDetailUtilityTest {
             );
             index++;
         }
+    }
+
+    @Test
+    void setAarDocumentAvailability_available() {
+        Clock clock = Clock.fixed(Instant.parse("2036-01-01T09:59:59Z"), ZoneOffset.UTC);
+
+        BffFullNotificationV1 notification = buildNotificationForAarAvailability(
+                List.of(buildEffectiveDate("2026-01-01T10:00:00Z", null))
+        );
+
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
+
+        assertTrue(notification.getAarDocumentAvailable());
+    }
+
+    @Test
+    void setAarDocumentAvailability_notAvailable() {
+        Clock clock = Clock.fixed(Instant.parse("2036-01-01T10:00:00Z"), ZoneOffset.UTC);
+
+        BffFullNotificationV1 notification = buildNotificationForAarAvailability(
+                List.of(buildEffectiveDate("2026-01-01T10:00:00Z", null))
+        );
+
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
+
+        assertFalse(notification.getAarDocumentAvailable());
+    }
+
+    @Test
+    void setAarDocumentAvailability_usesValidEffectiveDateAfterRework() {
+        Clock clock = Clock.fixed(Instant.parse("2036-06-22T10:00:00Z"), ZoneOffset.UTC);
+
+        BffNotificationStatusHistory oldEffectiveDate = buildEffectiveDate(
+                "2025-01-01T10:00:00Z", BffNotificationReworkedStatus.NOT_VALID
+        );
+
+        BffNotificationStatusHistory newEffectiveDate = buildEffectiveDate(
+                "2026-07-01T10:00:00Z", BffNotificationReworkedStatus.VALID
+        );
+
+        BffFullNotificationV1 notification = buildNotificationForAarAvailability(
+                List.of(oldEffectiveDate, newEffectiveDate)
+        );
+
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
+
+        assertTrue(notification.getAarDocumentAvailable());
+    }
+
+    @Test
+    void setAarDocumentAvailability_availableWhenEffectiveDateIsMissing() {
+        Clock clock = Clock.fixed(Instant.parse("2050-01-01T10:00:00Z"), ZoneOffset.UTC);
+
+        BffFullNotificationV1 notification = buildNotificationForAarAvailability(List.of());
+
+        NotificationDetailUtility.setAarDocumentAvailability(notification, clock);
+
+        assertTrue(notification.getAarDocumentAvailable());
     }
 
     @Test
@@ -677,5 +738,27 @@ class NotificationDetailUtilityTest {
         );
 
         assertEquals(OptionalInt.empty(), findRecipientIndex(recipients));
+    }
+
+    private BffFullNotificationV1 buildNotificationForAarAvailability(
+            List<BffNotificationStatusHistory> notificationStatusHistory
+    ) {
+        BffFullNotificationV1 notification = new BffFullNotificationV1();
+        notification.setNotificationStatusHistory(new ArrayList<>(notificationStatusHistory));
+
+        return notification;
+    }
+
+    private BffNotificationStatusHistory buildEffectiveDate(
+            String activeFrom,
+            BffNotificationReworkedStatus reworkedStatus
+    ) {
+        BffNotificationStatusHistory effectiveDate = new BffNotificationStatusHistory();
+
+        effectiveDate.setStatus(BffNotificationStatus.EFFECTIVE_DATE);
+        effectiveDate.setActiveFrom(OffsetDateTime.parse(activeFrom));
+        effectiveDate.setReworkedStatus(reworkedStatus);
+
+        return effectiveDate;
     }
 }
