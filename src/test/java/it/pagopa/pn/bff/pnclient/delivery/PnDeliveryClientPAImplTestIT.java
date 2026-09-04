@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -41,10 +42,12 @@ class PnDeliveryClientPAImplTestIT {
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
     private final String newNotificationPath = "/delivery/v2.6/requests";
     private final String preloadRequestPath = "/delivery/attachments/preload";
+    private final String campaignsListPath = "/delivery-private/v1/campaigns";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
+    private final CampaignMock campaignMock = new CampaignMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -301,5 +304,61 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_CX_ID,
                 newSentNotificationMock.getPreloadRequestMock()
         )).expectError().verify();
+    }
+
+    @Test
+    void listCampaigns() throws JsonProcessingException {
+        String response =
+                objectMapper.writeValueAsString(
+                        campaignMock.getCampaignSearchResponseMock()
+                );
+
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignsListPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPagesKey", "next-page-key")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectNext(campaignMock.getCampaignSearchResponseMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void listCampaignsError() {
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignsListPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPagesKey", "next-page-key")
+        ).respond(
+                response().withStatusCode(404)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectError()
+                .verify();
     }
 }

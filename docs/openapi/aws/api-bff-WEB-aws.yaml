@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 7KEqoECHpPHsS8fJXN5JQckTnQqv2ikWzN7ZLRsmqQc=
+  version: u86ZVb4iST5PYnh9khIlkfUH8MvrRsnUijR4NhHBV8E=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4187,6 +4187,66 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/notifications/informal/campaigns:
+    get:
+      summary: 'Mittente: Lista Campagne'
+      tags:
+        - SenderInformalNotifications
+      operationId: getListCampaignsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/NextPagesKeyParam'
+      responses:
+        '200':
+          description: Lista campagne paginata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/campaigns API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -4567,6 +4627,23 @@ components:
       required: true
       schema:
         type: number
+    PageSizeParam:
+      name: size
+      in: query
+      required: false
+      description: Numero massimo di elementi da restituire nella pagina corrente.
+      schema:
+        type: number
+        minimum: 1
+        maximum: 50
+        default: 10
+    NextPagesKeyParam:
+      name: nextPagesKey
+      in: query
+      required: false
+      description: Chiave della pagina successiva ritornata dalla precedente invocazione.
+      schema:
+        type: string
   schemas:
     NotificationStatusV26:
       type: string
@@ -9607,6 +9684,106 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
             $ref: '#/components/schemas/InformalTimelineElementV1'
+    ChannelType:
+      type: string
+      description: Canale di invio utilizzabile nella campagna.
+      enum:
+        - IO
+        - EMAIL
+        - SMS
+        - PEC
+        - ANALOG
+      example: IO
+    CampaignStatus:
+      type: string
+      description: Stato della campagna.
+      enum:
+        - DRAFT
+        - IN_PROGRESS
+        - CANCELED
+        - CONCLUDED
+      example: IN_PROGRESS
+    CampaignSummary:
+      type: object
+      description: Modello minimale usato nella risposta di listing campagne.
+      required:
+        - campaignId
+        - senderId
+        - title
+        - pfChannels
+        - pgChannels
+        - campaignStatus
+        - startDate
+        - endDate
+      properties:
+        campaignId:
+          type: string
+          description: Identificativo univoco della campagna.
+          example: campaign-1
+        senderId:
+          type: string
+          format: uuid
+          description: Identificativo UUID dell'Ente mittente.
+          example: 5b994d4a-0fa8-47ac-9c7b-354f1d44a1ce
+        title:
+          type: string
+          description: Titolo sintetico della campagna.
+          example: First campaign
+        pfChannels:
+          type: array
+          description: >-
+            Elenco dei canali previsti per i destinatari persona fisica della
+            campagna.
+          items:
+            $ref: '#/components/schemas/ChannelType'
+          example:
+            - IO
+            - SMS
+        pgChannels:
+          type: array
+          description: >-
+            Elenco dei canali previsti per i destinatari persona giuridica della
+            campagna.
+          items:
+            $ref: '#/components/schemas/ChannelType'
+          example:
+            - PEC
+            - ANALOG
+        campaignStatus:
+          $ref: '#/components/schemas/CampaignStatus'
+          example: IN_PROGRESS
+        startDate:
+          type: string
+          format: date-time
+          description: Data e ora di inizio campagna in formato UTC.
+          example: '2026-02-01T00:00:00Z'
+        endDate:
+          type: string
+          format: date-time
+          description: Data e ora di fine campagna in formato UTC.
+          example: '2026-12-31T23:59:59Z'
+    CampaignSearchResponse:
+      type: object
+      description: Risposta paginata della ricerca campagne.
+      required:
+        - resultsPage
+        - moreResult
+      properties:
+        resultsPage:
+          type: array
+          description: Campagne appartenenti alla pagina corrente.
+          items:
+            $ref: '#/components/schemas/CampaignSummary'
+        moreResult:
+          type: boolean
+          description: Indica se sono presenti ulteriori pagine di risultati.
+        nextPagesKey:
+          type: array
+          description: >-
+            Elenco delle chiavi utilizzabili per richiedere le pagine
+            successive.
+          items:
+            type: string
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -9664,6 +9841,8 @@ tags:
       API esposte al frontend PF/PG di SEND per ottenere i dettagli delle
       comunicazioni bonarie e scaricare gli allegati della notifica e del
       pagamento
+  - name: SenderInformalNotifications
+    description: API esposte al frontend PA di SEND per ottenere la lista delle campagne
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

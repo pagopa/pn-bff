@@ -6,6 +6,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeA
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV26;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -31,6 +33,7 @@ class PnDeliveryClientPAImplTest {
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
+    private final CampaignMock campaignMock = new CampaignMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
@@ -39,6 +42,10 @@ class PnDeliveryClientPAImplTest {
     private SenderReadWebApi senderReadWebApi;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi")
     private NewNotificationApi newNotificationApi;
+    @MockBean(
+            name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi"
+    )
+    private CampaignsApi campaignsApi;
 
     @Test
     void searchSentNotifications() {
@@ -308,5 +315,55 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_ID,
                 newSentNotificationMock.getPreloadRequestMock()
         )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void listCampaigns() {
+        when(campaignsApi.listCampaigns(
+                Mockito.any(UUID.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(
+                Mono.just(campaignMock.getCampaignSearchResponseMock())
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClientPAImpl.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectNext(campaignMock.getCampaignSearchResponseMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void listCampaignsError() {
+        when(campaignsApi.listCampaigns(
+                Mockito.any(UUID.class),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(
+                Mono.error(
+                        new WebClientResponseException(
+                                404,
+                                "Not Found",
+                                null,
+                                null,
+                                null
+                        )
+                )
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClientPAImpl.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectError(WebClientResponseException.class)
+                .verify();
     }
 }
