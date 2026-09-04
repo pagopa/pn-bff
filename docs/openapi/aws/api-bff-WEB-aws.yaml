@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Tla9u/Xptm9FuZXT72guh4CjIoa1ZHxN35a6EZEXaTQ=
+  version: HlPHTSHjz19unfN/231UgklUmaEjLyesqovlavgIUqc=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -9860,6 +9860,14 @@ components:
             type: string
     BffCampaignDetailResponseV1:
       type: object
+      required:
+        - campaignId
+        - title
+        - description
+        - startDate
+        - campaignStatus
+        - serviceName
+        - channels
       properties:
         campaignId:
           type: string

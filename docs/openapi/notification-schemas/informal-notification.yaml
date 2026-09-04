@@ -8,6 +8,14 @@ components:
 
     BffCampaignDetailResponseV1:
       type: object
+      required:
+        - campaignId
+        - title
+        - description
+        - startDate
+        - campaignStatus
+        - serviceName
+        - channels
       properties:
         campaignId:
           type: string
