@@ -50,3 +50,39 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/informal/campaigns/{campaignId}':
+    get:
+      summary: 'Mittente: Dettaglio Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: getCampaignDetailV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
+      responses:
+        '200':
+          description: Dettaglio Campagna
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignDetailResponseV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

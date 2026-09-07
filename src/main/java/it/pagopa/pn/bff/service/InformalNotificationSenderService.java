@@ -1,5 +1,8 @@
 package it.pagopa.pn.bff.service;
+
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
@@ -24,8 +27,8 @@ public class InformalNotificationSenderService {
      * Get the campaigns list for a Public Administration.
      *
      * @param xPagopaPnCxId Public Administration id
-     * @param size Page size
-     * @param nextPagesKey Next page key
+     * @param size          Page size
+     * @param nextPagesKey  Next page key
      * @return the paginated campaigns list
      */
     public Mono<BffCampaignSearchResponseV1> getListCampaigns(
@@ -47,5 +50,25 @@ public class InformalNotificationSenderService {
         return campaigns.map(
                 CampaignMapper.modelMapper::toBffCampaignSearchResponse
         );
+    }
+
+    /**
+     * Get the detail of a campaign
+     *
+     * @param campaignId    - The ID of the campaign
+     * @param xPagopaPnCxId - Public Administration id
+     * @return the details of the requested campaign
+     */
+    public Mono<BffCampaignDetailResponseV1> getCampaignDetail(
+            String campaignId,
+            String xPagopaPnCxId
+    ) {
+        log.info("Get campaign detail with ID: {}", campaignId);
+
+        Mono<CampaignDetail> campaignDetail = pnDeliveryClient
+                .getCampaignDetail(campaignId, UUID.fromString(xPagopaPnCxId))
+                .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return campaignDetail.map(CampaignMapper.modelMapper::mapCampaignDetail);
     }
 }

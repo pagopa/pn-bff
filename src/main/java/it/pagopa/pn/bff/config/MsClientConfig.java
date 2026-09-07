@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.config;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi;
