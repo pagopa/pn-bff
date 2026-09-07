@@ -1,10 +1,12 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.WorkflowEntity;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalSenderNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.ChannelType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -46,4 +48,14 @@ public interface CampaignMapper {
     default ChannelType mapWorkflowEntityToChannelType(WorkflowEntity workflowEntity) {
         return ChannelType.fromValue(workflowEntity.getChannel().getValue());
     }
+
+    /**
+     * Maps an InformalNotificationSearchResponse to a BffInformalSenderNotificationSearchResponse
+     *
+     * @param informalNotificationSearchResponse the InformalNotificationSearchResponse to map
+     * @return the mapped BffInformalSenderNotificationSearchResponse
+     */
+    BffInformalSenderNotificationSearchResponse toBffInformalSenderNotificationSearchResponse(
+            InformalNotificationSearchResponse informalNotificationSearchResponse
+    );
 }

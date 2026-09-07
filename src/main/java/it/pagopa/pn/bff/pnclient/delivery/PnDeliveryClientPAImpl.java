@@ -3,13 +3,15 @@ package it.pagopa.pn.bff.pnclient.delivery;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.*;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class PnDeliveryClientPAImpl {
     private final SenderReadWebApi senderReadWebApi;
     private final NewNotificationApi newNotificationApi;
     private final CampaignsApi campaignsApi;
+    private final SenderInformalReadWebApi senderInformalReadWebApi;
 
     public Mono<LegalNotificationSearchResponse> searchSentNotifications(String xPagopaPnUid, it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.CxTypeAuthFleet xPagopaPnCxType,
                                                                          String xPagopaPnCxId, OffsetDateTime startDate,
@@ -145,10 +148,47 @@ public class PnDeliveryClientPAImpl {
                 nextPagesKey
         );
     }
-    
+
     public Mono<CampaignDetail> getCampaignDetail(String campaignId, UUID senderId) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getCampaignDetail");
 
         return campaignsApi.getCampaign(campaignId, senderId);
+    }
+
+    public Mono<InformalNotificationSearchResponse> searchInformalSentNotifications(
+            String xPagopaPnUid,
+            it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String campaignId,
+            OffsetDateTime startDate,
+            OffsetDateTime endDate,
+            List<String> xPagopaPnCxGroups,
+            String recipientId,
+            String iunMatch,
+            InformalNotificationStatusV1 status,
+            Boolean viewed,
+            Boolean delivered,
+            Integer size,
+            String nextPagesKey
+    ) {
+
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "searchInformalSentNotification");
+
+        return senderInformalReadWebApi.searchInformalSentNotification(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                campaignId,
+                startDate,
+                endDate,
+                xPagopaPnCxGroups,
+                recipientId,
+                iunMatch,
+                status,
+                viewed,
+                delivered,
+                size,
+                nextPagesKey
+        );
     }
 }

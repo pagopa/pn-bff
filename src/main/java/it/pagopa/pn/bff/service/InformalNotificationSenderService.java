@@ -1,10 +1,12 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
+import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
+import it.pagopa.pn.bff.mappers.notifications.InformalNotificationStatusMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -70,5 +74,62 @@ public class InformalNotificationSenderService {
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return campaignDetail.map(CampaignMapper.modelMapper::mapCampaignDetail);
+    }
+
+    /**
+     * Search the sender's informal notifications of a campaign
+     *
+     * @param xPagopaPnUid      user id
+     * @param xPagopaPnCxType   auth fleet cx type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param campaignId        the ID of the campaign
+     * @param startDate         search range start date
+     * @param endDate           search range end date
+     * @param xPagopaPnCxGroups user groups
+     * @param recipientId       recipient id to filter by
+     * @param iunMatch          IUN to filter by
+     * @param status            informal notification status to filter by
+     * @param viewed            viewed outcome to filter by
+     * @param delivered         delivered outcome to filter by
+     * @param size              page size
+     * @param nextPagesKey      next page key
+     * @return the paginated list of the campaign's sent informal notifications
+     */
+    public Mono<BffInformalSenderNotificationSearchResponse> searchInformalSentNotifications(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String campaignId,
+            OffsetDateTime startDate,
+            OffsetDateTime endDate,
+            List<String> xPagopaPnCxGroups,
+            String recipientId,
+            String iunMatch,
+            InformalNotificationStatusV1 status,
+            Boolean viewed,
+            Boolean delivered,
+            Integer size,
+            String nextPagesKey
+    ) {
+        log.info("Search Sent Informal Notifications: campaignId: {}, IUN: {}", campaignId, iunMatch);
+
+        Mono<InformalNotificationSearchResponse> sentNotifications = pnDeliveryClient.searchInformalSentNotifications(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAWebCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                campaignId,
+                startDate,
+                endDate,
+                xPagopaPnCxGroups,
+                recipientId,
+                iunMatch,
+                InformalNotificationStatusMapper.informalNotificationStatusMapper.convertDeliveryInformalPAWebNotificationStatus(status),
+                viewed,
+                delivered,
+                size,
+                nextPagesKey
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return sentNotifications.map(CampaignMapper.modelMapper::toBffInformalSenderNotificationSearchResponse);
     }
 }

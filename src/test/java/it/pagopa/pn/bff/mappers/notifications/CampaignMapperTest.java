@@ -1,12 +1,17 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchRow;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.ChannelType;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.WorkflowEntity;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalSenderNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalSenderNotificationSearchRow;
 import it.pagopa.pn.bff.mocks.CampaignMock;
+import it.pagopa.pn.bff.mocks.InformalNotificationSearchMock;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CampaignMapperTest {
 
     private final CampaignMock campaignMock = new CampaignMock();
+    private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
 
     @Test
     void testCampaignMapper() {
@@ -128,5 +134,43 @@ public class CampaignMapperTest {
         for (int i = 0; i < sourceWorkflow.size(); i++) {
             assertEquals(sourceWorkflow.get(i).getChannel().getValue(), mappedChannels.get(i).getValue());
         }
+    }
+
+    @Test
+    void testToBffInformalSenderNotificationSearchResponse() {
+        InformalNotificationSearchResponse informalNotificationSearchResponse =
+                informalNotificationSearchMock.getInformalNotificationSearchResponseMock();
+
+        BffInformalSenderNotificationSearchResponse result =
+                CampaignMapper.modelMapper.toBffInformalSenderNotificationSearchResponse(
+                        informalNotificationSearchResponse
+                );
+
+        assertNotNull(result);
+        assertEquals(informalNotificationSearchResponse.getMoreResult(), result.getMoreResult());
+        assertEquals(informalNotificationSearchResponse.getNextPagesKey(), result.getNextPagesKey());
+
+        List<InformalNotificationSearchRow> sourceRows = informalNotificationSearchResponse.getResultsPage();
+        List<BffInformalSenderNotificationSearchRow> mappedRows = result.getResultsPage();
+        assertEquals(sourceRows.size(), mappedRows.size());
+
+        for (int i = 0; i < sourceRows.size(); i++) {
+            assertEquals(sourceRows.get(i).getIun(), mappedRows.get(i).getIun());
+            assertEquals(sourceRows.get(i).getRecipients(), mappedRows.get(i).getRecipients());
+            assertEquals(
+                    sourceRows.get(i).getNotificationStatus().getValue(),
+                    mappedRows.get(i).getNotificationStatus().getValue()
+            );
+            assertEquals(
+                    sourceRows.get(i).getCommunicationOutcomes().getViewed(),
+                    mappedRows.get(i).getCommunicationOutcomes().getViewed()
+            );
+            assertEquals(
+                    sourceRows.get(i).getCommunicationOutcomes().getDelivered(),
+                    mappedRows.get(i).getCommunicationOutcomes().getDelivered()
+            );
+        }
+
+        assertNull(CampaignMapper.modelMapper.toBffInformalSenderNotificationSearchResponse(null));
     }
 }
