@@ -783,4 +783,77 @@ class SentNotificationControllerTest {
                 argThat(new FluxMatcher<>(Flux.fromIterable(request)))
         );
     }
+
+    @Test
+    void getSentNotificationTimeline() {
+        BffNotificationTimelineResponse response = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(
+                NotificationSentDetailMapper.modelMapper.mapSentNotificationDetail(
+                        notificationDetailPaMock.getNotificationMultiRecipientMock(), null));
+        Mockito.when(notificationsPAService.getSentNotificationTimeline(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_TIMELINE_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffNotificationTimelineResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsPAService).getSentNotificationTimeline(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentNotificationTimelineError() {
+        Mockito.when(notificationsPAService.getSentNotificationTimeline(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_SENT_TIMELINE_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsPAService).getSentNotificationTimeline(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
 }

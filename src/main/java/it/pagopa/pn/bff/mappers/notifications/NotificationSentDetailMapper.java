@@ -108,10 +108,12 @@ public interface NotificationSentDetailMapper {
 
     /**
      * @see NotificationDetailUtility#setReworkedStatusOnSteps(BffFullNotificationV1)
+     * @see NotificationDetailUtility#setAarDocumentAvailability(BffFullNotificationV1)
      */
     @AfterMapping
-    default void setReworkedStatusOnSteps(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
+    default void finalizeReworkedStatusAndAarAvailability(@MappingTarget BffFullNotificationV1 bffFullNotificationV1) {
         NotificationDetailUtility.setReworkedStatusOnSteps(bffFullNotificationV1);
+        NotificationDetailUtility.setAarDocumentAvailability(bffFullNotificationV1);
     }
 
     /**

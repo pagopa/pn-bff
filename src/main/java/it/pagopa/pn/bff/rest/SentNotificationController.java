@@ -92,6 +92,36 @@ public class SentNotificationController implements NotificationSentApi {
     }
 
     /**
+     * GET bff/v1/notifications/sent/{iun}/timeline: Notification timeline
+     * Get the timeline of a notification.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param exchange
+     * @return the timeline of the notification with a specific IUN
+     */
+    @Override
+    public Mono<ResponseEntity<BffNotificationTimelineResponse>> getSentNotificationTimelineV1(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups,
+            ServerWebExchange exchange) {
+
+        return notificationsPAService.getSentNotificationTimeline(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                xPagopaPnCxGroups
+        ).map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+    }
+
+    /**
      * GET bff/v1/notifications/sent/{iun}/documents/{documentType}: Notification document
      * Download the document linked to a notification
      *
