@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.AfterAll;
@@ -20,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -41,10 +43,15 @@ class PnDeliveryClientPAImplTestIT {
     private final String paymentDownloadPath = "/delivery/notifications/sent/" + iun + "/attachments/payment/" + recipientIdx + "/" + attachmentName;
     private final String newNotificationPath = "/delivery/v2.6/requests";
     private final String preloadRequestPath = "/delivery/attachments/preload";
+    private final String campaignsListPath = "/delivery-private/v1/campaigns";
+    private final String campaignDetailPath = "/delivery-private/v1/campaigns/" + CampaignMock.CAMPAIGN_ID;
+    private final String searchInformalSentNotificationsPath = "/delivery/campaigns/" + CampaignMock.CAMPAIGN_ID + "/notifications/sent";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
+    private final CampaignMock campaignMock = new CampaignMock();
+    private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -300,6 +307,158 @@ class PnDeliveryClientPAImplTestIT {
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,
                 newSentNotificationMock.getPreloadRequestMock()
+        )).expectError().verify();
+    }
+
+    @Test
+    void listCampaigns() throws JsonProcessingException {
+        String response =
+                objectMapper.writeValueAsString(
+                        campaignMock.getCampaignSearchResponseMock()
+                );
+
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignsListPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPagesKey", "next-page-key")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectNext(campaignMock.getCampaignSearchResponseMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void listCampaignsError() {
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignsListPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+                        .withQueryStringParameter("size", "10")
+                        .withQueryStringParameter("nextPagesKey", "next-page-key")
+        ).respond(
+                response().withStatusCode(404)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.listCampaigns(
+                                UUID.fromString(CampaignMock.SENDER_ID),
+                                10,
+                                "next-page-key"
+                        )
+                )
+                .expectError()
+                .verify();
+    }
+
+    @Test
+    void getCampaignDetail() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(campaignMock.getCampaignDetailMock());
+
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignDetailPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+        );
+
+        StepVerifier.create(
+                        pnDeliveryClient.getCampaignDetail(
+                                CampaignMock.CAMPAIGN_ID,
+                                UUID.fromString(CampaignMock.SENDER_ID)
+                        )
+                )
+                .expectNext(campaignMock.getCampaignDetailMock())
+                .verifyComplete();
+    }
+
+    @Test
+    void getCampaignDetailError() {
+        mockServerClient.when(
+                request()
+                        .withMethod("GET")
+                        .withPath(campaignDetailPath)
+                        .withQueryStringParameter("senderId", CampaignMock.SENDER_ID)
+        ).respond(response().withStatusCode(404));
+
+        StepVerifier.create(
+                        pnDeliveryClient.getCampaignDetail(
+                                CampaignMock.CAMPAIGN_ID,
+                                UUID.fromString(CampaignMock.SENDER_ID)
+                        )
+                )
+                .expectError()
+                .verify();
+    }
+
+    @Test
+    void searchInformalSentNotifications() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(informalNotificationSearchMock.getInformalNotificationSearchResponseMock());
+        mockServerClient.when(request().withMethod("GET").withPath(searchInformalSentNotificationsPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectNext(informalNotificationSearchMock.getInformalNotificationSearchResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void searchInformalSentNotificationsError() {
+        mockServerClient.when(request().withMethod("GET").withPath(searchInformalSentNotificationsPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
         )).expectError().verify();
     }
 }

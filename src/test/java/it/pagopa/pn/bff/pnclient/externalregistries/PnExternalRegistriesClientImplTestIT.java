@@ -103,7 +103,7 @@ class PnExternalRegistriesClientImplTestIT {
     @Test
     void getInstitutionProducts() throws JsonProcessingException {
         String response = objectMapper.writeValueAsString(paInfoMock.getProductResourcePNMock());
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/" + UserMock.PN_CX_ID + "/products"))
                 .respond(response()
                         .withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -120,7 +120,7 @@ class PnExternalRegistriesClientImplTestIT {
 
     @Test
     void getInstitutionProductsError() {
-        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/CX_ID/products"))
+        mockServerClient.when(request().withMethod("GET").withPath(pathInstitutions + "/" + UserMock.PN_CX_ID + "/products"))
                 .respond(response().withStatusCode(404));
 
         StepVerifier.create(pnExternalRegistriesClient.getInstitutionProducts(
