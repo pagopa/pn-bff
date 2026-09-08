@@ -77,18 +77,20 @@ una preferenza stilistica o quando il beneficio suggerito non è concreto.
 
 Ogni commento deve iniziare con una delle seguenti classificazioni:
 
-- `[BLOCCANTE][SICUREZZA]`
-- `[BLOCCANTE][AUTORIZZAZIONE]`
-- `[ALTA][PRIVACY]`
-- `[ALTA][CONTRATTO]`
-- `[ALTA][AFFIDABILITÀ]`
-- `[ALTA][CORRETTEZZA]`
-- `[MEDIA][CORRETTEZZA]`
-- `[BASSA][MANUTENIBILITÀ]`
+- `[BLOCKING][SECURITY]`
+- `[BLOCKING][AUTHORIZATION]`
+- `[HIGH][PRIVACY]`
+- `[HIGH][CONTRACT]`
+- `[HIGH][RELIABILITY]`
+- `[HIGH][CORRECTNESS]`
+- `[MEDIUM][CORRECTNESS]`
+- `[LOW][MAINTAINABILITY]`
 
-Non utilizzare classificazioni differenti da quelle elencate.
+Non utilizzare classificazioni differenti da quelle elencate, con la sola eccezione del marcatore `[VERIFY]`, riservato ai dubbi non confermati e definito nella sezione "Gestione dei dubbi".
 
-### `[BLOCCANTE][AUTORIZZAZIONE]`
+Le classificazioni devono essere riprodotte esattamente in questo formato, in maiuscolo e senza spazi tra le due parentesi.
+
+### `[BLOCKING][AUTHORIZATION]`
 
 Utilizza questa severità quando la modifica consente concretamente:
 
@@ -100,7 +102,7 @@ Utilizza questa severità quando la modifica consente concretamente:
 - accesso basato sul solo possesso di un identificativo;
 - conversione di un accesso negato in una risposta contenente dati protetti.
 
-### `[BLOCCANTE][SICUREZZA]`
+### `[BLOCKING][SECURITY]`
 
 Utilizza questa severità quando la modifica consente concretamente:
 
@@ -132,7 +134,7 @@ Non utilizzare severità bloccanti per:
 - sola assenza di test;
 - preferenze implementative.
 
-### `[ALTA][PRIVACY]`
+### `[HIGH][PRIVACY]`
 
 Utilizza questa severità per:
 
@@ -142,7 +144,7 @@ Utilizza questa severità per:
 - violazioni concrete del principio di minimizzazione;
 - URL prefirmati con durata o ambito eccessivi.
 
-### `[ALTA][CONTRATTO]`
+### `[HIGH][CONTRACT]`
 
 Utilizza questa severità per:
 
@@ -154,7 +156,7 @@ Utilizza questa severità per:
 - modifiche che impediscono o alterano involontariamente la generazione;
 - modifiche manuali destinate a essere perse alla rigenerazione.
 
-### `[ALTA][AFFIDABILITÀ]`
+### `[HIGH][RELIABILITY]`
 
 Utilizza questa severità per:
 
@@ -169,7 +171,7 @@ Utilizza questa severità per:
 - concorrenza non limitata;
 - pipeline CI/CD che può pubblicare artefatti incompleti o non verificati.
 
-### `[ALTA][CORRETTEZZA]`
+### `[HIGH][CORRECTNESS]`
 
 Utilizza questa severità per:
 
@@ -180,7 +182,7 @@ Utilizza questa severità per:
 - errori che compromettono stabilmente il comportamento previsto senza
   costituire un bypass di sicurezza.
 
-### `[MEDIA][CORRETTEZZA]`
+### `[MEDIUM][CORRECTNESS]`
 
 Utilizza questa severità per problemi:
 
@@ -191,7 +193,7 @@ Utilizza questa severità per problemi:
   principali;
 - che causano inefficienze concrete ma limitate.
 
-### `[BASSA][MANUTENIBILITÀ]`
+### `[LOW][MAINTAINABILITY]`
 
 Utilizza questa severità soltanto quando la modifica introduce un problema
 concreto che aumenta significativamente il rischio di errori futuri o rende
@@ -207,11 +209,24 @@ Esempi appropriati:
 - dipendenze inutilizzate o configurazioni obsolete introdotte dalla PR;
 - codice irraggiungibile o strutture non utilizzate introdotte dalla modifica.
 
-Non utilizzare `[BASSA][MANUTENIBILITÀ]` per naming, formattazione, ordine dei
-metodi, costrutti equivalenti o richieste generiche di refactoring.
+Non utilizzare `[LOW][MAINTAINABILITY]` per:
 
-Un rilievo di manutenibilità deve spiegare il rischio concreto di divergenza o
-errore e proporre una correzione minima.
+- preferenze di naming;
+- formattazione;
+- ordine dei metodi o degli import;
+- scelta tra costrutti equivalenti;
+- richieste generiche di refactoring;
+- estrazione di metodi senza un beneficio concreto;
+- riduzione del numero di righe fine a sé stessa; la concisione è segnalabile solo quando il codice introdotto dalla pull request è verboso o duplicato e una forma equivalente più breve migliora anche la leggibilità;
+- problemi preesistenti non aggravati dalla pull request.
+
+Un rilievo di manutenibilità deve spiegare:
+
+1. quale duplicazione, accoppiamento o complessità viene introdotta;
+2. quale modifica futura potrebbe produrre una divergenza o un errore;
+3. quale correzione minima riduce il rischio.
+
+Non elevare un problema di sola manutenibilità a una severità superiore.
 
 ## Confini di fiducia
 
@@ -336,10 +351,10 @@ Per `openapi-generator-maven-plugin`, verifica inoltre:
 - assenza di modifiche manuali al codice generato;
 - compatibilità degli output con i contratti BFF.
 
-Segnala come `[ALTA][CONTRATTO]` un aggiornamento della specifica downstream che
+Segnala come `[HIGH][CONTRACT]` un aggiornamento della specifica downstream che
 modifica il client generato senza i corrispondenti adeguamenti applicativi.
 
-Segnala come `[ALTA][AFFIDABILITÀ]` una configurazione Maven che rende la build
+Segnala come `[HIGH][RELIABILITY]` una configurazione Maven che rende la build
 non riproducibile o omette dalla build gli artefatti runtime necessari.
 
 Non proporre aggiornamenti di dipendenze non collegati alla pull request.
@@ -368,8 +383,8 @@ Se cambia la versione di `pn-codegen`, verifica che:
 - non siano mescolate modifiche manuali agli artefatti generati.
 
 Una modifica a `codegen/config.json` che espone concretamente un'API protetta
-nel contesto errato può essere `[BLOCCANTE][SICUREZZA]` o
-`[BLOCCANTE][AUTORIZZAZIONE]`.
+nel contesto errato può essere `[BLOCKING][SECURITY]` o
+`[BLOCKING][AUTHORIZATION]`.
 
 ## Script di build e generazione
 
@@ -398,11 +413,11 @@ Per `scripts/generate-code.sh`, verifica in particolare:
 - assenza di privilegi o accessi al Docker daemon non necessari;
 - rigenerazione coerente di external e AWS.
 
-Classifica come `[BLOCCANTE][SICUREZZA]` una command injection concretamente
+Classifica come `[BLOCKING][SECURITY]` una command injection concretamente
 attivabile o l'esecuzione di un'immagine non attendibile con accesso
 privilegiato.
 
-Classifica come `[ALTA][AFFIDABILITÀ]` uno script che ignora un fallimento e
+Classifica come `[HIGH][RELIABILITY]` uno script che ignora un fallimento e
 produce artefatti parziali considerati validi.
 
 ## GitHub Actions e automazione
@@ -430,16 +445,17 @@ Quando una pull request modifica `.github/workflows/**`, verifica:
 - artifact prodotti soltanto dopo build e test riusciti;
 - protezione degli ambienti e dei deployment.
 
-Classifica come `[BLOCCANTE][SICUREZZA]`:
+Classifica come `[BLOCKING][SECURITY]`:
 
-- esecuzione del codice di una PR non attendibile con secret o token in scrittura;
+- esecuzione del codice di una PR non attendibile con secret o token in
+  scrittura;
 - uso vulnerabile di `pull_request_target`;
 - interpolazione diretta di input controllabile in comandi shell;
 - action non attendibili eseguite con permessi privilegiati;
 - esposizione di secret;
 - pubblicazione o deployment attivabili da un soggetto non autorizzato.
 
-Classifica come `[ALTA][AFFIDABILITÀ]`:
+Classifica come `[HIGH][RELIABILITY]`:
 
 - workflow che può pubblicare senza completare le verifiche richieste;
 - errori ignorati;
@@ -521,7 +537,98 @@ Diventa bloccante soltanto quando la modifica mostra già un bypass concreto.
 Non richiedere test per una segnalazione di sola manutenibilità, salvo che la
 correzione proposta modifichi anche il comportamento osservabile.
 
+## Lingua dei commenti
+
+Scrivi tutti i commenti della code review in inglese.
+
+Questo requisito si applica a:
+
+- titolo e testo del rilievo;
+- descrizione dello scenario;
+- spiegazione dell'impatto;
+- correzione suggerita;
+- indicazioni sui test;
+- richieste di verifica;
+- commenti relativi a sicurezza, autorizzazione, privacy, contratto,
+  affidabilità, correttezza e manutenibilità.
+
+Mantieni invariati:
+
+- nomi di classi, metodi, variabili e parametri;
+- path dei file;
+- `operationId`;
+- nomi degli header;
+- codici di errore;
+- messaggi che devono essere citati testualmente;
+- identificatori e termini tecnici presenti nel repository.
+
+Utilizza un inglese tecnico, diretto e professionale.
+
+Non mescolare italiano e inglese nello stesso commento, salvo quando è
+necessario citare testualmente codice, messaggi, descrizioni o identificatori
+esistenti.
+
+Le classificazioni di severità devono rimanere esattamente nel formato definito
+in queste istruzioni:
+
+- `[BLOCKING][SECURITY]`
+- `[BLOCKING][AUTHORIZATION]`
+- `[HIGH][PRIVACY]`
+- `[HIGH][CONTRACT]`
+- `[HIGH][RELIABILITY]`
+- `[HIGH][CORRECTNESS]`
+- `[MEDIUM][CORRECTNESS]`
+- `[LOW][MAINTAINABILITY]`
+
+## Gestione dei dubbi
+
+Se durante la review hai un dubbio, non improvvisare e non presentare
+un'ipotesi come se fosse un fatto verificato.
+
+Considera un dubbio, ad esempio, quando:
+
+- non riesci a determinare se un controllo è applicato altrove nel flusso;
+- non hai visibilità sul comportamento del servizio downstream;
+- non puoi verificare il contenuto di un file non incluso nel diff;
+- non sai se una collezione o un input è limitato contrattualmente;
+- non puoi stabilire se lo scenario che immagini è realmente raggiungibile;
+- l'intento della modifica non è deducibile dal codice e dal contesto della
+  pull request.
+
+In questi casi:
+
+1. dichiara esplicitamente che si tratta di un dubbio e non di un problema
+   confermato;
+2. indica quale informazione manca e perché è necessaria;
+3. descrivi la verifica concreta che il reviewer umano può eseguire;
+4. non proporre una correzione come obbligatoria, ma solo come possibile esito
+   della verifica.
+
+Non trasformare un dubbio in un rilievo bloccante. Assegna una severità
+`[BLOCKING]` o `[HIGH]` soltanto quando lo scenario è confermato dal codice
+visibile nella pull request.
+
+Non produrre un rilievo quando l'unico fondamento è una supposizione su codice,
+configurazioni o comportamenti che non puoi osservare.
+
+Se il dubbio riguarda un confine di sicurezza, autorizzazione o privacy,
+segnalalo comunque come richiesta di verifica esplicita, senza affermare che la
+vulnerabilità esiste.
+
+Formato consigliato per un dubbio:
+
+> **[VERIFY]** I cannot determine from this pull request whether X is
+> enforced, because Y is not visible in the diff. If X is not enforced,
+> Z becomes possible. Please confirm the behaviour of Y, and apply W only if
+> the check is actually missing.
+
+Il marcatore `[VERIFY]` è ammesso in aggiunta alle classificazioni di
+severità ed è l'unico consentito per i rilievi non confermati. Non combinarlo
+con una classificazione di severità nello stesso commento.
+
 ## Requisiti dei commenti
+
+Tutti i commenti devono essere scritti in inglese.
 
 Prima di segnalare un problema identifica:
 
@@ -531,9 +638,9 @@ Prima di segnalare un problema identifica:
 4. l'effetto concreto;
 5. la correzione minima.
 
-Per sicurezza e autorizzazione usa uno scenario simile a:
+Per sicurezza e autorizzazione usa uno scenario equivalente a:
 
-`Un chiamante con ruolo X può utilizzare Y per accedere o modificare Z perché il controllo W è assente, alterato o non propagato.`
+`A caller with role X can use Y to access or modify Z because control W is missing, altered, or not propagated.`
 
 Ogni commento deve:
 
@@ -544,56 +651,87 @@ Ogni commento deve:
 - proporre una correzione attuabile;
 - indicare un test solo quando utile a prevenire la regressione.
 
-Per un rilievo di manutenibilità, descrivi il rischio di divergenza, errore o
-difficoltà di modifica introdotto dalla pull request.
+Per un rilievo di manutenibilità, descrivi in inglese il rischio di divergenza,
+errore o difficoltà di modifica introdotto dalla pull request.
 
 Non produrre commenti generici come:
 
-- “migliorare la validazione”;
-- “aggiungere più test”;
-- “valutare un refactoring”;
-- “semplificare questo codice”;
-- “aggiornare le dipendenze”;
-- “verificare il workflow”.
+- `Improve validation`;
+- `Add more tests`;
+- `Consider refactoring this`;
+- `Simplify this code`;
+- `Update the dependencies`;
+- `Check the workflow`;
+- `Improve readability`.
 
-Indica sempre comportamento o struttura interessata, scenario, impatto e
-correzione.
+Indica sempre il comportamento o la struttura interessata, lo scenario,
+l'impatto e la correzione.
 
 ## Esempi di commenti
 
-Esempio di autorizzazione:
+### Autorizzazione
 
-> **[BLOCCANTE][AUTORIZZAZIONE]** Il `mandateId` ricevuto dal controller non
-> viene propagato al client downstream. Un destinatario che opera come delegato
-> può richiedere il documento tramite un IUN valido senza applicare il vincolo
-> del mandato. Propaga `mandateId` attraverso service e `pnclient` e aggiungi un
-> test negativo con un mandato appartenente a un altro soggetto.
+> **[BLOCKING][AUTHORIZATION]** The controller receives `mandateId`, but the
+> service does not propagate it to the downstream client. A recipient acting as
+> a delegate can therefore request the document using a valid IUN without
+> enforcing the mandate constraint. Propagate `mandateId` through the service
+> and `pnclient`, and add a negative test using a mandate owned by another
+> subject.
 
-Esempio di workflow:
+### Sicurezza del workflow
 
-> **[BLOCCANTE][SICUREZZA]** Questo job usa `pull_request_target`, esegue il
-> codice della PR e dispone di un token con permesso `contents: write`. Un autore
-> esterno può modificare lo script eseguito e utilizzare il token del repository.
-> Non eseguire il checkout della PR nel contesto privilegiato oppure separa la
-> validazione non attendibile dal job che utilizza il token.
+> **[BLOCKING][SECURITY]** This job uses `pull_request_target`, checks out the
+> pull request code, and has a token with `contents: write`. An external
+> contributor can modify the executed script and use the repository token.
+> Avoid running pull request code in the privileged context, or separate the
+> untrusted validation job from the job that uses the write token.
 
-Esempio di codegen:
+### Contratto e codegen
 
-> **[ALTA][CONTRATTO]** La nuova specifica downstream è referenziata tramite il
-> branch `develop`, quindi la build può generare client differenti senza
-> modifiche al repository. Fissa `inputSpec` a un commit immutabile e rigenera
-> gli artefatti correlati.
+> **[HIGH][CONTRACT]** The downstream OpenAPI specification is referenced
+> through the `develop` branch, so identical repository revisions can generate
+> different clients over time. Pin `inputSpec` to an immutable commit and
+> regenerate the affected clients and artifacts.
 
-Esempio di script:
+### Affidabilità dello script
 
-> **[ALTA][AFFIDABILITÀ]** Il comando di generazione ignora il fallimento di
-> Docker e prosegue con gli artefatti precedenti, che possono essere pubblicati
-> come aggiornati. Propaga l'exit code e interrompi lo script prima degli step
-> successivi.
+> **[HIGH][RELIABILITY]** The generation script ignores the Docker failure and
+> continues with stale artifacts, which can then be published as if they were
+> updated. Propagate the non-zero exit code and stop before any subsequent
+> publication step.
 
-Esempio di manutenibilità:
+### Affidabilità e performance
 
-> **[BASSA][MANUTENIBILITÀ]** Questa modifica duplica nel workflow la versione
-> del codegen già dichiarata nel `pom.xml`. I due valori possono divergere nei
-> prossimi aggiornamenti. Ricava la versione dalla fonte esistente oppure
-> mantieni una sola configurazione canonica.
+> **[HIGH][RELIABILITY]** This transformation performs a linear lookup for
+> every timeline entry, resulting in quadratic complexity for an unbounded
+> collection. Build the identifier index once and reuse it during mapping,
+> while preserving ordering and duplicate handling.
+
+### Privacy
+
+> **[HIGH][PRIVACY]** This log records the complete downstream error body, which
+> can contain recipient and notification data. Log the status code and trace ID
+> instead, and keep the response body out of application logs.
+
+### Correttezza
+
+> **[HIGH][CORRECTNESS]** `senderId` and `recipientId` are passed in the reverse
+> order to the service. Both parameters are strings, so the code compiles, but
+> the query is executed for the wrong subject. Restore the generated-client
+> argument order and add a test that verifies both values independently.
+
+### Manutenibilità
+
+> **[LOW][MAINTAINABILITY]** This change duplicates the codegen version in the
+> workflow even though `pom.xml` is already the canonical source. The values can
+> diverge during the next update and generate artifacts with different tool
+> versions. Read the version from `pom.xml` or keep a single canonical
+> configuration.
+
+### Artefatto generato
+
+> **[HIGH][CONTRACT]** This change only affects the generated external
+> specification and has no corresponding change in the internal source,
+> schemas, or codegen configuration. It will be lost during the next
+> generation. Apply the change to the appropriate source and regenerate the
+> external and AWS artifacts.
