@@ -86,3 +86,42 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/informal/campaigns/{campaignId}/notifications/sent':
+    get:
+      summary: 'Mittente: Lista Comunicazioni Bonarie di una Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: searchInformalSentNotificationV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchUnifiedIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchStatusParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchViewedParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchDeliveredParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffInformalSenderNotificationSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

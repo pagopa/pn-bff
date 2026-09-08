@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: HlPHTSHjz19unfN/231UgklUmaEjLyesqovlavgIUqc=
+  version: a14QvIuo1lxWjIvxFesvlyl2pPoKOLQg9lvsHMeCtDs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4314,6 +4314,79 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/informal/campaigns/{campaignId}/notifications/sent:
+    get:
+      summary: 'Mittente: Lista Comunicazioni Bonarie di una Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: searchInformalSentNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/CampaignIdParam'
+        - $ref: '#/components/parameters/notificationSearchStartDate'
+        - $ref: '#/components/parameters/notificationSearchEndDate'
+        - $ref: '#/components/parameters/notificationSearchRecipientId'
+        - $ref: '#/components/parameters/BffSearchUnifiedIun'
+        - $ref: '#/components/parameters/BffInformalNotificationSearchStatusParam'
+        - $ref: '#/components/parameters/notificationSearchViewed'
+        - $ref: '#/components/parameters/notificationSearchDelivered'
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/NextPagesKeyParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/BffInformalSenderNotificationSearchResponse
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/informal/campaigns/{campaignId}/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/informal/campaigns/{campaignId}/notifications/sent API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/informal/campaigns/{campaignId}/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -4718,6 +4791,30 @@ components:
       description: Identificativo univoco della campagna.
       schema:
         type: string
+    BffInformalNotificationSearchStatusParam:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/InformalNotificationStatusV1'
+    notificationSearchViewed:
+      name: viewed
+      in: query
+      required: false
+      description: >-
+        Se valorizzato, filtra le comunicazioni bonarie in base all'esito di
+        visualizzazione (true = visualizzate, false = non visualizzate).
+      schema:
+        type: boolean
+    notificationSearchDelivered:
+      name: delivered
+      in: query
+      required: false
+      description: >-
+        Se valorizzato, filtra le comunicazioni bonarie in base all'esito di
+        consegna (true = consegnate, false = non consegnate).
+      schema:
+        type: boolean
   schemas:
     NotificationStatusV26:
       type: string
@@ -9886,6 +9983,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ChannelType'
+    BffInformalSenderNotificationSearchRow:
+      type: object
+      properties:
+        iun:
+          $ref: '#/components/schemas/UnifiedIUN'
+        recipients:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            type: string
+            format: password
+        notificationStatus:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        communicationOutcomes:
+          $ref: '#/components/schemas/CommunicationOutcomes'
+    BffInformalSenderNotificationSearchResponse:
+      title: List of sender's informal notifications
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffInformalSenderNotificationSearchRow'
+        moreResult:
+          type: boolean
+        nextPagesKey:
+          type: array
+          items:
+            type: string
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

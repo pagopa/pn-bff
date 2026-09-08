@@ -4,6 +4,8 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotifi
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
@@ -35,6 +37,7 @@ class PnDeliveryClientPAImplTest {
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     private final CampaignMock campaignMock = new CampaignMock();
+    private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
@@ -47,6 +50,10 @@ class PnDeliveryClientPAImplTest {
             name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi"
     )
     private CampaignsApi campaignsApi;
+    @MockBean(
+            name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi"
+    )
+    private SenderInformalReadWebApi senderInformalReadWebApi;
 
     @Test
     void searchSentNotifications() {
@@ -391,6 +398,80 @@ class PnDeliveryClientPAImplTest {
         StepVerifier.create(pnDeliveryClientPAImpl.getCampaignDetail(
                 CampaignMock.CAMPAIGN_ID,
                 UUID.fromString(CampaignMock.SENDER_ID)
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void searchInformalSentNotifications() {
+        when(senderInformalReadWebApi.searchInformalSentNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(InformalNotificationStatusV1.class),
+                Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.just(informalNotificationSearchMock.getInformalNotificationSearchResponseMock()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectNext(informalNotificationSearchMock.getInformalNotificationSearchResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void searchInformalSentNotificationsError() {
+        when(senderInformalReadWebApi.searchInformalSentNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.any(OffsetDateTime.class),
+                Mockito.anyList(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(InformalNotificationStatusV1.class),
+                Mockito.anyBoolean(),
+                Mockito.anyBoolean(),
+                Mockito.anyInt(),
+                Mockito.anyString()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
         )).expectError(WebClientResponseException.class).verify();
     }
 }

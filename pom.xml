@@ -1496,6 +1496,44 @@
                             </configOptions>
                         </configuration>
                     </execution>
+
+                    <!-- OPEN API PN-DELIVERY SENDER INFORMAL NOTIFICATIONS WEB -->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-client-pn-delivery-sender-informal-notifications-web</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-informal-pa.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <templateDirectory>
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                            </templateDirectory>
+                            <configOptions>
+                                <apiPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-informal-pa-web.api
+                                </apiPackage>
+                                <modelPackage>
+                                    ${project.groupId}.bff.generated.openapi.msclient.delivery-informal-pa-web.model
+                                </modelPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

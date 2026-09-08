@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
 import it.pagopa.pn.bff.mocks.*;
 import org.junit.jupiter.api.AfterAll;
@@ -44,11 +45,13 @@ class PnDeliveryClientPAImplTestIT {
     private final String preloadRequestPath = "/delivery/attachments/preload";
     private final String campaignsListPath = "/delivery-private/v1/campaigns";
     private final String campaignDetailPath = "/delivery-private/v1/campaigns/" + CampaignMock.CAMPAIGN_ID;
+    private final String searchInformalSentNotificationsPath = "/delivery/campaigns/" + CampaignMock.CAMPAIGN_ID + "/notifications/sent";
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     private final CampaignMock campaignMock = new CampaignMock();
+    private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -406,5 +409,56 @@ class PnDeliveryClientPAImplTestIT {
                 )
                 .expectError()
                 .verify();
+    }
+
+    @Test
+    void searchInformalSentNotifications() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(informalNotificationSearchMock.getInformalNotificationSearchResponseMock());
+        mockServerClient.when(request().withMethod("GET").withPath(searchInformalSentNotificationsPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectNext(informalNotificationSearchMock.getInformalNotificationSearchResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void searchInformalSentNotificationsError() {
+        mockServerClient.when(request().withMethod("GET").withPath(searchInformalSentNotificationsPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.searchInformalSentNotifications(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                CampaignMock.CAMPAIGN_ID,
+                OffsetDateTime.parse(InformalNotificationSearchMock.START_DATE),
+                OffsetDateTime.parse(InformalNotificationSearchMock.END_DATE),
+                UserMock.PN_CX_GROUPS,
+                InformalNotificationSearchMock.RECIPIENT_ID,
+                InformalNotificationSearchMock.IUN_MATCH,
+                InformalNotificationStatusV1.ACCEPTED,
+                true,
+                true,
+                InformalNotificationSearchMock.SIZE,
+                InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectError().verify();
     }
 }
