@@ -164,6 +164,48 @@ public class NotificationsRecipientService {
         log.info("Get notification detail - senderId: {} - type: {} - groups: {} - iun: {}",
                 xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
 
+        return fetchNotificationDetail(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun,
+                xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId)
+                .flatMap(notification -> enrichWithCostDetails(notification, iun));
+    }
+
+    /**
+     * Get the timeline of a notification. This is for a recipient user.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the timeline of the notification with a specific IUN
+     */
+    public Mono<BffNotificationTimelineResponse> getNotificationTimeline(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                        String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails,
+                                                                        String mandateId) {
+        log.info("Get notification timeline - senderId: {} - type: {} - groups: {} - iun: {}",
+                xPagopaPnCxId, xPagopaPnCxType, xPagopaPnCxGroups, iun);
+
+        return fetchNotificationDetail(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, xPagopaPnSrcCh, iun,
+                xPagopaPnCxGroups, xPagopaPnSrcChDetails, mandateId)
+                .map(NotificationTimelineMapper.modelMapper::mapNotificationTimeline);
+    }
+
+    /**
+     * Retrieve the notification from pn-delivery and map it to the BFF notification detail.
+     * The cost details are not part of the mapping: they are needed by the detail API only.
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Receiver Type
+     * @param xPagopaPnCxId     Receiver id
+     * @param iun               Notification IUN
+     * @param xPagopaPnCxGroups Receiver Group id List
+     * @param mandateId         mandate id. It is required if the user, that is requesting the notification, is a mandate
+     * @return the mapped detail of the notification with a specific IUN
+     */
+    private Mono<BffFullNotificationV1> fetchNotificationDetail(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType,
+                                                                String xPagopaPnCxId, String xPagopaPnSrcCh, String iun, List<String> xPagopaPnCxGroups, String xPagopaPnSrcChDetails,
+                                                                String mandateId) {
         return pnDeliveryClient.getReceivedNotification(
                         xPagopaPnUid,
                         CxTypeMapper.cxTypeMapper.convertDeliveryRecipientCXType(xPagopaPnCxType),
@@ -173,8 +215,7 @@ public class NotificationsRecipientService {
                 .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                 .flatMap(notification -> reworkItemsService.getReworkItems(notification)
                         .map(reworkItems -> NotificationReceivedDetailMapper.modelMapper
-                                .mapReceivedNotificationDetail(notification, reworkItems)))
-                .flatMap(notification -> enrichWithCostDetails(notification, iun));
+                                .mapReceivedNotificationDetail(notification, reworkItems)));
     }
 
     /**

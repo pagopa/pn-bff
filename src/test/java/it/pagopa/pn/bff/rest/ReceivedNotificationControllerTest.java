@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.NotificationAarQrCodeMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationReceivedDetailMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationsReceivedMapper;
 import it.pagopa.pn.bff.mocks.NotificationDetailRecipientMock;
 import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
@@ -362,6 +363,143 @@ class ReceivedNotificationControllerTest {
                 .isNotFound();
 
         Mockito.verify(notificationsRecipientService).getNotificationDetail(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                IUN,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                null
+        );
+    }
+
+    @Test
+    void getReceivedNotificationTimeline() {
+        BffNotificationTimelineResponse response = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(
+                NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(
+                        notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null));
+        Mockito.when(notificationsRecipientService.getNotificationTimeline(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_TIMELINE_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffNotificationTimelineResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).getNotificationTimeline(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                IUN,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                null
+        );
+    }
+
+    @Test
+    void getReceivedNotificationTimelineWithMandate() {
+        BffNotificationTimelineResponse response = NotificationTimelineMapper.modelMapper.mapNotificationTimeline(
+                NotificationReceivedDetailMapper.modelMapper.mapReceivedNotificationDetail(
+                        notificationDetailRecipientMock.getNotificationMultiRecipientMock(), null));
+        Mockito.when(notificationsRecipientService.getNotificationTimeline(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.anyString()
+                ))
+                .thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_TIMELINE_PATH)
+                                .queryParam("mandateId", NotificationsReceivedMock.MANDATE_ID)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffNotificationTimelineResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(notificationsRecipientService).getNotificationTimeline(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PF,
+                UserMock.PN_CX_ID,
+                NotificationsReceivedMock.SOURCE_CHANNEL,
+                IUN,
+                UserMock.PN_CX_GROUPS,
+                NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS,
+                NotificationsReceivedMock.MANDATE_ID
+        );
+    }
+
+    @Test
+    void getReceivedNotificationTimelineError() {
+        Mockito.when(notificationsRecipientService.getNotificationTimeline(
+                        Mockito.anyString(),
+                        Mockito.any(CxTypeAuthFleet.class),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyString(),
+                        Mockito.anyList(),
+                        Mockito.anyString(),
+                        Mockito.any()
+                ))
+                .thenReturn(Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path(PnBffRestConstants.NOTIFICATION_RECEIVED_TIMELINE_PATH)
+                                .build(IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PF.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .header(SOURCE_CHANNEL_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL)
+                .header(SOURCE_CHANNEL_DETAILS_HEADER, NotificationsReceivedMock.SOURCE_CHANNEL_DETAILS)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(notificationsRecipientService).getNotificationTimeline(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PF,
                 UserMock.PN_CX_ID,
