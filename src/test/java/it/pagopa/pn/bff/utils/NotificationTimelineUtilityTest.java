@@ -409,7 +409,7 @@ class NotificationTimelineUtilityTest {
         // own element ID): it creates the DIGITAL group first, with no channel yet, and the
         // matching send later joins that same group and backfills its channel
         List<BffNotificationTimelineStep> steps = deliveringSteps(
-                step("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_1.ATTEMPT_1", "2023-08-25T09:00:00Z",
+                step("SCHEDULE_DIGITAL_WORKFLOW.RECINDEX_1.ATTEMPT_1", "2023-08-25T09:15:00Z",
                         BffTimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
                         new BffNotificationDetailTimelineDetails().recIndex(1).sentAttemptMade(1)),
                 digitalDelivery(1, 0, "PEC", "2023-08-25T09:10:00Z"),
