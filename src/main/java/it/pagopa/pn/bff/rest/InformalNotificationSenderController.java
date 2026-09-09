@@ -126,4 +126,39 @@ public class InformalNotificationSenderController implements SenderInformalNotif
                 ResponseEntity.status(HttpStatus.OK).body(response)
         );
     }
+
+    /**
+     * GET /bff/v1/notifications/informal/sent/{iun}: Informal Sent Notification detail
+     * Get the detail of an informal notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the detail of the informal notification with a specific IUN
+     */
+    @Override
+    public Mono<ResponseEntity<BffFullSentInformalNotificationV1>> getSentInformalNotificationV1(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups,
+            final ServerWebExchange exchange
+    ) {
+        Mono<BffFullSentInformalNotificationV1> serviceResponse =
+                informalNotificationSenderService.getSentInformalNotification(
+                        xPagopaPnUid,
+                        xPagopaPnCxType,
+                        xPagopaPnCxId,
+                        iun,
+                        xPagopaPnCxGroups
+                );
+
+        return serviceResponse.map(response ->
+                ResponseEntity.status(HttpStatus.OK).body(response)
+        );
+    }
+
 }

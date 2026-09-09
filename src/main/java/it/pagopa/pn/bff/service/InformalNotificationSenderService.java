@@ -1,11 +1,13 @@
 package it.pagopa.pn.bff.service;
 
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
+import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationStatusMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -131,5 +133,35 @@ public class InformalNotificationSenderService {
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
         return sentNotifications.map(CampaignMapper.modelMapper::toBffInformalSenderNotificationSearchResponse);
+    }
+
+    /**
+     * Retrieve the informal sent notification detail
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the detail of the informal notification
+     */
+    public Mono<BffFullSentInformalNotificationV1> getSentInformalNotification(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups
+    ) {
+        log.info("Get sent informal notification detail - user id: {} - iun: {}", xPagopaPnUid, iun);
+
+        Mono<FullSentInformalNotificationV1> informalNotification = pnDeliveryClient.getSentInformalNotification(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAB2BCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return informalNotification.map(InformalNotificationSentMapper.modelMapper::mapSentInformalNotificationDetail);
     }
 }

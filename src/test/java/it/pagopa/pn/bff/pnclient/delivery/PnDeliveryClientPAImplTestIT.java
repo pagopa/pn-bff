@@ -46,12 +46,14 @@ class PnDeliveryClientPAImplTestIT {
     private final String campaignsListPath = "/delivery-private/v1/campaigns";
     private final String campaignDetailPath = "/delivery-private/v1/campaigns/" + CampaignMock.CAMPAIGN_ID;
     private final String searchInformalSentNotificationsPath = "/delivery/campaigns/" + CampaignMock.CAMPAIGN_ID + "/notifications/sent";
+    private final String sentInformalNotificationPath = "/delivery/v1/notifications/sent/" + InformalSentNotificationDetailMock.IUN;
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     private final NotificationDetailPaMock notificationDetailPaMock = new NotificationDetailPaMock();
     private final NotificationDownloadDocumentMock notificationDownloadDocumentMock = new NotificationDownloadDocumentMock();
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     private final CampaignMock campaignMock = new CampaignMock();
     private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
+    private final InformalSentNotificationDetailMock informalSentNotificationDetailMock = new InformalSentNotificationDetailMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClient;
 
@@ -459,6 +461,39 @@ class PnDeliveryClientPAImplTestIT {
                 true,
                 InformalNotificationSearchMock.SIZE,
                 InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectError().verify();
+    }
+
+    @Test
+    void getSentInformalNotification() throws JsonProcessingException {
+        String response = objectMapper.writeValueAsString(informalSentNotificationDetailMock.getFullSentInformalNotificationMock());
+        mockServerClient.when(request().withMethod("GET").withPath(sentInformalNotificationPath))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(response)
+                );
+
+        StepVerifier.create(pnDeliveryClient.getSentInformalNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
+        )).expectNext(informalSentNotificationDetailMock.getFullSentInformalNotificationMock()).verifyComplete();
+    }
+
+    @Test
+    void getSentInformalNotificationError() {
+        mockServerClient.when(request().withMethod("GET").withPath(sentInformalNotificationPath))
+                .respond(response().withStatusCode(404));
+
+        StepVerifier.create(pnDeliveryClient.getSentInformalNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
         )).expectError().verify();
     }
 }

@@ -131,3 +131,43 @@ paths:
             application/problem+json:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/informal/sent/{iun}':
+    get:
+      summary: 'Mittente: Dettaglio Comunicazione Bonaria'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationV1
+#      security:                                      # ONLY EXTERNAL
+#        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet' # NO EXTERNAL
+        - $ref: './common-refs.yaml#/components/parameters/cxGroupsAuthFleet' # NO EXTERNAL
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffFullSentInformalNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

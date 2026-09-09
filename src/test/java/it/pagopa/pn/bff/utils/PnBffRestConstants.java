@@ -54,6 +54,7 @@ public class PnBffRestConstants {
     public static final String ADDITIONAL_LANGUAGES_PATH = BFF_PATH + VERSION_1 + "/pa/additional-languages";
     public static final String CAMPAIGN_DETAIL_PATH = BFF_PATH + VERSION_1 + "/notifications/informal/campaigns/{campaignId}";
     public static final String SEARCH_INFORMAL_SENT_NOTIFICATIONS_PATH = BFF_PATH + VERSION_1 + "/informal/campaigns/{campaignId}/notifications/sent";
+    public static final String SENT_INFORMAL_NOTIFICATION_PATH = BFF_PATH + VERSION_1 + "/notifications/informal/sent/{iun}";
 
     private PnBffRestConstants() {
     }
