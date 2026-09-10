@@ -175,8 +175,8 @@ components:
     BffChannelStatusV1:
       type: string
       enum:
+        - READY_TO_SEND
         - WAITING_TO_SEND
-        - SENDING
         - SENT
         - DELIVERED
         - VIEWED

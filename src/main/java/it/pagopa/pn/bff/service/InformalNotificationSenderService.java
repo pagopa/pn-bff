@@ -154,7 +154,7 @@ public class InformalNotificationSenderService {
             String iun,
             List<String> xPagopaPnCxGroups
     ) {
-        log.info("Get sent informal notification detail");
+        log.info("Get sent informal notification detail - senderId: {} - iun: {}", xPagopaPnCxId, iun);
 
         Mono<FullSentInformalNotificationV1> informalNotification = pnDeliveryClient.getSentInformalNotification(
                 xPagopaPnUid,

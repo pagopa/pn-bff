@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Z54ACqpzJgCd9hQj/ssuuHs20/UiH/9G3xW+4R2QhE0=
+  version: 6RDOE6nesd+VxWPmLkVEhhc5Emg6ybfNmlMfb9nkrf8=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -10097,8 +10097,8 @@ components:
     BffChannelStatusV1:
       type: string
       enum:
+        - READY_TO_SEND
         - WAITING_TO_SEND
-        - SENDING
         - SENT
         - DELIVERED
         - VIEWED

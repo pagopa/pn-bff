@@ -69,13 +69,13 @@ class SentInformalNotificationChannelStatusResolverTest {
 
     @Test
     void sendingWhenProcessingWithNoChannelEvents() {
-        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.ANALOG, BffChannelStatusV1.SENDING);
+        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.ANALOG, BffChannelStatusV1.WAITING_TO_SEND);
     }
 
     @Test
     void ioNeverReturnsSendingEvenWhenProcessing() {
-        // IO does not support SENDING: it must fall back to WAITING_TO_SEND instead
-        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.IO, BffChannelStatusV1.WAITING_TO_SEND);
+        // IO does not support WAITING_TO_SEND (in progress): it must fall back to READY_TO_SEND instead
+        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.IO, BffChannelStatusV1.READY_TO_SEND);
     }
 
     @Test
@@ -85,13 +85,13 @@ class SentInformalNotificationChannelStatusResolverTest {
                 List.of(),
                 List.of(BffNotificationChannelType.EMAIL, BffNotificationChannelType.SMS));
 
-        assertEquals(BffChannelStatusV1.SENDING, result.get(0).getStatus());
-        assertEquals(BffChannelStatusV1.WAITING_TO_SEND, result.get(1).getStatus());
+        assertEquals(BffChannelStatusV1.WAITING_TO_SEND, result.get(0).getStatus());
+        assertEquals(BffChannelStatusV1.READY_TO_SEND, result.get(1).getStatus());
     }
 
     @Test
-    void waitingToSendWhenAccepted() {
-        assertStatus(InformalNotificationStatusV1.ACCEPTED, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.WAITING_TO_SEND);
+    void readyToSendWhenAccepted() {
+        assertStatus(InformalNotificationStatusV1.ACCEPTED, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.READY_TO_SEND);
     }
 
     @Test

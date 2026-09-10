@@ -15,38 +15,38 @@ public class SentInformalNotificationChannelStatusResolver {
     // Statuses allowed for each channel (except SEND)
     private static final Map<BffNotificationChannelType, Set<BffChannelStatusV1>> ALLOWED_STATUSES = Map.of(
             BffNotificationChannelType.IO, EnumSet.of(
-                    BffChannelStatusV1.WAITING_TO_SEND,
+                    BffChannelStatusV1.READY_TO_SEND,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.DELIVERED,
                     BffChannelStatusV1.VIEWED,
                     BffChannelStatusV1.UNAVAILABLE,
                     BffChannelStatusV1.NOT_DELIVERED),
             BffNotificationChannelType.SMS, EnumSet.of(
+                    BffChannelStatusV1.READY_TO_SEND,
                     BffChannelStatusV1.WAITING_TO_SEND,
-                    BffChannelStatusV1.SENDING,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.UNAVAILABLE,
                     BffChannelStatusV1.NOT_DELIVERED,
                     BffChannelStatusV1.WORKFLOW_ENDED),
             BffNotificationChannelType.EMAIL, EnumSet.of(
+                    BffChannelStatusV1.READY_TO_SEND,
                     BffChannelStatusV1.WAITING_TO_SEND,
-                    BffChannelStatusV1.SENDING,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.DELIVERED,
                     BffChannelStatusV1.UNAVAILABLE,
                     BffChannelStatusV1.NOT_DELIVERED,
                     BffChannelStatusV1.WORKFLOW_ENDED),
             BffNotificationChannelType.PEC, EnumSet.of(
+                    BffChannelStatusV1.READY_TO_SEND,
                     BffChannelStatusV1.WAITING_TO_SEND,
-                    BffChannelStatusV1.SENDING,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.DELIVERED,
                     BffChannelStatusV1.UNAVAILABLE,
                     BffChannelStatusV1.NOT_DELIVERED,
                     BffChannelStatusV1.WORKFLOW_ENDED),
             BffNotificationChannelType.ANALOG, EnumSet.of(
+                    BffChannelStatusV1.READY_TO_SEND,
                     BffChannelStatusV1.WAITING_TO_SEND,
-                    BffChannelStatusV1.SENDING,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.DELIVERED,
                     BffChannelStatusV1.NOT_DELIVERED,
@@ -120,17 +120,17 @@ public class SentInformalNotificationChannelStatusResolver {
         }
 
         // 5. Sending in progress - only the channel the sequential workflow is currently on
-        if (supportsStatus(channel, BffChannelStatusV1.SENDING)
+        if (supportsStatus(channel, BffChannelStatusV1.WAITING_TO_SEND)
                 && notificationStatus == InformalNotificationStatusV1.PROCESSING
                 && channelEvents.isEmpty()
                 && isActiveChannel) {
-            return BffChannelStatusV1.SENDING;
+            return BffChannelStatusV1.WAITING_TO_SEND;
         }
 
         // 6. Ready to send
-        if (supportsStatus(channel, BffChannelStatusV1.WAITING_TO_SEND)
+        if (supportsStatus(channel, BffChannelStatusV1.READY_TO_SEND)
                 && notificationStatus == InformalNotificationStatusV1.ACCEPTED) {
-            return BffChannelStatusV1.WAITING_TO_SEND;
+            return BffChannelStatusV1.READY_TO_SEND;
         }
 
         // 7. Workflow ended (in any outcome) without this channel ever being attempted
@@ -141,7 +141,7 @@ public class SentInformalNotificationChannelStatusResolver {
         }
 
         // 8. No rule matched
-        return BffChannelStatusV1.WAITING_TO_SEND;
+        return BffChannelStatusV1.READY_TO_SEND;
     }
 
     // Notification in one of its final states
