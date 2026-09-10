@@ -20,6 +20,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @WebFluxTest(InformalNotificationSenderController.class)
 class InformalNotificationSenderControllerTest {
@@ -300,7 +301,8 @@ class InformalNotificationSenderControllerTest {
     void getSentInformalNotification() {
         BffFullSentInformalNotificationV1 response =
                 InformalNotificationSentMapper.modelMapper.mapSentInformalNotificationDetail(
-                        informalSentNotificationDetailMock.getFullSentInformalNotificationMock()
+                        informalSentNotificationDetailMock.getFullSentInformalNotificationMock(),
+                        List.of(BffNotificationChannelType.IO)
                 );
 
         Mockito.when(informalNotificationSenderService.getSentInformalNotification(

@@ -10,6 +10,7 @@ import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaig
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalSenderNotificationSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationChannelType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
@@ -28,6 +29,8 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -272,6 +275,7 @@ class InformalNotificationSenderServiceTest {
     void getSentInformalNotification() {
         FullSentInformalNotificationV1 fullSentInformalNotification =
                 informalSentNotificationDetailMock.getFullSentInformalNotificationMock();
+        CampaignDetail campaignDetail = campaignMock.getCampaignDetailMock();
 
         when(pnDeliveryClient.getSentInformalNotification(
                 Mockito.anyString(),
@@ -281,8 +285,19 @@ class InformalNotificationSenderServiceTest {
                 Mockito.anyList()
         )).thenReturn(Mono.just(fullSentInformalNotification));
 
+        when(pnDeliveryClient.getCampaignDetail(Mockito.anyString(), Mockito.any(UUID.class)))
+                .thenReturn(Mono.just(campaignDetail));
+
+        List<BffNotificationChannelType> expectedChannels = new ArrayList<>(
+                CampaignMapper.modelMapper.mapCampaignDetail(campaignDetail).getChannels().stream()
+                        .map(channel -> BffNotificationChannelType.valueOf(channel.name()))
+                        .toList()
+        );
+        expectedChannels.add(BffNotificationChannelType.SEND);
+
         BffFullSentInformalNotificationV1 expected =
-                InformalNotificationSentMapper.modelMapper.mapSentInformalNotificationDetail(fullSentInformalNotification);
+                InformalNotificationSentMapper.modelMapper.mapSentInformalNotificationDetail(
+                        fullSentInformalNotification, expectedChannels);
 
         Mono<BffFullSentInformalNotificationV1> result =
                 informalNotificationSenderService.getSentInformalNotification(

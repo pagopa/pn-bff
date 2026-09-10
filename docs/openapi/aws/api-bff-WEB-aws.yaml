@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: hqMF8W3rV0riUjKtRGi4J+QWGYFJSZLI10Me4+77Eeg=
+  version: Z54ACqpzJgCd9hQj/ssuuHs20/UiH/9G3xW+4R2QhE0=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -10085,6 +10085,37 @@ components:
       minLength: 25
       maxLength: 25
       pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[A-Z]{1}$
+    BffNotificationChannelType:
+      type: string
+      enum:
+        - IO
+        - EMAIL
+        - SMS
+        - PEC
+        - ANALOG
+        - SEND
+    BffChannelStatusV1:
+      type: string
+      enum:
+        - WAITING_TO_SEND
+        - SENDING
+        - SENT
+        - DELIVERED
+        - VIEWED
+        - UNAVAILABLE
+        - NOT_DELIVERED
+        - WORKFLOW_ENDED
+        - FILED
+    BffChannelDeliveryStatusV1:
+      type: object
+      required:
+        - channel
+        - status
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        status:
+          $ref: '#/components/schemas/BffChannelStatusV1'
     BffFullSentInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del mittente.
       type: object
@@ -10114,6 +10145,10 @@ components:
           $ref: '#/components/schemas/InformalNotificationStatusV1'
         documentsAvailable:
           type: boolean
+        channelsStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

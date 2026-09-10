@@ -18,8 +18,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,6 +164,28 @@ public class InformalNotificationSenderService {
                 xPagopaPnCxGroups
         ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
 
-        return informalNotification.map(InformalNotificationSentMapper.modelMapper::mapSentInformalNotificationDetail);
+        return informalNotification.flatMap(notification ->
+                pnDeliveryClient.getCampaignDetail(notification.getCampaignId(), UUID.fromString(xPagopaPnCxId))
+                        .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
+                        .map(campaignDetail -> InformalNotificationSentMapper.modelMapper.mapSentInformalNotificationDetail(
+                                notification,
+                                extractCampaignChannels(campaignDetail)
+                        ))
+        );
+    }
+
+    /**
+     * Create a list with all the channels of a campaign. It also adds SEND since it isn't returned from pn-delivery
+     *
+     * @param campaignDetail - The detail of the campaign
+     * @return A list with all the channels of the campaign, including SEND.
+     */
+    private List<BffNotificationChannelType> extractCampaignChannels(CampaignDetail campaignDetail) {
+        List<BffNotificationChannelType> channels = CampaignMapper.modelMapper.mapCampaignDetail(campaignDetail)
+                .getChannels().stream()
+                .map(channel -> BffNotificationChannelType.valueOf(channel.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        channels.add(BffNotificationChannelType.SEND);
+        return channels;
     }
 }

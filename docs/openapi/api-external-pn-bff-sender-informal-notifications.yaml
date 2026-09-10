@@ -140,9 +140,9 @@ paths:
         '200':
           description: OK
           content:
-            "application/json":
+            application/json:
               schema:
-                $ref: "./notification-schemas/informal-notification.yaml#/components/schemas/BffFullSentInformalNotificationV1"
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffFullSentInformalNotificationV1'
         '400':
           description: Bad request
           content:
