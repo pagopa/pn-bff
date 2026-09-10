@@ -58,14 +58,25 @@ public class SentInformalNotificationChannelStatusResolver {
             List<BffNotificationChannelType> channels) {
 
         List<InformalTimelineElementV1> events = timeline == null ? List.of() : timeline;
+        BffNotificationChannelType activeChannel = resolveActiveChannel(events, channels);
 
         return channels.stream()
                 .map(channel -> new BffChannelDeliveryStatusV1()
                         .channel(channel)
                         .status(channel == BffNotificationChannelType.SEND
                                 ? resolveSendStatus(events)
-                                : resolveChannelStatus(notificationStatus, events, channel)))
+                                : resolveChannelStatus(notificationStatus, events, channel, channel == activeChannel)))
                 .toList();
+    }
+
+    // First channel (SEND excluded) with no events yet
+    private static BffNotificationChannelType resolveActiveChannel(
+            List<InformalTimelineElementV1> events, List<BffNotificationChannelType> channels) {
+        return channels.stream()
+                .filter(channel -> channel != BffNotificationChannelType.SEND)
+                .filter(channel -> events.stream().noneMatch(el -> matchesChannel(el, channel)))
+                .findFirst()
+                .orElse(null);
     }
 
     private static BffChannelStatusV1 resolveSendStatus(List<InformalTimelineElementV1> timeline) {
@@ -75,7 +86,8 @@ public class SentInformalNotificationChannelStatusResolver {
     private static BffChannelStatusV1 resolveChannelStatus(
             InformalNotificationStatusV1 notificationStatus,
             List<InformalTimelineElementV1> events,
-            BffNotificationChannelType channel) {
+            BffNotificationChannelType channel,
+            boolean isActiveChannel) {
 
         List<InformalTimelineElementV1> channelEvents = events.stream()
                 .filter(el -> matchesChannel(el, channel))
@@ -107,10 +119,11 @@ public class SentInformalNotificationChannelStatusResolver {
             return BffChannelStatusV1.SENT;
         }
 
-        // 5. Sending in progress
+        // 5. Sending in progress - only the channel the sequential workflow is currently on
         if (supportsStatus(channel, BffChannelStatusV1.SENDING)
                 && notificationStatus == InformalNotificationStatusV1.PROCESSING
-                && channelEvents.isEmpty()) {
+                && channelEvents.isEmpty()
+                && isActiveChannel) {
             return BffChannelStatusV1.SENDING;
         }
 
@@ -120,15 +133,22 @@ public class SentInformalNotificationChannelStatusResolver {
             return BffChannelStatusV1.WAITING_TO_SEND;
         }
 
-        // 7. Workflow ended without this channel ever being attempted
+        // 7. Workflow ended (in any outcome) without this channel ever being attempted
         if (supportsStatus(channel, BffChannelStatusV1.WORKFLOW_ENDED)
-                && hasCategory(events, InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED)
+                && isTerminalStatus(notificationStatus)
                 && channelEvents.isEmpty()) {
             return BffChannelStatusV1.WORKFLOW_ENDED;
         }
 
         // 8. No rule matched
         return BffChannelStatusV1.WAITING_TO_SEND;
+    }
+
+    // Notification in one of its final states
+    private static boolean isTerminalStatus(InformalNotificationStatusV1 notificationStatus) {
+        return notificationStatus == InformalNotificationStatusV1.COMPLETED_REACHED
+                || notificationStatus == InformalNotificationStatusV1.COMPLETED_UNREACHED
+                || notificationStatus == InformalNotificationStatusV1.UNDELIVERABLE;
     }
 
     private static boolean supportsStatus(BffNotificationChannelType channel, BffChannelStatusV1 status) {

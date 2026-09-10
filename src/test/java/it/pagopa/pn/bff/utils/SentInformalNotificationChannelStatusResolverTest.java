@@ -79,17 +79,29 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
+    void onlyTheFirstUnattemptedChannelInTheWorkflowIsSending() {
+        List<BffChannelDeliveryStatusV1> result = SentInformalNotificationChannelStatusResolver.populateChannelStatuses(
+                InformalNotificationStatusV1.PROCESSING,
+                List.of(),
+                List.of(BffNotificationChannelType.EMAIL, BffNotificationChannelType.SMS));
+
+        assertEquals(BffChannelStatusV1.SENDING, result.get(0).getStatus());
+        assertEquals(BffChannelStatusV1.WAITING_TO_SEND, result.get(1).getStatus());
+    }
+
+    @Test
     void waitingToSendWhenAccepted() {
         assertStatus(InformalNotificationStatusV1.ACCEPTED, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.WAITING_TO_SEND);
     }
 
     @Test
     void workflowEndedWhenChannelNeverAttempted() {
-        List<InformalTimelineElementV1> timeline = List.of(
-                new InformalTimelineElementV1().category(InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED).eventTimestamp(T1)
-        );
+        assertStatus(InformalNotificationStatusV1.COMPLETED_UNREACHED, List.of(), BffNotificationChannelType.SMS, BffChannelStatusV1.WORKFLOW_ENDED);
+    }
 
-        assertStatus(InformalNotificationStatusV1.COMPLETED_UNREACHED, timeline, BffNotificationChannelType.SMS, BffChannelStatusV1.WORKFLOW_ENDED);
+    @Test
+    void workflowEndedAlsoWhenNotificationIsUndeliverable() {
+        assertStatus(InformalNotificationStatusV1.UNDELIVERABLE, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.WORKFLOW_ENDED);
     }
 
     @Test
