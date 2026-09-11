@@ -46,4 +46,12 @@ public interface NotificationDownloadDocumentMapper {
      * @return the mapped BffDocumentDownloadMetadataResponse
      */
     BffDocumentDownloadMetadataResponse mapReceivedAttachmentDownloadResponse(it.pagopa.pn.bff.generated.openapi.msclient.delivery_recipient.model.NotificationAttachmentDownloadMetadataResponse document);
+
+    /**
+     * Maps a NotificationAttachmentDownloadMetadataResponse to a BffDocumentDownloadMetadataResponse
+     *
+     * @param document the NotificationAttachmentDownloadMetadataResponse to map
+     * @return the mapped BffDocumentDownloadMetadataResponse
+     */
+    BffDocumentDownloadMetadataResponse mapSentInformalAttachmentDownloadResponse(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse document);
 }

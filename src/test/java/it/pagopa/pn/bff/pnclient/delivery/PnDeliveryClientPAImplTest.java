@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotifi
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.model.NewNotificationRequestV26;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.api.SenderReadInformalNotificationB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
@@ -38,6 +39,7 @@ class PnDeliveryClientPAImplTest {
     private final NewSentNotificationMock newSentNotificationMock = new NewSentNotificationMock();
     private final CampaignMock campaignMock = new CampaignMock();
     private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
+    private final InformalSentNotificationDetailMock informalSentNotificationDetailMock = new InformalSentNotificationDetailMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
     @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
@@ -54,6 +56,10 @@ class PnDeliveryClientPAImplTest {
             name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi"
     )
     private SenderInformalReadWebApi senderInformalReadWebApi;
+    @MockBean(
+            name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.api.SenderReadInformalNotificationB2BApi"
+    )
+    private SenderReadInformalNotificationB2BApi senderReadInformalNotificationB2BApi;
 
     @Test
     void searchSentNotifications() {
@@ -472,6 +478,46 @@ class PnDeliveryClientPAImplTest {
                 true,
                 InformalNotificationSearchMock.SIZE,
                 InformalNotificationSearchMock.NEXT_PAGES_KEY
+        )).expectError(WebClientResponseException.class).verify();
+    }
+
+    @Test
+    void getSentInformalNotification() {
+        when(senderReadInformalNotificationB2BApi.getSentInformalNotificationV1(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.just(informalSentNotificationDetailMock.getFullSentInformalNotificationMock()));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getSentInformalNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
+        )).expectNext(informalSentNotificationDetailMock.getFullSentInformalNotificationMock()).verifyComplete();
+    }
+
+    @Test
+    void getSentInformalNotificationError() {
+        when(senderReadInformalNotificationB2BApi.getSentInformalNotificationV1(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyBoolean()
+        )).thenReturn(Mono.error(new WebClientResponseException(404, "Not Found", null, null, null)));
+
+        StepVerifier.create(pnDeliveryClientPAImpl.getSentInformalNotification(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
         )).expectError(WebClientResponseException.class).verify();
     }
 }
