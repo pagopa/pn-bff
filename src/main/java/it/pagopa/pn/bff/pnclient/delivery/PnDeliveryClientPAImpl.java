@@ -213,4 +213,48 @@ public class PnDeliveryClientPAImpl {
                 true
         );
     }
+
+    public Mono<it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse> getSentInformalNotificationDocument(
+            String xPagopaPnUid,
+            it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer docIdx,
+            List<String> xPagopaPnCxGroups
+    ) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentInformalNotificationDocument");
+
+        return senderReadInformalNotificationB2BApi.getSentInformalNotificationDocument(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                docIdx,
+                xPagopaPnCxGroups
+        );
+    }
+
+    public Mono<it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse> getSentInformalNotificationAttachment(
+            String xPagopaPnUid,
+            it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer recipientIdx,
+            String attachmentName,
+            List<String> xPagopaPnCxGroups,
+            Integer attachmentIdx
+    ) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_DELIVERY, "getSentInformalNotificationAttachment");
+
+        return senderReadInformalNotificationB2BApi.getSentInformalNotificationAttachment(
+                xPagopaPnUid,
+                xPagopaPnCxType,
+                xPagopaPnCxId,
+                iun,
+                recipientIdx,
+                attachmentName,
+                xPagopaPnCxGroups,
+                attachmentIdx
+        );
+    }
 }

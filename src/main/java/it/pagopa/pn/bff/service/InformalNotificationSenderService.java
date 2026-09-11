@@ -1,6 +1,7 @@
 package it.pagopa.pn.bff.service;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
@@ -9,6 +10,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationStatusMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
 import lombok.RequiredArgsConstructor;
@@ -172,6 +174,78 @@ public class InformalNotificationSenderService {
                                 extractCampaignChannels(campaignDetail)
                         ))
         );
+    }
+
+    /**
+     * Retrieve a document attached to the informal sent notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param docIdx            The document index
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the requested attached document
+     */
+    public Mono<BffDocumentDownloadMetadataResponse> getSentInformalNotificationDocument(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer docIdx,
+            List<String> xPagopaPnCxGroups
+    ) {
+        log.info("Get sent informal notification document - senderId: {} - iun: {} - docIdx: {}", xPagopaPnCxId, iun, docIdx);
+
+        Mono<NotificationAttachmentDownloadMetadataResponse> informalNotificationDocument = pnDeliveryClient.getSentInformalNotificationDocument(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAB2BCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                docIdx,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return informalNotificationDocument.map(NotificationDownloadDocumentMapper.modelMapper::mapSentInformalAttachmentDownloadResponse);
+    }
+
+    /**
+     * Retrieve the attachment document of a payment for the informal sent notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param recipientIdx      The recipient index
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @return the requested payment document
+     */
+    public Mono<BffDocumentDownloadMetadataResponse> getSentInformalNotificationAttachment(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer recipientIdx,
+            String attachmentName,
+            List<String> xPagopaPnCxGroups,
+            Integer attachmentIdx
+    ) {
+        log.info("Get sent informal notification payment attachment - senderId: {} - iun: {} - recipientIdx: {}", xPagopaPnCxId, iun, recipientIdx);
+
+        Mono<NotificationAttachmentDownloadMetadataResponse> informalNotificationAttachment = pnDeliveryClient.getSentInformalNotificationAttachment(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAB2BCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                recipientIdx,
+                attachmentName,
+                xPagopaPnCxGroups,
+                attachmentIdx
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return informalNotificationAttachment.map(NotificationDownloadDocumentMapper.modelMapper::mapSentInformalAttachmentDownloadResponse);
     }
 
     /**

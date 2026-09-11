@@ -161,4 +161,84 @@ public class InformalNotificationSenderController implements SenderInformalNotif
         );
     }
 
+    /**
+     * GET /bff/v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}
+     * Download the documents linked to an informal sent notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param docIdx            The document index
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the requested document
+     */
+    @Override
+    public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getSentInformalNotificationDocumentV1(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer docIdx,
+            List<String> xPagopaPnCxGroups,
+            final ServerWebExchange exchange
+    ) {
+        Mono<BffDocumentDownloadMetadataResponse> serviceResponse =
+                informalNotificationSenderService.getSentInformalNotificationDocument(
+                        xPagopaPnUid,
+                        xPagopaPnCxType,
+                        xPagopaPnCxId,
+                        iun,
+                        docIdx,
+                        xPagopaPnCxGroups
+                );
+
+        return serviceResponse.map(response ->
+                ResponseEntity.status(HttpStatus.OK).body(response)
+        );
+    }
+
+    /**
+     * GET /bff/v1/notifications/informal/sent/{iun}/attachments/payment/{recipientIdx}/{attachmentName}
+     * Get the attachment document of a payment for an informal sent notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param recipientIdx      The recipient index
+     * @param attachmentName    Type of the payment (PAGOPA or F24)
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @param attachmentIdx     Index of the payment
+     * @return the requested payment document
+     */
+    @Override
+    public Mono<ResponseEntity<BffDocumentDownloadMetadataResponse>> getSentInformalNotificationAttachmentV1(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            Integer recipientIdx,
+            String attachmentName,
+            List<String> xPagopaPnCxGroups,
+            Integer attachmentIdx,
+            final ServerWebExchange exchange
+    ) {
+        Mono<BffDocumentDownloadMetadataResponse> serviceResponse =
+                informalNotificationSenderService.getSentInformalNotificationAttachment(
+                        xPagopaPnUid,
+                        xPagopaPnCxType,
+                        xPagopaPnCxId,
+                        iun,
+                        recipientIdx,
+                        attachmentName,
+                        xPagopaPnCxGroups,
+                        attachmentIdx
+                );
+
+        return serviceResponse.map(response ->
+                ResponseEntity.status(HttpStatus.OK).body(response)
+        );
+    }
+
 }

@@ -4,9 +4,11 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
+import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mocks.CampaignMock;
 import it.pagopa.pn.bff.mocks.InformalNotificationSearchMock;
 import it.pagopa.pn.bff.mocks.InformalSentNotificationDetailMock;
+import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.service.InformalNotificationSenderService;
 import it.pagopa.pn.bff.utils.PnBffRestConstants;
@@ -34,6 +36,7 @@ class InformalNotificationSenderControllerTest {
     private final CampaignMock campaignMock = new CampaignMock();
     private final InformalNotificationSearchMock informalNotificationSearchMock = new InformalNotificationSearchMock();
     private final InformalSentNotificationDetailMock informalSentNotificationDetailMock = new InformalSentNotificationDetailMock();
+    private final NotificationDownloadDocumentMock documentMock = new NotificationDownloadDocumentMock();
 
     @Autowired
     private WebTestClient webTestClient;
@@ -368,6 +371,170 @@ class InformalNotificationSenderControllerTest {
                 UserMock.PN_CX_ID,
                 InformalSentNotificationDetailMock.IUN,
                 UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationDocument() {
+        BffDocumentDownloadMetadataResponse response =
+                NotificationDownloadDocumentMapper.modelMapper.mapSentInformalAttachmentDownloadResponse(
+                        documentMock.getSenderInformalAttachmentMock()
+                );
+
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationDocument(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_DOCUMENT_PATH)
+                        .build(InformalSentNotificationDetailMock.IUN, 0))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                0,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationDocumentError() {
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationDocument(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyList()
+        )).thenReturn(
+                Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND"))
+        );
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_DOCUMENT_PATH)
+                        .build(InformalSentNotificationDetailMock.IUN, 0))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationDocument(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                0,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationAttachment() {
+        BffDocumentDownloadMetadataResponse response =
+                NotificationDownloadDocumentMapper.modelMapper.mapSentInformalAttachmentDownloadResponse(
+                        documentMock.getSenderInformalAttachmentMock()
+                );
+
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_ATTACHMENT_PATH)
+                        .queryParam("attachmentIdx", 0)
+                        .build(InformalSentNotificationDetailMock.IUN, 0, "PAGOPA"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffDocumentDownloadMetadataResponse.class)
+                .isEqualTo(response);
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationAttachment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationAttachmentError() {
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationAttachment(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyString(),
+                Mockito.anyList(),
+                Mockito.anyInt()
+        )).thenReturn(
+                Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND"))
+        );
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_ATTACHMENT_PATH)
+                        .queryParam("attachmentIdx", 0)
+                        .build(InformalSentNotificationDetailMock.IUN, 0, "PAGOPA"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationAttachment(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                0,
+                "PAGOPA",
+                UserMock.PN_CX_GROUPS,
+                0
         );
     }
 }
