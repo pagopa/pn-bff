@@ -96,12 +96,18 @@ class SentInformalNotificationChannelStatusResolverTest {
 
     @Test
     void workflowEndedWhenChannelNeverAttempted() {
-        assertStatus(InformalNotificationStatusV1.COMPLETED_UNREACHED, List.of(), BffNotificationChannelType.SMS, BffChannelStatusV1.WORKFLOW_ENDED);
+        List<InformalTimelineElementV1> timeline = List.of(
+                new InformalTimelineElementV1().category(InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED).eventTimestamp(T1)
+        );
+
+        assertStatus(InformalNotificationStatusV1.COMPLETED_UNREACHED, timeline, BffNotificationChannelType.SMS, BffChannelStatusV1.WORKFLOW_ENDED);
     }
 
     @Test
-    void workflowEndedAlsoWhenNotificationIsUndeliverable() {
-        assertStatus(InformalNotificationStatusV1.UNDELIVERABLE, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.WORKFLOW_ENDED);
+    void undeliverableWithoutWorkflowDoneReachedFallsBackToReadyToSend() {
+        // only WORKFLOW_DONE_REACHED marks the channel as ended: any other terminal outcome
+        // without it must still follow the rules above, landing on the fallback
+        assertStatus(InformalNotificationStatusV1.UNDELIVERABLE, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.READY_TO_SEND);
     }
 
     @Test

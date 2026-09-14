@@ -133,22 +133,15 @@ public class SentInformalNotificationChannelStatusResolver {
             return BffChannelStatusV1.READY_TO_SEND;
         }
 
-        // 7. Workflow ended (in any outcome) without this channel ever being attempted
+        // 7. Workflow ended without this channel ever being attempted
         if (supportsStatus(channel, BffChannelStatusV1.WORKFLOW_ENDED)
-                && isTerminalStatus(notificationStatus)
+                && hasCategory(events, InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED)
                 && channelEvents.isEmpty()) {
             return BffChannelStatusV1.WORKFLOW_ENDED;
         }
 
         // 8. No rule matched
         return BffChannelStatusV1.READY_TO_SEND;
-    }
-
-    // Notification in one of its final states
-    private static boolean isTerminalStatus(InformalNotificationStatusV1 notificationStatus) {
-        return notificationStatus == InformalNotificationStatusV1.COMPLETED_REACHED
-                || notificationStatus == InformalNotificationStatusV1.COMPLETED_UNREACHED
-                || notificationStatus == InformalNotificationStatusV1.UNDELIVERABLE;
     }
 
     private static boolean supportsStatus(BffNotificationChannelType channel, BffChannelStatusV1 status) {
