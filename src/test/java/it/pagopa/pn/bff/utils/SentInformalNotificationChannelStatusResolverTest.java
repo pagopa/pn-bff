@@ -27,13 +27,23 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
-    void deliveredFromLatestOkFeedback() {
+    void deliveredFromDedicatedDeliveredEvent() {
         List<InformalTimelineElementV1> timeline = List.of(
                 dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "PEC", T1),
-                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC", ResponseStatus.OK, T2)
+                deliveredEvent("PEC", T2)
         );
 
         assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.PEC, BffChannelStatusV1.DELIVERED);
+    }
+
+    @Test
+    void deliveredForAnalogChannel() {
+        List<InformalTimelineElementV1> timeline = List.of(
+                new InformalTimelineElementV1().category(InformalTimelineElementCategoryV1.SEND_ANALOG_MESSAGE).eventTimestamp(T1),
+                deliveredEvent("ANALOG", T2)
+        );
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.ANALOG, BffChannelStatusV1.DELIVERED);
     }
 
     @Test
@@ -58,10 +68,10 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
-    void smsCapsAtSentEvenWithPositiveFeedback() {
+    void smsCapsAtSentEvenWithDeliveredEvent() {
         List<InformalTimelineElementV1> timeline = List.of(
                 dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "SMS", T1),
-                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "SMS", ResponseStatus.OK, T2)
+                deliveredEvent("SMS", T2)
         );
 
         assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.SMS, BffChannelStatusV1.SENT);
@@ -154,5 +164,12 @@ class SentInformalNotificationChannelStatusResolverTest {
                 .category(InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED)
                 .eventTimestamp(timestamp)
                 .details(new InformalTimelineElementDetailsV1().sourceChannel(sourceChannel));
+    }
+
+    private InformalTimelineElementV1 deliveredEvent(String channel, OffsetDateTime timestamp) {
+        return new InformalTimelineElementV1()
+                .category(InformalTimelineElementCategoryV1.DELIVERED)
+                .eventTimestamp(timestamp)
+                .details(new InformalTimelineElementDetailsV1().channel(channel));
     }
 }

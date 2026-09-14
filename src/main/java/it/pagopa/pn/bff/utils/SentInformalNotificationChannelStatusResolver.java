@@ -86,48 +86,50 @@ public class SentInformalNotificationChannelStatusResolver {
             return BffChannelStatusV1.VIEWED;
         }
 
-        // 2. Delivered / not delivered: from the channel's most recent feedback
-        ResponseStatus feedback = latestFeedbackOutcome(channelEvents);
-        if (feedback == ResponseStatus.OK && supportsStatus(channel, BffChannelStatusV1.DELIVERED)) {
+        // 2. Delivered: dedicated DELIVERED event for this channel
+        if (supportsStatus(channel, BffChannelStatusV1.DELIVERED) && hasDeliveredEvent(events, channel)) {
             return BffChannelStatusV1.DELIVERED;
         }
-        if (feedback == ResponseStatus.KO && supportsStatus(channel, BffChannelStatusV1.NOT_DELIVERED)) {
+
+        // 3. Not delivered: the channel's most recent feedback was KO
+        if (supportsStatus(channel, BffChannelStatusV1.NOT_DELIVERED)
+                && latestFeedbackOutcome(channelEvents) == ResponseStatus.KO) {
             return BffChannelStatusV1.NOT_DELIVERED;
         }
 
-        // 3. Channel unavailable
+        // 4. Channel unavailable
         if (supportsStatus(channel, BffChannelStatusV1.UNAVAILABLE)
                 && hasCategory(channelEvents, InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_SKIP)) {
             return BffChannelStatusV1.UNAVAILABLE;
         }
 
-        // 4. Sent: a dispatch exists but no feedback has arrived yet
+        // 5. Sent: a dispatch exists but no feedback has arrived yet
         if (supportsStatus(channel, BffChannelStatusV1.SENT)
                 && channelEvents.stream().anyMatch(el -> isDispatch(el.getCategory()))) {
             return BffChannelStatusV1.SENT;
         }
 
-        // 5. Sending in progress
+        // 6. Sending in progress
         if (supportsStatus(channel, BffChannelStatusV1.WAITING_TO_SEND)
                 && notificationStatus == InformalNotificationStatusV1.PROCESSING
                 && channelEvents.isEmpty()) {
             return BffChannelStatusV1.WAITING_TO_SEND;
         }
 
-        // 6. Ready to send
+        // 7. Ready to send
         if (supportsStatus(channel, BffChannelStatusV1.READY_TO_SEND)
                 && notificationStatus == InformalNotificationStatusV1.ACCEPTED) {
             return BffChannelStatusV1.READY_TO_SEND;
         }
 
-        // 7. Workflow ended without this channel ever being attempted
+        // 8. Workflow ended without this channel ever being attempted
         if (supportsStatus(channel, BffChannelStatusV1.WORKFLOW_ENDED)
                 && hasCategory(events, InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED)
                 && channelEvents.isEmpty()) {
             return BffChannelStatusV1.WORKFLOW_ENDED;
         }
 
-        // 8. No rule matched
+        // 9. No rule matched
         return BffChannelStatusV1.READY_TO_SEND;
     }
 
@@ -154,6 +156,13 @@ public class SentInformalNotificationChannelStatusResolver {
     private static boolean hasCategory(List<InformalTimelineElementV1> events,
                                        InformalTimelineElementCategoryV1 category) {
         return events.stream().anyMatch(el -> el.getCategory() == category);
+    }
+
+    private static boolean hasDeliveredEvent(List<InformalTimelineElementV1> events, BffNotificationChannelType channel) {
+        return events.stream().anyMatch(el ->
+                el.getCategory() == InformalTimelineElementCategoryV1.DELIVERED
+                        && el.getDetails() != null
+                        && channel.getValue().equals(el.getDetails().getChannel()));
     }
 
     private static final Comparator<InformalTimelineElementV1> BY_EVENT_TIMESTAMP =
