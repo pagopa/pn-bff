@@ -79,14 +79,14 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
-    void onlyTheFirstUnattemptedChannelInTheWorkflowIsSending() {
+    void everyChannelWithNoEventsIsWaitingWhileProcessing() {
         List<BffChannelDeliveryStatusV1> result = SentInformalNotificationChannelStatusResolver.populateChannelStatuses(
                 InformalNotificationStatusV1.PROCESSING,
                 List.of(),
                 List.of(BffNotificationChannelType.EMAIL, BffNotificationChannelType.SMS));
 
         assertEquals(BffChannelStatusV1.WAITING_TO_SEND, result.get(0).getStatus());
-        assertEquals(BffChannelStatusV1.READY_TO_SEND, result.get(1).getStatus());
+        assertEquals(BffChannelStatusV1.WAITING_TO_SEND, result.get(1).getStatus());
     }
 
     @Test
