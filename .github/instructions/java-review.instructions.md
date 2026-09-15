@@ -4,8 +4,8 @@ applyTo: "src/**/*.java"
 
 # Istruzioni per la review Java
 
-Applica severità, confini di fiducia, fail closed, privacy, requisiti dei test e
-formato dei commenti definiti in `.github/copilot-instructions.md`.
+Applica severità, confini di fiducia, fail closed, privacy, requisiti dei test,
+gestione dei dubbi, lingua e formato dei commenti definiti in `.github/copilot-instructions.md`.
 
 Queste istruzioni contengono soltanto controlli specifici per Java, Spring
 WebFlux, MapStruct e per l'architettura di `pn-bff`.
@@ -25,7 +25,8 @@ Dopo le priorità globali, presta particolare attenzione a:
 5. mapping e nullabilità;
 6. performance di mapper e utility;
 7. chiamate downstream N+1;
-8. test del comportamento modificato.
+8. leggibilità e concisione del codice introdotto;
+9. test del comportamento modificato.
 
 Non produrre micro-ottimizzazioni speculative o suggerimenti stilistici.
 
@@ -50,7 +51,7 @@ Segnala:
 - richieste costruite manualmente quando il client generato espone già
   l'operazione.
 
-Usa `[BASSA][MANUTENIBILITÀ]` solo quando la collocazione errata introduce una
+Usa `[LOW][MAINTAINABILITY]` solo quando la collocazione errata introduce una
 duplicazione o un rischio concreto di divergenza, non per preferenze
 architetturali.
 
@@ -88,7 +89,7 @@ Controlla che:
 - venga invocata la variante downstream corretta;
 - `401` e `403` non vengano convertiti in fallback con dati protetti.
 
-Classifica come `[BLOCCANTE][AUTORIZZAZIONE]` soltanto uno scenario concreto
+Classifica come `[BLOCKING][AUTHORIZATION]` soltanto uno scenario concreto
 che consenta accesso non autorizzato, escalation o perdita di ownership.
 
 Non assumere che il possesso di un identificativo autorizzi l'accesso o che il
@@ -111,9 +112,9 @@ La compilazione non rileva lo scambio di parametri dello stesso tipo.
 
 Classifica lo scambio come:
 
-- `[BLOCCANTE][AUTORIZZAZIONE]` se altera identità, ruolo, delega o ownership;
-- `[ALTA][CORRETTEZZA]` se causa una regressione funzionale rilevante;
-- `[MEDIA][CORRETTEZZA]` se l'impatto è circoscritto.
+- `[BLOCKING][AUTHORIZATION]` se altera identità, ruolo, delega o ownership;
+- `[HIGH][CORRECTNESS]` se causa una regressione funzionale rilevante;
+- `[MEDIUM][CORRECTNESS]` se l'impatto è circoscritto.
 
 ## Controller
 
@@ -174,7 +175,7 @@ configurazione del generatore o al `pnclient`, non al sorgente generato.
 
 ## Spring WebFlux e Reactor
 
-Segnala come `[ALTA][AFFIDABILITÀ]`, quando introdotti nel percorso reattivo:
+Segnala come `[HIGH][RELIABILITY]`, quando introdotti nel percorso reattivo:
 
 - `block()`, `blockOptional()` o attese sincrone equivalenti;
 - `Thread.sleep(...)`;
@@ -314,12 +315,12 @@ Controlla soprattutto:
 
 Classifica come:
 
-- `[ALTA][AFFIDABILITÀ]` complessità non limitata, N+1, blocco dei thread o
+- `[HIGH][RELIABILITY]` complessità non limitata, N+1, blocco dei thread o
   rischio concreto di esaurimento delle risorse;
-- `[ALTA][CORRETTEZZA]` regressioni prestazionali rilevanti e riproducibili su
+- `[HIGH][CORRECTNESS]` regressioni prestazionali rilevanti e riproducibili su
   percorsi frequenti;
-- `[MEDIA][CORRETTEZZA]` inefficienze concrete ma circoscritte;
-- `[BASSA][MANUTENIBILITÀ]` solo complessità non necessaria che aumenta il
+- `[MEDIUM][CORRECTNESS]` inefficienze concrete ma circoscritte;
+- `[LOW][MAINTAINABILITY]` solo complessità non necessaria che aumenta il
   rischio di future regressioni, senza impatto prestazionale attuale rilevante.
 
 ### Ottimizzazioni ammesse
@@ -389,6 +390,78 @@ CORS ampliato, endpoint arbitrari o disattivazione di controlli esistenti sono
 bloccanti soltanto con uno scenario concreto e raggiungibile nell'ambiente
 interessato.
 
+## Leggibilità e concisione
+
+Oltre a sicurezza, correttezza, affidabilità e performance, valuta la
+leggibilità e la lunghezza del codice introdotto dalla pull request.
+
+Considera solo il codice aggiunto o modificato dalla pull request.
+
+### Leggibilità
+
+Segnala:
+
+- catene reattive con annidamenti profondi di `flatMap`, `map` o `zip` che
+  rendono difficile seguire il flusso principale;
+- condizioni booleane composte non estratte in una variabile o in un metodo con
+  nome esplicativo;
+- metodi che concentrano validazione, mapping, chiamata downstream e gestione
+  degli errori nello stesso percorso;
+- blocchi `if/else` annidati sostituibili con early return o guard clause;
+- variabili temporanee prive di significato o commenti che spiegano codice che
+  può essere reso auto-esplicativo;
+- conversioni scritte a mano che replicano logica già esprimibile in modo
+  dichiarativo con MapStruct.
+
+### Lunghezza e concisione
+
+A parità di comportamento osservabile, preferisci la soluzione che utilizza
+meno righe di codice.
+
+Segnala il codice più verboso del necessario quando esiste un costrutto
+equivalente più breve e altrettanto chiaro, ad esempio:
+
+- `Optional.map` e `orElse` al posto di catene di `if` sui valori nulli;
+- `Stream` e `Collectors` al posto di cicli di accumulo manuale;
+- `List.of` o `Map.of` per collezioni immutabili;
+- `var` soltanto dove il tipo resta evidente dal contesto;
+- text block per stringhe multilinea;
+- `switch` espressivo al posto di catene `if/else` sullo stesso valore;
+- un metodo condiviso quando la pull request introduce blocchi identici
+  duplicati;
+- rimozione di boilerplate evitabile, come null check già garantiti dalla
+  validazione a monte o `try/catch` che si limitano a rilanciare.
+
+La riduzione delle righe non deve mai peggiorare:
+
+- la leggibilità del percorso principale;
+- la gestione e il contesto degli errori;
+- la tracciabilità nei log;
+- il comportamento reattivo, che non deve introdurre operazioni bloccanti;
+- la semantica di ordinamento, duplicati e nullabilità.
+
+### Cosa non segnalare
+
+- pura preferenza stilistica, formattazione, ordine di import o di metodi;
+- one-liner criptici, ternari annidati o catene di stream illeggibili proposti
+  solo per ridurre le righe;
+- codice preesistente non toccato dalla pull request;
+- rinomine di variabili senza un beneficio concreto sulla comprensione.
+
+### Severità e forma del rilievo
+
+Classifica i rilievi di leggibilità e concisione come `[LOW][MAINTAINABILITY]`
+e non elevarli a una severità superiore.
+
+Ogni rilievo deve indicare:
+
+1. classe o metodo interessato;
+2. il punto specifico poco leggibile o verboso;
+3. il motivo concreto per cui rende più difficile la comprensione o la
+   manutenzione;
+4. una correzione minima e attuabile, preferibilmente con un esempio breve del
+   costrutto equivalente più conciso.
+
 ## Test Java
 
 Scegli il livello più vicino al comportamento:
@@ -413,7 +486,12 @@ Per una correzione prestazionale:
   dalla complessità algoritmica;
 - non richiedere benchmark per ogni mapper.
 
+Non richiedere nuovi test per un rilievo di sola leggibilità o concisione,
+salvo che la correzione proposta modifichi il comportamento osservabile.
+
 ## Focus del commento
+
+Tutti i commenti devono essere scritti in inglese.
 
 Nel commento Java indica sempre:
 
@@ -426,10 +504,15 @@ Nel commento Java indica sempre:
 Per le performance indica anche dimensione dell'input e variazione della
 complessità o del numero di chiamate.
 
+Per leggibilità e concisione indica il punto specifico e il costrutto
+equivalente proposto, non un principio generale.
+
 Non produrre commenti generici come:
 
-- “ottimizzare questo metodo”;
-- “usare uno Stream”;
-- “considerare una cache”;
-- “estrarre un metodo”;
-- “aggiungere più test”.
+- `Optimize this method`;
+- `Use a Stream`;
+- `Consider adding a cache`;
+- `Extract this into a method`;
+- `Add more tests`;
+- `Improve readability`;
+- `Make this shorter`.
