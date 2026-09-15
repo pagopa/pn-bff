@@ -47,12 +47,41 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
-    void notDeliveredFromLatestKoFeedback() {
+    void notDeliveredFromKoFeedback() {
         List<InformalTimelineElementV1> timeline = List.of(
                 feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC", ResponseStatus.KO, T1)
         );
 
         assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.PEC, BffChannelStatusV1.NOT_DELIVERED);
+    }
+
+    @Test
+    void sentWhenLatestFeedbackIsOk() {
+        List<InformalTimelineElementV1> timeline = List.of(
+                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC", ResponseStatus.KO, T1),
+                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC", ResponseStatus.OK, T2)
+        );
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.PEC, BffChannelStatusV1.SENT);
+    }
+
+    @Test
+    void sentWhenFeedbackIsOkButNoDeliveredEventYet() {
+        List<InformalTimelineElementV1> timeline = List.of(
+                dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "PEC", T1),
+                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC", ResponseStatus.OK, T2)
+        );
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.PEC, BffChannelStatusV1.SENT);
+    }
+
+    @Test
+    void sentWhenDispatchedWithoutFeedback() {
+        List<InformalTimelineElementV1> timeline = List.of(
+                dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "PEC", T1)
+        );
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, timeline, BffNotificationChannelType.PEC, BffChannelStatusV1.SENT);
     }
 
     @Test
@@ -71,6 +100,7 @@ class SentInformalNotificationChannelStatusResolverTest {
     void smsCapsAtSentEvenWithDeliveredEvent() {
         List<InformalTimelineElementV1> timeline = List.of(
                 dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "SMS", T1),
+                feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "SMS", ResponseStatus.OK, T2),
                 deliveredEvent("SMS", T2)
         );
 
@@ -83,9 +113,8 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
-    void ioNeverReturnsSendingEvenWhenProcessing() {
-        // IO does not support WAITING_TO_SEND (in progress): it must fall back to READY_TO_SEND instead
-        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.IO, BffChannelStatusV1.READY_TO_SEND);
+    void ioReturnsWaitingToSendWhenProcessing() {
+        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(), BffNotificationChannelType.IO, BffChannelStatusV1.WAITING_TO_SEND);
     }
 
     @Test
@@ -113,16 +142,31 @@ class SentInformalNotificationChannelStatusResolverTest {
         assertStatus(InformalNotificationStatusV1.COMPLETED_UNREACHED, timeline, BffNotificationChannelType.SMS, BffChannelStatusV1.WORKFLOW_ENDED);
     }
 
+
     @Test
-    void undeliverableWithoutWorkflowDoneReachedFallsBackToReadyToSend() {
-        // only WORKFLOW_DONE_REACHED marks the channel as ended: any other terminal outcome
-        // without it must still follow the rules above, landing on the fallback
-        assertStatus(InformalNotificationStatusV1.UNDELIVERABLE, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.READY_TO_SEND);
+    void undeliverableWithoutWorkflowDoneReachedIsStillWaiting() {
+        assertStatus(InformalNotificationStatusV1.UNDELIVERABLE, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.WAITING_TO_SEND);
+    }
+
+    @Test
+    void refusedNotificationFallsBackToReadyToSend() {
+        assertStatus(InformalNotificationStatusV1.REFUSED, List.of(), BffNotificationChannelType.PEC, BffChannelStatusV1.READY_TO_SEND);
     }
 
     @Test
     void sendChannelIsFiledWithoutWebView() {
         assertStatus(InformalNotificationStatusV1.ACCEPTED, List.of(), BffNotificationChannelType.SEND, BffChannelStatusV1.FILED);
+    }
+
+    @Test
+    void sendChannelIsFiledWhenRequestAccepted() {
+        List<InformalTimelineElementV1> timeline = List.of(
+                new InformalTimelineElementV1()
+                        .category(InformalTimelineElementCategoryV1.REQUEST_ACCEPTED)
+                        .eventTimestamp(T1)
+        );
+
+        assertStatus(InformalNotificationStatusV1.ACCEPTED, timeline, BffNotificationChannelType.SEND, BffChannelStatusV1.FILED);
     }
 
     @Test

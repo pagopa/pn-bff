@@ -16,6 +16,7 @@ public class SentInformalNotificationChannelStatusResolver {
     private static final Map<BffNotificationChannelType, Set<BffChannelStatusV1>> ALLOWED_STATUSES = Map.of(
             BffNotificationChannelType.IO, EnumSet.of(
                     BffChannelStatusV1.READY_TO_SEND,
+                    BffChannelStatusV1.WAITING_TO_SEND,
                     BffChannelStatusV1.SENT,
                     BffChannelStatusV1.DELIVERED,
                     BffChannelStatusV1.VIEWED,
@@ -69,7 +70,11 @@ public class SentInformalNotificationChannelStatusResolver {
     }
 
     private static BffChannelStatusV1 resolveSendStatus(List<InformalTimelineElementV1> timeline) {
-        return hasViewedFrom(timeline, "WEB") ? BffChannelStatusV1.VIEWED : BffChannelStatusV1.FILED;
+        if (hasViewedFrom(timeline, "WEB")) {
+            return BffChannelStatusV1.VIEWED;
+        }
+
+        return BffChannelStatusV1.FILED;
     }
 
     private static BffChannelStatusV1 resolveChannelStatus(
@@ -81,52 +86,54 @@ public class SentInformalNotificationChannelStatusResolver {
                 .filter(el -> matchesChannel(el, channel))
                 .toList();
 
-        // 1. Read: IO only (sourceChannel == "IO")
+        // 1. Workflow ended without this channel ever being attempted
+        if (supportsStatus(channel, BffChannelStatusV1.WORKFLOW_ENDED)
+                && hasCategory(events, InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED)
+                && channelEvents.isEmpty()) {
+            return BffChannelStatusV1.WORKFLOW_ENDED;
+        }
+
+        // 2. Read: IO only (sourceChannel == "IO")
         if (supportsStatus(channel, BffChannelStatusV1.VIEWED) && hasViewedFrom(events, "IO")) {
             return BffChannelStatusV1.VIEWED;
         }
 
-        // 2. Delivered: dedicated DELIVERED event for this channel
+        // 3. Delivered
         if (supportsStatus(channel, BffChannelStatusV1.DELIVERED) && hasDeliveredEvent(events, channel)) {
             return BffChannelStatusV1.DELIVERED;
         }
 
-        // 3. Not delivered: the channel's most recent feedback was KO
+        // 4. Not delivered: the latest feedback for this channel is KO
         if (supportsStatus(channel, BffChannelStatusV1.NOT_DELIVERED)
                 && latestFeedbackOutcome(channelEvents) == ResponseStatus.KO) {
             return BffChannelStatusV1.NOT_DELIVERED;
         }
 
-        // 4. Channel unavailable
+        // 5. Channel unavailable
         if (supportsStatus(channel, BffChannelStatusV1.UNAVAILABLE)
                 && hasCategory(channelEvents, InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_SKIP)) {
             return BffChannelStatusV1.UNAVAILABLE;
         }
 
-        // 5. Sent: a dispatch exists but no feedback has arrived yet
+        // 6. Sent: no KO feedback yet (OK feedback or dispatch without feedback)
         if (supportsStatus(channel, BffChannelStatusV1.SENT)
-                && channelEvents.stream().anyMatch(el -> isDispatch(el.getCategory()))) {
+                && isProcessingOrLater(notificationStatus)
+                && (latestFeedbackOutcome(channelEvents) == ResponseStatus.OK
+                    || hasDispatch(channelEvents))) {
             return BffChannelStatusV1.SENT;
         }
 
-        // 6. Sending in progress
+        // 7. Sending in progress
         if (supportsStatus(channel, BffChannelStatusV1.WAITING_TO_SEND)
-                && notificationStatus == InformalNotificationStatusV1.PROCESSING
+                && isProcessingOrLater(notificationStatus)
                 && channelEvents.isEmpty()) {
             return BffChannelStatusV1.WAITING_TO_SEND;
         }
 
-        // 7. Ready to send
+        // 8. Ready to send
         if (supportsStatus(channel, BffChannelStatusV1.READY_TO_SEND)
                 && notificationStatus == InformalNotificationStatusV1.ACCEPTED) {
             return BffChannelStatusV1.READY_TO_SEND;
-        }
-
-        // 8. Workflow ended without this channel ever being attempted
-        if (supportsStatus(channel, BffChannelStatusV1.WORKFLOW_ENDED)
-                && hasCategory(events, InformalTimelineElementCategoryV1.WORKFLOW_DONE_REACHED)
-                && channelEvents.isEmpty()) {
-            return BffChannelStatusV1.WORKFLOW_ENDED;
         }
 
         // 9. No rule matched
@@ -138,10 +145,20 @@ public class SentInformalNotificationChannelStatusResolver {
     }
 
     private static boolean matchesChannel(InformalTimelineElementV1 element, BffNotificationChannelType channel) {
+        InformalTimelineElementCategoryV1 category = element.getCategory();
         if (channel == BffNotificationChannelType.ANALOG) {
-            return isAnalogSend(element.getCategory());
+            if (isAnalogSend(category)) {
+                return true;
+            }
+            return category == InformalTimelineElementCategoryV1.DELIVERED
+                    && element.getDetails() != null
+                    && channel.getValue().equals(element.getDetails().getChannel());
         }
-        return isDigitalSend(element.getCategory())
+        if (category == InformalTimelineElementCategoryV1.DELIVERED) {
+            return element.getDetails() != null
+                    && channel.getValue().equals(element.getDetails().getChannel());
+        }
+        return isDigitalSend(category)
                 && element.getDetails() != null
                 && channel.getValue().equals(element.getDetails().getChannel());
     }
@@ -182,6 +199,20 @@ public class SentInformalNotificationChannelStatusResolver {
     private static ResponseStatus responseStatusOf(InformalTimelineElementV1 element) {
         InformalTimelineElementDetailsV1 details = element.getDetails();
         return details == null ? null : details.getResponseStatus();
+    }
+
+    private static boolean hasDispatch(List<InformalTimelineElementV1> channelEvents) {
+        return channelEvents.stream().anyMatch(el -> isDispatch(el.getCategory()));
+    }
+
+    private static boolean isProcessingOrLater(InformalNotificationStatusV1 notificationStatus) {
+        if (notificationStatus == null) {
+            return false;
+        }
+        return switch (notificationStatus) {
+            case PROCESSING, COMPLETED_REACHED, COMPLETED_UNREACHED, UNDELIVERABLE -> true;
+            default -> false;
+        };
     }
 
     private static boolean isDigitalSend(InformalTimelineElementCategoryV1 category) {
