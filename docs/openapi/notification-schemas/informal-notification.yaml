@@ -3,9 +3,40 @@ info:
   version: v1.0
 components:
   schemas:
+    BffCampaignSearchResponseV1:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignSearchResponse"
+
+    BffCampaignDetailResponseV1:
+      type: object
+      required:
+        - campaignId
+        - title
+        - description
+        - startDate
+        - campaignStatus
+        - serviceName
+        - channels
+      properties:
+        campaignId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        campaignStatus:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignStatus"
+        serviceName:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/ChannelType"
+
     BffFullInformalNotificationV1:
-      description: >-
-        Dettaglio notifica bonaria esposto al frontend del destinatario.
+      description: Dettaglio notifica bonaria esposto al frontend del destinatario.
       type: object
       required:
         - iun
@@ -65,3 +96,34 @@ components:
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
             $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/remote-refs.yaml#/components/schemas/InformalTimelineElementV1"
+
+    BffInformalSenderNotificationSearchResponse:
+      title: List of sender's informal notifications
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffInformalSenderNotificationSearchRow'
+        moreResult:
+          type: boolean
+        nextPagesKey:
+          type: array
+          items:
+            type: string
+
+    BffInformalSenderNotificationSearchRow:
+      type: object
+      properties:
+        iun:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/UnifiedIUN"
+        recipients:
+          type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          items:
+            type: string
+            format: password # NO EXTERNAL
+        notificationStatus:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+        communicationOutcomes:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"

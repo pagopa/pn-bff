@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Sender Informal Notifications
+  description: Documentation APIs v1.0
+  x-api-id: api-internal-pn-bff-sender-informal
+  x-summary: 'API di pn-bff per le notifiche bonarie esposte al web per i mittenti'
+  version: '1.0.0'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: SenderInformalNotifications
+    description: >-
+      API esposte al frontend PA di SEND per ottenere la lista delle campagne
+
+paths:
+  '/bff/v1/notifications/informal/campaigns':
+    get:
+      summary: 'Mittente: Lista Campagne'
+      tags:
+        - SenderInformalNotifications
+      operationId: getListCampaignsV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
+      responses:
+        '200':
+          description: Lista campagne paginata
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignSearchResponseV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/notifications/informal/campaigns/{campaignId}':
+    get:
+      summary: 'Mittente: Dettaglio Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: getCampaignDetailV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
+      responses:
+        '200':
+          description: Dettaglio Campagna
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffCampaignDetailResponseV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
+  '/bff/v1/informal/campaigns/{campaignId}/notifications/sent':
+    get:
+      summary: 'Mittente: Lista Comunicazioni Bonarie di una Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: searchInformalSentNotificationV1
+      security:                                      # ONLY EXTERNAL
+        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationCampaignIdParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchStartDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchEndDate'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffNotificationSearchRecipientId'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffSearchUnifiedIun'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchStatusParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchViewedParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationSearchDeliveredParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationPageSizeParam'
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffInformalNotificationNextPagesKeyParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffInformalSenderNotificationSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'

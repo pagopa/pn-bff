@@ -192,4 +192,14 @@ class CxTypeMapperTest {
             assertEquals(cxType.getValue(), result.getValue());
         }
     }
+
+    @ParameterizedTest
+    @EnumSource(value = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.class)
+    void testConvertDeliveryInformalPAWebCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet result =
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAWebCXType(cxType);
+
+        assertNotNull(result);
+        assertEquals(cxType.getValue(), result.getValue());
+    }
 }
