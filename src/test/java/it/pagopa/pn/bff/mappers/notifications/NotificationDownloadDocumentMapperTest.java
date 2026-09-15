@@ -72,4 +72,19 @@ class NotificationDownloadDocumentMapperTest {
         BffDocumentDownloadMetadataResponse bffDocumentDownloadMetadataResponseNull = NotificationDownloadDocumentMapper.modelMapper.mapReceivedAttachmentDownloadResponse(null);
         assertNull(bffDocumentDownloadMetadataResponseNull);
     }
+
+    @Test
+    void testSentInformalAttachmentDownloadMetadataResponseMapper() {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse attachmentMock = notificationDownloadDocumentMock.getSenderInformalAttachmentMock();
+
+        BffDocumentDownloadMetadataResponse bffDocumentDownloadMetadataResponse = NotificationDownloadDocumentMapper.modelMapper.mapSentInformalAttachmentDownloadResponse(attachmentMock);
+        assertNotNull(bffDocumentDownloadMetadataResponse);
+        assertEquals(bffDocumentDownloadMetadataResponse.getFilename(), attachmentMock.getFilename());
+        assertEquals(bffDocumentDownloadMetadataResponse.getContentLength(), BigDecimal.valueOf(attachmentMock.getContentLength()));
+        assertEquals(bffDocumentDownloadMetadataResponse.getUrl(), attachmentMock.getUrl());
+        assertEquals(bffDocumentDownloadMetadataResponse.getRetryAfter(), attachmentMock.getRetryAfter() != null ? BigDecimal.valueOf(attachmentMock.getRetryAfter()) : null);
+
+        BffDocumentDownloadMetadataResponse bffDocumentDownloadMetadataResponseNull = NotificationDownloadDocumentMapper.modelMapper.mapSentInformalAttachmentDownloadResponse(null);
+        assertNull(bffDocumentDownloadMetadataResponseNull);
+    }
 }

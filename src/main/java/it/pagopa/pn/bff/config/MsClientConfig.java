@@ -3,6 +3,7 @@ package it.pagopa.pn.bff.config;
 import it.pagopa.pn.bff.generated.openapi.msclient.apikey_pa.api.ApiKeysApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.api.SenderReadInformalNotificationB2BApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi;
@@ -27,7 +28,6 @@ import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsA
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.api.VirtualKeysApi;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi;
 import it.pagopa.pn.commons.pnclients.CommonBaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -341,5 +341,21 @@ public class MsClientConfig extends CommonBaseClient {
         apiClient.setBasePath(cfg.getDeliveryBaseUrl());
 
         return new SenderInformalReadWebApi(apiClient);
+    }
+
+    @Bean
+    @Primary
+    SenderReadInformalNotificationB2BApi senderInformalReadB2BApi(PnBffConfigs cfg) {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.ApiClient apiClient =
+                new it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.ApiClient(
+                        initWebClient(
+                                it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.ApiClient
+                                        .buildWebClientBuilder()
+                        )
+                );
+
+        apiClient.setBasePath(cfg.getDeliveryBaseUrl());
+
+        return new SenderReadInformalNotificationB2BApi(apiClient);
     }
 }

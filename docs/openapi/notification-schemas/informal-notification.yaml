@@ -127,3 +127,71 @@ components:
           $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         communicationOutcomes:
           $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
+
+    BffFullSentInformalNotificationV1:
+      description: Dettaglio notifica bonaria esposto al frontend del mittente.
+      type: object
+      required:
+        - iun
+        - senderDenomination
+        - recipients
+        - subject
+        - notificationStatus
+      properties:
+        iun:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalIUN"
+        senderDenomination:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
+        recipients:
+          type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
+        subject:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
+        notificationStatus:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+        documentsAvailable:
+          type: boolean
+        channelsStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+
+    BffNotificationChannelType:
+      type: string
+      enum:
+        - IO
+        - EMAIL
+        - SMS
+        - PEC
+        - ANALOG
+        - SEND
+
+    BffChannelStatusV1:
+      type: string
+      enum:
+        - READY_TO_SEND
+        - WAITING_TO_SEND
+        - SENT
+        - DELIVERED
+        - VIEWED
+        - UNAVAILABLE
+        - NOT_DELIVERED
+        - WORKFLOW_ENDED
+        - FILED
+
+    BffChannelDeliveryStatusV1:
+      type: object
+      required:
+        - channel
+        - status
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        status:
+          $ref: '#/components/schemas/BffChannelStatusV1'

@@ -46,4 +46,15 @@ public class NotificationDownloadDocumentMock {
         attachment.setSha256("random-sha256");
         return attachment;
     }
+
+    public it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse getSenderInformalAttachmentMock() {
+        it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse attachment = new it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse();
+        attachment.setContentLength(999);
+        attachment.setFilename("Attachment");
+        attachment.setUrl("https://attachment-fake-url.com");
+        attachment.setContentType("application/json");
+        attachment.setRetryAfter(10);
+        attachment.setSha256("random-sha256");
+        return attachment;
+    }
 }
