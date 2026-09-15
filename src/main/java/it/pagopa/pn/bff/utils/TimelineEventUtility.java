@@ -89,6 +89,8 @@ public class TimelineEventUtility {
                     BffTimelineCategory.COMPLETELY_UNREACHABLE,
                     EnumSet.of(BffNotificationTimelineGroupCategory.ANALOG, BffNotificationTimelineGroupCategory.ANALOG_FAILURE),
                     BffTimelineCategory.DIGITAL_FAILURE_WORKFLOW,
+                    EnumSet.of(BffNotificationTimelineGroupCategory.DIGITAL),
+                    BffTimelineCategory.DIGITAL_SUCCESS_WORKFLOW,
                     EnumSet.of(BffNotificationTimelineGroupCategory.DIGITAL)
             );
 
