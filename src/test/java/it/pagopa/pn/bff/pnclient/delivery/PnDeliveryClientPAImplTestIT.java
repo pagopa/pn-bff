@@ -21,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -433,7 +434,7 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 InformalNotificationSearchMock.RECIPIENT_ID,
                 InformalNotificationSearchMock.IUN_MATCH,
-                InformalNotificationStatusV1.ACCEPTED,
+                List.of(InformalNotificationStatusV1.ACCEPTED),
                 true,
                 true,
                 InformalNotificationSearchMock.SIZE,
@@ -456,7 +457,7 @@ class PnDeliveryClientPAImplTestIT {
                 UserMock.PN_CX_GROUPS,
                 InformalNotificationSearchMock.RECIPIENT_ID,
                 InformalNotificationSearchMock.IUN_MATCH,
-                InformalNotificationStatusV1.ACCEPTED,
+                List.of(InformalNotificationStatusV1.ACCEPTED),
                 true,
                 true,
                 InformalNotificationSearchMock.SIZE,

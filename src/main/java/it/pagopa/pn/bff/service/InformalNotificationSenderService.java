@@ -129,7 +129,12 @@ public class InformalNotificationSenderService {
                 xPagopaPnCxGroups,
                 recipientId,
                 iunMatch,
-                InformalNotificationStatusMapper.informalNotificationStatusMapper.convertDeliveryInformalPAWebNotificationStatus(status),
+                status == null
+                        ? null
+                        : List.of(
+                        InformalNotificationStatusMapper.informalNotificationStatusMapper
+                                .convertDeliveryInformalPAWebNotificationStatus(status)
+                ),
                 viewed,
                 delivered,
                 size,
