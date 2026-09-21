@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: Q9ZLOtzxNdwfzeh4+s8IlqN9xI8TZIEpTA7DzGAy8R4=
+  version: JL/f3D2l3rkna8R+2g30oWNWX8T0GGu0ONt0789rnyQ=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4446,6 +4446,73 @@ paths:
       x-amazon-apigateway-integration:
         uri: >-
           http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/sent/{iun}/timeline:
+    get:
+      summary: 'Mittente: Timeline Comunicazione Bonaria'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationTimelineV1
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffFullSentInformalNotificationTimelineV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/timeline
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/sent/{iun}/timeline API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/timeline
         connectionId: ${stageVariables.NetworkLoadBalancerLink}
         httpMethod: ANY
         requestParameters:
@@ -10299,6 +10366,46 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+    BffInformalNotificationTimelineStatusHistoryV1:
+      type: object
+      required:
+        - status
+        - activeFrom
+        - steps
+      properties:
+        status:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        activeFrom:
+          type: string
+          format: date-time
+        steps:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/InformalTimelineElementV1'
+    BffFullSentInformalNotificationTimelineV1:
+      description: Timeline notifica bonaria del mittente.
+      type: object
+      required:
+        - iun
+        - recipients
+        - notificationStatusHistory
+        - communicationOutcomes
+      properties:
+        iun:
+          $ref: '#/components/schemas/InformalIUN'
+        recipients:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
+        communicationOutcomes:
+          $ref: '#/components/schemas/CommunicationOutcomes'
+        notificationStatusHistory:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/BffInformalNotificationTimelineStatusHistoryV1
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:

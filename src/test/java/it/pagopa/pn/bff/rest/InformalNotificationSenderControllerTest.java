@@ -4,6 +4,7 @@ import it.pagopa.pn.bff.exceptions.PnBffException;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
+import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mocks.CampaignMock;
 import it.pagopa.pn.bff.mocks.InformalNotificationSearchMock;
@@ -366,6 +367,78 @@ class InformalNotificationSenderControllerTest {
                 .isNotFound();
 
         Mockito.verify(informalNotificationSenderService).getSentInformalNotification(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationTimeline() {
+        BffFullSentInformalNotificationTimelineV1 response =
+                InformalNotificationTimelineMapper.modelMapper.mapSentInformalNotificationTimeline(
+                        informalSentNotificationDetailMock.getFullSentInformalNotificationMock());
+
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationTimeline(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_TIMELINE_PATH)
+                        .build(InformalSentNotificationDetailMock.IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BffFullSentInformalNotificationTimelineV1.class)
+                .isEqualTo(response);
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationTimeline(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PA,
+                UserMock.PN_CX_ID,
+                InformalSentNotificationDetailMock.IUN,
+                UserMock.PN_CX_GROUPS
+        );
+    }
+
+    @Test
+    void getSentInformalNotificationTimelineError() {
+        Mockito.when(informalNotificationSenderService.getSentInformalNotificationTimeline(
+                Mockito.anyString(),
+                Mockito.any(CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(
+                Mono.error(new PnBffException("Not Found", "Not Found", 404, "NOT_FOUND"))
+        );
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(PnBffRestConstants.SENT_INFORMAL_NOTIFICATION_TIMELINE_PATH)
+                        .build(InformalSentNotificationDetailMock.IUN))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
+                .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
+                .header(PnBffRestConstants.CX_TYPE_HEADER, CxTypeAuthFleet.PA.getValue())
+                .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        Mockito.verify(informalNotificationSenderService).getSentInformalNotificationTimeline(
                 UserMock.PN_UID,
                 CxTypeAuthFleet.PA,
                 UserMock.PN_CX_ID,

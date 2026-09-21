@@ -10,12 +10,14 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.mode
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffDocumentDownloadMetadataResponse;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalSenderNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationChannelType;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
+import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.mocks.CampaignMock;
 import it.pagopa.pn.bff.mocks.InformalNotificationSearchMock;
@@ -340,6 +342,76 @@ class InformalNotificationSenderServiceTest {
 
         Mono<BffFullSentInformalNotificationV1> result =
                 informalNotificationSenderService.getSentInformalNotification(
+                        UserMock.PN_UID,
+                        CxTypeAuthFleet.PA,
+                        UserMock.PN_CX_ID,
+                        InformalSentNotificationDetailMock.IUN,
+                        UserMock.PN_CX_GROUPS
+                );
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable ->
+                        throwable instanceof PnBffException
+                                && ((PnBffException) throwable)
+                                .getProblem()
+                                .getStatus() == 404
+                )
+                .verify();
+    }
+
+    @Test
+    void getSentInformalNotificationTimeline() {
+        FullSentInformalNotificationV1 fullSentInformalNotification =
+                informalSentNotificationDetailMock.getFullSentInformalNotificationMock();
+
+        when(pnDeliveryClient.getSentInformalNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(fullSentInformalNotification));
+
+        BffFullSentInformalNotificationTimelineV1 expected =
+                InformalNotificationTimelineMapper.modelMapper.mapSentInformalNotificationTimeline(
+                        fullSentInformalNotification);
+
+        Mono<BffFullSentInformalNotificationTimelineV1> result =
+                informalNotificationSenderService.getSentInformalNotificationTimeline(
+                        UserMock.PN_UID,
+                        CxTypeAuthFleet.PA,
+                        UserMock.PN_CX_ID,
+                        InformalSentNotificationDetailMock.IUN,
+                        UserMock.PN_CX_GROUPS
+                );
+
+        StepVerifier.create(result)
+                .expectNext(expected)
+                .verifyComplete();
+    }
+
+    @Test
+    void getSentInformalNotificationTimelineError() {
+        when(pnDeliveryClient.getSentInformalNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(
+                Mono.error(
+                        new WebClientResponseException(
+                                404,
+                                "Not Found",
+                                null,
+                                null,
+                                null
+                        )
+                )
+        );
+
+        Mono<BffFullSentInformalNotificationTimelineV1> result =
+                informalNotificationSenderService.getSentInformalNotificationTimeline(
                         UserMock.PN_UID,
                         CxTypeAuthFleet.PA,
                         UserMock.PN_CX_ID,
