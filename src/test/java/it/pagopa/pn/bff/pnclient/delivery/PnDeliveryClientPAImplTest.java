@@ -26,6 +26,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -419,7 +420,7 @@ class PnDeliveryClientPAImplTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(InformalNotificationStatusV1.class),
+                Mockito.anyList(),
                 Mockito.anyBoolean(),
                 Mockito.anyBoolean(),
                 Mockito.anyInt(),
@@ -436,7 +437,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_GROUPS,
                 InformalNotificationSearchMock.RECIPIENT_ID,
                 InformalNotificationSearchMock.IUN_MATCH,
-                InformalNotificationStatusV1.ACCEPTED,
+                List.of(InformalNotificationStatusV1.ACCEPTED),
                 true,
                 true,
                 InformalNotificationSearchMock.SIZE,
@@ -456,7 +457,7 @@ class PnDeliveryClientPAImplTest {
                 Mockito.anyList(),
                 Mockito.anyString(),
                 Mockito.anyString(),
-                Mockito.any(InformalNotificationStatusV1.class),
+                Mockito.anyList(),
                 Mockito.anyBoolean(),
                 Mockito.anyBoolean(),
                 Mockito.anyInt(),
@@ -473,7 +474,7 @@ class PnDeliveryClientPAImplTest {
                 UserMock.PN_CX_GROUPS,
                 InformalNotificationSearchMock.RECIPIENT_ID,
                 InformalNotificationSearchMock.IUN_MATCH,
-                InformalNotificationStatusV1.ACCEPTED,
+                List.of(InformalNotificationStatusV1.ACCEPTED),
                 true,
                 true,
                 InformalNotificationSearchMock.SIZE,
