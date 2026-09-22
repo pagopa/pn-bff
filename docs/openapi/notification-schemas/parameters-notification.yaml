@@ -67,7 +67,9 @@ components:
       in: query
       required: false
       schema:
-        $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+        type: array
+        items:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
 
     BffInformalNotificationSearchViewedParam:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/parameters-notification-search.yaml#/components/parameters/notificationSearchViewed'

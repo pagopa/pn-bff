@@ -111,7 +111,7 @@ public class InformalNotificationSenderService {
             List<String> xPagopaPnCxGroups,
             String recipientId,
             String iunMatch,
-            InformalNotificationStatusV1 status,
+            List<InformalNotificationStatusV1> status,
             Boolean viewed,
             Boolean delivered,
             Integer size,
@@ -131,10 +131,10 @@ public class InformalNotificationSenderService {
                 iunMatch,
                 status == null
                         ? null
-                        : List.of(
-                        InformalNotificationStatusMapper.informalNotificationStatusMapper
-                                .convertDeliveryInformalPAWebNotificationStatus(status)
-                ),
+                        : status.stream()
+                        .map(InformalNotificationStatusMapper.informalNotificationStatusMapper
+                                ::convertDeliveryInformalPAWebNotificationStatus)
+                        .toList(),
                 viewed,
                 delivered,
                 size,
