@@ -129,12 +129,8 @@ public class InformalNotificationSenderService {
                 xPagopaPnCxGroups,
                 recipientId,
                 iunMatch,
-                status == null
-                        ? null
-                        : status.stream()
-                        .map(InformalNotificationStatusMapper.informalNotificationStatusMapper
-                                ::convertDeliveryInformalPAWebNotificationStatus)
-                        .toList(),
+                InformalNotificationStatusMapper.informalNotificationStatusMapper
+                        .convertDeliveryInformalPAWebNotificationStatus(status),
                 viewed,
                 delivered,
                 size,
