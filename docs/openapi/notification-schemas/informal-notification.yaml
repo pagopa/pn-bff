@@ -201,7 +201,21 @@ components:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementV1"
+            $ref: "#/components/schemas/BffInformalNotificationTimelineItem"
+
+    BffInformalNotificationTimelineItem:
+      type: object
+      properties:
+        elementId:
+          type: string
+          maxLength: 512
+        eventTimestamp:
+          type: string
+          format: date-time
+        category:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementCategoryV1'
+        details:
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementDetailsV1'
 
     BffNotificationChannelType:
       type: string

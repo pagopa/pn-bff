@@ -2,9 +2,10 @@ package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalNotificationStatusHistoryElementV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineStatusHistoryV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1;
 import it.pagopa.pn.bff.utils.InformalNotificationTimelineUtility;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -69,6 +70,5 @@ public interface InformalNotificationTimelineMapper {
     /**
      * Map the delivery timeline element to the BFF timeline step
      */
-    InformalTimelineElementV1 mapTimelineElement(
-            it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1 element);
+    BffInformalNotificationTimelineItem mapTimelineElement(InformalTimelineElementV1 element);
 }

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: JL/f3D2l3rkna8R+2g30oWNWX8T0GGu0ONt0789rnyQ=
+  version: 1JooUam5NWurPGVHP2hJD7zvO1yPX18pRA/KGZC6CME=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -10366,6 +10366,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+    BffInformalNotificationTimelineItem:
+      type: object
+      properties:
+        elementId:
+          type: string
+          maxLength: 512
+        eventTimestamp:
+          type: string
+          format: date-time
+        category:
+          $ref: '#/components/schemas/InformalTimelineElementCategoryV1'
+        details:
+          $ref: '#/components/schemas/InformalTimelineElementDetailsV1'
     BffInformalNotificationTimelineStatusHistoryV1:
       type: object
       required:
@@ -10382,7 +10395,7 @@ components:
           type: array
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
-            $ref: '#/components/schemas/InformalTimelineElementV1'
+            $ref: '#/components/schemas/BffInformalNotificationTimelineItem'
     BffFullSentInformalNotificationTimelineV1:
       description: Timeline notifica bonaria del mittente.
       type: object

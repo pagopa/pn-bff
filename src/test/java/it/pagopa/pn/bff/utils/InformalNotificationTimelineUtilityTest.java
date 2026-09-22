@@ -1,11 +1,8 @@
 package it.pagopa.pn.bff.utils;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalNotificationStatusHistoryElementV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalNotificationStatusV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementCategoryV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.*;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineStatusHistoryV1;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 import org.junit.jupiter.api.Test;
@@ -40,7 +37,7 @@ class InformalNotificationTimelineUtilityTest {
                 notification, target, InformalNotificationTimelineMapper.modelMapper);
 
         assertEquals(1, target.getNotificationStatusHistory().size());
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1> steps =
+        List<BffInformalNotificationTimelineItem> steps =
                 target.getNotificationStatusHistory().get(0).getSteps();
 
         assertEquals(2, steps.size());
@@ -66,7 +63,7 @@ class InformalNotificationTimelineUtilityTest {
         InformalNotificationTimelineUtility.populateNotificationStatusHistory(
                 notification, target, InformalNotificationTimelineMapper.modelMapper);
 
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1> steps =
+        List<BffInformalNotificationTimelineItem> steps =
                 target.getNotificationStatusHistory().get(0).getSteps();
 
         assertEquals(1, steps.size());
@@ -91,7 +88,7 @@ class InformalNotificationTimelineUtilityTest {
         InformalNotificationTimelineUtility.populateNotificationStatusHistory(
                 notification, target, InformalNotificationTimelineMapper.modelMapper);
 
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1> steps =
+        List<BffInformalNotificationTimelineItem> steps =
                 target.getNotificationStatusHistory().get(0).getSteps();
 
         assertEquals(1, steps.size());
@@ -117,7 +114,7 @@ class InformalNotificationTimelineUtilityTest {
         InformalNotificationTimelineUtility.populateNotificationStatusHistory(
                 notification, target, InformalNotificationTimelineMapper.modelMapper);
 
-        List<it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1> steps =
+        List<BffInformalNotificationTimelineItem> steps =
                 target.getNotificationStatusHistory().get(0).getSteps();
 
         assertEquals(1, steps.size());

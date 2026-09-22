@@ -3,17 +3,14 @@ package it.pagopa.pn.bff.utils;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalNotificationStatusHistoryElementV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementCategoryV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineItem;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineStatusHistoryV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CommunicationOutcomes;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalTimelineElementV1;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Builds the parts of the informal notification timeline API response that require business
@@ -98,12 +95,12 @@ public class InformalNotificationTimelineUtility {
      * @param mapper   MapStruct mapper used for event mapping
      * @return the resolved and filtered steps, most recent first
      */
-    private static List<InformalTimelineElementV1> resolveSteps(
+    private static List<BffInformalNotificationTimelineItem> resolveSteps(
             InformalNotificationStatusHistoryElementV1 status,
-            List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1> timeline,
+            List<InformalTimelineElementV1> timeline,
             InformalNotificationTimelineMapper mapper) {
 
-        List<InformalTimelineElementV1> steps = new ArrayList<>();
+        List<BffInformalNotificationTimelineItem> steps = new ArrayList<>();
 
         for (String elementId : CommonUtility.safeList(status.getRelatedTimelineElements())) {
             CommonUtility.safeList(timeline).stream()
