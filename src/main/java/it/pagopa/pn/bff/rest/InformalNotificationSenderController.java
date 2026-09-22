@@ -97,7 +97,7 @@ public class InformalNotificationSenderController implements SenderInformalNotif
             List<String> xPagopaPnCxGroups,
             String recipientId,
             String iunMatch,
-            InformalNotificationStatusV1 status,
+            List<InformalNotificationStatusV1> status,
             Boolean viewed,
             Boolean delivered,
             Integer size,

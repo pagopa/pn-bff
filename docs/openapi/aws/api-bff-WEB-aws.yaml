@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 1JooUam5NWurPGVHP2hJD7zvO1yPX18pRA/KGZC6CME=
+  version: tes1q01L+f1JN/dDvUqGp/lDyRciPDHOAeYQDI3wUho=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -5080,7 +5080,9 @@ components:
       in: query
       required: false
       schema:
-        $ref: '#/components/schemas/InformalNotificationStatusV1'
+        type: array
+        items:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
     notificationSearchViewed:
       name: viewed
       in: query
