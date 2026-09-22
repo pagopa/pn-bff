@@ -15,9 +15,6 @@ public interface InformalNotificationStatusMapper {
     InformalNotificationStatusMapper informalNotificationStatusMapper =
             Mappers.getMapper(InformalNotificationStatusMapper.class);
 
-    it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1
-    convertDeliveryInformalPAWebNotificationStatus(InformalNotificationStatusV1 notificationStatus);
-
     List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationStatusV1>
     convertDeliveryInformalPAWebNotificationStatus(List<InformalNotificationStatusV1> notificationStatuses);
 }
