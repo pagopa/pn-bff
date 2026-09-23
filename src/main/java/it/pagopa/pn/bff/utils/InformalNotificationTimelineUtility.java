@@ -1,13 +1,10 @@
 package it.pagopa.pn.bff.utils;
 
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
-import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalNotificationStatusHistoryElementV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.*;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementCategoryV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementDetailsV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineItem;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffInformalNotificationTimelineStatusHistoryV1;
-import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CommunicationOutcomes;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 
 import java.util.*;
@@ -25,8 +22,14 @@ public class InformalNotificationTimelineUtility {
             InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK,
             InformalTimelineElementCategoryV1.SEND_ANALOG_MESSAGE_FEEDBACK,
             InformalTimelineElementCategoryV1.DELIVERED,
-            InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED
+            InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED,
+            InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_SKIP
     );
+
+    /**
+     * Source channel of a notification viewed from the SEND web portal
+     */
+    private static final String WEB_SOURCE_CHANNEL = "WEB";
 
     /**
      * Computes the communication outcomes by checking the presence of DELIVERED and INFORMAL_NOTIFICATION_VIEWED events
@@ -34,13 +37,11 @@ public class InformalNotificationTimelineUtility {
      * @param timeline the notification timeline
      * @return the communication outcomes object
      */
-    public static CommunicationOutcomes computeCommunicationOutcomes(
-            List<it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1> timeline) {
+    public static CommunicationOutcomes computeCommunicationOutcomes(List<InformalTimelineElementV1> timeline) {
         boolean delivered = false;
         boolean viewed = false;
 
-        for (it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1 element
-                : CommonUtility.safeList(timeline)) {
+        for (InformalTimelineElementV1 element : CommonUtility.safeList(timeline)) {
             if (element.getCategory() == InformalTimelineElementCategoryV1.DELIVERED) {
                 delivered = true;
             } else if (element.getCategory() == InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED) {
@@ -59,8 +60,9 @@ public class InformalNotificationTimelineUtility {
 
     /**
      * Maps and populates the status history of the timeline API response.
-     * Each status history element is resolved from relatedTimelineElements into the
-     * corresponding steps, keeping only the categories visible to the frontend.
+     * The events of each status are grouped by channel. Statuses and the events inside each
+     * group go from the most recent to the oldest, while groups are ordered by the first event
+     * of their channel, from the most recent to the oldest.
      *
      * @param source source notification
      * @param target target timeline response
@@ -76,7 +78,8 @@ public class InformalNotificationTimelineUtility {
         for (InformalNotificationStatusHistoryElementV1 sourceStatus : CommonUtility.safeList(source.getNotificationStatusHistory())) {
             BffInformalNotificationTimelineStatusHistoryV1 mappedStatus = mapper.mapStatusHistory(sourceStatus);
 
-            mappedStatus.setSteps(resolveSteps(sourceStatus, source.getTimeline(), mapper));
+            List<InformalTimelineElementV1> events = resolveVisibleEvents(sourceStatus, source.getTimeline());
+            mappedStatus.setSteps(groupByChannel(events, mapper));
 
             mappedStatuses.add(mappedStatus);
         }
@@ -88,30 +91,101 @@ public class InformalNotificationTimelineUtility {
 
     /**
      * Resolves a status history element relatedTimelineElements into the corresponding
-     * timeline step
+     * timeline events, keeping only the categories visible to the frontend
      *
      * @param status   the source status history element
      * @param timeline the notification timeline
-     * @param mapper   MapStruct mapper used for event mapping
-     * @return the resolved and filtered steps, most recent first
+     * @return the visible events, in the order returned by pn-delivery
      */
-    private static List<BffInformalNotificationTimelineItem> resolveSteps(
+    private static List<InformalTimelineElementV1> resolveVisibleEvents(
             InformalNotificationStatusHistoryElementV1 status,
-            List<InformalTimelineElementV1> timeline,
-            InformalNotificationTimelineMapper mapper) {
+            List<InformalTimelineElementV1> timeline) {
 
-        List<BffInformalNotificationTimelineItem> steps = new ArrayList<>();
+        List<InformalTimelineElementV1> events = new ArrayList<>();
 
         for (String elementId : CommonUtility.safeList(status.getRelatedTimelineElements())) {
             CommonUtility.safeList(timeline).stream()
                     .filter(element -> Objects.equals(elementId, element.getElementId()))
                     .findFirst()
                     .filter(element -> VISIBLE_CATEGORIES.contains(element.getCategory()))
-                    .ifPresent(element -> steps.add(mapper.mapTimelineElement(element)));
+                    .ifPresent(events::add);
         }
 
+        return events;
+    }
+
+    /**
+     * Groups the events by channel. Groups are created in the order in which their channel first
+     * appears and then reversed, so they are ordered by the first event of their channel, from
+     * the most recent to the oldest. The events inside each group are reversed too, so they go
+     * from the most recent to the oldest. Events whose channel cannot be resolved are grouped
+     * under the UNKNOWN channel
+     *
+     * @param events the events of a status, in the order returned by pn-delivery
+     * @param mapper MapStruct mapper used for event mapping
+     * @return the groups of events, ordered by the first event of their channel
+     */
+    private static List<BffInformalNotificationTimelineGroup> groupByChannel(
+            List<InformalTimelineElementV1> events,
+            InformalNotificationTimelineMapper mapper) {
+
+        Map<BffNotificationChannelType, BffInformalNotificationTimelineGroup> groups = new LinkedHashMap<>();
+
+        for (InformalTimelineElementV1 event : events) {
+            BffNotificationChannelType channel = resolveChannel(event);
+
+            if (channel == null) {
+                channel = BffNotificationChannelType.UNKNOWN;
+            }
+
+            groups.computeIfAbsent(channel, key -> new BffInformalNotificationTimelineGroup().channel(key))
+                    .addEventsItem(mapper.mapTimelineElement(event));
+        }
+
+        List<BffInformalNotificationTimelineGroup> steps = new ArrayList<>(groups.values());
+        steps.forEach(group -> Collections.reverse(group.getEvents()));
         Collections.reverse(steps);
 
         return steps;
+    }
+
+    /**
+     * Resolves the channel of a visible event. Analog feedbacks don't have the channel in their
+     * details, while readings are identified by their source channel (a reading from the web
+     * portal belongs to SEND)
+     *
+     * @param event the timeline event
+     * @return the channel of the event, or null when it cannot be resolved
+     */
+    private static BffNotificationChannelType resolveChannel(InformalTimelineElementV1 event) {
+        if (event.getCategory() == InformalTimelineElementCategoryV1.SEND_ANALOG_MESSAGE_FEEDBACK) {
+            return BffNotificationChannelType.ANALOG;
+        }
+
+        InformalTimelineElementDetailsV1 details = event.getDetails();
+        if (details == null) {
+            return null;
+        }
+
+        if (event.getCategory() == InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED) {
+            return WEB_SOURCE_CHANNEL.equals(details.getSourceChannel())
+                    ? BffNotificationChannelType.SEND
+                    : toChannelType(details.getSourceChannel());
+        }
+
+        return toChannelType(details.getChannel());
+    }
+
+    /**
+     * Converts a channel value into the channel type, without failing on unknown values
+     *
+     * @param value the channel value
+     * @return the channel type, or null when the value is unknown
+     */
+    private static BffNotificationChannelType toChannelType(String value) {
+        return Arrays.stream(BffNotificationChannelType.values())
+                .filter(channel -> channel.getValue().equals(value))
+                .findFirst()
+                .orElse(null);
     }
 }

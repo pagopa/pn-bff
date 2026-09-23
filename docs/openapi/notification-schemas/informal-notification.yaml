@@ -201,6 +201,21 @@ components:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
+            $ref: "#/components/schemas/BffInformalNotificationTimelineGroup"
+
+    BffInformalNotificationTimelineGroup:
+      description: Eventi della timeline relativi allo stesso canale, dal più recente al più vecchio
+      type: object
+      required:
+        - channel
+        - events
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        events:
+          type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          items:
             $ref: "#/components/schemas/BffInformalNotificationTimelineItem"
 
     BffInformalNotificationTimelineItem:
@@ -226,6 +241,7 @@ components:
         - PEC
         - ANALOG
         - SEND
+        - UNKNOWN
 
     BffChannelStatusV1:
       type: string

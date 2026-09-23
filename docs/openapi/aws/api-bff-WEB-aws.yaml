@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: JqeIQbYGo3CTRASg++WWPZRoPZPNpLIJZazbq3ezRYI=
+  version: Z8K7nJHKEBJX4/f/AtSXgugJ+ZJTyRiTzRMLMUqGvko=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -10313,6 +10313,7 @@ components:
         - PEC
         - ANALOG
         - SEND
+        - UNKNOWN
     BffChannelStatusV1:
       type: string
       enum:
@@ -10381,6 +10382,22 @@ components:
           $ref: '#/components/schemas/InformalTimelineElementCategoryV1'
         details:
           $ref: '#/components/schemas/InformalTimelineElementDetailsV1'
+    BffInformalNotificationTimelineGroup:
+      description: >-
+        Eventi della timeline relativi allo stesso canale, dal più recente al
+        più vecchio
+      type: object
+      required:
+        - channel
+        - events
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        events:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/BffInformalNotificationTimelineItem'
     BffInformalNotificationTimelineStatusHistoryV1:
       type: object
       required:
@@ -10397,7 +10414,7 @@ components:
           type: array
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
-            $ref: '#/components/schemas/BffInformalNotificationTimelineItem'
+            $ref: '#/components/schemas/BffInformalNotificationTimelineGroup'
     BffFullSentInformalNotificationTimelineV1:
       description: Timeline notifica bonaria del mittente.
       type: object
