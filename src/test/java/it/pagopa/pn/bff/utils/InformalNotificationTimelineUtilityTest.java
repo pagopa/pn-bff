@@ -120,6 +120,38 @@ class InformalNotificationTimelineUtilityTest {
     }
 
     @Test
+    void populateNotificationStatusHistoryKeepsDuplicatesAndReusesTimelineAcrossStatuses() {
+        FullSentInformalNotificationV1 notification = new FullSentInformalNotificationV1()
+                .timeline(List.of(
+                        event("e1", InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "PEC"),
+                        event("e2", InformalTimelineElementCategoryV1.DELIVERED, "PEC")
+                ))
+                .notificationStatusHistory(List.of(
+                        status(InformalNotificationStatusV1.ACCEPTED, "2026-01-01T00:00:00Z", List.of("e1", "e1", "e2")),
+                        status(InformalNotificationStatusV1.COMPLETED_REACHED, "2026-01-02T00:00:00Z", List.of("e2", "e1"))
+                ));
+
+        BffFullSentInformalNotificationTimelineV1 target = new BffFullSentInformalNotificationTimelineV1();
+
+        InformalNotificationTimelineUtility.populateNotificationStatusHistory(
+                notification, target, InformalNotificationTimelineMapper.modelMapper);
+
+        List<BffInformalNotificationTimelineStatusHistoryV1> history = target.getNotificationStatusHistory();
+
+        assertEquals(2, history.size());
+
+        BffInformalNotificationTimelineStatusHistoryV1 mostRecent = history.get(0);
+        assertEquals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalNotificationStatusV1.COMPLETED_REACHED,
+                mostRecent.getStatus());
+        assertEquals(List.of("e1", "e2"), elementIds(mostRecent.getSteps().get(0)));
+
+        BffInformalNotificationTimelineStatusHistoryV1 oldest = history.get(1);
+        assertEquals(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.InformalNotificationStatusV1.ACCEPTED,
+                oldest.getStatus());
+        assertEquals(List.of("e2", "e1", "e1"), elementIds(oldest.getSteps().get(0)));
+    }
+
+    @Test
     void populateNotificationStatusHistoryReversesTheStatusList() {
         FullSentInformalNotificationV1 notification = new FullSentInformalNotificationV1()
                 .timeline(List.of())

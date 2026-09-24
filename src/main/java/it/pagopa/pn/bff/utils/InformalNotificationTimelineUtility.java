@@ -75,10 +75,12 @@ public class InformalNotificationTimelineUtility {
 
         List<BffInformalNotificationTimelineStatusHistoryV1> mappedStatuses = new ArrayList<>();
 
+        Map<String, InformalTimelineElementV1> timelineByElementId = indexTimelineByElementId(source.getTimeline());
+
         for (InformalNotificationStatusHistoryElementV1 sourceStatus : CommonUtility.safeList(source.getNotificationStatusHistory())) {
             BffInformalNotificationTimelineStatusHistoryV1 mappedStatus = mapper.mapStatusHistory(sourceStatus);
 
-            List<InformalTimelineElementV1> events = resolveVisibleEvents(sourceStatus, source.getTimeline());
+            List<InformalTimelineElementV1> events = resolveVisibleEvents(sourceStatus, timelineByElementId);
             mappedStatus.setSteps(groupByChannel(events, mapper));
 
             mappedStatuses.add(mappedStatus);
@@ -90,25 +92,43 @@ public class InformalNotificationTimelineUtility {
     }
 
     /**
+     * Indexes the timeline by element id, keeping the first element for each id so that the
+     * first-match semantics are preserved when resolving related timeline elements.
+     *
+     * @param timeline the notification timeline
+     * @return a map from element id to the first timeline element with that id
+     */
+    private static Map<String, InformalTimelineElementV1> indexTimelineByElementId(
+            List<InformalTimelineElementV1> timeline) {
+
+        Map<String, InformalTimelineElementV1> timelineByElementId = new HashMap<>();
+
+        for (InformalTimelineElementV1 element : CommonUtility.safeList(timeline)) {
+            timelineByElementId.putIfAbsent(element.getElementId(), element);
+        }
+
+        return timelineByElementId;
+    }
+
+    /**
      * Resolves a status history element relatedTimelineElements into the corresponding
      * timeline events, keeping only the categories visible to the frontend
      *
-     * @param status   the source status history element
-     * @param timeline the notification timeline
+     * @param status               the source status history element
+     * @param timelineByElementId  the timeline indexed by element id
      * @return the visible events, in the order returned by pn-delivery
      */
     private static List<InformalTimelineElementV1> resolveVisibleEvents(
             InformalNotificationStatusHistoryElementV1 status,
-            List<InformalTimelineElementV1> timeline) {
+            Map<String, InformalTimelineElementV1> timelineByElementId) {
 
         List<InformalTimelineElementV1> events = new ArrayList<>();
 
         for (String elementId : CommonUtility.safeList(status.getRelatedTimelineElements())) {
-            CommonUtility.safeList(timeline).stream()
-                    .filter(element -> Objects.equals(elementId, element.getElementId()))
-                    .findFirst()
-                    .filter(element -> VISIBLE_CATEGORIES.contains(element.getCategory()))
-                    .ifPresent(events::add);
+            InformalTimelineElementV1 element = timelineByElementId.get(elementId);
+            if (element != null && VISIBLE_CATEGORIES.contains(element.getCategory())) {
+                events.add(element);
+            }
         }
 
         return events;
