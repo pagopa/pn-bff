@@ -162,6 +162,42 @@ paths:
               schema:
                 $ref: './common-refs.yaml#/components/schemas/Problem'
 
+  '/bff/v1/notifications/informal/sent/{iun}/timeline':
+    get:
+      summary: 'Mittente: Timeline Comunicazione Bonaria'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationTimelineV1
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      parameters:
+        - $ref: './notification-schemas/parameters-notification.yaml#/components/parameters/BffPathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './notification-schemas/informal-notification.yaml#/components/schemas/BffFullSentInformalNotificationTimelineV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common-refs.yaml#/components/schemas/Problem'
+
   '/bff/v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}':
     get:
       summary: 'Mittente: Download documento notificato'

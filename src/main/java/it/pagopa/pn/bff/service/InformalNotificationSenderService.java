@@ -10,6 +10,7 @@ import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationSentMapper;
 import it.pagopa.pn.bff.mappers.notifications.InformalNotificationStatusMapper;
+import it.pagopa.pn.bff.mappers.notifications.InformalNotificationTimelineMapper;
 import it.pagopa.pn.bff.mappers.notifications.NotificationDownloadDocumentMapper;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
@@ -175,6 +176,36 @@ public class InformalNotificationSenderService {
                                 extractCampaignChannels(campaignDetail)
                         ))
         );
+    }
+
+    /**
+     * Retrieve the timeline of the informal sent notification
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the timeline of the informal notification
+     */
+    public Mono<BffFullSentInformalNotificationTimelineV1> getSentInformalNotificationTimeline(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups
+    ) {
+        log.info("Get sent informal notification timeline - senderId: {} - iun: {}", xPagopaPnCxId, iun);
+
+        Mono<FullSentInformalNotificationV1> informalNotification = pnDeliveryClient.getSentInformalNotification(
+                xPagopaPnUid,
+                CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAB2BCXType(xPagopaPnCxType),
+                xPagopaPnCxId,
+                iun,
+                xPagopaPnCxGroups
+        ).onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException);
+
+        return informalNotification.map(InformalNotificationTimelineMapper.modelMapper::mapSentInformalNotificationTimeline);
     }
 
     /**

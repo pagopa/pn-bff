@@ -162,6 +162,40 @@ public class InformalNotificationSenderController implements SenderInformalNotif
     }
 
     /**
+     * GET /bff/v1/notifications/informal/sent/{iun}/timeline: Informal Sent Notification timeline
+     * Get the timeline of an informal notification. This is for a Public Administration user
+     *
+     * @param xPagopaPnUid      User Identifier
+     * @param xPagopaPnCxType   Public Administration Type
+     * @param xPagopaPnCxId     Public Administration id
+     * @param iun               Informal Notification IUN
+     * @param xPagopaPnCxGroups Public Administration Group id List
+     * @return the timeline of the informal notification with a specific IUN
+     */
+    @Override
+    public Mono<ResponseEntity<BffFullSentInformalNotificationTimelineV1>> getSentInformalNotificationTimelineV1(
+            String xPagopaPnUid,
+            CxTypeAuthFleet xPagopaPnCxType,
+            String xPagopaPnCxId,
+            String iun,
+            List<String> xPagopaPnCxGroups,
+            final ServerWebExchange exchange
+    ) {
+        Mono<BffFullSentInformalNotificationTimelineV1> serviceResponse =
+                informalNotificationSenderService.getSentInformalNotificationTimeline(
+                        xPagopaPnUid,
+                        xPagopaPnCxType,
+                        xPagopaPnCxId,
+                        iun,
+                        xPagopaPnCxGroups
+                );
+
+        return serviceResponse.map(response ->
+                ResponseEntity.status(HttpStatus.OK).body(response)
+        );
+    }
+
+    /**
      * GET /bff/v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}
      * Download the documents linked to an informal sent notification
      *
