@@ -4,7 +4,7 @@ info:
 components:
   schemas:
     BffCampaignSearchResponseV1:
-      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignSearchResponse"
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignSearchResponse"
 
     BffCampaignDetailResponseV1:
       type: object
@@ -27,13 +27,13 @@ components:
           type: string
           format: date-time
         campaignStatus:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignStatus"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/CampaignStatus"
         serviceName:
           type: string
         channels:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/ChannelType"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/api-internal-web-campaign.yaml#/components/schemas/ChannelType"
 
     BffFullInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del destinatario.
@@ -48,9 +48,9 @@ components:
         - sentAt
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
         senderDenomination:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
         campaignId:
           type: string
         additionalLanguages:
@@ -65,17 +65,17 @@ components:
         recipients:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
         documents:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
         group:
           type: string
           pattern: ^[ -~]*$
           maxLength: 1024
         notificationStatus:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         sentAt:
           type: string
           format: date-time
@@ -90,12 +90,12 @@ components:
           format: date-time
           description: Data di accettazione della notifica/comunicazione
         senderContacts:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/api-internal-web-informal-recipient.yaml#/components/schemas/SenderContactInfo"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/api-internal-web-informal-recipient.yaml#/components/schemas/SenderContactInfo"
         timeline:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/remote-refs.yaml#/components/schemas/InformalTimelineElementV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalTimelineElementV1"
 
     BffInformalSenderNotificationSearchResponse:
       title: List of sender's informal notifications
@@ -116,7 +116,7 @@ components:
       type: object
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/UnifiedIUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/UnifiedIUN"
         recipients:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
@@ -124,9 +124,9 @@ components:
             type: string
             format: password # NO EXTERNAL
         notificationStatus:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         communicationOutcomes:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
 
     BffFullSentInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del mittente.
@@ -139,22 +139,22 @@ components:
         - notificationStatus
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalIUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalIUN"
         senderDenomination:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/Denomination"
         recipients:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
         subject:
           type: string
         documents:
           type: array
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationDocument"
         notificationStatus:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         documentsAvailable:
           type: boolean
         channelsStatus:
@@ -172,14 +172,14 @@ components:
         - communicationOutcomes
       properties:
         iun:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalIUN"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/InformalIUN"
         recipients:
           type: array
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
           items:
-            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/FullInformalNotificationRecipientV1"
         communicationOutcomes:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/e1b2b8fd1c6c928596f3ead13a34399e1b84d66e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
         notificationStatusHistory:
           type: array
           items:
@@ -193,7 +193,7 @@ components:
         - steps
       properties:
         status:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/999d18286f598f397f6c71aef22d5a5284ef1d03/docs/openapi/schemas-pn-status.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-status.yaml#/components/schemas/InformalNotificationStatusV1"
         activeFrom:
           type: string
           format: date-time
@@ -228,9 +228,9 @@ components:
           type: string
           format: date-time
         category:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/999d18286f598f397f6c71aef22d5a5284ef1d03/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementCategoryV1'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementCategoryV1'
         details:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/999d18286f598f397f6c71aef22d5a5284ef1d03/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementDetailsV1'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementDetailsV1'
 
     BffNotificationChannelType:
       type: string
