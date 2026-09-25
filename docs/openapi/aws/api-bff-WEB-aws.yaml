@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: on+6c1LyR9GXQDt7CB8cpdYa4EP4o+eAMspwjOJ5m6E=
+  version: JY69m2noz9iLzLhMa1JU/Ub9gCqa4PDGSJ2iHTa5TbA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -9985,11 +9985,6 @@ components:
           type: string
           description: Data ricezione richiesta visualizzazione notifica
           format: date-time
-        firstView:
-          type: boolean
-          description: >
-            Indica se il destinatario ha già aperto la notifica almeno una volta
-            (true = la notifica è stata aperta in precedenza)
         sourceChannel:
           type: string
           description: >
@@ -10398,6 +10393,70 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+        timeline:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/InformalTimelineElementV1'
+    schemas-InformalNotificationViewedDetails:
+      type: object
+      required:
+        - recIndex
+        - eventTimestamp
+        - sourceChannel
+      properties:
+        recIndex:
+          type: number
+          description: Index destinatario notifica digitale
+        eventTimestamp:
+          type: string
+          description: Data ricezione richiesta visualizzazione notifica
+          format: date-time
+        firstView:
+          type: boolean
+          description: >
+            Indica se il destinatario ha già aperto la notifica almeno una volta
+            (true = la notifica è stata aperta in precedenza)
+        sourceChannel:
+          type: string
+          description: >
+            Canale di provenienza della richiesta di visualizzazione notifica
+            bonaria - __IO__: richiesta tramite App IO - __WEB__: richiesta
+            tramite Portale WEB
+        sourceChannelDetails:
+          type: string
+          description: >
+            Dettaglio del canale di provenienza della richiesta di
+            visualizzazione notifica bonaria
+    schemas-InformalTimelineElementDetailsV1:
+      description: The raw event payload that will be different based on the event.
+      oneOf:
+        - $ref: '#/components/schemas/PublicRegistryValidationCallDetails'
+        - $ref: '#/components/schemas/PublicRegistryValidationResponseDetails'
+        - $ref: '#/components/schemas/NormalizedAddressDetails'
+        - $ref: '#/components/schemas/NotificationRequestAcceptedDetailsV28'
+        - $ref: '#/components/schemas/RequestRefusedDetailsV27'
+        - $ref: '#/components/schemas/SendDigitalMessageDetails'
+        - $ref: '#/components/schemas/SendDigitalMessageProgressDetails'
+        - $ref: '#/components/schemas/SendDigitalMessageFeedbackDetails'
+        - $ref: '#/components/schemas/PrepareAnalogDeliveryDetails'
+        - $ref: '#/components/schemas/SendAnalogMessageDetails'
+        - $ref: '#/components/schemas/SendAnalogMessageProgressDetails'
+        - $ref: '#/components/schemas/SendAnalogMessageFeedbackDetails'
+        - $ref: '#/components/schemas/DeliveredDetails'
+        - $ref: '#/components/schemas/WorkflowEndedReachedDetails'
+        - $ref: '#/components/schemas/WorkflowEndedUnreachedDetails'
+        - $ref: '#/components/schemas/WorkflowEndedUndeliverableDetails'
+        - $ref: '#/components/schemas/WorkflowDoneReachedDetails'
+        - $ref: '#/components/schemas/WorkflowDoneUnreachedDetails'
+        - $ref: '#/components/schemas/schemas-InformalNotificationViewedDetails'
+        - $ref: '#/components/schemas/CoverpageCreationRequestDetails'
+        - $ref: '#/components/schemas/SendDigitalMessageSkipDetails'
+        - $ref: '#/components/schemas/NotificationPaidDetailsV23'
+        - $ref: '#/components/schemas/InformalGetAddressInfoDetails'
+        - $ref: '#/components/schemas/PublicRegistryCallDetails'
+        - $ref: '#/components/schemas/SendCourtesyMessageDetails'
+        - $ref: '#/components/schemas/PublicRegistryResponseDetails'
     BffInformalNotificationTimelineItem:
       type: object
       properties:
@@ -10410,7 +10469,7 @@ components:
         category:
           $ref: '#/components/schemas/InformalTimelineElementCategoryV1'
         details:
-          $ref: '#/components/schemas/InformalTimelineElementDetailsV1'
+          $ref: '#/components/schemas/schemas-InformalTimelineElementDetailsV1'
     BffInformalNotificationTimelineGroup:
       description: >-
         Eventi della timeline relativi allo stesso canale, dal più recente al

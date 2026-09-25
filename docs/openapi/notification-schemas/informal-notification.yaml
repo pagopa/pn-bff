@@ -161,6 +161,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+        timeline:
+          type: array
+          x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          items:
+            $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/remote-refs.yaml#/components/schemas/InformalTimelineElementV1"
 
     BffFullSentInformalNotificationTimelineV1:
       description: Timeline notifica bonaria del mittente.
