@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: on+6c1LyR9GXQDt7CB8cpdYa4EP4o+eAMspwjOJ5m6E=
+  version: Z8K7nJHKEBJX4/f/AtSXgugJ+ZJTyRiTzRMLMUqGvko=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -9518,10 +9518,6 @@ components:
           * `WORKFLOW_ENDED_UNDELIVERABLE` - Flusso terminato: la notifica è definitivamente irrecapitabile su ogni canale
           * `WORKFLOW_DONE_REACHED` - Elaborazione del workflow completata per riscontro su un feedback desiderato e destinatario raggiunto
           * `WORKFLOW_DONE_UNREACHED` - Elaborazione del workflow completata per riscontro su un feedback desiderato e destinatario non raggiunto
-          * `SEND_COURTESY_MESSAGE` - Invio di un messaggio di cortesia
-          * `GET_ADDRESS` - Disponibilità dell’indirizzo specifico (domicilio digitale di piattaforma, domicilio digitale speciale, domicilio digitale generale, indirizzo fisico sulla notifica o sui registri nazionali)
-          * `PUBLIC_REGISTRY_CALL` - Richiesta ai registri pubblici per ottenere domicilio digitale generale o per ottenere indirizzo fisico da ANPR, da registro della imprese, da anagrafe tributaria.
-          * `PUBLIC_REGISTRY_RESPONSE` - Ricevuta la risposta dei registri pubblici
       enum:
         - PUBLIC_REGISTRY_VALIDATION_CALL
         - PUBLIC_REGISTRY_VALIDATION_RESPONSE
@@ -9546,10 +9542,6 @@ components:
         - INFORMAL_NOTIFICATION_VIEWED
         - COVERPAGE_CREATION_REQUEST
         - PAYMENT
-        - GET_ADDRESS
-        - PUBLIC_REGISTRY_CALL
-        - PUBLIC_REGISTRY_RESPONSE
-        - SEND_COURTESY_MESSAGE
     RecIndex:
       type: number
       description: Index destinatario notifica digitale
@@ -9985,11 +9977,6 @@ components:
           type: string
           description: Data ricezione richiesta visualizzazione notifica
           format: date-time
-        firstView:
-          type: boolean
-          description: >
-            Indica se il destinatario ha già aperto la notifica almeno una volta
-            (true = la notifica è stata aperta in precedenza)
         sourceChannel:
           type: string
           description: >
@@ -10026,23 +10013,11 @@ components:
           $ref: '#/components/schemas/RecIndex'
         channel:
           $ref: '#/components/schemas/DigitalNotificationChannel'
+        digitalAddressSource:
+          $ref: '#/components/schemas/DigitalAddressSource'
         retryNumber:
           type: number
           description: numero dei tentativi effettuati
-    InformalGetAddressInfoDetails:
-      allOf:
-        - $ref: '#/components/schemas/GetAddressInfoDetails'
-        - type: object
-          properties:
-            isTosAccepted:
-              type: boolean
-              description: >-
-                Indica se l'utente ha accettato i termini di servizio per la
-                consultazione dell'indirizzo
-            digitalAddress:
-              $ref: '#/components/schemas/DigitalAddress'
-            channel:
-              $ref: '#/components/schemas/DigitalNotificationChannel'
     InformalTimelineElementDetailsV1:
       description: The raw event payload that will be different based on the event.
       oneOf:
@@ -10068,10 +10043,6 @@ components:
         - $ref: '#/components/schemas/CoverpageCreationRequestDetails'
         - $ref: '#/components/schemas/SendDigitalMessageSkipDetails'
         - $ref: '#/components/schemas/NotificationPaidDetailsV23'
-        - $ref: '#/components/schemas/InformalGetAddressInfoDetails'
-        - $ref: '#/components/schemas/PublicRegistryCallDetails'
-        - $ref: '#/components/schemas/SendCourtesyMessageDetails'
-        - $ref: '#/components/schemas/PublicRegistryResponseDetails'
     InformalTimelineElementV1:
       type: object
       additionalProperties: false

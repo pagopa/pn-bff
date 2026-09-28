@@ -18,7 +18,7 @@ components:
         recipients:
           type: array
           items:
-            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/8d7923513a50905d5e9d427fd63971b938119a5e/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV24'
+            $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/320a2a887ad101f920a299164078b536fe1fb3e5/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationRecipientV24'
         isCancelled:
           type: boolean
           description: >-
