@@ -486,6 +486,16 @@ Parameters:
     Type: String
     Description: SSM parameter name for the list of locationIds for which to return the original CAF address
 
+  CpuArchitecture:
+    Type: String
+    Default: 'ARM'
+    Description: CPU architecture for the Fargate tasks
+
+  JavaToolOptions:
+    Type: String
+    Default: ''
+    Description: Java tool options for the Fargate tasks
+
 Conditions:
   CreateFakeDLRole:
     Fn::Not:
@@ -560,6 +570,8 @@ Resources:
         EfsFilesystem: !Ref FargateEFSFileSystemID
         MountEfs: !Ref MountEfs
         WireTapLogActivation: !Ref WireTapLogActivation
+        JavaToolOptions: !Ref JavaToolOptions
+        CpuArchitecture: !Ref CpuArchitecture
 
   PnBffMicroserviceTaskManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
