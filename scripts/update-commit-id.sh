@@ -2,7 +2,7 @@
 
 # Update commit ID of a pn-* repository in all remote references
 # (inputSpec in pom.xml and $ref under docs/openapi).
-# Excludes generated files: api-external-*.yaml and aws/api-bff-WEB-aws.yaml
+# Excludes generated files: api-external-*.yaml and everything under docs/openapi/aws
 #
 # Usage: ./scripts/update-commit-id.sh <repo> <commit-id>
 # Example: ./scripts/update-commit-id.sh pn-delivery 320a2a887ad101f920a299164078b536fe1fb3e5
@@ -34,7 +34,7 @@ files=$(
         echo pom.xml
         find docs/openapi -type f -name '*.yaml' \
             ! -name 'api-external-*.yaml' \
-            ! -path 'docs/openapi/aws/api-bff-WEB-aws.yaml'
+            ! -path 'docs/openapi/aws/*'
     } | sort
 )
 
