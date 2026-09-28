@@ -34,6 +34,7 @@
     "PostalCodeThreshold": "1",
     "AddressNumberThreshold": "0.80",
     "OverallThreshold": "0.85",
-    "CafLocationIdsWhitelistParameter": "/pn-radd-store-registry-lambda/caf-locationIDs-whitelist"
+    "CafLocationIdsWhitelistParameter": "/pn-radd-store-registry-lambda/caf-locationIDs-whitelist",
+    "CpuArchitecture": "AMD"
   }
 }
