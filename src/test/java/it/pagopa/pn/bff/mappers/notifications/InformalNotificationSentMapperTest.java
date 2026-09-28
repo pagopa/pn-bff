@@ -1,6 +1,9 @@
 package it.pagopa.pn.bff.mappers.notifications;
 
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementCategoryV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementDetailsV1;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.InformalTimelineElementV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffNotificationChannelType;
 import it.pagopa.pn.bff.mocks.InformalSentNotificationDetailMock;
@@ -23,7 +26,13 @@ class InformalNotificationSentMapperTest {
 
     @Test
     void testMapSentInformalNotificationDetail() {
-        FullSentInformalNotificationV1 notification = mock.getFullSentInformalNotificationMock();
+        FullSentInformalNotificationV1 notification = mock.getFullSentInformalNotificationMock()
+                .timeline(List.of(
+                        new InformalTimelineElementV1()
+                                .elementId("e1")
+                                .category(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK)
+                                .details(new InformalTimelineElementDetailsV1().channel("IO"))
+                ));
         List<BffNotificationChannelType> channels = List.of(BffNotificationChannelType.IO, BffNotificationChannelType.SEND);
 
         BffFullSentInformalNotificationV1 result =
@@ -49,5 +58,11 @@ class InformalNotificationSentMapperTest {
         
         assertNotNull(result.getChannelsStatus());
         assertEquals(channels.size(), result.getChannelsStatus().size());
+
+        assertNotNull(result.getTimeline());
+        assertEquals(notification.getTimeline().size(), result.getTimeline().size());
+        assertEquals(notification.getTimeline().get(0).getElementId(), result.getTimeline().get(0).getElementId());
+        assertEquals(notification.getTimeline().get(0).getCategory().getValue(), result.getTimeline().get(0).getCategory().getValue());
+        assertEquals(notification.getTimeline().get(0).getDetails().getChannel(), result.getTimeline().get(0).getDetails().getChannel());
     }
 }
