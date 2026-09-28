@@ -245,13 +245,13 @@ components:
           $ref: '#/components/schemas/BffReworkRequestType'
 
     BffTimelineCategory:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/87e6b7e09a1a2e4ef3b7a4c96e7aa7256475804d/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementCategoryV28'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementCategoryV28'
 
     BffNotificationDetailTimelineDetails:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/87e6b7e09a1a2e4ef3b7a4c96e7aa7256475804d/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementDetailsV28'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/TimelineElementDetailsV28'
     
     BffRequestStatus:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/87e6b7e09a1a2e4ef3b7a4c96e7aa7256475804d/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/api-internal-pn-delivery-push.yaml#/components/schemas/RequestStatus'
     
     BffCheckAarRequest:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery/fe12df74061c1e89427c9c392ffdc0634a72a6ea/docs/openapi/api-internal-web-recipient.yaml#/components/schemas/RequestCheckAarMandateDto'
