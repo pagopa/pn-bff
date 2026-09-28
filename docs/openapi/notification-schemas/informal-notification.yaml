@@ -193,7 +193,7 @@ components:
         - steps
       properties:
         status:
-          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-status.yaml#/components/schemas/InformalNotificationStatusV1"
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/schemas-pn-status.yaml#/components/schemas/InformalNotificationStatusV1"
         activeFrom:
           type: string
           format: date-time
@@ -228,9 +228,9 @@ components:
           type: string
           format: date-time
         category:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementCategoryV1'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementCategoryV1'
         details:
-          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/e072b6fb599673fdbb7297945871d010ebb3418a/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementDetailsV1'
+          $ref: 'https://raw.githubusercontent.com/pagopa/pn-delivery-push/805040adc821bafc66305e0d15eb1e705d7985f4/docs/openapi/schemas-pn-timeline-external.yaml#/components/schemas/InformalTimelineElementDetailsV1'
 
     BffNotificationChannelType:
       type: string
