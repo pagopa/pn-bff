@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 7KEqoECHpPHsS8fJXN5JQckTnQqv2ikWzN7ZLRsmqQc=
+  version: wWtASHWVsJrhLwcTPMVTAWPt5Z3ce/VEQxSl5XCSqj4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4187,6 +4187,490 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/notifications/informal/campaigns:
+    get:
+      summary: 'Mittente: Lista Campagne'
+      tags:
+        - SenderInformalNotifications
+      operationId: getListCampaignsV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/NextPagesKeyParam'
+      responses:
+        '200':
+          description: Lista campagne paginata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/campaigns API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/campaigns/{campaignId}:
+    get:
+      summary: 'Mittente: Dettaglio Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: getCampaignDetailV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/CampaignIdParam'
+      responses:
+        '200':
+          description: Dettaglio Campagna
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffCampaignDetailResponseV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns/{campaignId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/campaigns/{campaignId} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/campaigns/{campaignId}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/informal/campaigns/{campaignId}/notifications/sent:
+    get:
+      summary: 'Mittente: Lista Comunicazioni Bonarie di una Campagna'
+      tags:
+        - SenderInformalNotifications
+      operationId: searchInformalSentNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/CampaignIdParam'
+        - $ref: '#/components/parameters/notificationSearchStartDate'
+        - $ref: '#/components/parameters/notificationSearchEndDate'
+        - $ref: '#/components/parameters/notificationSearchRecipientId'
+        - $ref: '#/components/parameters/BffSearchUnifiedIun'
+        - $ref: '#/components/parameters/BffInformalNotificationSearchStatusParam'
+        - $ref: '#/components/parameters/notificationSearchViewed'
+        - $ref: '#/components/parameters/notificationSearchDelivered'
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/NextPagesKeyParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/BffInformalSenderNotificationSearchResponse
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/informal/campaigns/{campaignId}/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for /v1/informal/campaigns/{campaignId}/notifications/sent API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/informal/campaigns/{campaignId}/notifications/sent
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.campaignId: method.request.path.campaignId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/sent/{iun}:
+    get:
+      summary: 'Mittente: Dettaglio Comunicazione Bonaria'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffFullSentInformalNotificationV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/sent/{iun} API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/sent/{iun}/timeline:
+    get:
+      summary: 'Mittente: Timeline Comunicazione Bonaria'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationTimelineV1
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffFullSentInformalNotificationTimelineV1'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/timeline
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/notifications/informal/sent/{iun}/timeline API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/timeline
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}:
+    get:
+      summary: 'Mittente: Download documento notificato'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationDocumentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+        - $ref: '#/components/parameters/BffPathDocumentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.docIdx: method.request.path.docIdx
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for
+        /v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx} API
+        CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/attachments/documents/{docIdx}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.docIdx: method.request.path.docIdx
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /v1/notifications/informal/sent/{iun}/attachments/payment/{recipientIdx}/{attachmentName}:
+    get:
+      summary: 'Mittente: Download allegato per pagamento'
+      tags:
+        - SenderInformalNotifications
+      operationId: getSentInformalNotificationAttachmentV1
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      parameters:
+        - $ref: '#/components/parameters/pathInformalIun'
+        - $ref: '#/components/parameters/pathRecipientIdx'
+        - $ref: '#/components/parameters/pathAttachmentName'
+        - $ref: '#/components/parameters/attachmentIdx'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffDocumentDownloadMetadataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/attachments/payment/{recipientIdx}/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.recipientIdx: method.request.path.recipientIdx
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: >-
+        Options for
+        /v1/notifications/informal/sent/{iun}/attachments/payment/{recipientIdx}/{attachmentName}
+        API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/notifications/informal/sent/{iun}/attachments/payment/{recipientIdx}/{attachmentName}
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.iun: method.request.path.iun
+          integration.request.path.recipientIdx: method.request.path.recipientIdx
+          integration.request.path.attachmentName: method.request.path.attachmentName
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -4567,6 +5051,56 @@ components:
       required: true
       schema:
         type: number
+    PageSizeParam:
+      name: size
+      in: query
+      required: false
+      description: Numero massimo di elementi da restituire nella pagina corrente.
+      schema:
+        type: number
+        minimum: 1
+        maximum: 50
+        default: 10
+    NextPagesKeyParam:
+      name: nextPagesKey
+      in: query
+      required: false
+      description: Chiave della pagina successiva ritornata dalla precedente invocazione.
+      schema:
+        type: string
+    CampaignIdParam:
+      name: campaignId
+      in: path
+      required: true
+      description: Identificativo univoco della campagna.
+      schema:
+        type: string
+    BffInformalNotificationSearchStatusParam:
+      name: status
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+    notificationSearchViewed:
+      name: viewed
+      in: query
+      required: false
+      description: >-
+        Se valorizzato, filtra le comunicazioni bonarie in base all'esito di
+        visualizzazione (true = visualizzate, false = non visualizzate).
+      schema:
+        type: boolean
+    notificationSearchDelivered:
+      name: delivered
+      in: query
+      required: false
+      description: >-
+        Se valorizzato, filtra le comunicazioni bonarie in base all'esito di
+        consegna (true = consegnate, false = non consegnate).
+      schema:
+        type: boolean
   schemas:
     NotificationStatusV26:
       type: string
@@ -8984,6 +9518,10 @@ components:
           * `WORKFLOW_ENDED_UNDELIVERABLE` - Flusso terminato: la notifica è definitivamente irrecapitabile su ogni canale
           * `WORKFLOW_DONE_REACHED` - Elaborazione del workflow completata per riscontro su un feedback desiderato e destinatario raggiunto
           * `WORKFLOW_DONE_UNREACHED` - Elaborazione del workflow completata per riscontro su un feedback desiderato e destinatario non raggiunto
+          * `SEND_COURTESY_MESSAGE` - Invio di un messaggio di cortesia
+          * `GET_ADDRESS` - Disponibilità dell’indirizzo specifico (domicilio digitale di piattaforma, domicilio digitale speciale, domicilio digitale generale, indirizzo fisico sulla notifica o sui registri nazionali)
+          * `PUBLIC_REGISTRY_CALL` - Richiesta ai registri pubblici per ottenere domicilio digitale generale o per ottenere indirizzo fisico da ANPR, da registro della imprese, da anagrafe tributaria.
+          * `PUBLIC_REGISTRY_RESPONSE` - Ricevuta la risposta dei registri pubblici
       enum:
         - PUBLIC_REGISTRY_VALIDATION_CALL
         - PUBLIC_REGISTRY_VALIDATION_RESPONSE
@@ -9008,6 +9546,10 @@ components:
         - INFORMAL_NOTIFICATION_VIEWED
         - COVERPAGE_CREATION_REQUEST
         - PAYMENT
+        - GET_ADDRESS
+        - PUBLIC_REGISTRY_CALL
+        - PUBLIC_REGISTRY_RESPONSE
+        - SEND_COURTESY_MESSAGE
     RecIndex:
       type: number
       description: Index destinatario notifica digitale
@@ -9443,6 +9985,11 @@ components:
           type: string
           description: Data ricezione richiesta visualizzazione notifica
           format: date-time
+        firstView:
+          type: boolean
+          description: >
+            Indica se il destinatario ha già aperto la notifica almeno una volta
+            (true = la notifica è stata aperta in precedenza)
         sourceChannel:
           type: string
           description: >
@@ -9479,11 +10026,23 @@ components:
           $ref: '#/components/schemas/RecIndex'
         channel:
           $ref: '#/components/schemas/DigitalNotificationChannel'
-        digitalAddressSource:
-          $ref: '#/components/schemas/DigitalAddressSource'
         retryNumber:
           type: number
           description: numero dei tentativi effettuati
+    InformalGetAddressInfoDetails:
+      allOf:
+        - $ref: '#/components/schemas/GetAddressInfoDetails'
+        - type: object
+          properties:
+            isTosAccepted:
+              type: boolean
+              description: >-
+                Indica se l'utente ha accettato i termini di servizio per la
+                consultazione dell'indirizzo
+            digitalAddress:
+              $ref: '#/components/schemas/DigitalAddress'
+            channel:
+              $ref: '#/components/schemas/DigitalNotificationChannel'
     InformalTimelineElementDetailsV1:
       description: The raw event payload that will be different based on the event.
       oneOf:
@@ -9509,6 +10068,10 @@ components:
         - $ref: '#/components/schemas/CoverpageCreationRequestDetails'
         - $ref: '#/components/schemas/SendDigitalMessageSkipDetails'
         - $ref: '#/components/schemas/NotificationPaidDetailsV23'
+        - $ref: '#/components/schemas/InformalGetAddressInfoDetails'
+        - $ref: '#/components/schemas/PublicRegistryCallDetails'
+        - $ref: '#/components/schemas/SendCourtesyMessageDetails'
+        - $ref: '#/components/schemas/PublicRegistryResponseDetails'
     InformalTimelineElementV1:
       type: object
       additionalProperties: false
@@ -9607,6 +10170,308 @@ components:
           x-field-extra-annotation: '@lombok.ToString.Exclude'
           items:
             $ref: '#/components/schemas/InformalTimelineElementV1'
+    ChannelType:
+      type: string
+      description: Canale di invio utilizzabile nella campagna.
+      enum:
+        - IO
+        - EMAIL
+        - SMS
+        - PEC
+        - ANALOG
+      example: IO
+    CampaignStatus:
+      type: string
+      description: Stato della campagna.
+      enum:
+        - DRAFT
+        - IN_PROGRESS
+        - CANCELED
+        - CONCLUDED
+      example: IN_PROGRESS
+    CampaignSummary:
+      type: object
+      description: Modello minimale usato nella risposta di listing campagne.
+      required:
+        - campaignId
+        - senderId
+        - title
+        - pfChannels
+        - pgChannels
+        - campaignStatus
+        - startDate
+        - endDate
+      properties:
+        campaignId:
+          type: string
+          description: Identificativo univoco della campagna.
+          example: campaign-1
+        senderId:
+          type: string
+          format: uuid
+          description: Identificativo UUID dell'Ente mittente.
+          example: 5b994d4a-0fa8-47ac-9c7b-354f1d44a1ce
+        title:
+          type: string
+          description: Titolo sintetico della campagna.
+          example: First campaign
+        pfChannels:
+          type: array
+          description: >-
+            Elenco dei canali previsti per i destinatari persona fisica della
+            campagna.
+          items:
+            $ref: '#/components/schemas/ChannelType'
+          example:
+            - IO
+            - SMS
+        pgChannels:
+          type: array
+          description: >-
+            Elenco dei canali previsti per i destinatari persona giuridica della
+            campagna.
+          items:
+            $ref: '#/components/schemas/ChannelType'
+          example:
+            - PEC
+            - ANALOG
+        campaignStatus:
+          $ref: '#/components/schemas/CampaignStatus'
+          example: IN_PROGRESS
+        startDate:
+          type: string
+          format: date-time
+          description: Data e ora di inizio campagna in formato UTC.
+          example: '2026-02-01T00:00:00Z'
+        endDate:
+          type: string
+          format: date-time
+          description: Data e ora di fine campagna in formato UTC.
+          example: '2026-12-31T23:59:59Z'
+    CampaignSearchResponse:
+      type: object
+      description: Risposta paginata della ricerca campagne.
+      required:
+        - resultsPage
+        - moreResult
+      properties:
+        resultsPage:
+          type: array
+          description: Campagne appartenenti alla pagina corrente.
+          items:
+            $ref: '#/components/schemas/CampaignSummary'
+        moreResult:
+          type: boolean
+          description: Indica se sono presenti ulteriori pagine di risultati.
+        nextPagesKey:
+          type: array
+          description: >-
+            Elenco delle chiavi utilizzabili per richiedere le pagine
+            successive.
+          items:
+            type: string
+    BffCampaignDetailResponseV1:
+      type: object
+      required:
+        - campaignId
+        - title
+        - description
+        - startDate
+        - campaignStatus
+        - serviceName
+        - channels
+      properties:
+        campaignId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        campaignStatus:
+          $ref: '#/components/schemas/CampaignStatus'
+        serviceName:
+          type: string
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelType'
+    BffInformalSenderNotificationSearchRow:
+      type: object
+      properties:
+        iun:
+          $ref: '#/components/schemas/UnifiedIUN'
+        recipients:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            type: string
+            format: password
+        notificationStatus:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        communicationOutcomes:
+          $ref: '#/components/schemas/CommunicationOutcomes'
+    BffInformalSenderNotificationSearchResponse:
+      title: List of sender's informal notifications
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffInformalSenderNotificationSearchRow'
+        moreResult:
+          type: boolean
+        nextPagesKey:
+          type: array
+          items:
+            type: string
+    InformalIUN:
+      description: Identificativo Univoco Notifica per il dominio informale
+      type: string
+      minLength: 25
+      maxLength: 25
+      pattern: ^[A-Z]{4}-[A-Z]{4}-[A-Z]{4}-[0-9]{6}-[A-Z]{1}-[A-Z]{1}$
+    BffNotificationChannelType:
+      type: string
+      enum:
+        - IO
+        - EMAIL
+        - SMS
+        - PEC
+        - ANALOG
+        - SEND
+        - UNKNOWN
+    BffChannelStatusV1:
+      type: string
+      enum:
+        - READY_TO_SEND
+        - WAITING_TO_SEND
+        - SENT
+        - DELIVERED
+        - VIEWED
+        - UNAVAILABLE
+        - NOT_DELIVERED
+        - WORKFLOW_ENDED
+        - FILED
+    BffChannelDeliveryStatusV1:
+      type: object
+      required:
+        - channel
+        - status
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        status:
+          $ref: '#/components/schemas/BffChannelStatusV1'
+    BffFullSentInformalNotificationV1:
+      description: Dettaglio notifica bonaria esposto al frontend del mittente.
+      type: object
+      required:
+        - iun
+        - senderDenomination
+        - recipients
+        - subject
+        - notificationStatus
+      properties:
+        iun:
+          $ref: '#/components/schemas/InformalIUN'
+        senderDenomination:
+          $ref: '#/components/schemas/Denomination'
+        recipients:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
+        subject:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationDocument'
+        notificationStatus:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        documentsAvailable:
+          type: boolean
+        channelsStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffChannelDeliveryStatusV1'
+        timeline:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/InformalTimelineElementV1'
+    BffInformalNotificationTimelineItem:
+      type: object
+      properties:
+        elementId:
+          type: string
+          maxLength: 512
+        eventTimestamp:
+          type: string
+          format: date-time
+        category:
+          $ref: '#/components/schemas/InformalTimelineElementCategoryV1'
+        details:
+          $ref: '#/components/schemas/InformalTimelineElementDetailsV1'
+    BffInformalNotificationTimelineGroup:
+      description: >-
+        Eventi della timeline relativi allo stesso canale, dal più recente al
+        più vecchio
+      type: object
+      required:
+        - channel
+        - events
+      properties:
+        channel:
+          $ref: '#/components/schemas/BffNotificationChannelType'
+        events:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/BffInformalNotificationTimelineItem'
+    BffInformalNotificationTimelineStatusHistoryV1:
+      type: object
+      required:
+        - status
+        - activeFrom
+        - steps
+      properties:
+        status:
+          $ref: '#/components/schemas/InformalNotificationStatusV1'
+        activeFrom:
+          type: string
+          format: date-time
+        steps:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/BffInformalNotificationTimelineGroup'
+    BffFullSentInformalNotificationTimelineV1:
+      description: Timeline notifica bonaria del mittente.
+      type: object
+      required:
+        - iun
+        - recipients
+        - notificationStatusHistory
+        - communicationOutcomes
+      properties:
+        iun:
+          $ref: '#/components/schemas/InformalIUN'
+        recipients:
+          type: array
+          x-field-extra-annotation: '@lombok.ToString.Exclude'
+          items:
+            $ref: '#/components/schemas/FullInformalNotificationRecipientV1'
+        communicationOutcomes:
+          $ref: '#/components/schemas/CommunicationOutcomes'
+        notificationStatusHistory:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/BffInformalNotificationTimelineStatusHistoryV1
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -9664,6 +10529,8 @@ tags:
       API esposte al frontend PF/PG di SEND per ottenere i dettagli delle
       comunicazioni bonarie e scaricare gli allegati della notifica e del
       pagamento
+  - name: SenderInformalNotifications
+    description: API esposte al frontend PA di SEND per ottenere la lista delle campagne
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:
