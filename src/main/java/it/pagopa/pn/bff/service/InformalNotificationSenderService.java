@@ -5,6 +5,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.mode
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.RecipientTypeInt;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.*;
 import it.pagopa.pn.bff.mappers.CxTypeMapper;
 import it.pagopa.pn.bff.mappers.notifications.CampaignMapper;
@@ -173,7 +174,7 @@ public class InformalNotificationSenderService {
                         .onErrorMap(WebClientResponseException.class, pnBffExceptionUtility::wrapException)
                         .map(campaignDetail -> InformalNotificationSentMapper.modelMapper.mapSentInformalNotificationDetail(
                                 notification,
-                                extractCampaignChannels(campaignDetail)
+                                extractCampaignChannels(campaignDetail, notification)
                         ))
         );
     }
@@ -281,15 +282,22 @@ public class InformalNotificationSenderService {
     }
 
     /**
-     * Create a list with all the channels of a campaign. It also adds SEND since it isn't returned from pn-delivery
+     * Create a list with the channels of a campaign that apply to the notification recipient, filtering the
+     * workflow steps by the recipient type of the first recipient. It also adds SEND since it isn't returned from pn-delivery
      *
      * @param campaignDetail - The detail of the campaign
-     * @return A list with all the channels of the campaign, including SEND.
+     * @param notification   - The informal notification, used to get the recipient type
+     * @return A list with the channels of the campaign for the notification recipient type, including SEND.
      */
-    private List<BffNotificationChannelType> extractCampaignChannels(CampaignDetail campaignDetail) {
-        List<BffNotificationChannelType> channels = CampaignMapper.modelMapper.mapCampaignDetail(campaignDetail)
-                .getChannels().stream()
-                .map(channel -> BffNotificationChannelType.valueOf(channel.name()))
+    private List<BffNotificationChannelType> extractCampaignChannels(CampaignDetail campaignDetail,
+                                                                     FullSentInformalNotificationV1 notification) {
+        RecipientTypeInt recipientType = RecipientTypeInt.fromValue(
+                notification.getRecipients().get(0).getRecipientType().getValue());
+
+        List<BffNotificationChannelType> channels = campaignDetail.getWorkflow().stream()
+                .filter(workflowEntity -> workflowEntity.getRecipientType().contains(recipientType))
+                .map(workflowEntity -> BffNotificationChannelType.fromValue(workflowEntity.getChannel().getValue()))
+                .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
         channels.add(BffNotificationChannelType.SEND);
         return channels;
