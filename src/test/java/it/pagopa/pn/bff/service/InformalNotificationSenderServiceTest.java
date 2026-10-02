@@ -2,13 +2,19 @@ package it.pagopa.pn.bff.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.pn.bff.exceptions.PnBffException;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullInformalNotificationRecipientV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.FullSentInformalNotificationV1;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.NotificationAttachmentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.InformalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignDetail;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.CampaignSearchResponse;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.ChannelType;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.DesiredFeedbackType;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.RecipientTypeInt;
+import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.model.WorkflowEntity;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignDetailResponseV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffCampaignSearchResponseV1;
+import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffChannelDeliveryStatusV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffDocumentDownloadMetadataResponse;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationTimelineV1;
 import it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.BffFullSentInformalNotificationV1;
@@ -26,6 +32,7 @@ import it.pagopa.pn.bff.mocks.NotificationDownloadDocumentMock;
 import it.pagopa.pn.bff.mocks.UserMock;
 import it.pagopa.pn.bff.pnclient.delivery.PnDeliveryClientPAImpl;
 import it.pagopa.pn.bff.utils.PnBffExceptionUtility;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -37,6 +44,7 @@ import reactor.test.StepVerifier;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -317,6 +325,66 @@ class InformalNotificationSenderServiceTest {
 
         StepVerifier.create(result)
                 .expectNext(expected)
+                .verifyComplete();
+    }
+
+    @Test
+    void getSentInformalNotificationFiltersChannelsByRecipientType() {
+        CampaignDetail campaignDetail = campaignMock.getCampaignDetailMock();
+        List<WorkflowEntity> workflow = new ArrayList<>(campaignDetail.getWorkflow());
+        workflow.add(new WorkflowEntity()
+                .channel(ChannelType.PEC)
+                .recipientType(Set.of(RecipientTypeInt.PG))
+                .timeout("PT6M")
+                .desiredFeedback(Set.of(DesiredFeedbackType.RECEIVED))
+                .includeAttachment(true));
+        campaignDetail.setWorkflow(workflow);
+
+        when(pnDeliveryClient.getCampaignDetail(Mockito.anyString(), Mockito.any(UUID.class)))
+                .thenReturn(Mono.just(campaignDetail));
+
+        assertSentInformalNotificationChannels(
+                FullInformalNotificationRecipientV1.RecipientTypeEnum.PF,
+                List.of(BffNotificationChannelType.IO, BffNotificationChannelType.EMAIL, BffNotificationChannelType.SEND)
+        );
+        assertSentInformalNotificationChannels(
+                FullInformalNotificationRecipientV1.RecipientTypeEnum.PG,
+                List.of(BffNotificationChannelType.EMAIL, BffNotificationChannelType.PEC, BffNotificationChannelType.SEND)
+        );
+    }
+
+    private void assertSentInformalNotificationChannels(
+            FullInformalNotificationRecipientV1.RecipientTypeEnum recipientType,
+            List<BffNotificationChannelType> expectedChannels
+    ) {
+        FullSentInformalNotificationV1 fullSentInformalNotification =
+                informalSentNotificationDetailMock.getFullSentInformalNotificationMock();
+        fullSentInformalNotification.getRecipients().get(0).setRecipientType(recipientType);
+
+        when(pnDeliveryClient.getSentInformalNotification(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyList()
+        )).thenReturn(Mono.just(fullSentInformalNotification));
+
+        Mono<BffFullSentInformalNotificationV1> result =
+                informalNotificationSenderService.getSentInformalNotification(
+                        UserMock.PN_UID,
+                        CxTypeAuthFleet.PA,
+                        UserMock.PN_CX_ID,
+                        InformalSentNotificationDetailMock.IUN,
+                        UserMock.PN_CX_GROUPS
+                );
+
+        StepVerifier.create(result)
+                .assertNext(notification -> Assertions.assertEquals(
+                        expectedChannels,
+                        notification.getChannelsStatus().stream()
+                                .map(BffChannelDeliveryStatusV1::getChannel)
+                                .toList()
+                ))
                 .verifyComplete();
     }
 
