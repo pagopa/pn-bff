@@ -32,6 +32,11 @@ public class InformalNotificationTimelineUtility {
     private static final String WEB_SOURCE_CHANNEL = "WEB";
 
     /**
+     * Event code of the progress meaning that an email is being delivered
+     */
+    private static final String EMAIL_IN_DELIVERY_CODE = "M004";
+
+    /**
      * Computes the communication outcomes by checking the presence of DELIVERED and INFORMAL_NOTIFICATION_VIEWED events
      *
      * @param timeline the notification timeline
@@ -112,7 +117,7 @@ public class InformalNotificationTimelineUtility {
 
     /**
      * Resolves a status history element relatedTimelineElements into the corresponding
-     * timeline events, keeping only the categories visible to the frontend
+     * timeline events, keeping only the events visible to the frontend
      *
      * @param status               the source status history element
      * @param timelineByElementId  the timeline indexed by element id
@@ -126,12 +131,38 @@ public class InformalNotificationTimelineUtility {
 
         for (String elementId : CommonUtility.safeList(status.getRelatedTimelineElements())) {
             InformalTimelineElementV1 element = timelineByElementId.get(elementId);
-            if (element != null && VISIBLE_CATEGORIES.contains(element.getCategory())) {
+            if (element != null && isVisible(element)) {
                 events.add(element);
             }
         }
 
         return events;
+    }
+
+    /**
+     * Checks whether a timeline event is exposed to the frontend
+     *
+     * @param event the timeline event
+     * @return true when the event category is visible or the event is an email in delivery
+     */
+    private static boolean isVisible(InformalTimelineElementV1 event) {
+        return VISIBLE_CATEGORIES.contains(event.getCategory()) || isEmailInDelivery(event);
+    }
+
+    /**
+     * Checks whether the event is the progress of an email being delivered.
+     *
+     * @param event the timeline event
+     * @return true when the event is an email progress with the in delivery code
+     */
+    private static boolean isEmailInDelivery(InformalTimelineElementV1 event) {
+        InformalTimelineElementDetailsV1 details = event.getDetails();
+
+        return event.getCategory() == InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_PROGRESS
+                && details != null
+                && BffNotificationChannelType.EMAIL.getValue().equals(details.getChannel())
+                && details.getDeliveryDetail() != null
+                && EMAIL_IN_DELIVERY_CODE.equals(details.getDeliveryDetail().getCode());
     }
 
     /**
