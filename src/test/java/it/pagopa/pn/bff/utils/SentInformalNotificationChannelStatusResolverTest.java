@@ -97,6 +97,22 @@ class SentInformalNotificationChannelStatusResolverTest {
     }
 
     @Test
+    void ioUnavailableWhenFeedbackIsSenderNotAllowed() {
+        InformalTimelineElementV1 feedback = feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "IO", ResponseStatus.KO, T1);
+        feedback.getDetails().deliveryDetail(new AnalogDeliveryDetail().code("SENDER_NOT_ALLOWED"));
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(feedback), BffNotificationChannelType.IO, BffChannelStatusV1.UNAVAILABLE);
+    }
+
+    @Test
+    void ioNotDeliveredWhenKoFeedbackHasOtherCode() {
+        InformalTimelineElementV1 feedback = feedbackEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "IO", ResponseStatus.KO, T1);
+        feedback.getDetails().deliveryDetail(new AnalogDeliveryDetail().code("GENERIC_ERROR"));
+
+        assertStatus(InformalNotificationStatusV1.PROCESSING, List.of(feedback), BffNotificationChannelType.IO, BffChannelStatusV1.NOT_DELIVERED);
+    }
+
+    @Test
     void smsCapsAtSentEvenWithDeliveredEvent() {
         List<InformalTimelineElementV1> timeline = List.of(
                 dispatchEvent(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE, "SMS", T1),

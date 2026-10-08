@@ -12,6 +12,9 @@ import java.util.*;
  */
 public class SentInformalNotificationChannelStatusResolver {
 
+    // IO feedback code: recipient not registered on IO or service disabled
+    private static final String SENDER_NOT_ALLOWED_CODE = "SENDER_NOT_ALLOWED";
+
     // Statuses allowed for each channel (except SEND)
     private static final Map<BffNotificationChannelType, Set<BffChannelStatusV1>> ALLOWED_STATUSES = Map.of(
             BffNotificationChannelType.IO, EnumSet.of(
@@ -103,16 +106,17 @@ public class SentInformalNotificationChannelStatusResolver {
             return BffChannelStatusV1.DELIVERED;
         }
 
-        // 4. Not delivered: the latest feedback for this channel is KO
+        // 4. Channel unavailable: skipped, or recipient not enabled on IO
+        if (supportsStatus(channel, BffChannelStatusV1.UNAVAILABLE)
+                && (hasCategory(channelEvents, InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_SKIP)
+                    || hasFeedbackWithCode(channelEvents, SENDER_NOT_ALLOWED_CODE))) {
+            return BffChannelStatusV1.UNAVAILABLE;
+        }
+
+        // 5. Not delivered: the latest feedback for this channel is KO
         if (supportsStatus(channel, BffChannelStatusV1.NOT_DELIVERED)
                 && latestFeedbackOutcome(channelEvents) == ResponseStatus.KO) {
             return BffChannelStatusV1.NOT_DELIVERED;
-        }
-
-        // 5. Channel unavailable
-        if (supportsStatus(channel, BffChannelStatusV1.UNAVAILABLE)
-                && hasCategory(channelEvents, InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_SKIP)) {
-            return BffChannelStatusV1.UNAVAILABLE;
         }
 
         // 6. Sent: no KO feedback yet (OK feedback or dispatch without feedback)
@@ -194,6 +198,14 @@ public class SentInformalNotificationChannelStatusResolver {
                 .orElse(null);
 
         return latestFeedback == null ? null : responseStatusOf(latestFeedback);
+    }
+
+    private static boolean hasFeedbackWithCode(List<InformalTimelineElementV1> channelEvents, String code) {
+        return channelEvents.stream().anyMatch(el ->
+                isFeedback(el.getCategory())
+                        && el.getDetails() != null
+                        && el.getDetails().getDeliveryDetail() != null
+                        && code.equals(el.getDetails().getDeliveryDetail().getCode()));
     }
 
     private static ResponseStatus responseStatusOf(InformalTimelineElementV1 element) {
