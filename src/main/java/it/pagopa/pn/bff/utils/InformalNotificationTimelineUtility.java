@@ -32,9 +32,13 @@ public class InformalNotificationTimelineUtility {
     private static final String WEB_SOURCE_CHANNEL = "WEB";
 
     /**
-     * Event code of the progress meaning that an email is being delivered
+     * For each channel, the code of the progress meaning that the message was sent successfully:
+     * the feedback of these channels is never OK, so this progress is the event that tells it
      */
-    private static final String EMAIL_IN_DELIVERY_CODE = "M004";
+    private static final Map<String, String> SENT_PROGRESS_CODES = Map.of(
+            BffNotificationChannelType.EMAIL.getValue(), "M004",
+            BffNotificationChannelType.IO.getValue(), "SENT_TO_IO"
+    );
 
     /**
      * Computes the communication outcomes by checking the presence of DELIVERED and INFORMAL_NOTIFICATION_VIEWED events
@@ -143,26 +147,32 @@ public class InformalNotificationTimelineUtility {
      * Checks whether a timeline event is exposed to the frontend
      *
      * @param event the timeline event
-     * @return true when the event category is visible or the event is an email in delivery
+     * @return true when the event category is visible or the event is a successful sending progress
      */
     private static boolean isVisible(InformalTimelineElementV1 event) {
-        return VISIBLE_CATEGORIES.contains(event.getCategory()) || isEmailInDelivery(event);
+        return VISIBLE_CATEGORIES.contains(event.getCategory()) || isSentProgress(event);
     }
 
     /**
-     * Checks whether the event is the progress of an email being delivered.
+     * Checks whether the event is the progress telling that the message was sent successfully
+     * on its channel
      *
      * @param event the timeline event
-     * @return true when the event is an email progress with the in delivery code
+     * @return true when the event is a progress with the sent code of its channel
      */
-    private static boolean isEmailInDelivery(InformalTimelineElementV1 event) {
+    private static boolean isSentProgress(InformalTimelineElementV1 event) {
         InformalTimelineElementDetailsV1 details = event.getDetails();
 
-        return event.getCategory() == InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_PROGRESS
-                && details != null
-                && BffNotificationChannelType.EMAIL.getValue().equals(details.getChannel())
-                && details.getDeliveryDetail() != null
-                && EMAIL_IN_DELIVERY_CODE.equals(details.getDeliveryDetail().getCode());
+        if (event.getCategory() != InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_PROGRESS
+                || details == null
+                || details.getChannel() == null
+                || details.getDeliveryDetail() == null) {
+            return false;
+        }
+
+        String sentCode = SENT_PROGRESS_CODES.get(details.getChannel());
+
+        return sentCode != null && sentCode.equals(details.getDeliveryDetail().getCode());
     }
 
     /**

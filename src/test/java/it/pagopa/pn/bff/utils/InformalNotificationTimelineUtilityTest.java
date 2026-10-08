@@ -134,6 +134,27 @@ class InformalNotificationTimelineUtilityTest {
     }
 
     @Test
+    void populateNotificationStatusHistoryKeepsOnlySentProgressOfEachChannel() {
+        List<BffInformalNotificationTimelineGroup> steps = populateSteps(
+                List.of(
+                        progress("e1", "EMAIL", "M003"),
+                        progress("e2", "EMAIL", "M004"),
+                        progress("e3", "IO", "SENT_TO_IO"),
+                        progress("e4", "IO", "M004"),
+                        progress("e5", "EMAIL", "SENT_TO_IO"),
+                        progress("e6", "PEC", null),
+                        progress("e7", null, "M004")
+                ),
+                List.of("e1", "e2", "e3", "e4", "e5", "e6", "e7"));
+
+        assertEquals(2, steps.size());
+        assertEquals(BffNotificationChannelType.IO, steps.get(0).getChannel());
+        assertEquals(List.of("e3"), elementIds(steps.get(0)));
+        assertEquals(BffNotificationChannelType.EMAIL, steps.get(1).getChannel());
+        assertEquals(List.of("e2"), elementIds(steps.get(1)));
+    }
+
+    @Test
     void populateNotificationStatusHistoryKeepsDuplicatesAndReusesTimelineAcrossStatuses() {
         FullSentInformalNotificationV1 notification = new FullSentInformalNotificationV1()
                 .timeline(List.of(
