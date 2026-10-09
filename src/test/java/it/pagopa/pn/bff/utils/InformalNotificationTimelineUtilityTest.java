@@ -120,6 +120,41 @@ class InformalNotificationTimelineUtilityTest {
     }
 
     @Test
+    void populateNotificationStatusHistoryGroupsEmailProgressWithTheOtherEmailEvents() {
+        List<BffInformalNotificationTimelineGroup> steps = populateSteps(
+                List.of(
+                        progress("e1", "EMAIL", "M004"),
+                        event("e2", InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_FEEDBACK, "EMAIL")
+                ),
+                List.of("e1", "e2"));
+
+        assertEquals(1, steps.size());
+        assertEquals(BffNotificationChannelType.EMAIL, steps.get(0).getChannel());
+        assertEquals(List.of("e2", "e1"), elementIds(steps.get(0)));
+    }
+
+    @Test
+    void populateNotificationStatusHistoryKeepsOnlySentProgressOfEachChannel() {
+        List<BffInformalNotificationTimelineGroup> steps = populateSteps(
+                List.of(
+                        progress("e1", "EMAIL", "M003"),
+                        progress("e2", "EMAIL", "M004"),
+                        progress("e3", "IO", "SENT_TO_IO"),
+                        progress("e4", "IO", "M004"),
+                        progress("e5", "EMAIL", "SENT_TO_IO"),
+                        progress("e6", "PEC", null),
+                        progress("e7", null, "M004")
+                ),
+                List.of("e1", "e2", "e3", "e4", "e5", "e6", "e7"));
+
+        assertEquals(2, steps.size());
+        assertEquals(BffNotificationChannelType.IO, steps.get(0).getChannel());
+        assertEquals(List.of("e3"), elementIds(steps.get(0)));
+        assertEquals(BffNotificationChannelType.EMAIL, steps.get(1).getChannel());
+        assertEquals(List.of("e2"), elementIds(steps.get(1)));
+    }
+
+    @Test
     void populateNotificationStatusHistoryKeepsDuplicatesAndReusesTimelineAcrossStatuses() {
         FullSentInformalNotificationV1 notification = new FullSentInformalNotificationV1()
                 .timeline(List.of(
@@ -217,6 +252,15 @@ class InformalNotificationTimelineUtilityTest {
                 .elementId(elementId)
                 .category(InformalTimelineElementCategoryV1.INFORMAL_NOTIFICATION_VIEWED)
                 .details(new InformalTimelineElementDetailsV1().sourceChannel(sourceChannel));
+    }
+
+    private static InformalTimelineElementV1 progress(String elementId, String channel, String code) {
+        return new InformalTimelineElementV1()
+                .elementId(elementId)
+                .category(InformalTimelineElementCategoryV1.SEND_DIGITAL_MESSAGE_PROGRESS)
+                .details(new InformalTimelineElementDetailsV1()
+                        .channel(channel)
+                        .deliveryDetail(new AnalogDeliveryDetail().code(code)));
     }
 
     private static List<String> elementIds(BffInformalNotificationTimelineGroup group) {
