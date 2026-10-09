@@ -108,6 +108,22 @@ public interface CxTypeMapper {
     it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.model.CxTypeAuthFleet convertDeliveryPushCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
 
     /**
+     * Map bff CxTypeAuthFleet to the delivery informal pa web CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet convertDeliveryInformalPAWebCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff CxTypeAuthFleet to the delivery informal pa B2B CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.model.CxTypeAuthFleet convertDeliveryInformalPAB2BCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType);
+
+    /**
      * Map bff CxTypeAuthFleet to the mandate CxTypeAuthFleet
      *
      * @param cxType bff CxTypeAuthFleet
