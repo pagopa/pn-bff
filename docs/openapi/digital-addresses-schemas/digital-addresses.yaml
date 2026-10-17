@@ -1,9 +1,10 @@
 info:
   version: v1.0
+# TODO WHATSAPP: sostituire feature/whatsapp-courtesy con il commit di merge di pn-user-attributes
 components:
   parameters:
     BffSenderId:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/5bd6bcc345188304fd51897b231e04804b90325d/docs/openapi/pn-address-book-common-components.yaml#/components/parameters/senderId'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/feature/whatsapp-courtesy/docs/openapi/pn-address-book-common-components.yaml#/components/parameters/senderId'
   schemas:
     BffUserAddresses:
       type: array
@@ -42,6 +43,7 @@ components:
       enum:
         - EMAIL
         - SMS
+        - WHATSAPP
         - PEC
         - APPIO
         - SERCQ_SEND
@@ -53,7 +55,7 @@ components:
         - COURTESY
 
     BffAddressVerificationRequest:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/5bd6bcc345188304fd51897b231e04804b90325d/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerification'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/feature/whatsapp-courtesy/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerification'
 
     BffAddressVerificationResponse:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/5bd6bcc345188304fd51897b231e04804b90325d/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerificationResponse'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-user-attributes/feature/whatsapp-courtesy/docs/openapi/pn-address-book-common-components.yaml#/components/schemas/AddressVerificationResponse'

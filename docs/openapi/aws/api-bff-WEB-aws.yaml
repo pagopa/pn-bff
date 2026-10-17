@@ -8860,6 +8860,7 @@ components:
       enum:
         - EMAIL
         - SMS
+        - WHATSAPP
         - PEC
         - APPIO
         - SERCQ_SEND
