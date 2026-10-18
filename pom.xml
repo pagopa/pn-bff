@@ -1097,7 +1097,7 @@
                         <configuration>
                             <!-- TODO WHATSAPP: sostituire feature/whatsapp-courtesy con il commit di merge di pn-user-attributes -->
                             <inputSpec>
-                                https://raw.githubusercontent.com/pagopa/pn-user-attributes/feature/whatsapp-courtesy/docs/openapi/pn-address-book-api-internal.yaml
+                                https://raw.githubusercontent.com/AlessioBiasutto/pn-user-attributes/feature/whatsapp-courtesy/docs/openapi/pn-address-book-api-internal.yaml
                             </inputSpec>
                             <generatorName>java</generatorName>
                             <library>webclient</library>
