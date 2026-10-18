@@ -50,4 +50,26 @@ public class AddressesMapperTest {
             assertEquals(bffUserAddress.getSenderId(), courtesyAddress.getSenderId());
         }
     }
+
+    @Test
+    void testMapWhatsappCourtesyAddress() {
+        CourtesyDigitalAddress courtesyAddress = new CourtesyDigitalAddress()
+                .addressType(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyAddressType.COURTESY)
+                .recipientId("PF-123")
+                .senderId("default")
+                .channelType(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyChannelType.WHATSAPP)
+                .value("+393331234567");
+
+        BffUserAddress bffUserAddress = AddressesMapper.addressesMapper.mapCourtesyAddress(courtesyAddress);
+
+        assertEquals(BffChannelType.WHATSAPP, bffUserAddress.getChannelType());
+        assertEquals("+393331234567", bffUserAddress.getValue());
+    }
+
+    @Test
+    void testMapWhatsappChannelType() {
+        assertEquals(it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.model.CourtesyChannelType.WHATSAPP,
+                ChannelTypeMapper.channelTypeMapper.mapCourtesyChannelType(BffChannelType.WHATSAPP));
+        org.junit.jupiter.api.Assertions.assertNull(ChannelTypeMapper.channelTypeMapper.mapLegalChannelType(BffChannelType.WHATSAPP));
+    }
 }
