@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: wWtASHWVsJrhLwcTPMVTAWPt5Z3ce/VEQxSl5XCSqj4=
+  version: SSUTUdF75jEOpinv0vIAxcJ0VimL8di3KtM73Ohe8Y4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -18,6 +18,8 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -79,6 +81,8 @@ paths:
       tags:
         - NotificationSent
       operationId: newSentNotificationV1
+      x-pn-allowed-cx-types:
+        - PA
       requestBody:
         required: true
         content:
@@ -152,6 +156,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -213,6 +219,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationTimelineV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -282,6 +290,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationDocumentV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -356,6 +366,8 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationPaymentV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -434,6 +446,8 @@ paths:
       tags:
         - NotificationSent
       operationId: notificationCancellationV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -505,6 +519,8 @@ paths:
       tags:
         - NotificationSent
       operationId: preSignedUploadV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -576,6 +592,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: searchReceivedNotificationsV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -643,6 +662,8 @@ paths:
       tags:
         - NotificationReceived
       operationId: searchReceivedDelegatedNotificationsV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -713,6 +734,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -784,6 +808,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationTimelineV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -854,6 +881,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationDocumentV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -929,6 +959,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationPaymentV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1003,6 +1036,9 @@ paths:
       tags:
         - NotificationReceived
       operationId: checkAarQrCodeV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -1061,6 +1097,8 @@ paths:
       tags:
         - NotificationReceived
       operationId: checkTppV1
+      x-pn-allowed-cx-types:
+        - PF
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1133,6 +1171,8 @@ paths:
       tags:
         - ApiKeys
       operationId: getApiKeysV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1200,6 +1240,8 @@ paths:
       tags:
         - ApiKeys
       operationId: newApiKeyV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -1265,6 +1307,8 @@ paths:
       tags:
         - ApiKeys
       operationId: deleteApiKeyV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1335,6 +1379,8 @@ paths:
       tags:
         - ApiKeys
       operationId: changeStatusApiKeyV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1411,6 +1457,8 @@ paths:
       tags:
         - PublicKeys
       operationId: getPublicKeysV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1484,6 +1532,8 @@ paths:
       tags:
         - PublicKeys
       operationId: newPublicKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -1549,6 +1599,8 @@ paths:
       tags:
         - PublicKeys
       operationId: deletePublicKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1627,6 +1679,8 @@ paths:
       tags:
         - PublicKeys
       operationId: changeStatusPublicKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1704,6 +1758,8 @@ paths:
       tags:
         - PublicKeys
       operationId: rotatePublicKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1790,6 +1846,8 @@ paths:
       tags:
         - PublicKeys
       operationId: checkIssuerPublicKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
@@ -1855,6 +1913,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: getVirtualKeysV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -1928,6 +1988,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: newVirtualKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -2005,6 +2067,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: deleteVirtualKeyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2081,6 +2145,8 @@ paths:
       tags:
         - VirtualKeys
       operationId: changeStatusVirtualKeysV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2161,6 +2227,8 @@ paths:
       summary: Get Institutions list
       description: This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2222,6 +2290,8 @@ paths:
         This operation retrieves all active products associated with the
         specified institution and user.
       operationId: getInstitutionProductsV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2281,6 +2351,8 @@ paths:
       summary: Get PA Groups list
       description: This operation retrieves the groups from Self Care.
       operationId: getPAGroupsV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2345,6 +2417,8 @@ paths:
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2390,6 +2464,8 @@ paths:
     put:
       description: Update the additional language chosen by pa
       operationId: changeAdditionalLang
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2455,6 +2531,8 @@ paths:
       summary: Get PG Groups list
       description: This operation retrieves the PG Groups from Self Care.
       operationId: getPGGroupsV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2520,6 +2598,9 @@ paths:
       summary: Get PA list
       description: This operation retrieves the list of PA that use PN
       operationId: getPAListV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2587,6 +2668,10 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
+      x-pn-allowed-cx-types:
+        - PA
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2628,6 +2713,10 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
+      x-pn-allowed-cx-types:
+        - PA
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -2683,6 +2772,8 @@ paths:
       tags:
         - UserConsents
       operationId: getPgTosPrivacyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2724,6 +2815,8 @@ paths:
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -2784,6 +2877,10 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       operationId: getCurrentStatusV1
+      x-pn-allowed-cx-types:
+        - PA
+        - PF
+        - PG
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -2845,6 +2942,10 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       operationId: getStatusHistoryV1
+      x-pn-allowed-cx-types:
+        - PA
+        - PF
+        - PG
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -2908,6 +3009,10 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       operationId: getLegalFactV1
+      x-pn-allowed-cx-types:
+        - PA
+        - PF
+        - PG
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -2977,6 +3082,9 @@ paths:
       tags:
         - Payments
       operationId: getPaymentsInfoV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       x-pagopa-monitoring-group: <none>
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
@@ -3041,6 +3149,9 @@ paths:
       tags:
         - Payments
       operationId: paymentsCartV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       x-pagopa-monitoring-group: <none>
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
@@ -3118,6 +3229,8 @@ paths:
       tags:
         - Payments
       operationId: paymentsTppV1
+      x-pn-allowed-cx-types:
+        - PF
       x-pagopa-monitoring-group: <none>
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
@@ -3188,6 +3301,9 @@ paths:
       tags:
         - Addresses
       operationId: getAddressesV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
@@ -3241,6 +3357,9 @@ paths:
       tags:
         - Addresses
       operationId: createOrUpdateAddressV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       x-pagopa-pn-custom-throttling-group: recapiti-by-cx-id
@@ -3324,6 +3443,9 @@ paths:
       tags:
         - Addresses
       operationId: deleteAddressV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3404,6 +3526,8 @@ paths:
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       operationId: countMandatesByDelegateV1
+      x-pn-allowed-cx-types:
+        - PG
       parameters:
         - $ref: '#/components/parameters/BffQueryStatus'
       responses:
@@ -3455,6 +3579,9 @@ paths:
       tags:
         - Mandate
       operationId: createMandateV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       requestBody:
@@ -3509,6 +3636,9 @@ paths:
       tags:
         - Mandate
       operationId: acceptMandateV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3566,6 +3696,8 @@ paths:
       tags:
         - Mandate
       operationId: updateMandateV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3623,6 +3755,9 @@ paths:
       tags:
         - Mandate
       operationId: rejectMandateV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3674,6 +3809,9 @@ paths:
       tags:
         - Mandate
       operationId: revokeMandateV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3728,6 +3866,8 @@ paths:
       tags:
         - Mandate
       operationId: getMandatesByDelegateV1
+      x-pn-allowed-cx-types:
+        - PF
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3772,6 +3912,8 @@ paths:
       tags:
         - Mandate
       operationId: searchMandatesByDelegateV1
+      x-pn-allowed-cx-types:
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -3832,6 +3974,9 @@ paths:
       tags:
         - Mandate
       operationId: getMandatesByDelegatorV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       responses:
@@ -3887,6 +4032,8 @@ paths:
       tags:
         - SenderDashboard
       operationId: getDashboardDataV1
+      x-pn-allowed-cx-types:
+        - PA
       parameters:
         - $ref: '#/components/parameters/BffSenderDashboardPathCxType'
         - $ref: '#/components/parameters/BffSenderDashboardPathCxId'
@@ -3961,6 +4108,9 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4034,6 +4184,9 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationDocumentV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4113,6 +4266,9 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationPaymentAttachmentV1
+      x-pn-allowed-cx-types:
+        - PF
+        - PG
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4193,6 +4349,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getListCampaignsV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4253,6 +4411,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getCampaignDetailV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4320,6 +4480,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: searchInformalSentNotificationV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4393,6 +4555,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4460,6 +4624,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationTimelineV1
+      x-pn-allowed-cx-types:
+        - PA
       parameters:
         - $ref: '#/components/parameters/pathInformalIun'
       responses:
@@ -4527,6 +4693,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationDocumentV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -4600,6 +4768,8 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationAttachmentV1
+      x-pn-allowed-cx-types:
+        - PA
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:

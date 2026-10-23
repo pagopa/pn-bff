@@ -26,6 +26,7 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -74,6 +75,7 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationDocumentV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -123,6 +125,7 @@ paths:
       tags:
         - RecipientInformalNotifications
       operationId: getReceivedInformalNotificationPaymentAttachmentV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

@@ -31,6 +31,7 @@ paths:
       description: |-
         This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -66,6 +67,7 @@ paths:
       description: |-
         This operation retrieves all active products associated with the specified institution and user.
       operationId: getInstitutionProductsV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -101,6 +103,7 @@ paths:
       description: |-
         This operation retrieves the groups from Self Care.
       operationId: getPAGroupsV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -139,6 +142,7 @@ paths:
     get:
       description: Retrieve the additional language chosen by pa
       operationId: getAdditionalLang
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -167,6 +171,7 @@ paths:
     put:
       description: Update the additional language chosen by pa
       operationId: changeAdditionalLang
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

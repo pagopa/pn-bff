@@ -35,6 +35,7 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                    # ONLY EXTERNAL
 #       - bearerAuth: [ ]                           # ONLY EXTERNAL
       parameters:
@@ -79,6 +80,7 @@ paths:
       tags:
         - NotificationSent
       operationId: newSentNotificationV1
+      x-pn-allowed-cx-types: [PA]
       parameters: # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/uidAuthFleet'                # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
@@ -124,6 +126,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -158,6 +161,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationTimelineV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -199,6 +203,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationDocumentV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -242,6 +247,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationPaymentV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -287,6 +293,7 @@ paths:
       tags:
         - NotificationSent
       operationId: notificationCancellationV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -330,6 +337,7 @@ paths:
       tags:
         - NotificationSent
       operationId: preSignedUploadV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL

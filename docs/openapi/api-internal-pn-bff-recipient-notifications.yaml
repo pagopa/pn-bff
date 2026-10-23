@@ -34,6 +34,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: searchReceivedNotificationsV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                    # ONLY EXTERNAL
 #       - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -77,6 +78,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: searchReceivedDelegatedNotificationsV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                    # ONLY EXTERNAL
 #       - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -122,6 +124,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -168,6 +171,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationTimelineV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -212,6 +216,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationDocumentV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -258,6 +263,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: getReceivedNotificationPaymentV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -303,6 +309,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: checkAarQrCodeV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -336,6 +343,7 @@ paths:
       tags:
         - NotificationReceived
       operationId: checkTppV1
+      x-pn-allowed-cx-types: [PF]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
