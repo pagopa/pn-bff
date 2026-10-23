@@ -37,7 +37,7 @@ paths:
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
       operationId: getCurrentStatusV1
-      x-pn-allowed-cx-types: [PA, PF, PG]
+      x-pn-allowed-cx-types: [PA, PF, PG, BS]
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
@@ -68,7 +68,7 @@ paths:
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
       operationId: getStatusHistoryV1
-      x-pn-allowed-cx-types: [PA, PF, PG]
+      x-pn-allowed-cx-types: [PA, PF, PG, BS]
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'
@@ -103,7 +103,7 @@ paths:
       security:                                                                                         # ONLY EXTERNAL
         - bearerAuth: [ ]                                                                               # ONLY EXTERNAL
       operationId: getLegalFactV1
-      x-pn-allowed-cx-types: [PA, PF, PG]
+      x-pn-allowed-cx-types: [PA, PF, PG, BS]
       x-api-permissions:
         - 'api-key-read'
         - 'log-downtime-read'

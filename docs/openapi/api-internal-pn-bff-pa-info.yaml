@@ -31,7 +31,7 @@ paths:
       description: |-
         This operation retrieves the institutions from Self Care.
       operationId: getInstitutionsV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -67,7 +67,7 @@ paths:
       description: |-
         This operation retrieves all active products associated with the specified institution and user.
       operationId: getInstitutionProductsV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

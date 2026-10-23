@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: SSUTUdF75jEOpinv0vIAxcJ0VimL8di3KtM73Ohe8Y4=
+  version: +VeZSs1JiYRwV+44WmOiMZlOTfL9kZhJ1ctwHPr7xzA=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -20,6 +20,7 @@ paths:
       operationId: searchSentNotificationsV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -158,6 +159,7 @@ paths:
       operationId: getSentNotificationV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -221,6 +223,7 @@ paths:
       operationId: getSentNotificationTimelineV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -292,6 +295,7 @@ paths:
       operationId: getSentNotificationDocumentV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -368,6 +372,7 @@ paths:
       operationId: getSentNotificationPaymentV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       parameters:
@@ -2229,6 +2234,7 @@ paths:
       operationId: getInstitutionsV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2292,6 +2298,7 @@ paths:
       operationId: getInstitutionProductsV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
@@ -2881,6 +2888,7 @@ paths:
         - PA
         - PF
         - PG
+        - BS
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -2946,6 +2954,7 @@ paths:
         - PA
         - PF
         - PG
+        - BS
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -3013,6 +3022,7 @@ paths:
         - PA
         - PF
         - PG
+        - BS
       x-api-permissions:
         - api-key-read
         - log-downtime-read
@@ -4034,6 +4044,7 @@ paths:
       operationId: getDashboardDataV1
       x-pn-allowed-cx-types:
         - PA
+        - BS
       parameters:
         - $ref: '#/components/parameters/BffSenderDashboardPathCxType'
         - $ref: '#/components/parameters/BffSenderDashboardPathCxId'

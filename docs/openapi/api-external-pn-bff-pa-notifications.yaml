@@ -35,7 +35,7 @@ paths:
       tags:
         - NotificationSent
       operationId: searchSentNotificationsV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
       security:                                    # ONLY EXTERNAL
        - bearerAuth: [ ]                           # ONLY EXTERNAL
       parameters:
@@ -117,7 +117,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -148,7 +148,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationTimelineV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -186,7 +186,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationDocumentV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -226,7 +226,7 @@ paths:
       tags:
         - NotificationSent
       operationId: getSentNotificationPaymentV1
-      x-pn-allowed-cx-types: [PA]
+      x-pn-allowed-cx-types: [PA, BS]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
