@@ -86,6 +86,37 @@ Per ogni blocco con marker verifica che:
 Un marker che produce YAML o riferimenti non validi è
 `[HIGH][CONTRACT]`. Usa una severità bloccante solo con un bypass concreto.
 
+## Tipi utente ammessi (`x-pn-allowed-cx-types`)
+
+Ogni operazione dei file internal elencati in `codegen/config.json` con
+`intendedUsage: WEB` deve dichiarare l'extension `x-pn-allowed-cx-types`.
+L'extension indica quali tipi utente (`cx_type`) possono invocare l'operazione.
+
+Da questi tag derivano le policy del `jwtAuthorizer` di `pn-auth-fleet`,
+salvate in `docs/openapi/policies/generated/<cxType>Policy.json`.
+Un'operazione senza tag non compare in nessuna policy, quindi viene negata a
+tutti gli utenti (default deny).
+
+Per ogni operazione aggiunta o modificata verifica che:
+
+- `x-pn-allowed-cx-types` sia presente e non vuoto;
+- contenga soltanto i valori `PF`, `PA`, `PG`, `BS`;
+- i tipi ammessi siano coerenti con il dominio dell'operazione, per esempio
+  notifiche inviate a `PA`, deleghe a `PF`/`PG`, API key a `PA`/`PG`;
+- i file `docs/openapi/policies/generated/*.json` siano aggiornati nella stessa
+  PR.
+
+Segnala come `[BLOCKING][AUTHORIZATION]`:
+
+- una nuova operazione senza `x-pn-allowed-cx-types`;
+- la rimozione dell'extension da un'operazione esistente;
+- un valore fuori da `PF`, `PA`, `PG`, `BS`;
+- l'aggiunta di un `cx_type` a un'operazione esistente senza una motivazione
+  esplicita nella PR, perché amplia il perimetro di accesso.
+
+Segnala come `[HIGH][AUTHORIZATION]` tag modificati senza il corrispondente
+aggiornamento delle policy in `docs/openapi/policies/generated/`.
+
 ## `$ref` e specifiche remote
 
 Verifica che:
