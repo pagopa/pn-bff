@@ -34,6 +34,7 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
+      x-pn-allowed-cx-types: [PA, PF, PG]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -58,6 +59,7 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
+      x-pn-allowed-cx-types: [PA, PF, PG]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
@@ -83,6 +85,7 @@ paths:
       tags:
         - UserConsents
       operationId: getPgTosPrivacyV1
+      x-pn-allowed-cx-types: [PG]
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -107,6 +110,7 @@ paths:
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
+      x-pn-allowed-cx-types: [PG]
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       requestBody:

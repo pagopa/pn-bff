@@ -31,6 +31,7 @@ paths:
       description: |-
         This operation retrieves the PG Groups from Self Care.
       operationId: getPGGroupsV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:
@@ -71,6 +72,7 @@ paths:
       description: |-
         This operation retrieves the list of PA that use PN
       operationId: getPAListV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

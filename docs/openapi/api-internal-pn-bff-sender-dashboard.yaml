@@ -34,6 +34,7 @@ paths:
       tags:
         - SenderDashboard
       operationId: getDashboardDataV1
+      x-pn-allowed-cx-types: [PA, BS]
       parameters:
         # Header params
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'             # NO EXTERNAL
