@@ -18,7 +18,8 @@
         "api-internal-pn-bff-recipient-informal-notifications.yaml",
         "api-internal-pn-bff-sender-informal-notifications.yaml"
       ],
-      "servicePath": "bff"
+      "servicePath": "bff",
+      "generatePolicies": true
     },
     {
       "intendedUsage": "PUBLIC",

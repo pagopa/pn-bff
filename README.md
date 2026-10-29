@@ -54,10 +54,12 @@ tag.
 
 ### Aggiornamento delle policy
 
-Per ora le policy sono messe a mano in `docs/openapi/policies/generated`.
-
-Prossimamente la generazione passerà a `pn-codegen`: rigenerando l'OpenAPI per AWS si aggiorneranno
-anche le policy, senza passaggi manuali.
+Le policy non vanno modificate a mano: le genera il `policyGenerator` di
+[`pn-codegen`](https://github.com/pagopa/pn-codegen), abilitato con `"generatePolicies": true` sul
+blocco `WEB` di `codegen/config.json`. Rigenerando l'OpenAPI con `scripts/generate-code.sh`, il
+generator legge `x-pn-allowed-cx-types` dal bundle AWS e riscrive un file per ogni `cx_type`
+presente nei tag (i path parameter diventano `*` nella `Resource`). I file di `cx_type` non più
+usati da nessuna operazione vengono rimossi.
 
 Le policy di questo repo vengono poi copiate nel `jwtAuthorizer` dallo script di CI/CD di
 `pn-auth-fleet`.
