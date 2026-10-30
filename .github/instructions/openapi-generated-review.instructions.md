@@ -134,10 +134,15 @@ policy IAM che il `jwtAuthorizer` di `pn-auth-fleet` restituisce per ogni
 - nessuna policy contenga risorse non presenti nel file AWS o assegnate a un
   `cx_type` non ammesso dal tag;
 - non compaiano wildcard più ampie del singolo path, per esempio `/*` o
-  `/{stage}/*`.
+  `/{stage}/*`;
+- ogni operazione non ammessa per un `cx_type` ma coperta da una wildcard della
+  sua policy (es. `GET /v1/notifications/received/delegated` coperta da
+  `GET /v1/notifications/received/*`) compaia nello statement `Deny` di quella
+  policy, e lo statement `Deny` contenga soltanto operazioni di questo tipo.
 
 Segnala come `[BLOCKING][AUTHORIZATION]` una policy che concede una risorsa a un
-`cx_type` non dichiarato nel tag, oppure una wildcard più ampia del path.
+`cx_type` non dichiarato nel tag, una wildcard più ampia del path, oppure
+un'operazione coperta da una wildcard ma assente dallo statement `Deny`.
 
 Segnala come `[HIGH][AUTHORIZATION]` un'operazione taggata assente dalla policy:
 con il default deny il tipo utente ammesso non riesce a chiamarla.

@@ -36,6 +36,13 @@
           "arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/POST/v1/payments/info",
           "arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/PUT/v2/tos-privacy"
         ]
+      },
+      {
+        "Action": "execute-api:Invoke",
+        "Effect": "Deny",
+        "Resource": [
+          "arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/GET/v1/notifications/received/delegated"
+        ]
       }
     ]
   },

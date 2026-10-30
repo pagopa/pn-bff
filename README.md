@@ -61,5 +61,11 @@ generator legge `x-pn-allowed-cx-types` dal bundle AWS e riscrive un file per og
 presente nei tag (i path parameter diventano `*` nella `Resource`). I file di `cx_type` non più
 usati da nessuna operazione vengono rimossi.
 
+In IAM `*` copre anche le rotte statiche con lo stesso prefisso: `GET /v1/notifications/received/*`
+copre anche `GET /v1/notifications/received/delegated`. Per questo ogni policy ha, oltre allo
+statement `Allow`, uno statement `Deny` con le rotte non consentite al `cx_type` ma coperte da una
+sua wildcard (in IAM il `Deny` prevale). Se un `Deny` bloccasse anche una rotta consentita, la
+generazione fallisce e i path vanno rivisti.
+
 Le policy di questo repo vengono poi copiate nel `jwtAuthorizer` dallo script di CI/CD di
 `pn-auth-fleet`.
