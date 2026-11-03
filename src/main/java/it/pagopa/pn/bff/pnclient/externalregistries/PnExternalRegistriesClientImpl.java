@@ -10,6 +10,9 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.m
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.api.InfoPtApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtDelegationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtInstitutionsResponse;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class PnExternalRegistriesClientImpl {
     private final InfoPgApi infoPgApi;
     private final PaymentInfoApi paymentInfoApi;
     private final AdditionalLangApi additionalLangApi;
+    private final InfoPtApi infoPtApi;
 
     public Flux<PaGroup> getPaGroups(String xPagopaPnUid,
                                      String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
@@ -100,5 +104,25 @@ public class PnExternalRegistriesClientImpl {
     public Mono<AdditionalLanguages> changeAdditionalLanguages(AdditionalLanguages additionalLanguages) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "putAdditionalLang");
         return additionalLangApi.putAdditionalLang(additionalLanguages);
+    }
+
+    public Mono<PtInstitutionsResponse> getPtInstitutions(String xPagopaPnUid,
+                                                          it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet xPagopaPnCxType,
+                                                          String xPagopaPnCxId,
+                                                          String search,
+                                                          PtDelegationStatus status,
+                                                          Integer limit,
+                                                          String lastKey) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPtInstitutions");
+        return infoPtApi.getPtInstitutions(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnUid,
+                "WEB",
+                search,
+                status,
+                limit,
+                lastKey
+        );
     }
 }
