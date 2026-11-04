@@ -169,4 +169,12 @@ public interface CxTypeMapper {
     @ValueMapping(source = "BS", target = MappingConstants.NULL)
     @ValueMapping(source = "PT", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.virtualkey_pg.model.CxTypeAuthFleet convertVirtualKeysPGCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet cxType);
+
+    /**
+     * Map bff CxTypeAuthFleet to the external-registries pt CxTypeAuthFleet
+     *
+     * @param cxType bff CxTypeAuthFleet
+     * @return the mapped CxTypeAuthFleet
+     */
+    it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet convertExternalRegistriesPtCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.pt_institutions.CxTypeAuthFleet cxType);
 }

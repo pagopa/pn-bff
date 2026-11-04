@@ -215,4 +215,14 @@ class CxTypeMapperTest {
         assertNotNull(result);
         assertEquals(cxType.getValue(), result.getValue());
     }
+
+    @ParameterizedTest
+    @EnumSource(value = it.pagopa.pn.bff.generated.openapi.server.v1.dto.pt_institutions.CxTypeAuthFleet.class)
+    void testConvertExternalRegistriesPtCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.pt_institutions.CxTypeAuthFleet cxType) {
+        it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet result =
+                CxTypeMapper.cxTypeMapper.convertExternalRegistriesPtCXType(cxType);
+
+        assertNotNull(result);
+        assertEquals(cxType.getValue(), result.getValue());
+    }
 }
