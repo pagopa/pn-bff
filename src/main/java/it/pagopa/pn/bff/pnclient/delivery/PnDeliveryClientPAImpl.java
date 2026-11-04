@@ -14,6 +14,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.mode
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.LegalNotificationSearchResponse;
 import it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.model.NotificationStatusV26;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -115,7 +116,7 @@ public class PnDeliveryClientPAImpl {
                 xPagopaPnUid,
                 xPagopaPnCxType,
                 xPagopaPnCxId,
-                "WEB",
+                CommonUtility.SourceChannel.WEB.name(),
                 NewNotificationRequestV26,
                 xPagopaPnCxGroups,
                 null,

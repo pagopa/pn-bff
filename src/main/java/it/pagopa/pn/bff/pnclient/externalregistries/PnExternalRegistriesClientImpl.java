@@ -13,6 +13,7 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.api.InfoPtApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtDelegationStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtInstitutionsResponse;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -67,13 +68,13 @@ public class PnExternalRegistriesClientImpl {
     public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getUserInstitutions");
         return infoPaApi
-                .getUserInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, null);
+                .getUserInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, CommonUtility.SourceChannel.WEB.name(), xPagopaPnCxGroups, null);
     }
 
     public Flux<ProductResourcePN> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutionProducts");
         return infoPaApi
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxId, xPagopaPnCxGroups, null);
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, CommonUtility.SourceChannel.WEB.name(), xPagopaPnCxId, xPagopaPnCxGroups, null);
     }
 
     public Flux<PaymentInfoV21> getPaymentsInfo(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<PaymentInfoRequest> paymentInfoRequest) {
@@ -118,7 +119,7 @@ public class PnExternalRegistriesClientImpl {
                 xPagopaPnCxId,
                 xPagopaPnCxType,
                 xPagopaPnUid,
-                "WEB",
+                CommonUtility.SourceChannel.WEB.name(),
                 search,
                 status,
                 limit,
