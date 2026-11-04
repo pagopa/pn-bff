@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: syIVOSxqB32EZyYkV7coxUzKdK41ZxHQU7hoLskCh/Q=
+  version: drsiw1r28K4EjYupnzioVf3aAdGcuRwKFAwwVuq+wJs=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -4671,6 +4671,73 @@ paths:
         connectionType: VPC_LINK
         timeoutInMillis: 29000
         type: http_proxy
+  /v1/pt/institutions:
+    get:
+      summary: Get Institutions that delegated the PT
+      description: >-
+        Restituisce l'elenco paginato degli Enti da cui il Partner Tecnologico è
+        stato delegato,
+
+        con lo stato della delega
+      operationId: getPtInstitutionsV1
+      tags:
+        - PtInstitutions
+      parameters:
+        - $ref: '#/components/parameters/BffPtInstitutionsQuerySearch'
+        - $ref: '#/components/parameters/BffPtInstitutionsQueryStatus'
+        - $ref: '#/components/parameters/BffPtInstitutionsQueryLimit'
+        - $ref: '#/components/parameters/BffPtInstitutionsQueryLastKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BffPtInstitutionsResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_jwtAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pt/institutions
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /v1/pt/institutions API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/v1/pt/institutions
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
 components:
   parameters:
     notificationSearchStartDate:
@@ -5104,6 +5171,47 @@ components:
         consegna (true = consegnate, false = non consegnate).
       schema:
         type: boolean
+    BffPtInstitutionsQuerySearch:
+      name: search
+      in: query
+      description: >-
+        Se valorizzato restituisce gli Enti la cui ragione sociale o il cui
+        codice fiscale contengono il valore, senza distinzione tra maiuscole e
+        minuscole
+      required: false
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 250
+    BffPtInstitutionsQueryStatus:
+      name: status
+      in: query
+      description: >-
+        Se valorizzato restituisce solo gli Enti la cui delega è nello stato
+        indicato, altrimenti restituisce le deleghe in qualsiasi stato
+      required: false
+      schema:
+        $ref: '#/components/schemas/BffPtDelegationStatus'
+    BffPtInstitutionsQueryLimit:
+      name: limit
+      in: query
+      description: Numero massimo di elementi restituiti
+      required: false
+      schema:
+        type: number
+        minimum: 1
+        maximum: 50
+        default: 10
+    BffPtInstitutionsQueryLastKey:
+      name: lastKey
+      in: query
+      description: >-
+        Chiave restituita dalla pagina precedente, da usare per leggere la
+        pagina successiva
+      required: false
+      schema:
+        type: string
+        maxLength: 1024
   schemas:
     NotificationStatusV26:
       type: string
@@ -10475,6 +10583,60 @@ components:
           items:
             $ref: >-
               #/components/schemas/BffInformalNotificationTimelineStatusHistoryV1
+    BffPtDelegationStatus:
+      title: Stato della delega
+      description: >-
+        Stato della delega: * `ACTIVE` - delega attiva * `REVOKED` - delega
+        revocata
+      type: string
+      enum:
+        - ACTIVE
+        - REVOKED
+    BffPtInstitution:
+      title: Ente delegante
+      type: object
+      required:
+        - institutionId
+        - institutionName
+        - institutionTaxCode
+        - delegationId
+        - status
+        - statusChangedAt
+      properties:
+        institutionId:
+          type: string
+          description: Id SelfCare dell'Ente
+        institutionName:
+          type: string
+          description: Ragione sociale dell'Ente
+        institutionTaxCode:
+          type: string
+          description: Codice fiscale dell'Ente
+        delegationId:
+          type: string
+          description: Id SelfCare della delega
+        status:
+          $ref: '#/components/schemas/BffPtDelegationStatus'
+        statusChangedAt:
+          type: string
+          format: date-time
+          description: Data da cui la delega è nello stato indicato
+    BffPtInstitutionsResponse:
+      title: Elenco degli Enti deleganti
+      description: Pagina dell'elenco degli Enti che hanno delegato il Partner Tecnologico
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffPtInstitution'
+        lastKey:
+          type: string
+          description: >-
+            Chiave per leggere la pagina successiva, assente se non ci sono
+            altri elementi
   responses: {}
   securitySchemes:
     pn-auth-fleet_jwtAuthorizer_openapi:
@@ -10534,6 +10696,10 @@ tags:
       pagamento
   - name: SenderInformalNotifications
     description: API esposte al frontend PA di SEND per ottenere la lista delle campagne
+  - name: PtInstitutions
+    description: >-
+      Invocazioni per recuperare gli Enti che hanno delegato il Partner
+      Tecnologico
 x-amazon-apigateway-gateway-responses:
   DEFAULT_5XX:
     responseParameters:

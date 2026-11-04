@@ -30,6 +30,7 @@ public class PnBffRestConstants {
     public static final String GROUPS_PA_PATH = BFF_PATH + VERSION_1 + "/pa/groups";
     public static final String PA_LIST = BFF_PATH + VERSION_1 + "/pa-list";
     public static final String INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/institutions";
+    public static final String PT_INSTITUTIONS_PATH = BFF_PATH + VERSION_1 + "/pt/institutions";
     public static final String APIKEYS_PATH = BFF_PATH + VERSION_1 + "/api-keys";
     public static final String DOWNTIME_LOGS_PATH = BFF_PATH + VERSION_1 + "/downtime";
     public static final String PAYMENTS_INFO_PATH = BFF_PATH + VERSION_1 + "/payments/info";
