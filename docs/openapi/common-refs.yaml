@@ -7,17 +7,17 @@ components:
     ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
     ############################################################################################
     cxTypeAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTypeAuthFleet'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTypeAuthFleet'
     cxIdAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxIdAuthFleet'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxIdAuthFleet'
     cxGroupsAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroupsAuthFleet'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroupsAuthFleet'
     uidAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
     cxTaxIdAuthFleet:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
     headerLanguage:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerLanguage'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerLanguage'
     cxRoleAuthFleet:
       name: x-pagopa-pn-cx-role
       in: header
@@ -29,9 +29,9 @@ components:
         pattern: ^[ -~]*$
         maxLength: 64
     headerSourceChannel:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannel'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannel'
     headerSourceChannelDetails:
-      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/c089844f73b075ef2901cd1c2e4586fc77528027/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannelDetails'
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/5d3fcfca3786840c4ac49e1cb7bb82fe597ab86e/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/headerSourceChannelDetails'
   schemas:
     ############################################################################################
     ###                          STRUTTURE DATI DI PN-COMMONS                                ###

@@ -15,7 +15,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -31,7 +32,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -47,7 +49,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -64,7 +67,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -80,7 +84,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -96,7 +101,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -113,7 +119,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_attributes.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -130,7 +137,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -146,7 +154,8 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -163,7 +172,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.mandate.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -180,7 +190,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -197,7 +208,8 @@ class CxTypeMapperTest {
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BO ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.BS ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT) {
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.PT ||
+                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.apikeys.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
             assertNotNull(result);
@@ -207,7 +219,7 @@ class CxTypeMapperTest {
 
     @ParameterizedTest
     @EnumSource(value = it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet.class,
-            names = {"PT"}, mode = EnumSource.Mode.EXCLUDE)
+            names = {"PT", "SD"}, mode = EnumSource.Mode.EXCLUDE)
     void testConvertDeliveryInformalPAWebCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.notifications.CxTypeAuthFleet cxType) {
         it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.model.CxTypeAuthFleet result =
                 CxTypeMapper.cxTypeMapper.convertDeliveryInformalPAWebCXType(cxType);
@@ -221,8 +233,11 @@ class CxTypeMapperTest {
     void testConvertExternalRegistriesPtCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.pt_institutions.CxTypeAuthFleet cxType) {
         it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet result =
                 CxTypeMapper.cxTypeMapper.convertExternalRegistriesPtCXType(cxType);
-
-        assertNotNull(result);
-        assertEquals(cxType.getValue(), result.getValue());
+        if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.pt_institutions.CxTypeAuthFleet.SD) {
+            assertNull(result);
+        } else {
+            assertNotNull(result);
+            assertEquals(cxType.getValue(), result.getValue());
+        }
     }
 }
