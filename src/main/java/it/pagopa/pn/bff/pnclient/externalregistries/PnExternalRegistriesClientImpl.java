@@ -10,6 +10,10 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_private.m
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPaApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.api.InfoPgApi;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.*;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.api.InfoPtApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtDelegationStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtInstitutionsResponse;
+import it.pagopa.pn.bff.utils.CommonUtility;
 import it.pagopa.pn.commons.log.PnLogger;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ public class PnExternalRegistriesClientImpl {
     private final InfoPgApi infoPgApi;
     private final PaymentInfoApi paymentInfoApi;
     private final AdditionalLangApi additionalLangApi;
+    private final InfoPtApi infoPtApi;
 
     public Flux<PaGroup> getPaGroups(String xPagopaPnUid,
                                      String xPagopaPnCxId, List<String> xPagopaPnCxGroups,
@@ -63,13 +68,13 @@ public class PnExternalRegistriesClientImpl {
     public Flux<InstitutionResourcePN> getInstitutions(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getUserInstitutions");
         return infoPaApi
-                .getUserInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxGroups, null);
+                .getUserInstitutions(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, CommonUtility.SourceChannel.WEB.name(), xPagopaPnCxGroups, null);
     }
 
     public Flux<ProductResourcePN> getInstitutionProducts(String xPagopaPnUid, CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<String> xPagopaPnCxGroups) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getInstitutionProducts");
         return infoPaApi
-                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, "WEB", xPagopaPnCxId, xPagopaPnCxGroups, null);
+                .getInstitutionProducts(xPagopaPnUid, xPagopaPnCxType, xPagopaPnCxId, CommonUtility.SourceChannel.WEB.name(), xPagopaPnCxId, xPagopaPnCxGroups, null);
     }
 
     public Flux<PaymentInfoV21> getPaymentsInfo(CxTypeAuthFleet xPagopaPnCxType, String xPagopaPnCxId, List<PaymentInfoRequest> paymentInfoRequest) {
@@ -100,5 +105,25 @@ public class PnExternalRegistriesClientImpl {
     public Mono<AdditionalLanguages> changeAdditionalLanguages(AdditionalLanguages additionalLanguages) {
         log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "putAdditionalLang");
         return additionalLangApi.putAdditionalLang(additionalLanguages);
+    }
+
+    public Mono<PtInstitutionsResponse> getPtInstitutions(String xPagopaPnUid,
+                                                          it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet xPagopaPnCxType,
+                                                          String xPagopaPnCxId,
+                                                          String search,
+                                                          PtDelegationStatus status,
+                                                          Integer limit,
+                                                          String lastKey) {
+        log.logInvokingExternalService(PnLogger.EXTERNAL_SERVICES.PN_EXTERNAL_REGISTRIES, "getPtInstitutions");
+        return infoPtApi.getPtInstitutions(
+                xPagopaPnCxId,
+                xPagopaPnCxType,
+                xPagopaPnUid,
+                CommonUtility.SourceChannel.WEB.name(),
+                search,
+                status,
+                limit,
+                lastKey
+        );
     }
 }

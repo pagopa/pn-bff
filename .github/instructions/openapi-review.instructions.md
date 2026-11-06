@@ -100,9 +100,9 @@ tutti gli utenti (default deny).
 Per ogni operazione aggiunta o modificata verifica che:
 
 - `x-pn-allowed-cx-types` sia presente e non vuoto;
-- contenga soltanto i valori `PF`, `PA`, `PG`, `BS`;
+- contenga soltanto i valori `PF`, `PA`, `PG`, `BS`, `PT`;
 - i tipi ammessi siano coerenti con il dominio dell'operazione, per esempio
-  notifiche inviate a `PA`, deleghe a `PF`/`PG`, API key a `PA`/`PG`;
+  notifiche inviate a `PA`, deleghe a `PF`/`PG`, API key a `PA`/`PG`, enti deleganti a `PT`;
 - i file `docs/openapi/policies/generated/*.json` siano aggiornati nella stessa
   PR.
 
@@ -110,7 +110,7 @@ Segnala come `[BLOCKING][AUTHORIZATION]`:
 
 - una nuova operazione senza `x-pn-allowed-cx-types`;
 - la rimozione dell'extension da un'operazione esistente;
-- un valore fuori da `PF`, `PA`, `PG`, `BS`;
+- un valore fuori da `PF`, `PA`, `PG`, `BS`, `PT`;
 - l'aggiunta di un `cx_type` a un'operazione esistente senza una motivazione
   esplicita nella PR, perché amplia il perimetro di accesso.
 

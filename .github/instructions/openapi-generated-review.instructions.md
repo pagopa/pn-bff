@@ -115,7 +115,7 @@ endpoint protetto.
 
 In `docs/openapi/aws/api-bff-WEB-aws.yaml` ogni operazione, tranne `options`,
 deve avere `x-pn-allowed-cx-types`, non vuoto e con valori soltanto tra `PF`,
-`PA`, `PG` e `BS`.
+`PA`, `PG`, `BS` e `PT`.
 
 Segnala come `[BLOCKING][AUTHORIZATION]` un'operazione del file WEB AWS senza
 l'extension o con un valore non ammesso. Indica la sorgente internal da
@@ -125,7 +125,7 @@ I file `docs/openapi/policies/generated/<cxType>Policy.json` contengono le
 policy IAM che il `jwtAuthorizer` di `pn-auth-fleet` restituisce per ogni
 `cx_type`. Devono corrispondere ai tag del file WEB AWS. Verifica che:
 
-- esista un file per ciascuno di `PF`, `PA`, `PG`, `BS`;
+- esista un file per ciascuno di `PF`, `PA`, `PG`, `BS`, `PT`;
 - ogni operazione taggata con un `cx_type` compaia nella policy di quel tipo,
   nella forma
   `arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/<METHOD><path>`;
