@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: PN BFF BE Microservice - Enti dei Partner Tecnologici
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-pn-bff-pt-institutions
+  x-summary: 'API di pn-bff esposte al Web per i Partner Tecnologici'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://webapi.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://webapi.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://webapi.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://webapi.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+tags:
+  - name: PtInstitutions
+    description: Invocazioni per recuperare gli Enti che hanno delegato il Partner Tecnologico
+
+paths:
+  '/bff/v1/pt/institutions':
+    get:
+      summary: Get Institutions that delegated the PT
+      description: |-
+        Restituisce l'elenco paginato degli Enti da cui il Partner Tecnologico è stato delegato,
+        con lo stato della delega
+      operationId: getPtInstitutionsV1
+      x-pn-allowed-cx-types:
+        - PT
+      #      security:                                      # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                            # ONLY EXTERNAL
+      tags:
+        - PtInstitutions
+      parameters:
+        - $ref: './pt-institutions-schemas/pt-institutions.yaml#/components/parameters/BffPtInstitutionsQuerySearch'
+        - $ref: './pt-institutions-schemas/pt-institutions.yaml#/components/parameters/BffPtInstitutionsQueryStatus'
+        - $ref: './pt-institutions-schemas/pt-institutions.yaml#/components/parameters/BffPtInstitutionsQueryLimit'
+        - $ref: './pt-institutions-schemas/pt-institutions.yaml#/components/parameters/BffPtInstitutionsQueryLastKey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './pt-institutions-schemas/pt-institutions.yaml#/components/schemas/BffPtInstitutionsResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: 'common-refs.yaml#/components/schemas/Problem'

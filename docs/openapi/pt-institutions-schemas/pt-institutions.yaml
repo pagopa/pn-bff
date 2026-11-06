@@ -1,0 +1,99 @@
+info:
+  version: v1.0
+
+components:
+  parameters:
+    BffPtInstitutionsQuerySearch:
+      name: search
+      in: query
+      description: >-
+        Se valorizzato restituisce gli Enti la cui ragione sociale o il cui codice fiscale
+        contengono il valore, senza distinzione tra maiuscole e minuscole
+      required: false
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 250
+    BffPtInstitutionsQueryStatus:
+      name: status
+      in: query
+      description: >-
+        Se valorizzato restituisce solo gli Enti la cui delega è nello stato indicato,
+        altrimenti restituisce le deleghe in qualsiasi stato
+      required: false
+      schema:
+        $ref: '#/components/schemas/BffPtDelegationStatus'
+    BffPtInstitutionsQueryLimit:
+      name: limit
+      in: query
+      description: Numero massimo di elementi restituiti
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+        default: 10
+    BffPtInstitutionsQueryLastKey:
+      name: lastKey
+      in: query
+      description: Chiave restituita dalla pagina precedente, da usare per leggere la pagina successiva
+      required: false
+      schema:
+        type: string
+        maxLength: 1024
+
+  schemas:
+    BffPtInstitutionsResponse:
+      title: Elenco degli Enti deleganti
+      description: Pagina dell'elenco degli Enti che hanno delegato il Partner Tecnologico
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BffPtInstitution'
+        lastKey:
+          type: string
+          description: Chiave per leggere la pagina successiva, assente se non ci sono altri elementi
+    BffPtInstitution:
+      title: Ente delegante
+      type: object
+      required:
+        - institutionId
+        - institutionName
+        - institutionTaxCode
+        - delegationId
+        - status
+        - statusChangedAt
+      properties:
+        institutionId:
+          type: string
+          description: Id SelfCare dell'Ente
+        institutionName:
+          type: string
+          description: Ragione sociale dell'Ente
+        institutionTaxCode:
+          type: string
+          description: Codice fiscale dell'Ente
+        delegationId:
+          type: string
+          description: Id SelfCare della delega
+        status:
+          $ref: '#/components/schemas/BffPtDelegationStatus'
+        statusChangedAt:
+          type: string
+          format: date-time
+          description: Data da cui la delega è nello stato indicato
+    BffPtDelegationStatus:
+      title: Stato della delega
+      description: >-
+        Stato della delega:
+        * `ACTIVE` - delega attiva
+        * `REVOKED` - delega revocata
+      type: string
+      enum:
+        - ACTIVE
+        - REVOKED
