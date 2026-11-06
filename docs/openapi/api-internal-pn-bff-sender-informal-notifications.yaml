@@ -26,6 +26,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getListCampaignsV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -58,6 +59,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getCampaignDetailV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -95,6 +97,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: searchInformalSentNotificationV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -138,6 +141,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -178,6 +182,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationTimelineV1
+      x-pn-allowed-cx-types: [PA]
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -218,6 +223,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationDocumentV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -259,6 +265,7 @@ paths:
       tags:
         - SenderInformalNotifications
       operationId: getSentInformalNotificationAttachmentV1
+      x-pn-allowed-cx-types: [PA]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

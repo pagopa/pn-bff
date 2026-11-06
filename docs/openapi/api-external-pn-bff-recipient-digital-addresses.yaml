@@ -34,6 +34,7 @@ paths:
       tags:
         - Addresses
       operationId: getAddressesV1
+      x-pn-allowed-cx-types: [PF, PG]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       responses:
@@ -58,6 +59,7 @@ paths:
       tags:
         - Addresses
       operationId: createOrUpdateAddressV1
+      x-pn-allowed-cx-types: [PF, PG]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       x-pagopa-pn-custom-throttling-group: 'recapiti-by-cx-id'
@@ -117,6 +119,7 @@ paths:
       tags:
           - Addresses
       operationId: deleteAddressV1
+      x-pn-allowed-cx-types: [PF, PG]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

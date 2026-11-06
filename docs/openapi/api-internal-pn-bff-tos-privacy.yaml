@@ -34,6 +34,7 @@ paths:
       tags:
         - UserConsents
       operationId: getTosPrivacyV2
+      x-pn-allowed-cx-types: [PA, PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -61,6 +62,7 @@ paths:
       tags:
         - UserConsents
       operationId: acceptTosPrivacyV2
+      x-pn-allowed-cx-types: [PA, PF, PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -90,6 +92,7 @@ paths:
       tags:
         - UserConsents
       operationId: getPgTosPrivacyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -116,6 +119,7 @@ paths:
       tags:
         - UserConsents
       operationId: acceptPgTosPrivacyV1
+      x-pn-allowed-cx-types: [PG]
       parameters:                                                                     # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'             # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'           # NO EXTERNAL

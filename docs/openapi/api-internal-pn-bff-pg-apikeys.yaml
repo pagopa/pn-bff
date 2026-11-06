@@ -37,6 +37,7 @@ paths:
       tags:
         - PublicKeys
       operationId: getPublicKeysV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -98,6 +99,7 @@ paths:
       tags:
         - PublicKeys
       operationId: newPublicKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -140,6 +142,7 @@ paths:
       tags:
         - PublicKeys
       operationId: deletePublicKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -191,6 +194,7 @@ paths:
       tags:
         - PublicKeys
       operationId: changeStatusPublicKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -243,6 +247,7 @@ paths:
       tags:
         - PublicKeys
       operationId: rotatePublicKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -304,6 +309,7 @@ paths:
       tags:
         - PublicKeys
       operationId: checkIssuerPublicKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -344,6 +350,7 @@ paths:
       tags:
         - VirtualKeys
       operationId: getVirtualKeysV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -405,6 +412,7 @@ paths:
       tags:
         - VirtualKeys
       operationId: newVirtualKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -459,6 +467,7 @@ paths:
       tags:
         - VirtualKeys
       operationId: deleteVirtualKeyV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -510,6 +519,7 @@ paths:
       tags:
         - VirtualKeys
       operationId: changeStatusVirtualKeysV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

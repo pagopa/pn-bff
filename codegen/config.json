@@ -19,7 +19,8 @@
         "api-internal-pn-bff-sender-informal-notifications.yaml",
         "api-internal-pn-bff-pt-institutions.yaml"
       ],
-      "servicePath": "bff"
+      "servicePath": "bff",
+      "generatePolicies": true
     },
     {
       "intendedUsage": "PUBLIC",

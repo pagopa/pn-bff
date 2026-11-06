@@ -33,6 +33,7 @@ paths:
       tags:
         - Payments
       operationId: getPaymentsInfoV1
+      x-pn-allowed-cx-types: [PF, PG]
       x-pagopa-monitoring-group: <none>
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
@@ -67,6 +68,7 @@ paths:
       tags:
         - Payments
       operationId: paymentsCartV1
+      x-pn-allowed-cx-types: [PF, PG]
       x-pagopa-monitoring-group: <none>
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL
@@ -114,6 +116,7 @@ paths:
       tags:
         - Payments
       operationId: paymentsTppV1
+      x-pn-allowed-cx-types: [PF]
       x-pagopa-monitoring-group: <none>
       security:                                                                # ONLY EXTERNAL
         - bearerAuth: [ ]                                                      # ONLY EXTERNAL

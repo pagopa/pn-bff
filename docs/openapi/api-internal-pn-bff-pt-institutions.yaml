@@ -32,6 +32,8 @@ paths:
         Restituisce l'elenco paginato degli Enti da cui il Partner Tecnologico è stato delegato,
         con lo stato della delega
       operationId: getPtInstitutionsV1
+      x-pn-allowed-cx-types:
+        - PT
       #      security:                                      # ONLY EXTERNAL
       #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

@@ -34,6 +34,7 @@ paths:
       tags:
         - ApiKeys
       operationId: getApiKeysV1
+      x-pn-allowed-cx-types: [PA]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -84,6 +85,7 @@ paths:
       tags:
         - ApiKeys
       operationId: newApiKeyV1
+      x-pn-allowed-cx-types: [PA]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       requestBody:
@@ -120,6 +122,7 @@ paths:
       tags:
         - ApiKeys
       operationId: deleteApiKeyV1
+      x-pn-allowed-cx-types: [PA]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:
@@ -160,6 +163,7 @@ paths:
       tags:
         - ApiKeys
       operationId: changeStatusApiKeyV1
+      x-pn-allowed-cx-types: [PA]
       security:                                      # ONLY EXTERNAL
         - bearerAuth: [ ]                            # ONLY EXTERNAL
       parameters:

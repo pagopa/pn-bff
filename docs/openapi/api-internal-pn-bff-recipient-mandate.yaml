@@ -36,6 +36,7 @@ paths:
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       operationId: countMandatesByDelegateV1
+      x-pn-allowed-cx-types: [PG]
       parameters:
         - $ref: './common-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
         - $ref: './common-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
@@ -62,6 +63,7 @@ paths:
       tags:
         - Mandate
       operationId: createMandateV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters: # NO EXTERNAL
@@ -92,6 +94,7 @@ paths:
       tags:
         - Mandate
       operationId: acceptMandateV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -122,6 +125,7 @@ paths:
       tags:
         - Mandate
       operationId: updateMandateV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -152,6 +156,7 @@ paths:
       tags:
         - Mandate
       operationId: rejectMandateV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -176,6 +181,7 @@ paths:
       tags:
         - Mandate
       operationId: revokeMandateV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -202,6 +208,7 @@ paths:
       tags:
         - Mandate
       operationId: getMandatesByDelegateV1
+      x-pn-allowed-cx-types: [PF]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -230,6 +237,7 @@ paths:
       tags:
         - Mandate
       operationId: searchMandatesByDelegateV1
+      x-pn-allowed-cx-types: [PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters:
@@ -265,6 +273,7 @@ paths:
       tags:
         - Mandate
       operationId: getMandatesByDelegatorV1
+      x-pn-allowed-cx-types: [PF, PG]
 #      security:                                                                # ONLY EXTERNAL
 #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
       parameters: # NO EXTERNAL

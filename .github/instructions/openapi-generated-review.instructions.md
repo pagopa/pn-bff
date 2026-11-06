@@ -1,5 +1,5 @@
 ---
-applyTo: "docs/openapi/api-external-*.yaml,docs/openapi/aws/*.yaml"
+applyTo: "docs/openapi/api-external-*.yaml,docs/openapi/aws/*.yaml,docs/openapi/policies/generated/*.json"
 ---
 
 # Istruzioni per la review degli artefatti OpenAPI generati
@@ -110,6 +110,42 @@ errato, riferimenti non validi o modifiche prive di una fonte corrispondente.
 
 Usa una severità bloccante se l'output AWS rende concretamente pubblico un
 endpoint protetto.
+
+## Tipi utente ammessi e policy del jwtAuthorizer
+
+In `docs/openapi/aws/api-bff-WEB-aws.yaml` ogni operazione, tranne `options`,
+deve avere `x-pn-allowed-cx-types`, non vuoto e con valori soltanto tra `PF`,
+`PA`, `PG`, `BS` e `PT`.
+
+Segnala come `[BLOCKING][AUTHORIZATION]` un'operazione del file WEB AWS senza
+l'extension o con un valore non ammesso. Indica la sorgente internal da
+correggere.
+
+I file `docs/openapi/policies/generated/<cxType>Policy.json` contengono le
+policy IAM che il `jwtAuthorizer` di `pn-auth-fleet` restituisce per ogni
+`cx_type`. Devono corrispondere ai tag del file WEB AWS. Verifica che:
+
+- esista un file per ciascuno di `PF`, `PA`, `PG`, `BS`, `PT`;
+- ogni operazione taggata con un `cx_type` compaia nella policy di quel tipo,
+  nella forma
+  `arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/<METHOD><path>`;
+- nei path i parametri `{param}` siano sostituiti da `*`;
+- i path siano senza prefisso `/bff`, come nel file AWS;
+- nessuna policy contenga risorse non presenti nel file AWS o assegnate a un
+  `cx_type` non ammesso dal tag;
+- non compaiano wildcard più ampie del singolo path, per esempio `/*` o
+  `/{stage}/*`;
+- ogni operazione non ammessa per un `cx_type` ma coperta da una wildcard della
+  sua policy (es. `GET /v1/notifications/received/delegated` coperta da
+  `GET /v1/notifications/received/*`) compaia nello statement `Deny` di quella
+  policy, e lo statement `Deny` contenga soltanto operazioni di questo tipo.
+
+Segnala come `[BLOCKING][AUTHORIZATION]` una policy che concede una risorsa a un
+`cx_type` non dichiarato nel tag, una wildcard più ampia del path, oppure
+un'operazione coperta da una wildcard ma assente dallo statement `Deny`.
+
+Segnala come `[HIGH][AUTHORIZATION]` un'operazione taggata assente dalla policy:
+con il default deny il tipo utente ammesso non riesce a chiamarla.
 
 ## Validità dell'output
 
