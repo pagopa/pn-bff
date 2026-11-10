@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: zYLGZ3m0qGi4YSoh6zqQhDhX7BshFpmXdy1gcFT3bMU=
+  version: 12PAsSqV19AjB1jbcldKbQkTRxE01Qc4ixS1h7W+TIo=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -2299,6 +2299,7 @@ paths:
       x-pn-allowed-cx-types:
         - PA
         - BS
+        - PT
       security:
         - pn-auth-fleet_jwtAuthorizer_openapi: []
       tags:
