@@ -117,6 +117,33 @@ class InfoPaServiceTest {
     }
 
     @Test
+    void getInstitutionProductPT() {
+        List<BffInstitutionProduct> bffInstitutionProducts = paInfoMock.getProductResourcePNMock()
+                .stream()
+                .map(product -> ProductMapper.modelMapper.toBffInstitutionProduct(product, pnBffConfigs, UserMock.PN_CX_ID))
+                .toList();
+        when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.eq(CxTypeAuthFleet.PT), Mockito.anyString(), Mockito.anyList()))
+                .thenReturn(Flux.fromIterable(paInfoMock.getProductResourcePNMock()));
+
+        Flux<BffInstitutionProduct> result = infoPaService.getInstitutionProducts(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PT,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS);
+
+        StepVerifier
+                .create(result.collectList())
+                .expectNext(bffInstitutionProducts)
+                .verifyComplete();
+
+        Mockito.verify(pnExternalRegistriesClient).getInstitutionProducts(
+                UserMock.PN_UID,
+                CxTypeAuthFleet.PT,
+                UserMock.PN_CX_ID,
+                UserMock.PN_CX_GROUPS);
+    }
+
+    @Test
     void getInstitutionProductError() {
         when(pnExternalRegistriesClient.getInstitutionProducts(Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyList()))
                 .thenReturn(Flux.error(new WebClientResponseException(404, "Not Found", null, null, null)));

@@ -71,7 +71,6 @@ public interface CxTypeMapper {
      */
     @ValueMapping(source = "RADD", target = MappingConstants.NULL)
     @ValueMapping(source = "BO", target = MappingConstants.NULL)
-    @ValueMapping(source = "PT", target = MappingConstants.NULL)
     @ValueMapping(source = "SD", target = MappingConstants.NULL)
     it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet convertExternalRegistriesCXType(it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet cxType);
 
