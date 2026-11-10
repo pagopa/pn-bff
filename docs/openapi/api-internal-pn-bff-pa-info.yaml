@@ -67,7 +67,7 @@ paths:
       description: |-
         This operation retrieves all active products associated with the specified institution and user.
       operationId: getInstitutionProductsV1
-      x-pn-allowed-cx-types: [PA, BS]
+      x-pn-allowed-cx-types: [PA, BS, PT]
 #      security:                                      # ONLY EXTERNAL
 #        - bearerAuth: [ ]                            # ONLY EXTERNAL
       tags:

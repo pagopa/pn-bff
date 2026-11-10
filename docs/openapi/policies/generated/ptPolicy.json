@@ -7,6 +7,7 @@
         "Action": "execute-api:Invoke",
         "Effect": "Allow",
         "Resource": [
+          "arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/GET/v1/institutions/products",
           "arn:aws:execute-api:{region}:{awsAccountId}:{restApiId}/{stage}/GET/v1/pt/institutions"
         ]
       }
