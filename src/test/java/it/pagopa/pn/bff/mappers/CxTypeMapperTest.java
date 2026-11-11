@@ -84,7 +84,6 @@ class CxTypeMapperTest {
 
         if (cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.RADD ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.BO ||
-                cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.PT ||
                 cxType == it.pagopa.pn.bff.generated.openapi.server.v1.dto.user_info.CxTypeAuthFleet.SD) {
             assertNull(result);
         } else {
