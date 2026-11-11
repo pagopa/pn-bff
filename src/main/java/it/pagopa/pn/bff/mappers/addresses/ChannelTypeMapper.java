@@ -28,6 +28,7 @@ public interface ChannelTypeMapper {
      */
     @ValueMapping(source = "EMAIL", target = "EMAIL")
     @ValueMapping(source = "SMS", target = "SMS")
+    @ValueMapping(source = "WHATSAPP", target = "WHATSAPP")
     @ValueMapping(source = "APPIO", target = "APPIO")
     @ValueMapping(source = "PEC", target = MappingConstants.NULL)
     @ValueMapping(source = "SERCQ_SEND", target = MappingConstants.NULL)
@@ -43,6 +44,7 @@ public interface ChannelTypeMapper {
     @ValueMapping(source = "SERCQ_SEND", target = "SERCQ")
     @ValueMapping(source = "APPIO", target = MappingConstants.NULL)
     @ValueMapping(source = "SMS", target = MappingConstants.NULL)
+    @ValueMapping(source = "WHATSAPP", target = MappingConstants.NULL)
     @ValueMapping(source = "EMAIL", target = MappingConstants.NULL)
     LegalChannelType mapLegalChannelType(BffChannelType channelType);
 
