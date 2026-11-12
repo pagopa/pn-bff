@@ -126,6 +126,7 @@ components:
         notificationStatus:
           $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/5b2fe16488690eab3c9ad6198c079eec00ba0de0/docs/openapi/remote-refs.yaml#/components/schemas/InformalNotificationStatusV1"
         communicationOutcomes:
+          $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/5b2fe16488690eab3c9ad6198c079eec00ba0de0/docs/openapi/schemas-pn-notification.yaml#/components/schemas/CommunicationOutcomes"
 
     BffFullSentInformalNotificationV1:
       description: Dettaglio notifica bonaria esposto al frontend del mittente.
