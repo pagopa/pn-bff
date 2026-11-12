@@ -169,6 +169,10 @@ public class CampaignMapperTest {
                     sourceRows.get(i).getCommunicationOutcomes().getDelivered(),
                     mappedRows.get(i).getCommunicationOutcomes().getDelivered()
             );
+            assertEquals(
+                    sourceRows.get(i).getCommunicationOutcomes().getPaid(),
+                    mappedRows.get(i).getCommunicationOutcomes().getPaid()
+            );
         }
 
         assertNull(CampaignMapper.modelMapper.toBffInformalSenderNotificationSearchResponse(null));
