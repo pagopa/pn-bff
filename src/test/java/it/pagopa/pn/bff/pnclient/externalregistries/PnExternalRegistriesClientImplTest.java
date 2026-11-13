@@ -10,6 +10,9 @@ import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.CxTypeAuthFleet;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PaGroupStatus;
 import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_selfcare.model.PgGroupStatus;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.api.InfoPtApi;
+import it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.PtDelegationStatus;
+import it.pagopa.pn.bff.mocks.PtInstitutionsMock;
 import it.pagopa.pn.bff.mocks.PaInfoMock;
 import it.pagopa.pn.bff.mocks.PaymentsMock;
 import it.pagopa.pn.bff.mocks.RecipientInfoMock;
@@ -36,6 +39,7 @@ class PnExternalRegistriesClientImplTest {
     private final PaInfoMock paInfoMock = new PaInfoMock();
     private final RecipientInfoMock recipientInfoMock = new RecipientInfoMock();
     private final PaymentsMock paymentsMock = new PaymentsMock();
+    private final PtInstitutionsMock ptInstitutionsMock = new PtInstitutionsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
     @MockBean
@@ -46,6 +50,8 @@ class PnExternalRegistriesClientImplTest {
     private PaymentInfoApi paymentInfoApi;
     @MockBean
     private AdditionalLangApi additionalLangApi;
+    @MockBean
+    private InfoPtApi infoPtApi;
 
     @Test
     void getInstitutions() {
@@ -306,5 +312,49 @@ class PnExternalRegistriesClientImplTest {
 
         StepVerifier.create(pnExternalRegistriesClient.changeAdditionalLanguages(paInfoMock.getAdditionalLanguagesMock()))
                 .expectError(WebClientResponseException.class).verify();
+    }
+    @Test
+    void getPtInstitutions() {
+        when(infoPtApi.getPtInstitutions(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.nullable(String.class),
+                Mockito.nullable(PtDelegationStatus.class),
+                Mockito.nullable(Integer.class),
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.just(ptInstitutionsMock.getPtInstitutionsResponseMock()));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPtInstitutions(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet.PT,
+                UserMock.PN_CX_ID,
+                "ente",
+                PtDelegationStatus.ACTIVE,
+                10,
+                null
+        )).expectNext(ptInstitutionsMock.getPtInstitutionsResponseMock()).verifyComplete();
+    }
+
+    @Test
+    void getPtInstitutionsError() {
+        when(infoPtApi.getPtInstitutions(
+                Mockito.anyString(),
+                Mockito.any(it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.nullable(String.class),
+                Mockito.nullable(PtDelegationStatus.class),
+                Mockito.nullable(Integer.class),
+                Mockito.nullable(String.class)
+        )).thenReturn(Mono.error(new WebClientResponseException(500, "Internal Server Error", null, null, null)));
+
+        StepVerifier.create(pnExternalRegistriesClient.getPtInstitutions(
+                UserMock.PN_UID,
+                it.pagopa.pn.bff.generated.openapi.msclient.external_registries_pt.model.CxTypeAuthFleet.PT,
+                UserMock.PN_CX_ID,
+                null, null, null, null
+        )).expectError(WebClientResponseException.class).verify();
     }
 }

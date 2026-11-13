@@ -43,9 +43,10 @@ Ogni operazione delle API WEB (file `docs/openapi/api-internal-*.yaml` con `inte
       x-pn-allowed-cx-types: [PF, PG]
 ```
 
-I valori ammessi sono `PF`, `PA`, `PG` e `BS` (utenti di supporto). L'extension va messa solo negli
-internal: external e bundle AWS (`docs/openapi/aws/api-bff-WEB-aws.yaml`) la ricevono dalla
-rigenerazione con `scripts/generate-code.sh`.
+I valori ammessi sono `PF`, `PA`, `PG`, `BS` (utenti di supporto) e `PT` (partner tecnologici).
+L'extension va messa solo negli internal: external e bundle AWS
+(`docs/openapi/aws/api-bff-WEB-aws.yaml`) la ricevono dalla rigenerazione con
+`scripts/generate-code.sh`.
 
 Dai tag derivano le policy IAM che il `jwtAuthorizer` di `pn-auth-fleet` restituisce per ogni
 `cx_type`, salvate in `docs/openapi/policies/generated/<cxType>Policy.json`. Un'operazione senza tag

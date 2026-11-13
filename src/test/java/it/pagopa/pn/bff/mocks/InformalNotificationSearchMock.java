@@ -30,7 +30,7 @@ public class InformalNotificationSearchMock {
                 .group("Group One")
                 .campaignId(CampaignMock.CAMPAIGN_ID)
                 .notificationStatus(InformalNotificationStatusV1.ACCEPTED)
-                .communicationOutcomes(new CommunicationOutcomes().viewed(true).delivered(true));
+                .communicationOutcomes(new CommunicationOutcomes().viewed(true).delivered(true).paid(false));
 
         InformalNotificationSearchRow rowTwo = new InformalNotificationSearchRow()
                 .iun("IUN2")

@@ -16,7 +16,8 @@
         "api-internal-pn-bff-recipient-mandate.yaml",
         "api-internal-pn-bff-sender-dashboard.yaml",
         "api-internal-pn-bff-recipient-informal-notifications.yaml",
-        "api-internal-pn-bff-sender-informal-notifications.yaml"
+        "api-internal-pn-bff-sender-informal-notifications.yaml",
+        "api-internal-pn-bff-pt-institutions.yaml"
       ],
       "servicePath": "bff",
       "generatePolicies": true
