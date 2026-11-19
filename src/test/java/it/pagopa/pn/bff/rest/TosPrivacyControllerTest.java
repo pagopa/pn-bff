@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -34,7 +34,7 @@ class TosPrivacyControllerTest {
     @Autowired
     WebTestClient webTestClient;
     ConsentsMock consentsMock = new ConsentsMock();
-    @MockBean
+    @MockitoBean
     private TosPrivacyService tosPrivacyService;
 
 
@@ -57,7 +57,7 @@ class TosPrivacyControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
-                .body(Flux.fromIterable(request), List.class)
+                .body(Flux.fromIterable(request), BffTosPrivacyActionBody.class)
                 .exchange()
                 .expectStatus()
                 .isNoContent()
@@ -93,7 +93,7 @@ class TosPrivacyControllerTest {
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
                 .header(PnBffRestConstants.CX_ROLE_HEADER, UserMock.PN_CX_ROLE)
                 .header(PnBffRestConstants.CX_GROUPS_HEADER, String.join(",", UserMock.PN_CX_GROUPS))
-                .body(Flux.fromIterable(request), List.class)
+                .body(Flux.fromIterable(request), BffTosPrivacyActionBody.class)
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -269,7 +269,7 @@ class TosPrivacyControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
-                .body(Flux.fromIterable(request), List.class)
+                .body(Flux.fromIterable(request), BffTosPrivacyActionBody.class)
                 .exchange()
                 .expectStatus()
                 .isNoContent()
@@ -301,7 +301,7 @@ class TosPrivacyControllerTest {
                 .header(PnBffRestConstants.UID_HEADER, UserMock.PN_UID)
                 .header(PnBffRestConstants.CX_ID_HEADER, UserMock.PN_CX_ID)
                 .header(PnBffRestConstants.CX_TYPE_HEADER, CX_TYPE.toString())
-                .body(Flux.fromIterable(request), List.class)
+                .body(Flux.fromIterable(request), BffTosPrivacyActionBody.class)
                 .exchange()
                 .expectStatus()
                 .isNotFound();

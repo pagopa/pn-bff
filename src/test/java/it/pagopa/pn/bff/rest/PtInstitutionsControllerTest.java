@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -33,7 +33,7 @@ class PtInstitutionsControllerTest {
     private final PtInstitutionsMock ptInstitutionsMock = new PtInstitutionsMock();
     @Autowired
     WebTestClient webTestClient;
-    @MockBean
+    @MockitoBean
     private PtInstitutionsService ptInstitutionsService;
 
     @Test

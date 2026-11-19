@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
@@ -26,7 +26,7 @@ class PnPublicKeyManagerClientPGImplTest {
     private final PublicKeysMock publicKeysMock = new PublicKeysMock();
     @Autowired
     private PnPublicKeyManagerClientPGImpl pnPublicKeyManagerClientPG;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.publickey_pg.api.PublicKeysApi")
     private PublicKeysApi publicKeysApi;
 
     @Test
