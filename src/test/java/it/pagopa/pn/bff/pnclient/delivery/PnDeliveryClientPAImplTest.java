@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
@@ -43,21 +43,21 @@ class PnDeliveryClientPAImplTest {
     private final InformalSentNotificationDetailMock informalSentNotificationDetailMock = new InformalSentNotificationDetailMock();
     @Autowired
     private PnDeliveryClientPAImpl pnDeliveryClientPAImpl;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.SenderReadB2BApi")
     private SenderReadB2BApi senderReadB2BApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_web_pa.api.SenderReadWebApi")
     private SenderReadWebApi senderReadWebApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_b2b_pa.api.NewNotificationApi")
     private NewNotificationApi newNotificationApi;
-    @MockBean(
+    @MockitoBean(
             name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_pa_web_campaign.api.CampaignsApi"
     )
     private CampaignsApi campaignsApi;
-    @MockBean(
+    @MockitoBean(
             name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_web.api.SenderInformalReadWebApi"
     )
     private SenderInformalReadWebApi senderInformalReadWebApi;
-    @MockBean(
+    @MockitoBean(
             name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_informal_pa_b2b.api.SenderReadInformalNotificationB2BApi"
     )
     private SenderReadInformalNotificationB2BApi senderReadInformalNotificationB2BApi;

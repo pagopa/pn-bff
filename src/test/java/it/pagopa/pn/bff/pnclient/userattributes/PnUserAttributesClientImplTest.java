@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
@@ -29,13 +29,13 @@ class PnUserAttributesClientImplTest {
     private final AddressesMock addressesMock = new AddressesMock();
     @Autowired
     private PnUserAttributesClientImpl pnUserAttributesClient;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.ConsentsApi")
     private ConsentsApi consentsApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.AllApi")
     private AllApi allAddressesApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.CourtesyApi")
     private CourtesyApi courtesyApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.user_attributes.api.LegalApi")
     private LegalApi legalApi;
 
 

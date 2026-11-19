@@ -5,7 +5,7 @@
     <parent>
         <groupId>it.pagopa.pn</groupId>
         <artifactId>pn-parent</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.3-SPRINGBOOT3</version>
         <relativePath/>
     </parent>
     <artifactId>pn-bff</artifactId>
@@ -20,8 +20,8 @@
     </scm>
     <properties>
         <pagopa.codegen.version>v01.18.00</pagopa.codegen.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <org.projectlombok.version>1.18.24</org.projectlombok.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <org.projectlombok.version>1.18.36</org.projectlombok.version>
     </properties>
 
     <dependencyManagement>
@@ -40,13 +40,13 @@
         <dependency>
             <groupId>it.pagopa.pn</groupId>
             <artifactId>pn-commons</artifactId>
-            <version>2.10.0</version>
+            <version>2.20.0-SPRINGBOOT3</version>
         </dependency>
 
         <dependency>
             <groupId>it.pagopa.pn</groupId>
             <artifactId>pn-model</artifactId>
-            <version>2.10.0</version>
+            <version>2.11.0-SPRINGBOOT3</version>
         </dependency>
 
         <dependency>
@@ -119,10 +119,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <release>21</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -133,11 +132,6 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${org.projectlombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.springframework</groupId>
-                            <artifactId>spring-context</artifactId>
-                            <version>5.3.24</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -163,7 +157,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>7.4.0</version>
                 <executions>
 
                     <!-- OPEN API PN-BFF RECIPIENT NOTIFICATION-->
@@ -182,13 +176,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
@@ -229,13 +223,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
@@ -276,13 +270,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
@@ -322,13 +316,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
                                 </modelPackage>
@@ -368,13 +362,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-info
                                 </modelPackage>
@@ -414,13 +408,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-info
                                 </modelPackage>
@@ -458,13 +452,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.apikeys
                                 </modelPackage>
@@ -501,13 +495,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.user-attributes
                                 </modelPackage>
@@ -545,13 +539,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>
                                     ${project.groupId}.bff.generated.openapi.server.v1.dto.user-attributes
@@ -589,13 +583,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.downtime-logs
                                 </modelPackage>
@@ -632,13 +626,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.notifications
                                 </modelPackage>
@@ -675,13 +669,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.mandate
                                 </modelPackage>
@@ -718,13 +712,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.sender-dashboard
                                 </modelPackage>
@@ -761,13 +755,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.pt-institutions
                                 </modelPackage>
@@ -803,13 +797,13 @@
                             <modelNameSuffix/>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/server
-                            </templateDirectory>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <basePackage>${project.groupId}.bff.generated.openapi.server.v1</basePackage>
                                 <modelPackage>${project.groupId}.bff.generated.openapi.server.v1.dto.apikeys
                                 </modelPackage>
@@ -847,9 +841,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
                                 </apiPackage>
                                 <modelPackage>
@@ -884,9 +879,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-b2b-pa.api
                                 </apiPackage>
                                 <modelPackage>
@@ -921,9 +917,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-web-pa.api
                                 </apiPackage>
                                 <modelPackage>
@@ -958,9 +955,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.apikey-pa.api
                                 </apiPackage>
                                 <modelPackage>
@@ -995,9 +993,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-selfcare.api
                                 </apiPackage>
@@ -1033,9 +1032,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-payment-info.api
                                 </apiPackage>
@@ -1071,9 +1071,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-private.api
                                 </apiPackage>
@@ -1109,9 +1110,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.external-registries-pt.api
                                 </apiPackage>
@@ -1147,9 +1149,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.user-attributes.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1184,9 +1187,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.user-attributes.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1221,9 +1225,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.downtime-logs.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1258,9 +1263,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-push.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1295,9 +1301,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.delivery-push-rework.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1332,9 +1339,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.mandate.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1369,9 +1377,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.publickey-pg.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1406,9 +1415,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.virtualkey-pg.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1443,9 +1453,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>${project.groupId}.bff.generated.openapi.msclient.emd.api
                                 </apiPackage>
                                 <modelPackage>
@@ -1480,9 +1491,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.notification-cost-service.api
                                 </apiPackage>
@@ -1518,9 +1530,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-recipient.api
                                 </apiPackage>
@@ -1556,9 +1569,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-pa-web-campaign.api
                                 </apiPackage>
@@ -1594,9 +1608,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-informal-pa-web.api
                                 </apiPackage>
@@ -1632,9 +1647,10 @@
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <templateDirectory>
-                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/5.4.0/client
+                                ${project.build.directory}/dependency-resources/scripts/openapi/templates/7.4.0/client
                             </templateDirectory>
                             <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
                                 <apiPackage>
                                     ${project.groupId}.bff.generated.openapi.msclient.delivery-informal-pa-b2b.api
                                 </apiPackage>

@@ -105,6 +105,7 @@ components:
         recipient:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -184,9 +185,11 @@ components:
         denomination:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         taxId:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
 
     BffLegalFactId:
       type: object
