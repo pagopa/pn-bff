@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClientException;
@@ -33,13 +33,13 @@ class PnDeliveryPushClientImplTest {
     private final NotificationsSentMock notificationsSentMock = new NotificationsSentMock();
     @Autowired
     private PnDeliveryPushClientImpl pnDeliveryPushClient;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.DocumentsWebApi")
     private DocumentsWebApi documentsWebApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.LegalFactsApi")
     private LegalFactsApi legalFactsApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push.api.NotificationCancellationApi")
     private NotificationCancellationApi notificationCancellationApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.api.NotificationReworkApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.delivery_push_rework.api.NotificationReworkApi")
     private NotificationReworkApi notificationReworkApi;
 
     @Test

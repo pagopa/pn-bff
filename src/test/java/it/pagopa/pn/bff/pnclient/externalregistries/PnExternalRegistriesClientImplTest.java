@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -42,15 +42,15 @@ class PnExternalRegistriesClientImplTest {
     private final PtInstitutionsMock ptInstitutionsMock = new PtInstitutionsMock();
     @Autowired
     private PnExternalRegistriesClientImpl pnExternalRegistriesClient;
-    @MockBean
+    @MockitoBean
     private InfoPaApi infoPaApi;
-    @MockBean
+    @MockitoBean
     private InfoPgApi infoPgApi;
-    @MockBean
+    @MockitoBean
     private PaymentInfoApi paymentInfoApi;
-    @MockBean
+    @MockitoBean
     private AdditionalLangApi additionalLangApi;
-    @MockBean
+    @MockitoBean
     private InfoPtApi infoPtApi;
 
     @Test

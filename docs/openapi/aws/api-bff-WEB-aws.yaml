@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: >-
     ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
-  version: 12PAsSqV19AjB1jbcldKbQkTRxE01Qc4ixS1h7W+TIo=
+  version: 9UOoqgV25TTTRLelRhuy5sVvpeQUL1FqY/UEwWVQvd4=
 servers:
   - url: https://${stageVariables.DnsName}/{basePath}
     variables:
@@ -7639,6 +7639,7 @@ components:
         recipient:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -7652,9 +7653,11 @@ components:
         denomination:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         taxId:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
     BffNotificationDetailDocument:
       description: Documento della notifica.
       allOf:
@@ -7827,10 +7830,12 @@ components:
           type: string
           description: Denominazione del destinatario
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         taxId:
           type: string
           description: Codice fiscale del destinatario
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         recIndex:
           type: number
           minimum: 0
@@ -7896,6 +7901,7 @@ components:
         viewedByMandate:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         deliveryMode:
           $ref: '#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -8116,6 +8122,9 @@ components:
         delivered:
           type: boolean
           description: Indica se la comunicazione è stata consegnata al destinatario
+        paid:
+          type: boolean
+          description: Indica se la comunicazione è stata pagata
     FullNotificationSearchRow:
       description: >-
         Riga di risultato della ricerca di notifiche completa (legali e
@@ -8238,10 +8247,12 @@ components:
           type: string
           description: id del gruppo
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         name:
           type: string
           description: nome del gruppo
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
     BffApiKeyStatus:
       description: Stato dell'api key
       type: string
@@ -8263,6 +8274,7 @@ components:
           type: string
           description: nome dell'utente che ha effettuato il cambio di stato
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
     BffApiKeyRow:
       type: object
       properties:
@@ -8270,6 +8282,7 @@ components:
           type: string
           description: Id dell'api key
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         name:
           type: string
           description: Nome dell'api key
@@ -8277,6 +8290,7 @@ components:
           type: string
           description: Valore dell'api key
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         lastUpdate:
           type: string
           description: Data ultima modifica
@@ -9177,6 +9191,7 @@ components:
         value:
           type: string
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password
         codeValid:
           type: boolean
         pecValid:

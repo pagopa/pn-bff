@@ -9,7 +9,7 @@ import it.pagopa.pn.bff.mocks.PaymentsMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
@@ -27,9 +27,9 @@ class PnEmdClientImplTest {
 
     @Autowired
     private PnEmdClientImpl pnEmdClient;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.emd.api.CheckTppApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.emd.api.CheckTppApi")
     private CheckTppApi checkTppApi;
-    @MockBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.emd.api.PaymentApi")
+    @MockitoBean(name = "it.pagopa.pn.bff.generated.openapi.msclient.emd.api.PaymentApi")
     private PaymentApi paymentApi;
 
     @Test

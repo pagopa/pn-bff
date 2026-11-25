@@ -29,6 +29,7 @@ components:
           type: string
           description: Id dell'api key
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         name:
           type: string
           description: Nome dell'api key
@@ -36,6 +37,7 @@ components:
           type: string
           description: Valore dell'api key
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         lastUpdate:
           type: string
           description: Data ultima modifica
@@ -60,10 +62,12 @@ components:
           type: string
           description: id del gruppo
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         name:
           type: string
           description: nome del gruppo
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
 
     BffApiKeyStatus:
       description: Stato dell'api key
@@ -83,6 +87,7 @@ components:
           type: string
           description: nome dell'utente che ha effettuato il cambio di stato
           x-field-extra-annotation: '@lombok.ToString.Exclude'
+          format: password # NO EXTERNAL
     
     BffRequestNewApiKey:
       $ref: 'https://raw.githubusercontent.com/pagopa/pn-apikey-manager/f898ba6a32972c6f373bb6b55c696e40864edf1a/docs/openapi/pn-apikey-manager-internal.yaml#/components/schemas/RequestNewApiKey'

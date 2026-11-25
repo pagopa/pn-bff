@@ -44,6 +44,7 @@ components:
         viewedByMandate:
           type: string
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         deliveryMode:
           $ref: './notification.yaml#/components/schemas/BffNotificationDeliveryMode'
         reworkedStatus:
@@ -136,10 +137,12 @@ components:
           type: string
           description: Denominazione del destinatario
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         taxId:
           type: string
           description: Codice fiscale del destinatario
           x-field-extra-annotation: "@lombok.ToString.Exclude" # NO EXTERNAL
+          format: password # NO EXTERNAL
         recIndex:
           type: integer
           format: int32
